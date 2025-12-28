@@ -1,0 +1,216 @@
+"""Visualization components using Plotly for interactive charts."""
+
+from typing import Dict, List, Optional
+import plotly.graph_objects as go
+import plotly.express as px
+import pandas as pd
+
+from utils.logging_config import setup_logger
+
+logger = setup_logger(__name__)
+
+
+def create_allocation_donut(holdings_df: pd.DataFrame, min_pct: float = 2.0) -> go.Figure:
+    """
+    Create an interactive donut chart showing portfolio allocation.
+    
+    Args:
+        holdings_df: DataFrame with columns ['Ticker', 'Market Value']
+        min_pct: Minimum percentage to show separately (default: 2%)
+    
+    Returns:
+        Plotly Figure object
+    """
+    if holdings_df.empty:
+        logger.warning("No holdings data for allocation chart")
+        return go.Figure()
+    
+    # Calculate total value
+    total_value = holdings_df['Market Value'].sum()
+    
+    if total_value <= 0:
+        logger.warning("Total portfolio value is zero")
+        return go.Figure()
+    
+    # Calculate percentages
+    holdings_df = holdings_df.copy()
+    holdings_df['Percentage'] = (holdings_df['Market Value'] / total_value) * 100
+    
+    # Group small holdings into "Other"
+    large_holdings = holdings_df[holdings_df['Percentage'] >= min_pct].copy()
+    small_holdings = holdings_df[holdings_df['Percentage'] < min_pct]
+    
+    if not small_holdings.empty:
+        other_row = pd.DataFrame([{
+            'Ticker': 'Other',
+            'Market Value': small_holdings['Market Value'].sum(),
+            'Percentage': small_holdings['Percentage'].sum()
+        }])
+        display_df = pd.concat([large_holdings, other_row], ignore_index=True)
+    else:
+        display_df = large_holdings
+    
+    # Sort by value
+    display_df = display_df.sort_values('Market Value', ascending=False)
+    
+    # Create donut chart
+    fig = go.Figure(data=[go.Pie(
+        labels=display_df['Ticker'],
+        values=display_df['Market Value'],
+        hole=0.4,
+        hovertemplate='<b>%{label}</b><br>' +
+                     'Value: €%{value:,.2f}<br>' +
+                     'Percentage: %{percent}<br>' +
+                     '<extra></extra>',
+        textinfo='label+percent',
+        textposition='auto',
+        marker=dict(
+            colors=px.colors.qualitative.Set3,
+            line=dict(color='white', width=2)
+        )
+    )])
+    
+    fig.update_layout(
+        title={
+            'text': 'Portfolio Allocation',
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 20, 'color': '#333'}
+        },
+        showlegend=True,
+        legend=dict(
+            orientation='v',
+            yanchor='middle',
+            y=0.5,
+            xanchor='left',
+            x=1.02
+        ),
+        height=500,
+        margin=dict(t=80, b=20, l=20, r=200)
+    )
+    
+    logger.info(f"Created allocation chart with {len(display_df)} segments")
+    
+    return fig
+
+
+def create_performance_chart(
+    dates: List[str],
+    invested_values: List[float],
+    portfolio_values: List[float]
+) -> go.Figure:
+    """
+    Create an area chart showing invested capital vs portfolio value over time.
+    
+    Args:
+        dates: List of dates (as strings)
+        invested_values: Cumulative invested amount at each date
+        portfolio_values: Portfolio market value at each date
+    
+    Returns:
+        Plotly Figure object
+    """
+    if not dates or not invested_values or not portfolio_values:
+        logger.warning("No data for performance chart")
+        return go.Figure()
+    
+    fig = go.Figure()
+    
+    # Cumulative invested (step line)
+    fig.add_trace(go.Scatter(
+        x=dates,
+        y=invested_values,
+        name='Cumulative Invested',
+        mode='lines',
+        line=dict(color='#636EFA', width=2, dash='dot'),
+        hovertemplate='<b>Invested</b><br>' +
+                     'Date: %{x}<br>' +
+                     'Amount: €%{y:,.2f}<br>' +
+                     '<extra></extra>'
+    ))
+    
+    # Portfolio value (area)
+    fig.add_trace(go.Scatter(
+        x=dates,
+        y=portfolio_values,
+        name='Portfolio Value',
+        mode='lines',
+        line=dict(color='#00CC96', width=2),
+        fill='tozeroy',
+        fillcolor='rgba(0, 204, 150, 0.2)',
+        hovertemplate='<b>Portfolio Value</b><br>' +
+                     'Date: %{x}<br>' +
+                     'Value: €%{y:,.2f}<br>' +
+                     '<extra></extra>'
+    ))
+    
+    fig.update_layout(
+        title={
+            'text': 'Portfolio Performance Over Time',
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 20, 'color': '#333'}
+        },
+        xaxis=dict(
+            title='Date',
+            showgrid=True,
+            gridcolor='#E5E5E5'
+        ),
+        yaxis=dict(
+            title='Value (€)',
+            showgrid=True,
+            gridcolor='#E5E5E5',
+            tickformat=',.0f'
+        ),
+        hovermode='x unified',
+        legend=dict(
+            orientation='h',
+            yanchor='bottom',
+            y=1.02,
+            xanchor='center',
+            x=0.5
+        ),
+        height=500,
+        margin=dict(t=80, b=60, l=80, r=40),
+        plot_bgcolor='white'
+    )
+    
+    logger.info(f"Created performance chart with {len(dates)} data points")
+    
+    return fig
+
+
+def create_simple_bar_chart(data: Dict[str, float], title: str) -> go.Figure:
+    """
+    Create a simple bar chart (alternative visualization).
+    
+    Args:
+        data: Dictionary mapping labels to values
+        title: Chart title
+    
+    Returns:
+        Plotly Figure object
+    """
+    fig = go.Figure(data=[
+        go.Bar(
+            x=list(data.keys()),
+            y=list(data.values()),
+            marker_color='#636EFA',
+            hovertemplate='<b>%{x}</b><br>Value: €%{y:,.2f}<extra></extra>'
+        )
+    ])
+    
+    fig.update_layout(
+        title={
+            'text': title,
+            'x': 0.5,
+            'xanchor': 'center'
+        },
+        xaxis_title='',
+        yaxis_title='Value (€)',
+        yaxis=dict(tickformat=',.0f'),
+        height=400,
+        margin=dict(t=60, b=40, l=80, r=40)
+    )
+    
+    return fig
