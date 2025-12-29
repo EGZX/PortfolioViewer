@@ -222,10 +222,35 @@ python utils/auth.py "your_password"
 ```
 
 ### Logging
-Logs are written to stdout. Check console for debugging:
+
+All logs are automatically written to `logs/portfolio_viewer.log`:
+
 ```bash
-streamlit run portfolio_viewer.py 2>&1 | tee app.log
+# View latest logs (Windows)
+type logs\portfolio_viewer.log
+
+# View latest logs (Linux/Mac)
+tail -f logs/portfolio_viewer.log
+
+# Search for errors
+grep "ERROR" logs/portfolio_viewer.log
+
+# Search for parsing issues
+grep -E "missing_price|missing_ticker" logs/portfolio_viewer.log
 ```
+
+**Log Format**:
+```
+[TIMESTAMP] [LEVEL] [MODULE:FUNCTION:LINE] MESSAGE
+```
+
+**Features**:
+- Rotating file handler (10MB max, 5 backups)
+- Structured format for easy parsing
+- Error categorization (invalid_date, missing_price, etc.)
+- Performance tracking for slow operations
+
+See [PERFORMANCE_AND_LOGGING.md](PERFORMANCE_AND_LOGGING.md) for detailed logging guide.
 
 ## Dependencies
 
@@ -236,6 +261,7 @@ streamlit run portfolio_viewer.py 2>&1 | tee app.log
 - **yfinance** ≥0.2.28 - Market data API
 - **plotly** ≥5.17.0 - Interactive charts
 - **pydantic** ≥2.0.0 - Data validation
+- **cryptography** ≥41.0.0 - Cache encryption
 
 ## License
 
