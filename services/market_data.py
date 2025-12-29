@@ -8,8 +8,13 @@ import yfinance as yf
 import streamlit as st
 
 from utils.logging_config import setup_logger
+from services.isin_resolver import ISINResolver
+from services.multi_provider import MarketDataAggregator
 
 logger = setup_logger(__name__)
+
+# Initialize fallback providers
+_fallback_aggregator = MarketDataAggregator()
 
 
 # Ticker overrides for ISINs that yfinance doesn't handle correctly
@@ -38,15 +43,39 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     """
     logger.info(f"Fetching prices for {len(tickers)} tickers")
     
-    # Apply ticker overrides
-    mapped_tickers = []
-    ticker_map = {}  # original -> mapped
+    # Step 1: Resolve ISINs to tickers
+    resolved_tickers = []
+    isin_resolution_log = []
     for ticker in tickers:
-        mapped = TICKER_OVERRIDES.get(ticker, ticker)
-        if mapped != ticker:
-            logger.info(f"Ticker override: {ticker} -> {mapped}")
+        if ISINResolver.needs_resolution(ticker):
+            resolved = ISINResolver.resolve_isin(ticker)
+            if resolved != ticker:
+                isin_resolution_log.append(f"{ticker} -> {resolved}")
+            resolved_tickers.append(resolved)
+        else:
+            resolved_tickers.append(ticker)
+    
+    if isin_resolution_log:
+        logger.info(f"Resolved {len(isin_resolution_log)} ISINs: {isin_resolution_log[:5]}")
+    
+    # Step 2: Apply ticker overrides
+    mapped_tickers = []
+    ticker_map = {}  # mapped -> original
+    for i, resolved_ticker in enumerate(resolved_tickers):
+        original_ticker = tickers[i]
+        
+        # Check if there's an override for the ORIGINAL ticker (might be ISIN)
+        mapped = TICKER_OVERRIDES.get(original_ticker, resolved_ticker)
+        if mapped != resolved_ticker:
+            logger.info(f"Ticker override: {original_ticker} -> {mapped}")
+        
+        # Skip empty tickers (fully sold positions)
+        if not mapped or mapped == '':
+            logger.warning(f"Skipping empty ticker for {original_ticker} (likely fully sold)")
+            continue
+        
         mapped_tickers.append(mapped)
-        ticker_map[mapped] = ticker  # Reverse map for results
+        ticker_map[mapped] = original_ticker  # Reverse map for results
     
     prices = {}
     
@@ -106,11 +135,21 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         
     except Exception as e:
         logger.error(f"Batch fetch failed: {e}")
-        # Fallback: fetch individually using ORIGINAL tickers (with override logic inside fetch_single_price)
+        # Fallback: fetch individually using ORIGINAL tickers
         for original_ticker in tickers:
+            if original_ticker in prices:
+                continue  # Skip if already fetched
+            
+            # Try mapped ticker first
             mapped_ticker = TICKER_OVERRIDES.get(original_ticker, original_ticker)
             price = fetch_single_price(mapped_ticker)
-            prices[original_ticker] = price  # Store with original key
+            
+            # If that fails, try fallback providers
+            if price is None and _fallback_aggregator.providers:
+                logger.info(f"Trying fallback providers for {original_ticker}")
+                price = _fallback_aggregator.get_price_with_fallback(mapped_ticker)
+            
+            prices[original_ticker] = price
     
     success_count = sum(1 for p in prices.values() if p is not None)
     logger.info(f"Successfully fetched {success_count}/{len(tickers)} prices")

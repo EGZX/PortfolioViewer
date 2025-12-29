@@ -177,28 +177,28 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         return total
     
     def get_holdings_summary(self, prices: Dict[str, Optional[float]]) -> pd.DataFrame:
-        """Get summary of all holdings as DataFrame."""
+        """Get summary of all holdings as DataFrame (excludes zero-share positions)."""
         data = []
         
         for ticker, pos in self.holdings.items():
+            # CRITICAL FIX: Skip positions with zero or negative shares
+            if pos.shares <= 0:
+                logger.debug(f"Skipping {ticker} with {pos.shares} shares (fully sold)")
+                continue
+            
             current_price = prices.get(ticker)
             if current_price is not None:
                 pos.update_market_value(Decimal(str(current_price)))
             else:
-                 # Fallback to last known price if possible? 
-                 # For now, if no price, market value remains as last set or 0? 
-                 # The validation logic should handle this.
-                 # Let's assume update_market_value handles 0 price or we trust previous state?
-                 # Actually, update_market_value relies on passed price.
-                 # If price is None, we skip update or set to 0?
-                 pass
+                # No price available - market value remains at last known value
+                pass
 
             # Calculate metrics
             avg_cost = pos.cost_basis / pos.shares if pos.shares > 0 else 0
             
             data.append({
                 'Ticker': ticker,
-                'Name': pos.name if pos.name else ticker,  # Use Name
+                'Name': pos.name if pos.name else ticker,
                 'Shares': float(pos.shares),
                 'Avg Cost': float(avg_cost),
                 'Current Price': float(current_price) if current_price else 0.0,
