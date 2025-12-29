@@ -26,8 +26,10 @@ class OpenFIGIResolver:
     RATE_LIMIT_DELAY = 2.5  # Seconds between requests (24 req/min = safe margin)
     
     def __init__(self):
-        self.cache: Dict[str, Optional[str]] = {}  # ISIN -> Ticker (or None if not found)
         self.last_request_time: Optional[datetime] = None
+        # Use MarketDataCache for persistent storage
+        from services.market_cache import get_market_cache
+        self.cache_store = get_market_cache()
     
     def _rate_limit(self):
         """Enforce rate limiting to stay within free tier limits."""
@@ -50,14 +52,14 @@ class OpenFIGIResolver:
             Yahoo Finance ticker symbol or None if not found
         """
         # Check cache first
-        if isin in self.cache:
-            logger.debug(f"Cache HIT: {isin} -> {self.cache[isin]}")
-            return self.cache[isin]
+        cached_ticker = self.cache_store.get_isin_mapping(isin)
+        if cached_ticker:
+            logger.debug(f"Cache HIT: {isin} -> {cached_ticker}")
+            return cached_ticker
         
         # Validate ISIN format
         if not isin or len(isin) != 12:
             logger.warning(f"Invalid ISIN format: {isin}")
-            self.cache[isin] = None
             return None
         
         logger.info(f"Resolving ISIN via OpenFIGI: {isin}")
@@ -85,14 +87,14 @@ class OpenFIGIResolver:
             
             if not data or 'error' in data[0]:
                 logger.warning(f"OpenFIGI: No mapping found for {isin}")
-                self.cache[isin] = None
+                # We could cache "not found" (e.g. empty string or special value) 
+                # but MarketDataCache logic for None is tricky. For now, don't cache failures.
                 return None
             
             # Extract ticker from response
             result = data[0].get('data', [])
             if not result:
                 logger.warning(f"OpenFIGI: No data for {isin}")
-                self.cache[isin] = None
                 return None
             
             # Try to find the best ticker
@@ -100,11 +102,10 @@ class OpenFIGIResolver:
             
             if ticker:
                 logger.info(f"✓ Resolved {isin} -> {ticker}")
-                self.cache[isin] = ticker
+                self.cache_store.set_isin_mapping(isin, ticker)
                 return ticker
             else:
                 logger.warning(f"OpenFIGI: Could not extract ticker from response for {isin}")
-                self.cache[isin] = None
                 return None
                 
         except requests.RequestException as e:
@@ -201,16 +202,10 @@ class OpenFIGIResolver:
         return results
     
     def get_cache_stats(self) -> Dict[str, int]:
-        """Get statistics about cached resolutions."""
-        total = len(self.cache)
-        resolved = sum(1 for v in self.cache.values() if v is not None)
-        failed = total - resolved
-        
-        return {
-            'total_cached': total,
-            'resolved': resolved,
-            'failed': failed
-        }
+        """Get statistics about cached resolutions from DB."""
+        # This is a bit expensive for a stats call, so we'll simplify or remove it
+        # Rely on market_cache stats
+        return self.cache_store.get_stats()
 
 
 # Global singleton instance

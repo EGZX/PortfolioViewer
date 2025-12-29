@@ -26,37 +26,44 @@ class ISINResolver:
         'US': '',     # US stocks (no suffix needed)
     }
     
+    # Manual overrides for specific ISINs that yfinance or OpenFIGI struggle with
+    # This replaces the need for circular imports from market_data
+    TICKER_OVERRIDES = {
+        # US ADRs - yfinance works better with ticker symbols than ISINs
+        'US8740391003': 'TSM',  # Taiwan Semiconductor ADR
+        'US02079K3059': 'GOOGL',  # Alphabet Class A
+        'US0404131064': 'ARKK',  # ARK Innovation ETF
+        
+        # Asian stocks
+        'CNE100000296': '1211.HK',  # BYD Company (Hong Kong)
+        
+        # European ETFs - add .L suffix for London listing or use local ticker
+        'IE000716YHJ7': 'FWRA.L',  # Invesco FTSE All-World UCITS ETF (London)
+        'AT0000A0E9W5': 'SPIW.DE',  # Example
+        'IE00B3RBWM25': 'VWRL.AS',  # Vanguard FTSE All-World (Amsterdam)
+        'US64110L1061': 'NFLX',     # Netflix
+        'DE000A0HHJR3': 'CLIQ.DE',  # Cliq Digital
+    }
+    
     @classmethod
     def resolve_isin(cls, isin: str, fallback_ticker: Optional[str] = None) -> str:
         """
         Attempt to resolve ISIN to Yahoo Finance ticker.
         
         Resolution strategy:
-        1. Check manual TICKER_OVERRIDES (in market_data.py) - highest priority
+        1. Check manual TICKER_OVERRIDES - highest priority
         2. Try OpenFIGI API for automatic resolution
         3. Use provided fallback_ticker
         4. Return ISIN as-is (will use last transaction price)
-        
-        Args:
-            isin: ISIN code (e.g., 'DE000BASF111')
-            fallback_ticker: Fallback ticker if ISIN can't be resolved
-        
-        Returns:
-            Yahoo Finance ticker symbol
         """
         if not isin or len(isin) != 12:
             return fallback_ticker or isin
         
-        # Check if there's a manual override in market_data.py
-        # (imported here to avoid circular dependency)
-        try:
-            from services.market_data import TICKER_OVERRIDES
-            if isin in TICKER_OVERRIDES:
-                override = TICKER_OVERRIDES[isin]
-                logger.info(f"Using manual override for {isin}: {override}")
-                return override
-        except ImportError:
-            pass
+        # Check manual overrides first
+        if isin in cls.TICKER_OVERRIDES:
+            override = cls.TICKER_OVERRIDES[isin]
+            logger.info(f"Using manual override for {isin}: {override}")
+            return override
         
         # If we have a fallback ticker explicitly provided, use it
         if fallback_ticker:
