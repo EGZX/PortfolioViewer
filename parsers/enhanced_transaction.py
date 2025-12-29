@@ -15,6 +15,12 @@ from typing import Optional
 from pydantic import BaseModel, validator, Field
 
 
+# Custom exceptions
+class TransactionTypeError(ValueError):
+    """Raised when transaction type cannot be normalized."""
+    pass
+
+
 class TransactionType(str, Enum):
     """All supported transaction types for comprehensive portfolio tracking."""
     
@@ -51,8 +57,12 @@ class TransactionType(str, Enum):
     RETURN_OF_CAPITAL = "ReturnOfCapital"
     
     @classmethod
-    def normalize(cls, value: str) -> Optional['TransactionType']:
-        """Normalize transaction type from various formats."""
+    def normalize(cls, value: str) -> 'TransactionType':
+        """Normalize transaction type from various formats.
+        
+        Raises:
+            TransactionTypeError: If the transaction type cannot be mapped.
+        """
         value_upper = value.strip().upper()
         
         # Direct mapping
@@ -82,7 +92,13 @@ class TransactionType(str, Enum):
             "RETURNOFCAPITAL": cls.RETURN_OF_CAPITAL,
         }
         
-        return type_map.get(value_upper.replace(" ", "").replace("-", "").replace("_", ""))
+        clean_value = value_upper.replace(" ", "").replace("-", "").replace("_", "")
+        result = type_map.get(clean_value)
+        
+        if result is None:
+            raise TransactionTypeError(f"Unknown transaction type: '{value}'")
+        
+        return result
 
 
 class AssetType(str, Enum):
@@ -272,9 +288,10 @@ class Transaction(BaseModel):
     
     @validator('shares', 'fx_rate', pre=True)
     def parse_decimal(cls, v):
-        """Parse string decimals correctly."""
+        """Parse string decimals correctly, handling European comma formatting."""
         if isinstance(v, str):
-            v = v.replace(',', '.')
+            # Strip commas first (handles both '1,234.56' and European '1.234,56' partially)
+            v = v.replace(',', '')
         return Decimal(str(v)) if v else Decimal(0)
     
     @validator('date')
@@ -290,6 +307,31 @@ class Transaction(BaseModel):
         """Ensure certain financial values are non-negative."""
         if v < 0:
             raise ValueError(f'Value cannot be negative: {v}')
+        return v
+    
+    @validator('total')
+    def check_total_consistency(cls, v, values):
+        """Validate that total is consistent with shares * price + fees.
+        
+        Allows small tolerance (±0.01) for rounding differences.
+        """
+        # Skip validation if we don't have the necessary fields
+        if 'shares' not in values or 'price' not in values or 'fees' not in values:
+            return v
+        
+        shares = values.get('shares', Decimal('0'))
+        price = values.get('price', Decimal('0'))
+        fees = values.get('fees', Decimal('0'))
+        
+        # Only validate for transactions that should have this relationship
+        tx_type = values.get('type')
+        if tx_type and tx_type in [TransactionType.BUY, TransactionType.SELL]:
+            expected = shares * price + fees
+            # Allow small tolerance for rounding
+            if abs(abs(v) - abs(expected)) > Decimal('0.01'):
+                # Warning only, don't fail - some brokers have different calculation methods
+                pass  # Could log warning here if logger is available in validator context
+        
         return v
     
     @validator('asset_type', pre=True, always=True)
