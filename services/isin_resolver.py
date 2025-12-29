@@ -31,33 +31,53 @@ class ISINResolver:
         """
         Attempt to resolve ISIN to Yahoo Finance ticker.
         
-        NOTE: The heuristic resolution has been disabled as it was creating
-        invalid tickers. ISINs are now returned as-is, which will cause price
-        fetch to fail, but the portfolio will use last transaction price as
-        fallback (which is more accurate than invalid/delisted ticker prices).
+        Resolution strategy:
+        1. Check manual TICKER_OVERRIDES (in market_data.py) - highest priority
+        2. Try OpenFIGI API for automatic resolution
+        3. Use provided fallback_ticker
+        4. Return ISIN as-is (will use last transaction price)
         
         Args:
             isin: ISIN code (e.g., 'DE000BASF111')
             fallback_ticker: Fallback ticker if ISIN can't be resolved
         
         Returns:
-            Yahoo Finance ticker symbol (will be ISIN if unresolvable)
+            Yahoo Finance ticker symbol
         """
         if not isin or len(isin) != 12:
             return fallback_ticker or isin
+        
+        # Check if there's a manual override in market_data.py
+        # (imported here to avoid circular dependency)
+        try:
+            from services.market_data import TICKER_OVERRIDES
+            if isin in TICKER_OVERRIDES:
+                override = TICKER_OVERRIDES[isin]
+                logger.info(f"Using manual override for {isin}: {override}")
+                return override
+        except ImportError:
+            pass
         
         # If we have a fallback ticker explicitly provided, use it
         if fallback_ticker:
             logger.info(f"Using provided ticker for {isin}: {fallback_ticker}")
             return fallback_ticker
         
-        # Heuristic resolution is disabled - it was creating invalid tickers
-        # like "0001", "53R2", etc. that don't exist on Yahoo Finance
-        # 
-        # Return ISIN as-is. Yahoo Finance will fail to fetch price, but
-        # portfolio valuation will use last transaction price as fallback,
-        # which is more accurate than using a wrong/delisted ticker's price.
-        logger.debug(f"Returning ISIN as ticker: {isin} (use TICKER_OVERRIDES in market_data.py for known mappings)")
+        # Try OpenFIGI automatic resolution
+        try:
+            from services.openfigi_resolver import get_openfigi_resolver
+            resolver = get_openfigi_resolver()
+            ticker = resolver.resolve_isin(isin)
+            
+            if ticker:
+                logger.info(f"OpenFIGI resolved {isin} -> {ticker}")
+                return ticker
+        except Exception as e:
+            logger.warning(f"OpenFIGI resolution failed for {isin}: {e}")
+        
+        # Last resort: return ISIN as-is
+        # Portfolio will use last transaction price as fallback
+        logger.debug(f"Could not resolve {isin}, returning as-is. Add to TICKER_OVERRIDES for manual mapping.")
         return isin
     
     @classmethod
