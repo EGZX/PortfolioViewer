@@ -1,6 +1,7 @@
 """Market data service with yfinance integration and fallback strategies."""
 
 import time
+from datetime import date
 from decimal import Decimal
 from typing import Dict, Optional, List
 import pandas as pd
@@ -34,6 +35,7 @@ TICKER_OVERRIDES = {
 def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     """
     Fetch current prices from yfinance with error handling and retry logic.
+    Uses SQLite cache to minimize API calls.
     
     Args:
         tickers: List of ticker symbols (Yahoo Finance format)
@@ -41,118 +43,141 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     Returns:
         Dictionary mapping ticker to current price (EUR) or None if failed
     """
+    from services.market_cache import get_market_cache
+    
     logger.info(f"Fetching prices for {len(tickers)} tickers")
     
     with get_perf_logger(logger, f"fetch_prices({len(tickers)} tickers)", threshold_ms=3000):
-    
-    # Step 1: Resolve ISINs to tickers
-    resolved_tickers = []
-    isin_resolution_log = []
-    for ticker in tickers:
-        if ISINResolver.needs_resolution(ticker):
-            resolved = ISINResolver.resolve_isin(ticker)
-            if resolved != ticker:
-                isin_resolution_log.append(f"{ticker} -> {resolved}")
-            resolved_tickers.append(resolved)
-        else:
-            resolved_tickers.append(ticker)
-    
-    if isin_resolution_log:
-        logger.info(f"Resolved {len(isin_resolution_log)} ISINs: {isin_resolution_log[:5]}")
-    
-    # Step 2: Apply ticker overrides
-    mapped_tickers = []
-    ticker_map = {}  # mapped -> original
-    for i, resolved_ticker in enumerate(resolved_tickers):
-        original_ticker = tickers[i]
+        # Step 0: Check cache first
+        cache = get_market_cache()
+        today = date.today()
         
-        # Check if there's an override for the ORIGINAL ticker (might be ISIN)
-        mapped = TICKER_OVERRIDES.get(original_ticker, resolved_ticker)
-        if mapped != resolved_ticker:
-            logger.info(f"Ticker override: {original_ticker} -> {mapped}")
+        # Try to get all prices from cache
+        cached_prices = cache.get_prices_batch(tickers, today)
         
-        # Skip empty tickers (fully sold positions)
-        if not mapped or mapped == '':
-            logger.warning(f"Skipping empty ticker for {original_ticker} (likely fully sold)")
-            continue
+        # Separate tickers into cached and needs-fetch
+        tickers_to_fetch = [t for t, p in cached_prices.items() if p is None]
+        prices = {t: p for t, p in cached_prices.items() if p is not None}
         
-        mapped_tickers.append(mapped)
-        ticker_map[mapped] = original_ticker  # Reverse map for results
-    
-    prices = {}
-    
-    if not mapped_tickers:
-        return prices
-    
-    # Batch fetch for efficiency
-    try:
-        data = yf.download(
-            mapped_tickers,  # Use mapped tickers
-            period='1d',
-            interval='1d',
-            group_by='ticker',
-            threads=True,
-            progress=False
-        )
+        if not tickers_to_fetch:
+            logger.info(f"All {len(tickers)} prices served from cache!")
+            return prices
         
-        # Handle single ticker vs multiple tickers
-        if len(mapped_tickers) == 1:
-            mapped_ticker = mapped_tickers[0]
-            original_ticker = ticker_map.get(mapped_ticker, mapped_ticker)
-            if not data.empty and 'Close' in data.columns:
-                price = data['Close'].iloc[-1]
-                if price is not None and not pd.isna(price):
-                    prices[original_ticker] = float(price)  # Map back to original
-                    logger.info(f"{original_ticker}: {price:.2f}")
-                else:
-                    prices[original_ticker] = None
-                    logger.warning(f"{original_ticker}: No current price available")
+        logger.info(f"Cache: {len(prices)} hits, {len(tickers_to_fetch)} to fetch from API")
+        
+        # Step 1: Resolve ISINs to tickers for tickers that need fetching
+        resolved_tickers = []
+        isin_resolution_log = []
+        for ticker in tickers_to_fetch:
+            if ISINResolver.needs_resolution(ticker):
+                resolved = ISINResolver.resolve_isin(ticker)
+                if resolved != ticker:
+                    isin_resolution_log.append(f"{ticker} -> {resolved}")
+                resolved_tickers.append(resolved)
             else:
-                prices[original_ticker] = None
-                logger.warning(f"{original_ticker}: Download failed")
-        else:
-            # Multiple tickers
-            for mapped_ticker in mapped_tickers:
+                resolved_tickers.append(ticker)
+        
+        if isin_resolution_log:
+            logger.info(f"Resolved {len(isin_resolution_log)} ISINs: {isin_resolution_log[:5]}")
+        
+        # Step 2: Apply ticker overrides
+        mapped_tickers = []
+        ticker_map = {}  # mapped -> original
+        for i, resolved_ticker in enumerate(resolved_tickers):
+            original_ticker = tickers_to_fetch[i]
+            
+            # Check if there's an override for the ORIGINAL ticker (might be ISIN)
+            mapped = TICKER_OVERRIDES.get(original_ticker, resolved_ticker)
+            if mapped != resolved_ticker:
+                logger.info(f"Ticker override: {original_ticker} -> {mapped}")
+            
+            # Skip empty tickers (fully sold positions)
+            if not mapped or mapped == '':
+                logger.warning(f"Skipping empty ticker for {original_ticker} (likely fully sold)")
+                continue
+            
+            mapped_tickers.append(mapped)
+            ticker_map[mapped] = original_ticker  # Reverse map for results
+        
+        if not mapped_tickers:
+            return prices
+        
+        # Batch fetch for efficiency
+        try:
+            data = yf.download(
+                mapped_tickers,  # Use mapped tickers
+                period='1d',
+                interval='1d',
+                group_by='ticker',
+                threads=True,
+                progress=False
+            )
+            
+            # Handle single ticker vs multiple tickers
+            if len(mapped_tickers) == 1:
+                mapped_ticker = mapped_tickers[0]
                 original_ticker = ticker_map.get(mapped_ticker, mapped_ticker)
-                try:
-                    if mapped_ticker in data.columns.levels[0]:
-                        ticker_data = data[mapped_ticker]
-                        if not ticker_data.empty and 'Close' in ticker_data.columns:
-                            price = ticker_data['Close'].iloc[-1]
-                            if price is not None and not pd.isna(price):
-                                prices[original_ticker] = float(price)  # Map back
-                                logger.info(f"{original_ticker}: {price:.2f}")
-                            else:
-                                prices[original_ticker] = None
-                                logger.warning(f"{original_ticker}: No current price")
-                        else:
-                            prices[original_ticker] = None
-                            logger.warning(f"{original_ticker}: No data in response")
+                if not data.empty and 'Close' in data.columns:
+                    price = data['Close'].iloc[-1]
+                    if price is not None and not pd.isna(price):
+                        price_val = float(price)
+                        prices[original_ticker] = price_val
+                        cache.set_price(original_ticker, price_val, today)  # Cache it
+                        logger.info(f"{original_ticker}: {price_val:.2f}")
                     else:
                         prices[original_ticker] = None
-                        logger.warning(f"{original_ticker}: Not in response")
-                except Exception as e:
+                        logger.warning(f"{original_ticker}: No current price available")
+                else:
                     prices[original_ticker] = None
-                    logger.error(f"{original_ticker}: Error extracting price - {e}")
+                    logger.warning(f"{original_ticker}: Download failed")
+            else:
+                # Multiple tickers
+                for mapped_ticker in mapped_tickers:
+                    original_ticker = ticker_map.get(mapped_ticker, mapped_ticker)
+                    try:
+                        if mapped_ticker in data.columns.levels[0]:
+                            ticker_data = data[mapped_ticker]
+                            if not ticker_data.empty and 'Close' in ticker_data.columns:
+                                price = ticker_data['Close'].iloc[-1]
+                                if price is not None and not pd.isna(price):
+                                    price_val = float(price)
+                                    prices[original_ticker] = price_val
+                                    cache.set_price(original_ticker, price_val, today)  # Cache it
+                                    logger.info(f"{original_ticker}: {price_val:.2f}")
+                                else:
+                                    prices[original_ticker] = None
+                                    logger.warning(f"{original_ticker}: No current price")
+                            else:
+                                prices[original_ticker] = None
+                                logger.warning(f"{original_ticker}: No data in response")
+                        else:
+                            prices[original_ticker] = None
+                            logger.warning(f"{original_ticker}: Not in response")
+                    except Exception as e:
+                        prices[original_ticker] = None
+                        logger.error(f"{original_ticker}: Error extracting price - {e}")
+            
+        except Exception as e:
+            logger.error(f"Batch fetch failed: {e}")
+            # Fallback: fetch individually using ORIGINAL tickers
+            for original_ticker in tickers_to_fetch:
+                if original_ticker in prices:
+                    continue  # Skip if already fetched
+                
+                # Try mapped ticker first
+                mapped_ticker = TICKER_OVERRIDES.get(original_ticker, original_ticker)
+                price = fetch_single_price(mapped_ticker)
+                
+                # If that fails, try fallback providers
+                if price is None and _fallback_aggregator.providers:
+                    logger.info(f"Trying fallback providers for {original_ticker}")
+                    price = _fallback_aggregator.get_price_with_fallback(mapped_ticker)
+                
+                if price is not None:
+                    cache.set_price(original_ticker, price, today)  # Cache it
+                
+                prices[original_ticker] = price
         
-    except Exception as e:
-        logger.error(f"Batch fetch failed: {e}")
-        # Fallback: fetch individually using ORIGINAL tickers
-        for original_ticker in tickers:
-            if original_ticker in prices:
-                continue  # Skip if already fetched
-            
-            # Try mapped ticker first
-            mapped_ticker = TICKER_OVERRIDES.get(original_ticker, original_ticker)
-            price = fetch_single_price(mapped_ticker)
-            
-            # If that fails, try fallback providers
-            if price is None and _fallback_aggregator.providers:
-                logger.info(f"Trying fallback providers for {original_ticker}")
-                price = _fallback_aggregator.get_price_with_fallback(mapped_ticker)
-            
-            prices[original_ticker] = price
-    
         success_count = sum(1 for p in prices.values() if p is not None)
         fail_count = len(tickers) - success_count
         

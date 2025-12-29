@@ -178,6 +178,7 @@ class CorporateActionService:
     ) -> Tuple[List[Transaction], List[str]]:
         """
         Detect splits for all tickers and apply adjustments.
+        Uses cache to avoid redundant API calls.
         
         Args:
             transactions: List of transactions
@@ -186,29 +187,90 @@ class CorporateActionService:
         Returns:
             Tuple of (adjusted_transactions, adjustment_log)
         """
+        from services.market_cache import get_market_cache
+        
         if not fetch_splits:
             return transactions, []
+        
+        logger.info("=" * 60)
+        logger.info("Starting split detection and adjustment")
+        logger.info("=" * 60)
         
         # Get unique tickers
         tickers = {t.ticker for t in transactions if t.ticker}
         
         if not tickers:
+            logger.info("No tickers found in transactions")
             return transactions, []
+        
+        logger.info(f"Checking splits for {len(tickers)} unique tickers")
+        
+        # Get cache instance
+        cache = get_market_cache()
         
         # Fetch split history for each ticker
         splits_by_ticker = {}
+        cache_hits = 0
+        cache_misses = 0
+        
         for ticker in tickers:
-            split_history = CorporateActionService.fetch_split_history(ticker)
-            if split_history:
-                splits_by_ticker[ticker] = split_history
+            # Check cache first
+            cached_splits = cache.get_splits(ticker)
+            
+            if cached_splits:
+                cache_hits += 1
+                logger.info(f"Cache HIT: {ticker} has {len(cached_splits)} cached splits")
+                # Convert back to CorporateAction objects
+                split_actions = []
+                for split_date, ratio in cached_splits:
+                    if ratio > 1:
+                        action = CorporateAction(
+                            ticker=ticker,
+                            action_date=split_date,
+                            action_type="StockSplit",
+                            ratio_from=Decimal(1),
+                            ratio_to=Decimal(str(ratio))
+                        )
+                    else:
+                        action = CorporateAction(
+                            ticker=ticker,
+                            action_date=split_date,
+                            action_type="ReverseSplit",
+                            ratio_from=Decimal(str(1/ratio)),
+                            ratio_to=Decimal(1)
+                        )
+                    split_actions.append(action)
+                
+                splits_by_ticker[ticker] = split_actions
+            else:
+                cache_misses += 1
+                logger.info(f"Cache MISS: Fetching splits for {ticker} from API")
+                split_history = CorporateActionService.fetch_split_history(ticker)
+                if split_history:
+                    splits_by_ticker[ticker] = split_history
+                    # Cache the splits
+                    splits_for_cache = [
+                        (action.action_date, float(action.adjustment_factor))
+                        for action in split_history
+                    ]
+                    cache.set_splits(ticker, splits_for_cache)
+                    logger.info(f"Cached {len(split_history)} splits for {ticker}")
+        
+        logger.info(f"Split cache stats: {cache_hits} hits, {cache_misses} misses")
         
         if not splits_by_ticker:
             logger.info("No splits found for any tickers")
+            logger.info("=" * 60)
             return transactions, []
         
         # Apply adjustments
         logger.info(f"Applying split adjustments for {len(splits_by_ticker)} tickers")
-        return CorporateActionService.adjust_transactions_for_splits(
+        adjusted_transactions, adjustment_log = CorporateActionService.adjust_transactions_for_splits(
             transactions,
             splits_by_ticker
         )
+        
+        logger.info(f"Split adjustment complete: {len(adjustment_log)} transactions adjusted")
+        logger.info("=" * 60)
+        
+        return adjusted_transactions, adjustment_log
