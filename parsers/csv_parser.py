@@ -217,6 +217,10 @@ class CSVParser:
         Raises:
             ValueError: If CSV is malformed or required columns are missing
         """
+        logger.info("=" * 60)
+        logger.info("Starting CSV parsing")
+        logger.info("=" * 60)
+        
         # Detect format
         self.delimiter = self.detect_delimiter(file_content)
         self.decimal_separator = self.detect_decimal_separator(file_content)
@@ -233,7 +237,7 @@ class CSVParser:
             on_bad_lines='warn'  # Continue on bad lines
         )
         
-        logger.info(f"Read {len(df)} rows, {len(df.columns)} columns")
+        logger.info(f"Read {len(df)} rows, {len(df.columns)} columns: {list(df.columns)}")
         
         # Strip quotes from column names
         df.columns = df.columns.str.strip().str.strip('"')
@@ -246,11 +250,20 @@ class CSVParser:
         required = ['date', 'type']
         missing = [col for col in required if col not in df_mapped.columns]
         if missing:
-            raise ValueError(f"Missing required columns: {missing}")
+            error_msg = f"Missing required columns: {missing}"
+            logger.error(error_msg)
+            raise ValueError(error_msg)
         
         # Parse transactions
         transactions = []
         errors = []
+        error_categories = {
+            'invalid_date': 0,
+            'unknown_type': 0,
+            'missing_ticker': 0,
+            'missing_price': 0,
+            'general_error': 0
+        }
         
         for idx, row in df_mapped.iterrows():
             try:
@@ -267,14 +280,20 @@ class CSVParser:
                 date_val = get_val('date')
                 trans_date = self.parse_date(date_val)
                 if not trans_date:
-                    errors.append(f"Row {idx}: Invalid date '{date_val}'")
+                    error = f"Row {idx}: Invalid date '{date_val}'"
+                    errors.append(error)
+                    error_categories['invalid_date'] += 1
+                    logger.warning(error)
                     continue
                 
                 # Parse type
                 type_val = get_val('type')
                 trans_type = TransactionType.normalize(type_val)
                 if not trans_type:
-                    errors.append(f"Row {idx}: Unknown transaction type '{type_val}'")
+                    error = f"Row {idx}: Unknown transaction type '{type_val}'"
+                    errors.append(error)
+                    error_categories['unknown_type'] += 1
+                    logger.warning(error)
                     continue
                 
                 # Parse amounts
@@ -317,10 +336,24 @@ class CSVParser:
                 # Use ticker or ISIN (prefer ISIN if both present)
                 if not ticker and isin:
                     ticker = isin
+                
+                # Log warning if ticker is missing for buy/sell transactions
+                if not ticker and trans_type in [TransactionType.BUY, TransactionType.SELL]:
+                    error = f"Row {idx}: Missing ticker/ISIN for {trans_type.value} transaction"
+                    errors.append(error)
+                    error_categories['missing_ticker'] += 1
+                    logger.warning(error)
 
                 # Get name (optional)
                 name_val = get_val('name')
                 name = name_val if name_val and name_val != '' and not pd.isna(name_val) else None
+                
+                # Log if price is missing for buy/sell
+                if price == 0 and trans_type in [TransactionType.BUY, TransactionType.SELL]:
+                    error = f"Row {idx}: Missing price for {trans_type.value} transaction (ticker: {ticker})"
+                    errors.append(error)
+                    error_categories['missing_price'] += 1
+                    logger.warning(error)
                 
                 # Get asset type (optional, will auto-detect if not provided)
                 asset_type_val = get_val('asset_type')
@@ -369,12 +402,27 @@ class CSVParser:
                 transactions.append(transaction)
                 
             except Exception as e:
-                errors.append(f"Row {idx}: {str(e)}")
-                logger.warning(f"Failed to parse row {idx}: {e}")
+                error = f"Row {idx}: {str(e)}"
+                errors.append(error)
+                error_categories['general_error'] += 1
+                logger.error(f"Failed to parse row {idx}: {e}", exc_info=True)
         
-        logger.info(f"Successfully parsed {len(transactions)} transactions, {len(errors)} errors")
+        logger.info("=" * 60)
+        logger.info(f"CSV Parsing Complete: {len(transactions)} successful, {len(errors)} errors")
+        logger.info(f"Error breakdown:")
+        for category, count in error_categories.items():
+            if count > 0:
+                logger.info(f"  - {category}: {count}")
+        logger.info("=" * 60)
         
         if errors and len(errors) > 10:
-            logger.warning(f"First 10 errors: {errors[:10]}")
+            logger.warning(f"First 10 errors:")
+            for i, error in enumerate(errors[:10], 1):
+                logger.warning(f"  {i}. {error}")
+            logger.warning(f"  ... and {len(errors) - 10} more errors")
+        elif errors:
+            logger.warning(f"All {len(errors)} errors:")
+            for i, error in enumerate(errors, 1):
+                logger.warning(f"  {i}. {error}")
         
         return transactions

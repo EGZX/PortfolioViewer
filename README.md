@@ -11,6 +11,10 @@ A production-grade portfolio analysis tool built with Streamlit that ingests CSV
 - ✅ **Interactive Charts**: Plotly visualizations (allocation donut, performance area chart)
 - ✅ **Password Protection**: Secure authentication using Streamlit secrets
 - ✅ **Type-Safe**: Pydantic validation throughout
+- ✅ **High Performance**: SQLite cache for market data (10-50x faster on subsequent loads)
+- ✅ **Enhanced Logging**: Detailed logs with error categorization for easy debugging
+
+> 📖 **New**: See [PERFORMANCE_AND_LOGGING.md](PERFORMANCE_AND_LOGGING.md) for details on performance improvements and logging features.
 
 ## Quick Start
 

@@ -46,3 +46,9 @@ Testdata/
 
 # Logs
 *.log
+logs/
+
+# Data cache
+data/
+*.db
+*.db-journal

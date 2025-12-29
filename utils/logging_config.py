@@ -82,7 +82,7 @@ def setup_logger(
     Args:
         name: Logger name (usually __name__)
         level: Log level (DEBUG, INFO, WARNING, ERROR). Defaults to env var or INFO
-        log_file: Optional file path for logs
+        log_file: Optional file path for logs. If None, uses logs/portfolio_viewer.log
     
     Returns:
         Configured logger instance
@@ -106,15 +106,24 @@ def setup_logger(
     console_handler.setFormatter(StructuredFormatter())
     logger.addHandler(console_handler)
     
-    # File handler if specified
-    if log_file:
-        log_path = Path(log_file)
-        log_path.parent.mkdir(parents=True, exist_ok=True)
-        
-        file_handler = logging.FileHandler(log_file, encoding='utf-8')
-        file_handler.setLevel(log_level)
-        file_handler.setFormatter(StructuredFormatter())
-        logger.addHandler(file_handler)
+    # File handler - default to logs/portfolio_viewer.log if not specified
+    if log_file is None:
+        log_file = 'logs/portfolio_viewer.log'
+    
+    log_path = Path(log_file)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Use rotating file handler to prevent huge log files
+    from logging.handlers import RotatingFileHandler
+    file_handler = RotatingFileHandler(
+        log_file,
+        maxBytes=10 * 1024 * 1024,  # 10MB
+        backupCount=5,
+        encoding='utf-8'
+    )
+    file_handler.setLevel(log_level)
+    file_handler.setFormatter(StructuredFormatter())
+    logger.addHandler(file_handler)
     
     # Prevent propagation to root logger
     logger.propagate = False
