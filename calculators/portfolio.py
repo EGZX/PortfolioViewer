@@ -2,12 +2,12 @@
 
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import datetime
-from decimal import Decimal
+from datetime import datetime, timezone
+from decimal import Decimal, ROUND_HALF_EVEN
 from typing import Dict, List, Optional, Tuple
 import pandas as pd
 
-from parsers.enhanced_transaction import Transaction, TransactionType
+from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
 from utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
@@ -24,6 +24,7 @@ class Position:
     gain_loss: Decimal = Decimal(0)
     gain_loss_pct: Decimal = Decimal(0)
     currency: str = "EUR"
+    asset_type: 'AssetType' = None  # Will be set from transaction
 
     def update_market_value(self, price: Decimal):
         """Update market value based on current price."""
@@ -92,58 +93,96 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             # Money LEFT the system. To my pocket.
             # Cash balance went DOWN. t.total is negative.
             # for XIRR: Positive flow (return).
-            self.cash_flows.append((t.date, -amount_eur)) # Use amount_eur
+            # CRITICAL FIX: Sign should be POSITIVE for XIRR (money returned to investor)
+            self.cash_flows.append((t.date, abs(amount_eur)))  # Positive for withdrawal
             self.invested_capital += amount_eur # amount_eur is negative, so this reduces invested cap
             self.total_withdrawn += abs(amount_eur) # Keep original total_withdrawn logic
+        
+        elif t.type == TransactionType.DEPOSIT:
+            # Cash deposit (similar to TRANSFER_IN)
+            self.cash_flows.append((t.date, -amount_eur))  # Negative (investment)
+            self.invested_capital += amount_eur
+            self.total_invested += abs(amount_eur)
+        
+        elif t.type == TransactionType.WITHDRAWAL:
+            # Cash withdrawal (similar to TRANSFER_OUT)
+            self.cash_flows.append((t.date, abs(amount_eur)))  # Positive (return)
+            self.invested_capital += amount_eur  # amount_eur is negative
+            self.total_withdrawn += abs(amount_eur)
             
         # Update holdings
         if t.ticker:
             if t.ticker not in self.holdings:
-                self.holdings[t.ticker] = Position(ticker=t.ticker, name=t.name) # Pass name
+                self.holdings[t.ticker] = Position(
+                    ticker=t.ticker, 
+                    name=t.name,
+                    asset_type=t.asset_type
+                )
             
             pos = self.holdings[t.ticker]
             # Use transaction name if position name is missing
             if not pos.name and t.name:
                 pos.name = t.name
+            # Update asset_type if transaction has better info
+            if t.asset_type and t.asset_type != AssetType.UNKNOWN:
+                pos.asset_type = t.asset_type
             
-            if t.type == TransactionType.BUY:
+            # INCREASE POSITION
+            if t.type in [TransactionType.BUY, TransactionType.TRANSFER_IN, TransactionType.STOCK_DIVIDEND]:
                 pos.shares += t.shares
-                # Cost basis increases by what we paid (amount_eur is negative, so subtract it)
-                # Cost is absolute value of what we spent.
-                # amount_eur = -100 -> Cost basis += 100
-                pos.cost_basis -= amount_eur 
-                # Note: Don't add to total_invested here - that's only for TRANSFER_IN
                 
-            elif t.type == TransactionType.SELL:
+                # For transfers, we assume cost basis increases by the value transferred (if provided)
+                # t.total is negative for outflows (Buys), but for TransferIn it depends on sign convention.
+                # Standard: TransferIn is "Money In", total > 0. But stock value?
+                # Usually TransferIn comes with a cost basis or market value.
+                # If t.total is the Value, it increases cost basis.
+                # Logic: cost_basis += abs(amount_eur)
+                # But wait, earlier we subtract amount_eur for BUYS (because amount is negative).
+                # Let's trust absolute value for cost basis increment.
+                amt = abs(amount_eur)
+                if t.type == TransactionType.STOCK_DIVIDEND:
+                    amt = 0 # Usually 0 cost
+                
+                pos.cost_basis += amt
+                
+            # DECREASE POSITION
+            elif t.type in [TransactionType.SELL, TransactionType.TRANSFER_OUT]:
                 if pos.shares > 0:
                     # Pro-rata reduce cost basis
                     cost_per_share = pos.cost_basis / pos.shares
-                    sold_cost = cost_per_share * t.shares
+                    # Safe handling if t.shares > pos.shares (partial sale of everything owned)
+                    shares_to_remove = min(t.shares, pos.shares)
+                    
+                    sold_cost = cost_per_share * shares_to_remove
                     pos.cost_basis -= sold_cost
                 
                 pos.shares -= t.shares
+                
+                # CRITICAL: Cap to prevent negative holdings
                 if pos.shares < 0:
                     logger.warning(
-                        f"{t.ticker}: Selling more shares than owned! "
-                        f"Date: {t.date.strftime('%Y-%m-%d')}, "
-                        f"Sell qty: {t.shares}, "
-                        f"Holdings before: {pos.shares + t.shares}, "
-                        f"Result: {pos.shares}. "
-                        f"Possible causes: missing buy transactions, split adjustment error, or data issue."
+                        f"{t.ticker}: Selling/Transferring more shares than owned! "
+                        f"Type: {t.type.value}, "
+                        f"Qty: {t.shares}, "
+                        f"Had: {pos.shares + t.shares}, "
+                        f"Capping to zero."
                     )
-                    pos.shares = Decimal(0) # Ensure shares don't go negative
-                    pos.cost_basis = Decimal(0) # Reset cost basis if all shares are gone
-                # Note: Don't add to total_withdrawn here - that's only for TRANSFER_OUT
+                    pos.shares = Decimal(0)
+                    pos.cost_basis = Decimal(0)
             
             elif t.type == TransactionType.DIVIDEND:
-                self.total_dividends += abs(amount_eur) # Keep original total_dividends logic
+                self.total_dividends += abs(amount_eur)
+                # Add to XIRR cash flows (positive = return to investor)
+                self.cash_flows.append((t.date, abs(amount_eur)))
             
             elif t.type == TransactionType.INTEREST:
-                # Handled by cash_balance update
-                pass
+                # Add to XIRR cash flows (positive = return to investor)
+                self.cash_flows.append((t.date, abs(amount_eur)))
             
             elif t.type == TransactionType.COST:
-                self.total_fees += abs(amount_eur) # Keep original total_fees logic
+                self.total_fees += abs(amount_eur)
+                # Add to XIRR cash flows (negative = cost to investor)
+                self.cash_flows.append((t.date, -abs(amount_eur)))
         
     def _reconstruct_state(self):
         """Reconstruct current portfolio state from all transactions."""
@@ -227,35 +266,35 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         """
         Prepare cash flows for XIRR calculation.
         
+        CRITICAL: Only includes EXTERNAL cash flows (TRANSFER_IN/OUT, DIVIDEND, INTEREST, COST)
+        Excludes internal position changes (BUY/SELL) as those are portfolio rebalancing.
+        
         Returns: (dates, amounts) where amounts are negative for investments, positive for returns
         """
-        # Aggregate cash flows by date
-        cash_flows: Dict[datetime, Decimal] = defaultdict(Decimal)
+        # Cash flows are already tracked in self.cash_flows during process_transaction
+        # They follow the correct sign convention:
+        # - TRANSFER_IN, DEPOSIT: Negative (money invested)
+        # - TRANSFER_OUT, WITHDRAWAL: Positive (money withdrawn)
+        # - DIVIDEND, INTEREST: Positive (return to investor)
+        # - COST: Negative (money out)
         
-        for trans in self.transactions:
-            amount_eur = trans.total * trans.fx_rate
-            
-            # Include all transactions that represent cash flows
-            if trans.type in [
-                TransactionType.BUY,
-                TransactionType.SELL,
-                TransactionType.DIVIDEND,
-                TransactionType.TRANSFER_IN,
-                TransactionType.TRANSFER_OUT,
-                TransactionType.INTEREST,
-                TransactionType.COST
-            ]:
-                # Normalize signs: negative = money out (investment), positive = money in (return)
-                cash_flows[trans.date.date()] += amount_eur
+        # Aggregate by date (using timezone-aware datetime)
+        aggregated: Dict[datetime, Decimal] = defaultdict(Decimal)
         
-        # Add final liquidation value (today)
-        today = datetime.now().date()
-        cash_flows[today] = cash_flows.get(today, Decimal(0)) + current_value
+        for date, amount in self.cash_flows:
+            # Quantize to 2 decimal places for consistency
+            quantized_amount = Decimal(str(amount)).quantize(Decimal('0.01'), rounding=ROUND_HALF_EVEN)
+            aggregated[date.date()] += quantized_amount
+        
+        # Add final liquidation value (today, timezone-aware)
+        today = datetime.now(tz=timezone.utc).date()
+        current_value_quantized = Decimal(str(current_value)).quantize(Decimal('0.01'), rounding=ROUND_HALF_EVEN)
+        aggregated[today] = aggregated.get(today, Decimal(0)) + current_value_quantized
         
         # Sort by date and convert to lists
-        sorted_flows = sorted(cash_flows.items())
-        dates = [datetime.combine(date, datetime.min.time()) for date, _ in sorted_flows]
-        amounts = [float(amount) for _, amount in sorted_flows]
+        sorted_flows = sorted(aggregated.items())
+        dates = [datetime.combine(d, datetime.min.time(), tzinfo=timezone.utc) for d, _ in sorted_flows]
+        amounts = [float(amt) for _, amt in sorted_flows]
         
         logger.info(f"XIRR cash flows: {len(dates)} dates, "
                    f"total invested: {sum(a for a in amounts if a < 0):.2f}, "

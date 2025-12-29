@@ -251,6 +251,11 @@ class CorporateActionService:
                 today = date.today()
                 
                 for split_date, ratio in cached_splits:
+                    # SPLIT BLACKLIST check for erroneous data (e.g. phantom 6x split for BYD)
+                    if ticker == 'CNE100000296' and split_date.strftime('%Y-%m-%d') == '2025-07-30' and abs(ratio - 6.0) < 0.1:
+                         logger.warning(f"Ignoring BLACKLISTED split for {ticker} on {split_date} (ratio: {ratio}x)")
+                         continue
+                        
                     # Filter future dates from cache
                     if split_date > today:
                         logger.warning(f"Ignoring cached future split for {ticker} on {split_date}")
