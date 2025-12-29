@@ -318,6 +318,22 @@ class MarketDataCache:
             conn.commit()
             logger.info(f"Cached {len(splits)} splits for {ticker}")
     
+    def clear_splits(self, ticker: str):
+        """
+        Clear all cached split data for a specific ticker.
+        Use this to remove incorrect split data.
+        
+        Args:
+            ticker: Ticker symbol
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM splits WHERE ticker = ?", (ticker,))
+            deleted_count = cursor.rowcount
+            conn.commit()
+            logger.info(f"Cleared {deleted_count} split records for {ticker}")
+            return deleted_count
+    
     def clear_old_data(self, days: int = 365):
         """
         Clear cached data older than specified days.

@@ -25,6 +25,9 @@ TICKER_OVERRIDES = {
     'US02079K3059': 'GOOGL',  # Alphabet Class A
     'US0404131064': 'ARKK',  # ARK Innovation ETF
     
+    # Asian stocks
+    'CNE100000296': '1211.HK',  # BYD Company (Hong Kong)
+    
     # European ETFs - add .L suffix for London listing or use local ticker
     'IE000716YHJ7': 'FWRA.L',  # Invesco FTSE All-World UCITS ETF (London)
     'AT0000A0E9W5': 'SPIW.DE',  # Example - adjust as needed
