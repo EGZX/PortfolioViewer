@@ -18,8 +18,9 @@ from parsers.enhanced_transaction import Transaction  # Import enhanced model
 from calculators.portfolio import Portfolio
 from calculators.metrics import xirr, calculate_absolute_return
 from services.market_data import fetch_prices
-from services.corporate_actions import CorporateActionService  # New import
-from services.fx_rates import FXRateService  # New import
+from services.corporate_actions import CorporateActionService
+from services.fx_rates import FXRateService
+from services.data_validator import DataValidator, ValidationIssue  # Data quality
 from charts.visualizations import create_allocation_donut, create_performance_chart
 from utils.logging_config import setup_logger
 from utils.auth import check_authentication, show_logout_button
@@ -204,6 +205,39 @@ def main():
             st.warning(f"⚠️ Could not fetch historical FX rates: {str(e)}")
             logger.error(f"Historical FX error: {e}", exc_info=True)
             # Continue with default/current FX rates
+    
+    # Validate data quality
+    with st.spinner("✓ Validating data quality..."):
+        try:
+            validator = DataValidator()
+            validation_issues = validator.validate_all(transactions)
+            summary = validator.get_summary()
+            
+            if validation_issues:
+                # Display validation summary in sidebar
+                if summary['ERROR'] > 0:
+                    st.sidebar.error(f"❌ {summary['ERROR']} data errors found")
+                if summary['WARNING'] > 0:
+                    st.sidebar.warning(f"⚠️ {summary['WARNING']} warnings")
+                if summary['INFO'] > 0:
+                    st.sidebar.info(f"ℹ️ {summary['INFO']} info messages")
+                
+                # Show detailed validation results in expander
+                with st.sidebar.expander("Data Quality Report", expanded=(summary['ERROR'] > 0)):
+                    for issue in validation_issues[:20]:  # Show first 20
+                        severity_icon = "❌" if issue.severity == "ERROR" else ("⚠️" if issue.severity == "WARNING" else "ℹ️")
+                        st.text(f"{severity_icon} {issue.category}: {issue.message}")
+                        if issue.transaction_ref:
+                            st.caption(f"   Transaction: {issue.transaction_ref}")
+                    
+                    if len(validation_issues) > 20:
+                        st.text(f"... and {len(validation_issues) - 20} more issues")
+            else:
+                st.sidebar.success("✅ Data quality validation passed")
+                
+        except Exception as e:
+            logger.error(f"Data validation error: {e}", exc_info=True)
+            # Continue even if validation fails
     
     # Build portfolio
     with st.spinner("💼 Reconstructing portfolio state..."):
@@ -410,6 +444,70 @@ def main():
             st.metric("Total Withdrawn", f"€{portfolio.total_withdrawn:,.2f}")
             st.metric("Number of Holdings", len(portfolio.holdings))
             st.metric("Number of Transactions", len(transactions))
+    
+    # Transaction History
+    st.divider()
+    st.subheader("📝 Transaction History")
+    
+    try:
+        # Create transaction history DataFrame
+        trans_data = []
+        for trans in sorted(transactions, key=lambda t: t.date, reverse=True):
+            trans_data.append({
+                'Date': trans.date.strftime('%Y-%m-%d'),
+                'Type': trans.type.value,
+                'Ticker': trans.ticker or '-',
+                'Name': trans.name or '-',
+                'Asset Type': trans.asset_type.value if hasattr(trans, 'asset_type') else 'Unknown',
+                'Shares': float(trans.shares) if trans.shares != 0 else '-',
+                'Price': f"€{float(trans.price):.2f}" if trans.price != 0 else '-',
+                'Fees': f"€{float(trans.fees):.2f}" if trans.fees != 0 else '-',
+                'Total': f"€{float(trans.total):,.2f}",
+                'Currency': trans.original_currency,
+                'FX Rate': f"{float(trans.fx_rate):.4f}" if trans.fx_rate != 1 else '-',
+                'Broker': trans.broker or '-',
+            })
+        
+        trans_df = pd.DataFrame(trans_data)
+        
+        if not trans_df.empty:
+            # Add filters
+            col_filter1, col_filter2, col_filter3 = st.columns(3)
+            
+            with col_filter1:
+                trans_types = ['All'] + sorted(trans_df['Type'].unique().tolist())
+                selected_type = st.selectbox("Filter by Type", trans_types)
+            
+            with col_filter2:
+                tickers = ['All'] + sorted([t for t in trans_df['Ticker'].unique() if t != '-'])
+                selected_ticker = st.selectbox("Filter by Ticker", tickers)
+            
+            with col_filter3:
+                asset_types = ['All'] + sorted(trans_df['Asset Type'].unique().tolist())
+                selected_asset_type = st.selectbox("Filter by Asset Type", asset_types)
+            
+            # Apply filters
+            filtered_df = trans_df.copy()
+            if selected_type != 'All':
+                filtered_df = filtered_df[filtered_df['Type'] == selected_type]
+            if selected_ticker != 'All':
+                filtered_df = filtered_df[filtered_df['Ticker'] == selected_ticker]
+            if selected_asset_type != 'All':
+                filtered_df = filtered_df[filtered_df['Asset Type'] == selected_asset_type]
+            
+            st.dataframe(
+                filtered_df,
+                use_container_width=True,
+                hide_index=True
+            )
+            
+            st.caption(f"Showing {len(filtered_df)} of {len(trans_df)} transactions")
+        else:
+            st.info("No transactions to display")
+            
+    except Exception as e:
+        st.error(f"Failed to display transaction history: {e}")
+        logger.error(f"Transaction history error: {e}", exc_info=True)
 
 
 if __name__ == "__main__":
