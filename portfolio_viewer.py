@@ -459,7 +459,7 @@ def main():
                 'Ticker': trans.ticker or '-',
                 'Name': trans.name or '-',
                 'Asset Type': trans.asset_type.value if hasattr(trans, 'asset_type') else 'Unknown',
-                'Shares': float(trans.shares) if trans.shares != 0 else '-',
+                'Shares': float(trans.shares) if trans.shares != 0 else 0.0,  # Keep numeric for Arrow
                 'Price': f"€{float(trans.price):.2f}" if trans.price != 0 else '-',
                 'Fees': f"€{float(trans.fees):.2f}" if trans.fees != 0 else '-',
                 'Total': f"€{float(trans.total):,.2f}",

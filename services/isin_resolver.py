@@ -31,41 +31,33 @@ class ISINResolver:
         """
         Attempt to resolve ISIN to Yahoo Finance ticker.
         
+        NOTE: The heuristic resolution has been disabled as it was creating
+        invalid tickers. ISINs are now returned as-is, which will cause price
+        fetch to fail, but the portfolio will use last transaction price as
+        fallback (which is more accurate than invalid/delisted ticker prices).
+        
         Args:
             isin: ISIN code (e.g., 'DE000BASF111')
             fallback_ticker: Fallback ticker if ISIN can't be resolved
         
         Returns:
-            Yahoo Finance ticker symbol (may still be ISIN if unresolvable)
+            Yahoo Finance ticker symbol (will be ISIN if unresolvable)
         """
         if not isin or len(isin) != 12:
             return fallback_ticker or isin
         
-        # Extract country code (first 2 characters)
-        country_code = isin[:2]
-        
-        # For European stocks, try to construct ticker from ISIN
-        if country_code in cls.EXCHANGE_PATTERNS:
-            exchange_suffix = cls.EXCHANGE_PATTERNS[country_code]
-            
-            # Extract numeric/alpha part and construct ticker
-            # This is a heuristic - may not always work
-            # For German stocks: DE000BASF111 -> try BASF.DE
-            # Extract the company identifier (usually characters 5-9)
-            company_part = isin[5:9].rstrip('0')
-            
-            if company_part:
-                ticker = f"{company_part}{exchange_suffix}"
-                logger.info(f"Resolved ISIN {isin} -> {ticker} (heuristic)")
-                return ticker
-        
-        # If we have a fallback, use it
+        # If we have a fallback ticker explicitly provided, use it
         if fallback_ticker:
-            logger.info(f"Using fallback ticker for {isin}: {fallback_ticker}")
+            logger.info(f"Using provided ticker for {isin}: {fallback_ticker}")
             return fallback_ticker
         
-        # Last resort: return ISIN itself (will likely fail price fetch)
-        logger.warning(f"Could not resolve ISIN {isin}, using as ticker")
+        # Heuristic resolution is disabled - it was creating invalid tickers
+        # like "0001", "53R2", etc. that don't exist on Yahoo Finance
+        # 
+        # Return ISIN as-is. Yahoo Finance will fail to fetch price, but
+        # portfolio valuation will use last transaction price as fallback,
+        # which is more accurate than using a wrong/delisted ticker's price.
+        logger.debug(f"Returning ISIN as ticker: {isin} (use TICKER_OVERRIDES in market_data.py for known mappings)")
         return isin
     
     @classmethod

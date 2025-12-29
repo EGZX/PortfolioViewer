@@ -123,7 +123,14 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 
                 pos.shares -= t.shares
                 if pos.shares < 0:
-                    logger.warning(f"{t.ticker}: Selling more shares than owned ({t.shares} > {pos.shares + t.shares})")
+                    logger.warning(
+                        f"{t.ticker}: Selling more shares than owned! "
+                        f"Date: {t.date.strftime('%Y-%m-%d')}, "
+                        f"Sell qty: {t.shares}, "
+                        f"Holdings before: {pos.shares + t.shares}, "
+                        f"Result: {pos.shares}. "
+                        f"Possible causes: missing buy transactions, split adjustment error, or data issue."
+                    )
                     pos.shares = Decimal(0) # Ensure shares don't go negative
                     pos.cost_basis = Decimal(0) # Reset cost basis if all shares are gone
                 # Note: Don't add to total_withdrawn here - that's only for TRANSFER_OUT
