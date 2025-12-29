@@ -94,20 +94,28 @@ The parser automatically detects:
 
 ```
 PortfolioViewer/
-├── portfolio_viewer.py       # Main Streamlit app
-├── requirements.txt           # Dependencies
+├── portfolio_viewer.py         # Main Streamlit app
+├── requirements.txt            # Dependencies
+├── generate_cache_key.py       # NEW: Encryption key generator
+├── PERFORMANCE_AND_LOGGING.md  # NEW: Performance & logging docs
+├── data/                       # NEW: Cache database (git ignored)
+│   └── market_cache.db
+├── logs/                       # NEW: Log files (git ignored)
+│   └── portfolio_viewer.log
 ├── parsers/
-│   └── csv_parser.py         # CSV ingestion with auto-detection
+│   └── csv_parser.py          # CSV ingestion with auto-detection
 ├── calculators/
-│   ├── portfolio.py          # Portfolio state manager
-│   └── metrics.py            # XIRR & performance calculations
+│   ├── portfolio.py           # Portfolio state manager
+│   └── metrics.py             # XIRR & performance calculations
 ├── services/
-│   └── market_data.py        # yfinance integration
+│   ├── market_cache.py        # NEW: SQLite cache for prices/splits
+│   ├── market_data.py         # yfinance integration (cached)
+│   └── corporate_actions.py   # Stock splits with caching
 ├── charts/
-│   └── visualizations.py     # Plotly charts
+│   └── visualizations.py      # Plotly charts
 └── utils/
-    ├── auth.py               # Password authentication
-    └── logging_config.py     # Structured logging
+    ├── auth.py                # Password authentication
+    └── logging_config.py      # Structured file logging
 ```
 
 ## Security
@@ -120,12 +128,30 @@ The app uses **SHA-256 hashing** for password storage. Passwords are:
 - ✅ Stored in `.streamlit/secrets.toml` (excluded from git)
 - ✅ Session-based authentication (logout available)
 
+### Market Data Encryption (Optional)
+
+The market data cache can be encrypted for added security:
+- ✅ AES-based encryption (Fernet)
+- ✅ Encrypted at rest in SQLite database
+- ✅ Encryption key stored in `.streamlit/secrets.toml`
+- ✅ Recommended for public repositories
+
+**Setup**:
+```bash
+# Generate encryption key
+python generate_cache_key.py
+
+# Add to .streamlit/secrets.toml
+# MARKET_CACHE_ENCRYPTION_KEY = "generated-key-here"
+```
+
 ### Best Practices
 
 1. **Never commit** `.streamlit/secrets.toml` to version control
 2. Use a **strong password** (12+ characters, mixed case, numbers, symbols)
 3. **Rotate passwords** regularly
 4. Deploy on private networks or use HTTPS in production
+5. Enable cache encryption if repository is public
 
 ## Performance Metrics
 
