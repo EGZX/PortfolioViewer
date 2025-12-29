@@ -59,7 +59,7 @@ class CorporateActionService:
             ticker: Stock ticker symbol
         
         Returns:
-            List of CorporateAction objects
+            List of CorporateAction objects (excludes future-dated splits)
         """
         try:
             logger.info(f"Fetching split history for {ticker}")
@@ -70,8 +70,28 @@ class CorporateActionService:
                 logger.info(f"No splits found for {ticker}")
                 return []
             
+            # Get today's date to filter out future splits
+            from datetime import date
+            today = date.today()
+            
             actions = []
+            future_splits_count = 0
+            
             for split_date, ratio in splits.items():
+                # Convert to date for comparison
+                split_date_obj = split_date.date()
+                
+                # CRITICAL: Ignore future-dated splits
+                # These are often incorrect/speculative data from yfinance
+                # and would incorrectly adjust historical transactions
+                if split_date_obj > today:
+                    logger.warning(
+                        f"{ticker}: Ignoring future-dated split on {split_date_obj} "
+                        f"(ratio: {ratio}x). This is likely erroneous data from yfinance."
+                    )
+                    future_splits_count += 1
+                    continue
+                
                 # yfinance returns the ratio as a multiplier
                 # e.g., 2.0 for a 2-for-1 split, 0.5 for a 1-for-2 reverse split
                 
@@ -88,13 +108,19 @@ class CorporateActionService:
                 
                 action = CorporateAction(
                     ticker=ticker,
-                    action_date=split_date.date(),
+                    action_date=split_date_obj,
                     action_type=action_type,
                     ratio_from=ratio_from,
                     ratio_to=ratio_to
                 )
                 actions.append(action)
                 logger.info(f"Found split: {action}")
+            
+            if future_splits_count > 0:
+                logger.warning(
+                    f"{ticker}: Filtered out {future_splits_count} future-dated split(s). "
+                    f"Using only {len(actions)} historical splits."
+                )
             
             return actions
             

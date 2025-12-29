@@ -355,12 +355,12 @@ class CSVParser:
                     error_categories['missing_price'] += 1
                     logger.warning(error)
                 
-                # Get asset type (optional, will auto-detect if not provided)
+                # Get asset type (optional, with broker format normalization)
                 asset_type_val = get_val('asset_type')
                 if asset_type_val and asset_type_val != '' and not pd.isna(asset_type_val):
-                    try:
-                        asset_type = AssetType(asset_type_val)
-                    except:
+                    # Use normalize to handle various broker formats
+                    asset_type = AssetType.normalize(asset_type_val)
+                    if not asset_type:
                         asset_type = AssetType.UNKNOWN
                 else:
                     asset_type = AssetType.UNKNOWN  # Will be auto-detected by model

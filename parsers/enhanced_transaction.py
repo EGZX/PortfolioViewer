@@ -102,6 +102,79 @@ class AssetType(str, Enum):
     UNKNOWN = "Unknown"
     
     @classmethod
+    def normalize(cls, value: str) -> Optional['AssetType']:
+        """Normalize asset type from various broker formats (German, English, etc)."""
+        if not value:
+            return cls.UNKNOWN
+        
+        value_upper = value.strip().upper()
+        
+        # Direct mapping for various broker formats
+        asset_map = {
+            # English
+            "STOCK": cls.STOCK,
+            "STOCKS": cls.STOCK,
+            "SHARE": cls.STOCK,
+            "SHARES": cls.STOCK,
+            "EQUITY": cls.STOCK,
+            "EQUITIES": cls.STOCK,
+            "COMMON STOCK": cls.STOCK,
+            
+            # German
+            "AKTIE": cls.STOCK,
+            "AKTIEN": cls.STOCK,
+            
+            # ETF
+            "ETF": cls.ETF,
+            "ETFS": cls.ETF,
+            "ETC": cls.ETF,
+            "ETN": cls.ETF,
+            "INDEX FUND": cls.ETF,
+            
+            # Bonds
+            "BOND": cls.BOND,
+            "BONDS": cls.BOND,
+            "ANLEIHE": cls.BOND,
+            "ANLEIHEN": cls.BOND,
+            
+            # Options/Derivatives
+            "OPTION": cls.OPTION,
+            "OPTIONS": cls.OPTION,
+            "CALL": cls.OPTION,
+            "PUT": cls.OPTION,
+            "WARRANT": cls.WARRANT,
+            "WARRANTS": cls.WARRANT,
+            "OPTIONSSCHEIN": cls.WARRANT,
+            
+            # Futures
+            "FUTURE": cls.FUTURE,
+            "FUTURES": cls.FUTURE,
+            
+            # Crypto
+            "CRYPTO": cls.CRYPTO,
+            "CRYPTOCURRENCY": cls.CRYPTO,
+            "KRYPTO": cls.CRYPTO,
+            
+            # Mutual Funds
+            "MUTUAL FUND": cls.MUTUAL_FUND,
+            "FUND": cls.MUTUAL_FUND,
+            "FONDS": cls.MUTUAL_FUND,
+            
+            # Cash
+            "CASH": cls.CASH,
+            "MONEY MARKET": cls.CASH,
+            
+            # Commodity
+            "COMMODITY": cls.COMMODITY,
+            "COMMODITIES": cls.COMMODITY,
+        }
+        
+        # Clean value for lookup
+        clean_value = value_upper.replace("-", " ").replace("_", " ")
+        
+        return asset_map.get(clean_value, cls.UNKNOWN)
+    
+    @classmethod
     def infer_from_ticker(cls, ticker: str) -> 'AssetType':
         """Infer asset type from ticker symbol patterns."""
         if not ticker:
