@@ -13,10 +13,13 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 import pandas as pd
 
-from parsers.csv_parser import CSVParser, Transaction
+from parsers.csv_parser import CSVParser
+from parsers.enhanced_transaction import Transaction  # Import enhanced model
 from calculators.portfolio import Portfolio
 from calculators.metrics import xirr, calculate_absolute_return
 from services.market_data import fetch_prices
+from services.corporate_actions import CorporateActionService  # New import
+from services.fx_rates import FXRateService  # New import
 from charts.visualizations import create_allocation_donut, create_performance_chart
 from utils.logging_config import setup_logger
 from utils.auth import check_authentication, show_logout_button
@@ -150,6 +153,57 @@ def main():
             st.error(f"❌ Failed to parse CSV: {str(e)}")
             logger.error(f"CSV parsing error: {e}", exc_info=True)
             return
+    
+    # Apply stock split adjustments
+    with st.spinner("🔄 Detecting and applying stock splits..."):
+        try:
+            adjusted_transactions, split_log = CorporateActionService.detect_and_apply_splits(
+                transactions,
+                fetch_splits=True
+            )
+            
+            transactions = adjusted_transactions
+            
+            if split_log:
+                st.sidebar.info(f"📊 Applied {len(split_log)} split adjustments")
+                with st.sidebar.expander("Split Adjustments", expanded=False):
+                    for log_entry in split_log[:5]:  # Show first 5
+                        st.text(log_entry)
+                    if len(split_log) > 5:
+                        st.text(f"... and {len(split_log) - 5} more")
+            else:
+                st.sidebar.info("✓ No splits detected")
+                
+        except Exception as e:
+            st.warning(f"⚠️ Could not fetch split data: {str(e)}")
+            logger.error(f"Split detection error: {e}", exc_info=True)
+            # Continue without split adjustments
+    
+    # Apply historical FX rates (convert to EUR at historical rates)
+    with st.spinner("💱 Applying historical FX rates..."):
+        try:
+            fx_conversions = 0
+            for trans in transactions:
+                if trans.original_currency != 'EUR':
+                    # Fetch historical FX rate for this transaction date
+                    historical_rate = FXRateService.get_rate(
+                        trans.original_currency,
+                        'EUR',
+                        trans.date.date()
+                    )
+                    
+                    # Update FX rate if we got a historical one
+                    if historical_rate != trans.fx_rate:
+                        trans.fx_rate = historical_rate
+                        fx_conversions += 1
+            
+            if fx_conversions > 0:
+                st.sidebar.success(f"💱 Applied {fx_conversions} historical FX rates")
+            
+        except Exception as e:
+            st.warning(f"⚠️ Could not fetch historical FX rates: {str(e)}")
+            logger.error(f"Historical FX error: {e}", exc_info=True)
+            # Continue with default/current FX rates
     
     # Build portfolio
     with st.spinner("💼 Reconstructing portfolio state..."):
@@ -334,21 +388,7 @@ def main():
             
             st.dataframe(
                 holdings_display,
-                use_container_width=True, # Keeping this for dataframe if the warning was only for charts? 
-                # The warning appeared multiple times.
-                # Let's assume it applies here too if valid.
-                # But st.dataframe uses use_container_width.
-                # I will risk leaving dataframe as is if I am unsure, or change it?
-                # Actually, the warning timestamps align with the charts.
-                # 18:56:43.024 (Allocation Chart)
-                # 18:56:43.065 (Performance Chart)
-                # 18:56:43.070 (Holdings Table?)
-                # I'll stick to use_container_width for dataframe for now as 'width="stretch"' might be specific to plotly_chart if it's a wrapper.
-                # Wait, st.dataframe has use_container_width.
-                # I will NOT change dataframe yet to avoid breaking it if the warning was specific to Plotly.
-                # Wait, I previously read the log: 
-                # "Please replace use_container_width with width."
-                # I will only change the charts first.
+                use_container_width=True,
                 hide_index=True
             )
         else:

@@ -3,12 +3,26 @@
 import time
 from decimal import Decimal
 from typing import Dict, Optional, List
+import pandas as pd
 import yfinance as yf
 import streamlit as st
 
 from utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
+
+
+# Ticker overrides for ISINs that yfinance doesn't handle correctly
+TICKER_OVERRIDES = {
+    # US ADRs - yfinance works better with ticker symbols than ISINs
+    'US8740391003': 'TSM',  # Taiwan Semiconductor ADR
+    'US02079K3059': 'GOOGL',  # Alphabet Class A
+    'US0404131064': 'ARKK',  # ARK Innovation ETF
+    
+    # European ETFs - add .L suffix for London listing or use local ticker
+    'IE000716YHJ7': 'FWRA.L',  # Invesco FTSE All-World UCITS ETF (London)
+    'AT0000A0E9W5': 'SPIW.DE',  # Example - adjust as needed
+}
 
 
 @st.cache_data(ttl=300)  # Cache for 5 minutes
@@ -23,15 +37,26 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         Dictionary mapping ticker to current price (EUR) or None if failed
     """
     logger.info(f"Fetching prices for {len(tickers)} tickers")
+    
+    # Apply ticker overrides
+    mapped_tickers = []
+    ticker_map = {}  # original -> mapped
+    for ticker in tickers:
+        mapped = TICKER_OVERRIDES.get(ticker, ticker)
+        if mapped != ticker:
+            logger.info(f"Ticker override: {ticker} -> {mapped}")
+        mapped_tickers.append(mapped)
+        ticker_map[mapped] = ticker  # Reverse map for results
+    
     prices = {}
     
-    if not tickers:
+    if not mapped_tickers:
         return prices
     
     # Batch fetch for efficiency
     try:
         data = yf.download(
-            tickers,
+            mapped_tickers,  # Use mapped tickers
             period='1d',
             interval='1d',
             group_by='ticker',
@@ -40,48 +65,52 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         )
         
         # Handle single ticker vs multiple tickers
-        if len(tickers) == 1:
-            ticker = tickers[0]
+        if len(mapped_tickers) == 1:
+            mapped_ticker = mapped_tickers[0]
+            original_ticker = ticker_map.get(mapped_ticker, mapped_ticker)
             if not data.empty and 'Close' in data.columns:
                 price = data['Close'].iloc[-1]
                 if price is not None and not pd.isna(price):
-                    prices[ticker] = float(price)
-                    logger.info(f"{ticker}: {price:.2f}")
+                    prices[original_ticker] = float(price)  # Map back to original
+                    logger.info(f"{original_ticker}: {price:.2f}")
                 else:
-                    prices[ticker] = None
-                    logger.warning(f"{ticker}: No current price available")
+                    prices[original_ticker] = None
+                    logger.warning(f"{original_ticker}: No current price available")
             else:
-                prices[ticker] = None
-                logger.warning(f"{ticker}: Download failed")
+                prices[original_ticker] = None
+                logger.warning(f"{original_ticker}: Download failed")
         else:
             # Multiple tickers
-            for ticker in tickers:
+            for mapped_ticker in mapped_tickers:
+                original_ticker = ticker_map.get(mapped_ticker, mapped_ticker)
                 try:
-                    if ticker in data.columns.levels[0]:
-                        ticker_data = data[ticker]
+                    if mapped_ticker in data.columns.levels[0]:
+                        ticker_data = data[mapped_ticker]
                         if not ticker_data.empty and 'Close' in ticker_data.columns:
                             price = ticker_data['Close'].iloc[-1]
                             if price is not None and not pd.isna(price):
-                                prices[ticker] = float(price)
-                                logger.info(f"{ticker}: {price:.2f}")
+                                prices[original_ticker] = float(price)  # Map back
+                                logger.info(f"{original_ticker}: {price:.2f}")
                             else:
-                                prices[ticker] = None
-                                logger.warning(f"{ticker}: No current price")
+                                prices[original_ticker] = None
+                                logger.warning(f"{original_ticker}: No current price")
                         else:
-                            prices[ticker] = None
-                            logger.warning(f"{ticker}: No data in response")
+                            prices[original_ticker] = None
+                            logger.warning(f"{original_ticker}: No data in response")
                     else:
-                        prices[ticker] = None
-                        logger.warning(f"{ticker}: Not in response")
+                        prices[original_ticker] = None
+                        logger.warning(f"{original_ticker}: Not in response")
                 except Exception as e:
-                    prices[ticker] = None
-                    logger.error(f"{ticker}: Error extracting price - {e}")
+                    prices[original_ticker] = None
+                    logger.error(f"{original_ticker}: Error extracting price - {e}")
         
     except Exception as e:
         logger.error(f"Batch fetch failed: {e}")
-        # Fallback: fetch individually
-        for ticker in tickers:
-            prices[ticker] = fetch_single_price(ticker)
+        # Fallback: fetch individually using ORIGINAL tickers (with override logic inside fetch_single_price)
+        for original_ticker in tickers:
+            mapped_ticker = TICKER_OVERRIDES.get(original_ticker, original_ticker)
+            price = fetch_single_price(mapped_ticker)
+            prices[original_ticker] = price  # Store with original key
     
     success_count = sum(1 for p in prices.values() if p is not None)
     logger.info(f"Successfully fetched {success_count}/{len(tickers)} prices")
@@ -123,7 +152,7 @@ def fetch_single_price(ticker: str, max_retries: int = 3) -> Optional[float]:
             hist = stock.history(period='5d')
             if not hist.empty and 'Close' in hist.columns:
                 price = hist['Close'].iloc[-1]
-                if price is not None and  price > 0:
+                if price is not None and price > 0:
                     logger.info(f"{ticker}: {price:.2f} (from historical)")
                     return float(price)
             
@@ -172,7 +201,3 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     except Exception as e:
         logger.error(f"Error fetching FX rate {from_currency}/{to_currency}: {e}")
         return Decimal(1)
-
-
-# Import pandas for data handling
-import pandas as pd
