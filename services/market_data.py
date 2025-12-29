@@ -7,7 +7,7 @@ import pandas as pd
 import yfinance as yf
 import streamlit as st
 
-from utils.logging_config import setup_logger
+from utils.logging_config import setup_logger, get_perf_logger
 from services.isin_resolver import ISINResolver
 from services.multi_provider import MarketDataAggregator
 
@@ -42,6 +42,8 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         Dictionary mapping ticker to current price (EUR) or None if failed
     """
     logger.info(f"Fetching prices for {len(tickers)} tickers")
+    
+    with get_perf_logger(logger, f"fetch_prices({len(tickers)} tickers)", threshold_ms=3000):
     
     # Step 1: Resolve ISINs to tickers
     resolved_tickers = []
@@ -151,10 +153,15 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
             
             prices[original_ticker] = price
     
-    success_count = sum(1 for p in prices.values() if p is not None)
-    logger.info(f"Successfully fetched {success_count}/{len(tickers)} prices")
-    
-    return prices
+        success_count = sum(1 for p in prices.values() if p is not None)
+        fail_count = len(tickers) - success_count
+        
+        if fail_count > 0:
+            logger.warning(f"Price fetch complete: {success_count}/{len(tickers)} succeeded, {fail_count} failed")
+        else:
+            logger.info(f"Price fetch complete: {success_count}/{len(tickers)} succeeded")
+        
+        return prices
 
 
 def fetch_single_price(ticker: str, max_retries: int = 3) -> Optional[float]:

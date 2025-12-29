@@ -55,21 +55,22 @@ class ISINResolver:
             company_part = isin[5:9].rstrip('0')
             
             if company_part:
-                ticker = f\"{company_part}{exchange_suffix}\"
-                logger.info(f\"Resolved ISIN {isin} -> {ticker} (heuristic)\")\n                return ticker
+                ticker = f"{company_part}{exchange_suffix}"
+                logger.info(f"Resolved ISIN {isin} -> {ticker} (heuristic)")
+                return ticker
         
         # If we have a fallback, use it
         if fallback_ticker:
-            logger.info(f\"Using fallback ticker for {isin}: {fallback_ticker}\")
+            logger.info(f"Using fallback ticker for {isin}: {fallback_ticker}")
             return fallback_ticker
         
         # Last resort: return ISIN itself (will likely fail price fetch)
-        logger.warning(f\"Could not resolve ISIN {isin}, using as ticker\")
+        logger.warning(f"Could not resolve ISIN {isin}, using as ticker")
         return isin
     
     @classmethod
     def needs_resolution(cls, identifier: str) -> bool:
-        \"\"\"Check if identifier is an ISIN that needs resolution.\"\"\"
+        """Check if identifier is an ISIN that needs resolution."""
         # ISIN format: 2-letter country code + 9 alphanumeric + 1 check digit
         if not identifier or len(identifier) != 12:
             return False
