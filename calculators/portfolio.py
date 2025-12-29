@@ -7,7 +7,7 @@ from decimal import Decimal
 from typing import Dict, List, Optional, Tuple
 import pandas as pd
 
-from parsers.csv_parser import Transaction, TransactionType
+from parsers.enhanced_transaction import Transaction, TransactionType
 from utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)

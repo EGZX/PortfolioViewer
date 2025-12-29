@@ -4,87 +4,15 @@ import csv
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from difflib import get_close_matches
-from enum import Enum
 from io import StringIO
 from typing import List, Dict, Optional, Any
 import pandas as pd
-from pydantic import BaseModel, validator, Field
 
+# Import enhanced transaction model
+from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
 from utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
-
-
-class TransactionType(str, Enum):
-    """Supported transaction types."""
-    BUY = "Buy"
-    SELL = "Sell"
-    DIVIDEND = "Dividend"
-    TRANSFER_IN = "TransferIn"
-    TRANSFER_OUT = "TransferOut"
-    INTEREST = "Interest"
-    COST = "cost"  # Fee/cost transactions
-    
-    @classmethod
-    def normalize(cls, value: str) -> Optional['TransactionType']:
-        """Normalize transaction type from various formats."""
-        value_upper = value.strip().upper()
-        
-        # Direct mapping
-        type_map = {
-            "BUY": cls.BUY,
-            "SELL": cls.SELL,
-            "DIVIDEND": cls.DIVIDEND,
-            "TRANSFERIN": cls.TRANSFER_IN,
-            "TRANSFER_IN": cls.TRANSFER_IN,
-            "TRANSFEROUT": cls.TRANSFER_OUT,
-            "TRANSFER_OUT": cls.TRANSFER_OUT,
-            "INTEREST": cls.INTEREST,
-            "COST": cls.COST,
-        }
-        
-        return type_map.get(value_upper.replace(" ", "").replace("-", ""))
-
-
-class Transaction(BaseModel):
-    """
-    Represents a single parsed transaction.
-    Validated using Pydantic.
-    """
-    date: datetime
-    type: TransactionType
-    ticker: Optional[str] = None
-    name: Optional[str] = None  # Added name field
-    shares: Decimal
-    price: Decimal
-    fees: Decimal
-    total: Decimal
-    original_currency: str = "EUR"
-    fx_rate: Decimal = Decimal(1)
-    broker: Optional[str] = None
-
-    class Config:
-        arbitrary_types_allowed = True
-
-    @validator('shares', pre=True)
-    def parse_shares(cls, v):
-        if isinstance(v, str):
-            v = v.replace(',', '.')
-        return Decimal(v)
-    
-    @validator('date')
-    def date_not_future(cls, v):
-        """Ensure transaction date is not in the future."""
-        if v > datetime.now():
-            raise ValueError(f'Transaction date cannot be in the future: {v}')
-        return v
-    
-    @validator('shares', 'fees', 'fx_rate')
-    def non_negative_financial(cls, v):
-        """Ensure financial values are non-negative."""
-        if v < 0:
-            raise ValueError(f'Financial value cannot be negative: {v}')
-        return v
 
 
 class CSVParser:
@@ -101,17 +29,21 @@ class CSVParser:
     
     # Column mapping templates
     COLUMN_MAPPINGS = {
-        'date': ['datetime', 'datum', 'transaction_date'],
+        'date': ['datetime', 'datum', 'transaction_date', 'time'],
         'type': ['type', 'typ', 'transaction_type', 'action'],
-        'ticker': ['identifier', 'isin', 'wkn', 'symbol', 'ticker'],
+        'ticker': ['symbol', 'ticker'],
+        'isin': ['isin', 'identifier', 'wkn', 'cusip'],
         'name': ['holdingname', 'holding_name', 'security', 'description', 'name'],
-        'shares': ['shares', 'quantity', 'units'],
+        'asset_type': ['asset_type', 'assettype', 'security_type', 'instrument_type'],
+        'shares': ['shares', 'quantity', 'units', 'amount'],
         'price': ['price', 'unit_price', 'share_price'],
         'fees': ['fee', 'fees', 'commission'],
-        'total': ['amount', 'total', 'net_amount', 'cash_flow'],
+        'total': ['total', 'net_amount', 'cash_flow', 'amount'],
         'original_currency': ['originalcurrency', 'currency', 'ccy'],
         'fx_rate': ['fxrate', 'exchange_rate', 'fx', 'rate'],
         'broker': ['broker', 'depot', 'account'],
+        'reference_id': ['reference_id', 'transaction_id', 'order_id', 'trade_id'],
+        'withholding_tax': ['withholding_tax', 'tax_withheld', 'withheld'],
     }
     
     def __init__(self):
@@ -378,9 +310,27 @@ class CSVParser:
                 ticker_val = get_val('ticker')
                 ticker = ticker_val if ticker_val and ticker_val != '' and not pd.isna(ticker_val) else None
 
+                # Get ISIN (optional)
+                isin_val = get_val('isin')
+                isin = isin_val if isin_val and isin_val != '' and not pd.isna(isin_val) else None
+                
+                # Use ticker or ISIN (prefer ISIN if both present)
+                if not ticker and isin:
+                    ticker = isin
+
                 # Get name (optional)
                 name_val = get_val('name')
                 name = name_val if name_val and name_val != '' and not pd.isna(name_val) else None
+                
+                # Get asset type (optional, will auto-detect if not provided)
+                asset_type_val = get_val('asset_type')
+                if asset_type_val and asset_type_val != '' and not pd.isna(asset_type_val):
+                    try:
+                        asset_type = AssetType(asset_type_val)
+                    except:
+                        asset_type = AssetType.UNKNOWN
+                else:
+                    asset_type = AssetType.UNKNOWN  # Will be auto-detected by model
                 
                 # Get currency
                 currency_val = get_val('original_currency', 'EUR')
@@ -390,12 +340,21 @@ class CSVParser:
                 broker_val = get_val('broker')
                 broker = broker_val if broker_val and broker_val != '' and not pd.isna(broker_val) else None
                 
+                # Get reference ID (optional)
+                ref_id_val = get_val('reference_id')
+                reference_id = ref_id_val if ref_id_val and ref_id_val != '' and not pd.isna(ref_id_val) else None
+                
+                # Get withholding tax (optional)
+                withholding_tax = self.normalize_decimal(get_val('withholding_tax', 0))
+                
                 # Create transaction
                 transaction = Transaction(
                     date=trans_date,
                     type=trans_type,
                     ticker=ticker,
+                    isin=isin,
                     name=name,
+                    asset_type=asset_type,
                     shares=shares,
                     price=price,
                     fees=fees,
@@ -403,6 +362,8 @@ class CSVParser:
                     original_currency=currency,
                     fx_rate=fx_rate,
                     broker=broker,
+                    reference_id=reference_id,
+                    withholding_tax=withholding_tax,
                 )
                 
                 transactions.append(transaction)
