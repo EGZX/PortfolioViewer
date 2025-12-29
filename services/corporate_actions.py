@@ -248,7 +248,14 @@ class CorporateActionService:
                 logger.info(f"Cache HIT: {ticker} has {len(cached_splits)} cached splits")
                 # Convert back to CorporateAction objects
                 split_actions = []
+                today = date.today()
+                
                 for split_date, ratio in cached_splits:
+                    # Filter future dates from cache
+                    if split_date > today:
+                        logger.warning(f"Ignoring cached future split for {ticker} on {split_date}")
+                        continue
+                        
                     if ratio > 1:
                         action = CorporateAction(
                             ticker=ticker,

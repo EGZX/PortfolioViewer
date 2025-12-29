@@ -18,20 +18,8 @@ logger = setup_logger(__name__)
 _fallback_aggregator = MarketDataAggregator()
 
 
-# Ticker overrides for ISINs that yfinance doesn't handle correctly
-TICKER_OVERRIDES = {
-    # US ADRs - yfinance works better with ticker symbols than ISINs
-    'US8740391003': 'TSM',  # Taiwan Semiconductor ADR
-    'US02079K3059': 'GOOGL',  # Alphabet Class A
-    'US0404131064': 'ARKK',  # ARK Innovation ETF
-    
-    # Asian stocks
-    'CNE100000296': '1211.HK',  # BYD Company (Hong Kong)
-    
-    # European ETFs - add .L suffix for London listing or use local ticker
-    'IE000716YHJ7': 'FWRA.L',  # Invesco FTSE All-World UCITS ETF (London)
-    'AT0000A0E9W5': 'SPIW.DE',  # Example - adjust as needed
-}
+# Initialize fallback providers
+_fallback_aggregator = MarketDataAggregator()
 
 
 @st.cache_data(ttl=300)  # Cache for 5 minutes
@@ -68,39 +56,29 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         
         logger.info(f"Cache: {len(prices)} hits, {len(tickers_to_fetch)} to fetch from API")
         
-        # Step 1: Resolve ISINs to tickers for tickers that need fetching
-        resolved_tickers = []
-        isin_resolution_log = []
-        for ticker in tickers_to_fetch:
-            if ISINResolver.needs_resolution(ticker):
-                resolved = ISINResolver.resolve_isin(ticker)
-                if resolved != ticker:
-                    isin_resolution_log.append(f"{ticker} -> {resolved}")
-                resolved_tickers.append(resolved)
-            else:
-                resolved_tickers.append(ticker)
-        
-        if isin_resolution_log:
-            logger.info(f"Resolved {len(isin_resolution_log)} ISINs: {isin_resolution_log[:5]}")
-        
-        # Step 2: Apply ticker overrides
+        # Step 1: Resolve ISINs to tickers
+        # ISINResolver now handles overrides internally
         mapped_tickers = []
         ticker_map = {}  # mapped -> original
-        for i, resolved_ticker in enumerate(resolved_tickers):
-            original_ticker = tickers_to_fetch[i]
+        
+        for original_ticker in tickers_to_fetch:
+            # Resolve ISIN if applicable, otherwise returns original
+            # Note: resolve_isin accepts non-ISINs and returns them as-is (mostly)
+            # or checks if we should even try resolving.
             
-            # Check if there's an override for the ORIGINAL ticker (might be ISIN)
-            mapped = TICKER_OVERRIDES.get(original_ticker, resolved_ticker)
-            if mapped != resolved_ticker:
-                logger.info(f"Ticker override: {original_ticker} -> {mapped}")
-            
-            # Skip empty tickers (fully sold positions)
-            if not mapped or mapped == '':
-                logger.warning(f"Skipping empty ticker for {original_ticker} (likely fully sold)")
-                continue
-            
-            mapped_tickers.append(mapped)
-            ticker_map[mapped] = original_ticker  # Reverse map for results
+            resolved_ticker = original_ticker
+            if ISINResolver.needs_resolution(original_ticker):
+                resolved_ticker = ISINResolver.resolve_isin(original_ticker)
+                if resolved_ticker != original_ticker:
+                    logger.debug(f"Resolved {original_ticker} -> {resolved_ticker}")
+
+            # Skip empty tickers (fully sold positions or failed resolution returning None?)
+            # resolve_isin returns original if failed, but let's be safe
+            if not resolved_ticker:
+                 resolved_ticker = original_ticker
+
+            mapped_tickers.append(resolved_ticker)
+            ticker_map[resolved_ticker] = original_ticker  # Reverse map
         
         if not mapped_tickers:
             return prices
@@ -168,7 +146,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
                     continue  # Skip if already fetched
                 
                 # Try mapped ticker first
-                mapped_ticker = TICKER_OVERRIDES.get(original_ticker, original_ticker)
+                mapped_ticker = ISINResolver.resolve_isin(original_ticker)
                 price = fetch_single_price(mapped_ticker)
                 
                 # If that fails, try fallback providers

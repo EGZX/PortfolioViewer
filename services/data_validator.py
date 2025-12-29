@@ -86,7 +86,7 @@ class DataValidator:
                 elif trans.type == TransactionType.SELL:
                     if holdings[trans.ticker] < trans.shares:
                         self.issues.append(ValidationIssue(
-                            ValidationIssue.SEVERITY_ERROR,
+                            ValidationIssue.SEVERITY_WARNING,
                             "Orphaned Sell",
                             f"Selling {trans.shares} shares of {trans.ticker} but only {holdings[trans.ticker]} owned",
                             trans

@@ -167,6 +167,10 @@ class AssetType(str, Enum):
             # Commodity
             "COMMODITY": cls.COMMODITY,
             "COMMODITIES": cls.COMMODITY,
+
+            # General Security (common in some exports)
+            "SECURITY": cls.STOCK,
+            "WERTPAPIER": cls.STOCK,
         }
         
         # Clean value for lookup
@@ -182,6 +186,13 @@ class AssetType(str, Enum):
         
         ticker_upper = ticker.upper()
         
+        # Check for ISIN format (2 letters, 9 alnum, 1 digit check) - length 12
+        # Simple heuristic: starts with 2 letters, length 12
+        if len(ticker) == 12 and ticker[0:2].isalpha() and ticker.isalnum():
+            # It's indistinguishable from a Stock/ETF/Bond just by ISIN
+            # But it is definitely NOT an Option chain symbol usually
+            return cls.STOCK
+        
         # ETF patterns (common suffixes)
         if any(ticker_upper.endswith(suffix) for suffix in ['.L', '.DE', '.PA']) and \
            any(keyword in ticker_upper for keyword in ['ETF', 'ETC', 'ETN']):
@@ -192,7 +203,8 @@ class AssetType(str, Enum):
             return cls.CRYPTO
         
         # Option patterns (common formats)
-        if len(ticker) > 10 and any(c.isdigit() for c in ticker):
+        # OCC symbols are 21 chars. Some broker symbols are shorter but usually > 15
+        if len(ticker) > 15 and any(c.isdigit() for c in ticker):
             # Likely an option chain symbol
             return cls.OPTION
         

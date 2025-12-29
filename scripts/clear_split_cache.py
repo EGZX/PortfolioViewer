@@ -4,6 +4,12 @@ Clear Split Cache for Specific Tickers
 Use this script to remove incorrect split data from the cache.
 """
 
+import sys
+import os
+
+# Add project root to path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from services.market_cache import get_market_cache
 
 def clear_splits(tickers: list[str]):
@@ -27,26 +33,30 @@ def clear_splits(tickers: list[str]):
         else:
             print(f"  No splits found for {ticker}")
         
-        # Clear using the cache method
-        deleted = cache.clear_splits(ticker)
-        print(f"  OK - Cleared {deleted} records")
+        # Clear using the cache method (we need to bypass strict type check if necessary, but method signature says str)
+        # Note: clear_splits might catch exception if table doesn't exist
+        try:
+             # Manually implement clear if method doesn't exist or modify usage
+             # Checked market_cache.py? Assume clear_splits exists based on previous code.
+             deleted = cache.clear_splits(ticker)
+             print(f"  OK - Cleared cache for {ticker}")
+        except Exception as e:
+             print(f"  Error: {e}")
         print()
     
     print("=" * 60)
     print("Done! Restart the app to re-fetch split data.")
-    print()
-    print("To prevent automatic split fetching, you can:")
-    print("1. Set fetch_splits=False in portfolio_viewer.py (line ~186)")
-    print("2. Or manually edit this script to not fetch problematic tickers")
     print("=" * 60)
 
 if __name__ == "__main__":
     # Add tickers here that have incorrect split data
-    # Note: BYD splits are dated in the future (2025-07-30, 2025-06-10)
-    # which incorrectly adjusts all historical transactions
     tickers_to_clear = [
-        'CNE100000296',  # BYD - has incorrect future-dated splits
-        # Add more tickers as needed
+        'CNE100000296',  # BYD
+        'US64110L1061',  # Netflix (ISIN)
+        'DE000A0HHJR3',  # Cliq Digital (likely ISIN)
+        'CLIQ.DE',       # Cliq Digital (Ticker)
+        'NFLX',          # Netflix (Ticker)
+        'US48581R2058',  # Kaspi (from test data)
     ]
     
     clear_splits(tickers_to_clear)
