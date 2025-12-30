@@ -95,6 +95,16 @@ class MarketDataCache:
                 )
             """)
             
+            # Transactions cache table (stores last uploaded CSV)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS transactions_cache (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    csv_content TEXT NOT NULL,
+                    filename TEXT,
+                    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            
             # Indexes
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_prices_ticker ON prices(ticker, date DESC)")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_splits_ticker ON splits(ticker, split_date DESC)")
@@ -248,6 +258,39 @@ class MarketDataCache:
                 (isin, ticker, source)
             )
             conn.commit()
+
+    # ==================== Transaction Cache Methods ====================
+
+    def save_transactions_csv(self, csv_content: str, filename: str = "uploaded.csv"):
+        """Save CSV content to cache for auto-loading."""
+        with self._get_conn() as conn:
+            cursor = conn.cursor()
+            # Delete old cached transactions (keep only latest)
+            cursor.execute("DELETE FROM transactions_cache")
+            # Insert new
+            cursor.execute(
+                "INSERT INTO transactions_cache (csv_content, filename) VALUES (?, ?)",
+                (csv_content, filename)
+            )
+            conn.commit()
+            logger.info(f"Saved transactions CSV to cache: {filename}")
+
+    def get_last_transactions_csv(self) -> Optional[Tuple[str, str, datetime]]:
+        """
+        Get last cached CSV content.
+        
+        Returns:
+            Tuple of (csv_content, filename, uploaded_at) or None if no cache
+        """
+        with self._get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT csv_content, filename, uploaded_at FROM transactions_cache ORDER BY uploaded_at DESC LIMIT 1"
+            )
+            result = cursor.fetchone()
+            if result:
+                return (result[0], result[1], datetime.fromisoformat(result[2]))
+            return None
 
 # Global cache instance
 _cache_instance: Optional[MarketDataCache] = None 

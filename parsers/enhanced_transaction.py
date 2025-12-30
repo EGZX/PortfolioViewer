@@ -184,15 +184,40 @@ class AssetType(str, Enum):
             "COMMODITY": cls.COMMODITY,
             "COMMODITIES": cls.COMMODITY,
 
-            # General Security (common in some exports)
-            "SECURITY": cls.STOCK,
-            "WERTPAPIER": cls.STOCK,
+            # General Security - Don't assume it's a stock, let inference handle it
+            # "SECURITY": cls.UNKNOWN,  # Will be inferred from name/ticker
+            # "WERTPAPIER": cls.UNKNOWN,
         }
         
         # Clean value for lookup
         clean_value = value_upper.replace("-", " ").replace("_", " ")
         
+        # Special case: "SECURITY" is too generic, return UNKNOWN to trigger inference
+        if clean_value in ["SECURITY", "WERTPAPIER"]:
+            return cls.UNKNOWN
+        
         return asset_map.get(clean_value, cls.UNKNOWN)
+    
+    @classmethod
+    def infer_from_name(cls, name: str) -> Optional['AssetType']:
+        """Infer asset type from security name."""
+        if not name:
+            return None
+        
+        name_upper = name.upper()
+        
+        # ETF detection from name
+        etf_keywords = ['ETF', 'ETC', 'ETN', 'INDEX FUND', 'ISHARES', 'VANGUARD', 
+                       'SPDR', 'XTRACKERS', 'WISDOMTREE', 'INVESCO', 'AMUNDI']
+        if any(keyword in name_upper for keyword in etf_keywords):
+            return cls.ETF
+        
+        # Crypto detection from name
+        crypto_keywords = ['BITCOIN', 'ETHEREUM', 'CRYPTO', 'COIN']
+        if any(keyword in name_upper for keyword in crypto_keywords):
+            return cls.CRYPTO
+        
+        return None
     
     @classmethod
     def infer_from_ticker(cls, ticker: str) -> 'AssetType':

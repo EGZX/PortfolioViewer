@@ -253,3 +253,82 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     except Exception as e:
         logger.error(f"Error fetching FX rate {from_currency}/{to_currency}: {e}")
         return Decimal(1)
+
+
+@st.cache_data(ttl=3600)  # Cache for 1 hour
+def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date) -> pd.DataFrame:
+    """
+    Fetch historical closing prices for a list of tickers.
+    
+    Args:
+        tickers: List of ticker symbols
+        start_date: Start date
+        end_date: End date
+        
+    Returns:
+        DataFrame with Date index and Ticker columns containing Close prices.
+        Forward filled to handle missing days/weekends.
+    """
+    if not tickers:
+        return pd.DataFrame()
+        
+    logger.info(f"Fetching historical prices for {len(tickers)} tickers from {start_date} to {end_date}")
+    
+    # Resolve ISINs
+    mapped_tickers = []
+    ticker_map = {}
+    
+    # Import locally to avoid circular imports if any
+    from services.isin_resolver import ISINResolver
+    
+    for t in tickers:
+        mapped = t
+        if ISINResolver.needs_resolution(t):
+            mapped = ISINResolver.resolve_isin(t) or t
+        mapped_tickers.append(mapped)
+        ticker_map[mapped] = t
+    
+    try:
+        # Fetch data
+        data = yf.download(
+            mapped_tickers,
+            start=start_date,
+            end=end_date,
+            interval="1d",
+            group_by='ticker',
+            auto_adjust=False, # We want Close, not Adj Close usually, or maybe Adj Close?
+            # Standard is Close for market value. Total Return includes Dividends which we track via transactions.
+            # Using 'Close' matches broker value.
+            threads=True,
+            progress=False
+        )
+        
+        # Process result into a simple DataFrame (Index=Date, Cols=OriginalTickers)
+        prices_df = pd.DataFrame(index=data.index)
+        
+        if len(mapped_tickers) == 1:
+            mapped = mapped_tickers[0]
+            original = ticker_map[mapped]
+            if 'Close' in data.columns:
+                prices_df[original] = data['Close']
+        else:
+            for mapped in mapped_tickers:
+                original = ticker_map[mapped]
+                if mapped in data.columns.levels[0]:
+                    prices_df[original] = data[mapped]['Close']
+        
+        # Determine frequency to reindex (daily)
+        full_idx = pd.date_range(start=start_date, end=end_date, freq='D')
+        prices_df = prices_df.reindex(full_idx)
+        
+        # Forward fill to handle weekends/holidays (use Friday price for Saturday)
+        prices_df = prices_df.ffill()
+        
+        # Also backward fill start if needed
+        prices_df = prices_df.bfill()
+        
+        return prices_df
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch historical prices: {e}")
+        return pd.DataFrame()
