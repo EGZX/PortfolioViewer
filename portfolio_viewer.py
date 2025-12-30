@@ -472,47 +472,49 @@ def main():
                 
                 current_date = start_date
                 
-                # Pre-calculate prices map for speed if possible, or just use df usage inside loop
+                # Pre-calculate prices map for speed
+                # Convert DataFrame to dictionary of dictionaries: {date: {ticker: price}}
+                # timestamp -> {ticker: price}
+                price_lookup = {}
+                if not hist_prices_df.empty:
+                    # Iterate once to build lookup (faster than .loc inside loop)
+                    for timestamp, row in hist_prices_df.iterrows():
+                        # Convert timestamp to date object for matching
+                        d_key = timestamp.date()
+                        price_lookup[d_key] = {
+                            t: float(p) for t, p in row.items() if pd.notna(p)
+                        }
+
+                # OPTIMIZATION: Incremental Portfolio Update
+                # Sort transactions by date once
+                sorted_valid_trans = sorted(
+                    [t for t in transactions if t.date <= end_date], 
+                    key=lambda t: t.date
+                )
+                
+                # Initialize empty portfolio runner
+                running_portfolio = Portfolio([])
+                
+                trans_idx = 0
+                num_trans = len(sorted_valid_trans)
                 
                 while current_date <= end_date:
-                    # Get transactions up to this date
-                    # OPTIMIZATION: Assuming transactions are sorted by date
-                    trans_until = [t for t in transactions if t.date <= current_date]
+                    # Process all transactions that happened up to (and including) current_date
+                    # that haven't been processed yet
+                    while trans_idx < num_trans and sorted_valid_trans[trans_idx].date.date() <= current_date.date():
+                        running_portfolio.process_transaction(sorted_valid_trans[trans_idx])
+                        trans_idx += 1
                     
-                    if trans_until:
-                        temp_portfolio = Portfolio(trans_until) # This is effectively an accumulator/snapshot
+                    if trans_idx > 0: # Only record if we have started portfolio history
+                        # Get prices for this date
+                        daily_prices = price_lookup.get(current_date.date(), {})
                         
-                        # CRITICAL FIX: Use prices AT current_date, not today's prices
-                        # Build price map for this date
-                        daily_prices = {}
-                        date_key = pd.Timestamp(current_date.date())
-                        
-                        if not hist_prices_df.empty:
-                            try:
-                                # Get row for this date (nearest available previous date via ffill)
-                                # Since we reindexed to daily and ffilled in fetch_historical_prices, .loc should work
-                                # But let's use asof/nearest logic if index mismatch, though reindex handles it.
-                                if date_key in hist_prices_df.index:
-                                    row = hist_prices_df.loc[date_key]
-                                    daily_prices = row.to_dict()
-                                    # Convert to float/None
-                                    final_prices = {}
-                                    for t, p in daily_prices.items():
-                                        if pd.notna(p):
-                                            final_prices[t] = float(p)
-                                        else:
-                                            final_prices[t] = None
-                                    daily_prices = final_prices
-                            except Exception as price_err:
-                                # Fallback or just empty
-                                pass
-                        
-                        # Use daily prices for historical value
-                        temp_value = temp_portfolio.calculate_total_value(daily_prices)
-                        temp_cost_basis = sum(pos.cost_basis for pos in temp_portfolio.holdings.values())
+                        # Calculate value
+                        temp_value = running_portfolio.calculate_total_value(daily_prices)
+                        temp_cost_basis = sum(pos.cost_basis for pos in running_portfolio.holdings.values())
                         
                         dates_list.append(current_date.strftime('%Y-%m-%d'))
-                        net_deposits_list.append(float(temp_portfolio.invested_capital))
+                        net_deposits_list.append(float(running_portfolio.invested_capital))
                         value_list.append(float(temp_value))
                         cost_basis_list.append(float(temp_cost_basis))
                     

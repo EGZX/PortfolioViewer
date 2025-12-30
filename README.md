@@ -1,279 +1,109 @@
 # Portfolio Viewer
 
-A production-grade portfolio analysis tool built with Streamlit that ingests CSV transactions, fetches live market data, and calculates sophisticated performance metrics including XIRR.
+A high-performance financial analytics dashboard built with Streamlit, designed for precision portfolio tracking, sophisticated performance metrics, and enterprise-grade data handling.
 
-## Features
+## 📋 Capabilities
 
-- ✅ **CSV Import**: Auto-detects German/English CSV formats (semicolon/comma delimiters)
-- ✅ **Multi-Currency**: Handles USD, EUR, DKK with automatic FX conversion
-- ✅ **Live Market Data**: Fetches current prices from yfinance with caching
-- ✅ **XIRR Calculation**: Scientifically rigorous using Newton-Raphson method
-- ✅ **Interactive Charts**: Plotly visualizations (allocation donut, performance area chart)
-- ✅ **Password Protection**: Secure authentication using Streamlit secrets
-- ✅ **Type-Safe**: Pydantic validation throughout
-- ✅ **High Performance**: SQLite cache for market data (10-50x faster on subsequent loads)
-- ✅ **Enhanced Logging**: Detailed logs with error categorization for easy debugging
+### Core Features
+- **Universal Import**: Smart parsing of CSV transaction logs with auto-detection for delimiters, locales (DE/EN), and column mappings.
+- **Multi-Asset Support**: Native handling of Stocks, ETFs, Crypto, and Cash with automated asset type classification.
+- **Foreign Exchange**: Automatic historical FX conversion (USD/EUR/DKK/etc.) for accurate base-currency valuation.
 
-> 📖 **New**: See [PERFORMANCE_AND_LOGGING.md](PERFORMANCE_AND_LOGGING.md) for details on performance improvements and logging features.
+### Analytics & Visualization
+- **XIRR Calculation**: Financial industry-standard Money-Weighted Return calculation using the Newton-Raphson method (via `scipy.optimize`).
+- **Performance Attribution**: Interactive visualization of Net Deposits vs. Cost Basis vs. Market Value over configurable timeframes.
+- **Holdings Analysis**: Drilling down into allocation, gains/losses, and tax-lot simulacra.
 
-## Quick Start
+### Technical Architecture
+- **Incremental Calculation Engine**: Implements an **O(N)** chronological state reconstruction algorithm for instantaneous historical charting, replacing legacy O(N²) methods.
+- **Hybrid Caching**:
+    - **Market Data**: Tiered SQLite caching strategy for high-frequency pricing data.
+    - **Computation**: Memoized transaction processing for sub-second dashboard reloads.
+- **Security**: SHA-256 hashed authentication and optional AES-256 encryption for cached market data at rest.
 
-### 1. Install Dependencies
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.9+
+- pip
+
+### Installation
+
+1.  **Clone and Install Dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2.  **Configuration (Optional)**
+    Create `.streamlit/secrets.toml` to secure the instance:
+    ```toml
+    [passwords]
+    # SHA-256 hash of your password
+    app_password_hash = "<sha256-of-your-password>" 
+    
+    # Optional: AES Key for cache encryption (generate via utils/auth.py)
+    MARKET_CACHE_ENCRYPTION_KEY = "..." 
+    ```
+
+3.  **Execution**
+    ```bash
+    streamlit run portfolio_viewer.py
+    ```
+
+## 📂 Data Ingestion
+
+The ingestion engine supports flexible CSV schemas. The parser uses fuzzy matching to identify columns.
+
+**Required Columns:**
+- `Date` (ISO 8601 or local format)
+- `Type` (Buy, Sell, Dividend, TransferIn/Out, etc.)
+
+**Recommended Columns:**
+- `Ticker` / `ISIN`
+- `Shares` / `Quantity`
+- `Price` / `Amount`
+- `Total` (Net flux)
+- `Currency` (if non-EUR)
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    User[User CSV] -->|Upload| Parser[CSV Parser]
+    Parser -->|Normalize| Trans[Transaction Model]
+    Trans -->|Process| Portfolio[Portfolio Engine]
+    
+    subgraph "Data Layer"
+        YF[yfinance API] -->|Fetch| Cache[(SQLite Cache)]
+        Cache -->|Serve| Service[Market Data Service]
+    end
+    
+    Service -->|Prices| Portfolio
+    Portfolio -->|Metrics| UI[Streamlit Dashboard]
+```
+
+### Logging & Observability
+
+The application maintains structured, rotating logs in `logs/portfolio_viewer.log` for debugging and audit trails.
+
+- **Rotation**: 10MB limit, 5 backups.
+- **Format**: `[TIMESTAMP] [LEVEL] [MODULE] Message`
+- **Performance Tracing**: Operations exceeding 1000ms are flagged with `SLOW` log entries for bottleneck identification.
+
+## 🛠️ Development
+
+### Testing
 ```bash
-pip install -r requirements.txt
+# Verify integrity of tax logic and calculations
+python -m unittest discover tests
 ```
 
-### 2. Configure Password (Optional but Recommended)
-
-Generate a password hash:
+### Password Hashing Utility
 ```bash
-python -c "from utils.auth import generate_password_hash; print(generate_password_hash('YourPasswordHere'))"
+# Generate hash for secrets.toml
+python -c "from utils.auth import generate_password_hash; print(generate_password_hash('your_password'))"
 ```
-
-Create `.streamlit/secrets.toml`:
-```toml
-[passwords]
-app_password_hash = "YOUR_GENERATED_HASH_HERE"
-```
-
-**Example** (password: "admin123"):
-```toml
-[passwords]
-app_password_hash = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
-```
-
-> **Note**: If no password is configured, the app will run without authentication (with a warning).
-
-### 3. Run the Application
-```bash
-streamlit run portfolio_viewer.py
-```
-
-The app will open in your browser at `http://localhost:8501`
-
-### 4. Upload Your CSV
-
-1. Click "Upload Transaction CSV" in the sidebar
-2. Select your transaction history CSV file
-3. View your portfolio metrics and visualizations
-
-
-## CSV Format
-
-### Supported Columns
-
-| Column | Aliases | Required | Description |
-|--------|---------|----------|-------------|
-| Date | datetime, datum, time | ✅ | Transaction date |
-| Type | typ, transaction_type, action | ✅ | Buy, Sell, Dividend, TransferIn/Out, Interest |
-| Ticker | symbol, isin, identifier, wkn, holding | ⚪ | Security identifier |
-| Shares | amount, quantity, units | ⚪ | Number of shares |
-| Price | unit_price, share_price | ⚪ | Price per share |
-| Fees | fee, commission, cost | ⚪ | Transaction fees |
-| Total | net_amount, cash_flow | ⚪ | Net cash flow (auto-calculated if missing) |
-| Currency | originalcurrency | ⚪ | Transaction currency (default: EUR) |
-| FXRate | exchange_rate, fx, rate | ⚪ | Exchange rate to EUR |
-
-### Format Auto-Detection
-
-The parser automatically detects:
-- **Delimiter**: Semicolon (`;`) or comma (`,`)
-- **Decimal separator**: Comma (`,`) or period (`.`)
-- **Quote character**: Double quotes (`"`)
-- **Column names**: Fuzzy matching (case-insensitive)
-
-### Example CSV (German Format)
-```csv
-"datetime";"type";"ticker";"shares";"price";"fees";"total";"currency";"fxrate"
-"2025-01-15T10:30:00";"Buy";"US0378331005";10;150,50;1,00;-1506,00;"USD";1,05
-"2025-02-20T14:15:00";"Sell";"US0378331005";5;155,25;0,50;776,75;"USD";1,05
-"2025-03-01T09:00:00";"Dividend";"US0378331005";5;0,50;0,00;2,50;"USD";1,05
-```
-
-## Architecture
-
-```
-PortfolioViewer/
-├── portfolio_viewer.py         # Main Streamlit app
-├── requirements.txt            # Dependencies
-├── generate_cache_key.py       # NEW: Encryption key generator
-├── PERFORMANCE_AND_LOGGING.md  # NEW: Performance & logging docs
-├── data/                       # NEW: Cache database (git ignored)
-│   └── market_cache.db
-├── logs/                       # NEW: Log files (git ignored)
-│   └── portfolio_viewer.log
-├── parsers/
-│   └── csv_parser.py          # CSV ingestion with auto-detection
-├── calculators/
-│   ├── portfolio.py           # Portfolio state manager
-│   └── metrics.py             # XIRR & performance calculations
-├── services/
-│   ├── market_cache.py        # NEW: SQLite cache for prices/splits
-│   ├── market_data.py         # yfinance integration (cached)
-│   └── corporate_actions.py   # Stock splits with caching
-├── charts/
-│   └── visualizations.py      # Plotly charts
-└── utils/
-    ├── auth.py                # Password authentication
-    └── logging_config.py      # Structured file logging
-```
-
-## Security
-
-### Password Protection
-
-The app uses **SHA-256 hashing** for password storage. Passwords are:
-- ✅ Never stored in plain text
-- ✅ Hashed using cryptographic algorithm (SHA-256)
-- ✅ Stored in `.streamlit/secrets.toml` (excluded from git)
-- ✅ Session-based authentication (logout available)
-
-### Market Data Encryption (Optional)
-
-The market data cache can be encrypted for added security:
-- ✅ AES-based encryption (Fernet)
-- ✅ Encrypted at rest in SQLite database
-- ✅ Encryption key stored in `.streamlit/secrets.toml`
-- ✅ Recommended for public repositories
-
-**Setup**:
-```bash
-# Generate encryption key
-python generate_cache_key.py
-
-# Add to .streamlit/secrets.toml
-# MARKET_CACHE_ENCRYPTION_KEY = "generated-key-here"
-```
-
-### Best Practices
-
-1. **Never commit** `.streamlit/secrets.toml` to version control
-2. Use a **strong password** (12+ characters, mixed case, numbers, symbols)
-3. **Rotate passwords** regularly
-4. Deploy on private networks or use HTTPS in production
-5. Enable cache encryption if repository is public
-
-## Performance Metrics
-
-### Net Worth
-Current portfolio value (holdings at market price + cash balance)
-
-### Total Invested
-Sum of all deposits and buy transactions
-
-### Absolute Gain
-```
-Gain = (Current Value + Withdrawn) - Invested
-```
-
-### XIRR (Extended Internal Rate of Return)
-Annualized money-weighted return that accounts for the timing of cash flows.
-
-**Formula**: Solves for `r` where NPV = 0
-```
-NPV = Σ(CF_i / (1 + r)^(days_i / 365)) = 0
-```
-
-## Troubleshooting
-
-### "No valid transactions found in CSV"
-
-**Possible causes**:
-1. CSV delimiter not detected correctly
-2. Required columns ('date', 'type') missing or misspelled
-3. Date format not recognized
-
-**Solutions**:
-- Ensure CSV has `date` and `type` columns
-- Check delimiter (should be `;` or `,`)
-- Verify dates are in format: `YYYY-MM-DD` or `DD.MM.YYYY`
-- Check console logs for detailed error messages
-
-### Password not working
-
-**Solutions**:
-1. Verify hash was generated correctly
-2. Check `.streamlit/secrets.toml` file exists and has correct format
-3. Restart Streamlit app after changing secrets
-4. Ensure no extra spaces in hash string
-
-### Market data fetch failures
-
-**Solutions**:
-- Check internet connection
-- Verify ticker symbols are Yahoo Finance compatible
-- App will fallback to last transaction price automatically
-- Check sidebar for specific failed tickers
-
-## Development
-
-### Generate Password Hash
-```bash
-python utils/auth.py "your_password"
-```
-
-### Run Tests
-```bash
-# Upload test CSV and verify:
-# 1. Transactions parsed correctly
-# 2. Market data fetched
-# 3. XIRR calculated
-# 4. Charts rendered
-```
-
-### Logging
-
-All logs are automatically written to `logs/portfolio_viewer.log`:
-
-```bash
-# View latest logs (Windows)
-type logs\portfolio_viewer.log
-
-# View latest logs (Linux/Mac)
-tail -f logs/portfolio_viewer.log
-
-# Search for errors
-grep "ERROR" logs/portfolio_viewer.log
-
-# Search for parsing issues
-grep -E "missing_price|missing_ticker" logs/portfolio_viewer.log
-```
-
-**Log Format**:
-```
-[TIMESTAMP] [LEVEL] [MODULE:FUNCTION:LINE] MESSAGE
-```
-
-**Features**:
-- Rotating file handler (10MB max, 5 backups)
-- Structured format for easy parsing
-- Error categorization (invalid_date, missing_price, etc.)
-- Performance tracking for slow operations
-
-See [PERFORMANCE_AND_LOGGING.md](PERFORMANCE_AND_LOGGING.md) for detailed logging guide.
-
-## Dependencies
-
-- **streamlit** ≥1.28.0 - Web UI framework
-- **pandas** ≥2.0.0 - Data manipulation
-- **numpy** ≥1.24.0 - Numerical computing
-- **scipy** ≥1.11.0 - Scientific computing (XIRR)
-- **yfinance** ≥0.2.28 - Market data API
-- **plotly** ≥5.17.0 - Interactive charts
-- **pydantic** ≥2.0.0 - Data validation
-- **cryptography** ≥41.0.0 - Cache encryption
 
 ## License
 
-MIT License - See LICENSE file for details
-
-## Support
-
-For issues or questions:
-1. Check the [Troubleshooting](#troubleshooting) section
-2. Review console logs for error messages
-3. Ensure CSV format matches specifications
-
----
-
-**Built with ❤️ using Streamlit, Pandas, and modern Python**
+MIT License. See `LICENSE` for details.

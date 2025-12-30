@@ -1,162 +1,83 @@
-# Quick Setup Guide
+# Deployment & Verification Guide
 
-Welcome to the updated Portfolio Viewer with performance improvements!
+This guide outlines the procedures for verifying the installation integrity, validating the caching system, and hardening the application for production use.
 
-## Step 1: Install Dependencies
+## 1. Post-Installation Verification
 
-```bash
-pip install -r requirements.txt
-```
+After installing dependencies and launching the application (`streamlit run portfolio_viewer.py`), perform the following validation steps.
 
-This will install the new `cryptography` package needed for cache encryption.
+### A. Functional Integrity
+1.  **Launch**: Ensure the web interface loads at `http://localhost:8501`.
+2.  **Data Ingestion**: Upload a sample CSV file.
+    *   *Success Criterion*: Dashboard renders without traceback errors.
+    *   *Success Criterion*: "Net Worth" and "XIRR" metrics are calculated.
+3.  **Market Data Access**: Check the sidebar for price fetching status.
+    *   *Success Criterion*: Green "Fetched prices" message or specific warnings for delisted tickers.
 
-## Step 2: Run the Application
+### B. Caching System Validation
+The application uses a persistent SQLite cache to optimize API precision.
 
-```bash
-streamlit run portfolio_viewer.py
-```
-
-**That's it!** The cache and logging systems are now active.
-
-## Step 3 (Optional): Enable Cache Encryption
-
-If you plan to commit this code to a public repository, enable encryption:
-
-```bash
-# Generate encryption key
-python generate_cache_key.py
-```
-
-This will output something like:
-```
-Add this line to your .streamlit/secrets.toml file:
-MARKET_CACHE_ENCRYPTION_KEY = "gAAAAABj..."
-```
-
-Copy that line and add it to `.streamlit/secrets.toml`:
-
-```toml
-[passwords]
-app_password_hash = "your-existing-password-hash"
-
-# Add this line:
-MARKET_CACHE_ENCRYPTION_KEY = "gAAAAABj..."
-```
-
-## What's New?
-
-### 🚀 Performance
-- **10-50x faster** on subsequent loads
-- Market data cached in SQLite database
-- No more redundant API calls
-
-### 📝 Logging
-- All logs written to `logs/portfolio_viewer.log`
-- Easy to copy/paste for debugging
-- Detailed error categorization
-
-### 🔍 Better Debugging
-- See exactly which transactions have issues
-- Categorized errors: missing_price, invalid_date, etc.
-- Performance tracking for slow operations
-
-## Verify Everything Works
-
-### 1. Check Cache Creation
-
-After first run, verify cache was created:
+**Verification Command:**
 ```bash
 python view_cache_stats.py
 ```
 
-Expected output:
-```
-============================================================
+**Expected Output:**
+```text
 Market Cache Statistics
-============================================================
-
-📊 Database Location: C:\...\data\market_cache.db
-📦 Database Size: 42.5 KB
-
-📈 Cache Statistics:
-   • Total prices cached: 150
-   • Unique tickers: 50
-   • Stock splits cached: 12
+=======================
+Database Location: .../data/market_cache.db
+Cache Statistics:
+   • Total prices cached: [Integer > 0]
+   • Unique tickers: [Integer > 0]
 ```
 
-### 2. Check Logs
+*Note: If `data/market_cache.db` is missing, the application has not successfully processed any transactions yet.*
 
-View the log file:
-```bash
-# Windows
-type logs\portfolio_viewer.log
+### C. Observability Check
+Verify that structured logging is active.
 
-# Linux/Mac
-tail logs/portfolio_viewer.log
-```
+1.  Inspect the log directory: `logs/portfolio_viewer.log`
+2.  Validate log rotation and formatting:
+    ```bash
+    # Linux/Mac
+    tail -n 20 logs/portfolio_viewer.log
+    ```
+    *Look for lines containing `[INFO]`, `[market_cache]`, or `[csv_parser]`.*
 
-Look for sections like:
-```
-============================================================
-Starting CSV parsing
-============================================================
-```
+## 2. Production Hardening
 
-### 3. Test Performance
+### Cache Encryption (AES-256)
+For environments where the SQLite cache file (`data/market_cache.db`) might be exposed or stored on shared storage, enable at-rest operations encryption.
 
-1. Upload a CSV file - note the time
-2. Change a filter - should be instant
-3. Reload the page - should be much faster
-4. Check logs for "Cache HIT" messages
+1.  **Generate Key**:
+    ```bash
+    python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    ```
 
-## Troubleshooting
+2.  **Configure Secrets**:
+    Add the key to `.streamlit/secrets.toml`:
+    ```toml
+    [passwords]
+    MARKET_CACHE_ENCRYPTION_KEY = "YOUR_GENERATED_KEY_HERE"
+    ```
 
-### "ModuleNotFoundError: No module named 'cryptography'"
+3.  **Verify Encryption**:
+    Restart the application. Check logs for:
+    `[INFO] [services.market_cache] Cache encryption enabled`
 
-Run:
-```bash
-pip install -r requirements.txt
-```
+### Security Best Practices
+*   **Secrets Management**: Ensure `.streamlit/secrets.toml` is added to `.gitignore`.
+*   **Network**: Run behind a reverse proxy (Nginx/Apache) with SSL termination in production.
+*   **Access Control**: Always configure `app_password_hash` if the instance is public.
 
-### Cache not working
+## 3. Maintenance
 
-1. Check if `data/` directory exists
-2. Check logs for errors
-3. Try deleting `data/market_cache.db`
+### Log Rotation
+Logs are automatically rotated at 10MB. To change this policy, modify `utils/logging_config.py`.
 
-### Logs not appearing
-
-1. Check if `logs/` directory was created
-2. Look for errors in console
-3. Check write permissions
-
-### Still slow after update
-
-1. First load is always slow (cache miss)
-2. Check logs for cache hit rates
-3. Run `python view_cache_stats.py` to verify cache is working
-
-## Need Help?
-
-1. Check `logs/portfolio_viewer.log` for detailed error messages
-2. Read [PERFORMANCE_AND_LOGGING.md](PERFORMANCE_AND_LOGGING.md) for comprehensive guide
-3. Review [CHANGES_SUMMARY.md](CHANGES_SUMMARY.md) for what changed
-
-## Files You'll See
-
-After first run:
-```
-PortfolioViewer/
-├── data/
-│   └── market_cache.db          # Cache database
-├── logs/
-│   ├── portfolio_viewer.log     # Current logs
-│   ├── portfolio_viewer.log.1   # Backup 1 (if rotated)
-│   └── ...
-```
-
-**Note**: Both directories are git-ignored, so they won't be committed.
-
----
-
-**That's it! Enjoy the improved performance! 🚀**
+### Cache Reset
+To force a complete refresh of market data (e.g., after corporate action corrections):
+1.  Stop the application.
+2.  Delete `data/market_cache.db`.
+3.  Restart the application.
