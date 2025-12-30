@@ -44,6 +44,16 @@ class ISINResolver:
         'US64110L1061': 'NFLX',     # Netflix
         'DE000A0HHJR3': 'CLIQ.DE',  # Cliq Digital
         
+        # Previously failing stocks (from user screenshot)
+        # Previously failing stocks
+        'PLDNPLU00011': 'DNP.WA',    # Dino Polska (Warsaw - PLN)
+        'NL0010273215': 'ASML.AS',   # ASML Holding (Amsterdam - EUR)
+        'LU1176118681': 'EQT.ST',    # EQT AB (Stockholm - SEK)
+        'DK0010272202': 'GMAB.CO',   # Genmab (Copenhagen - DKK)
+        'US60733R1023': 'NATKY',     # NAC Kazatomprom GDR (US OTC)
+        'NL9005294274': 'ENX.PA',    # Euronext NV (Paris)
+        'US45841N1072': 'IBKR',      # Interactive Brokers (Explicit)
+        
         # Crypto
         'BTC': 'BTC-EUR',
         'ETH': 'ETH-EUR',
