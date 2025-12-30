@@ -42,12 +42,18 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
     def __init__(self, transactions: List[Transaction]):
         self.transactions = sorted(transactions, key=lambda t: t.date)
         self.holdings: Dict[str, Position] = {}  # ticker -> Position
-        self.cash_balance = Decimal(0)
+        
+        # NOTE: cash_balance cannot be accurately calculated from transaction history alone
+        # when the CSV only contains partial history. It would need the starting cash balance.
+        # For now, set to 0 and allow manual override via set_cash_balance()
+        self.cash_balance = Decimal(0)  # Will be set manually or from broker data
+        
         self.total_invested = Decimal(0) # Kept original attribute name
         self.total_withdrawn = Decimal(0) # Kept original attribute name
         self.total_dividends = Decimal(0) # Kept original attribute name
         self.total_fees = Decimal(0) # Kept original attribute name
         self.invested_capital = Decimal(0) # New attribute from the provided code
+        self.realized_gains = Decimal(0)  # Track realized gains from selling
         self.cash_flows = []  # List of (date, amount) for XIRR # New attribute from the provided code
         
         self._reconstruct_state()
@@ -60,8 +66,54 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         # DO NOT multiply by fx_rate again!
         amount_eur = t.total  # Already in EUR!
         
-        # Update cash balance
-        self.cash_balance += amount_eur # Use amount_eur
+        # CRITICAL FIX 2: Cash balance tracking - CORRECTED
+        # Track cash for all transactions EXCEPT stock transfers (TRANSFER_IN/OUT with ticker)
+        # 
+        # The CSV transaction `total` field is already correctly signed:
+        # - BUY: negative (cash out)
+        # - SELL: positive (cash in)
+        # - DIVIDEND: positive (cash in)
+        # - TRANSFER_IN (cash deposit): positive (cash in)
+        # - TRANSFER_OUT (cash withdrawal): positive (cash in to your bank, out of portfolio)
+        # - TRANSFER_IN (stock): shouldn't affect cash (moving stocks between brokers)
+        #  - TRANSFER_OUT (stock): shouldn't affect cash (moving stocks between brokers)
+        
+        # Determine if this transaction affects cash balance
+        should_update_cash = True
+        
+        if t.type in [TransactionType.TRANSFER_IN, TransactionType.TRANSFER_OUT]:
+            # TRANSFER_IN/OUT can be either:
+            # 1. Stock transfer (has ticker) - doesn't affect cash
+            # 2. Cash deposit/withdrawal (no ticker) - affects cash
+            if t.ticker and t.ticker.strip() != '':
+                # Has ticker = stock transfer = skip cash update
+                should_update_cash = False
+        
+        # Track cash balance: sum ALL cash-affecting transaction totals
+        # User Rule: Cash is tracked for Scalable/Trade Republic (auto-import)
+        # BUT NOT for Crypto OR Interactive Brokers (manual/external)
+        
+        tracks_cash = True
+        
+        # 1. Check for manual/unknown broker (Manual entries usually have no broker)
+        if not t.broker or str(t.broker).lower() == 'nan' or t.broker.strip() == '':
+             tracks_cash = False
+             
+        # 2. Check explicitly excluded brokers
+        elif t.broker.lower() == 'interactive_brokers':
+             tracks_cash = False
+             
+        # 3. Check Asset Type
+        if t.asset_type == AssetType.CRYPTO:
+             tracks_cash = False
+
+        if should_update_cash and tracks_cash:
+            # For TRANSFER_OUT, the total is positive (money leaving portfolio)
+            # So we need to SUBTRACT it
+            if t.type == TransactionType.TRANSFER_OUT and (not t.ticker or t.ticker.strip() == ''):
+                self.cash_balance -= abs(amount_eur)  # Subtract withdrawals
+            else:
+                self.cash_balance += amount_eur  # Add all other cash transactions
         
         # Track cash flows for XIRR
         # Inflows (Buys) are negative for wallet, but positive investment flow? 
@@ -85,21 +137,26 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         # ONLY TransferIn/TransferOut affects the "External" flows.
         
         if t.type == TransactionType.TRANSFER_IN:
-            # Money ENTERED the system. From my pocket.
-            # Cash balance went UP. t.total is positive (if we follow logic).
-            # for XIRR: Negative flow (investment).
-            self.cash_flows.append((t.date, -amount_eur)) # Use amount_eur
-            self.invested_capital += amount_eur # Use amount_eur
-            self.total_invested += abs(amount_eur) # Keep original total_invested logic
+            # TRANSFER_IN can be cash deposit OR stock transfer
+            # Only count CASH deposits towards invested_capital
+            if not t.ticker or t.ticker.strip() == '':
+                # Cash-only transfer = actual deposit
+                self.cash_flows.append((t.date, -amount_eur))
+                self.invested_capital += amount_eur
+                self.total_invested += abs(amount_eur)
+            # else: Stock transfer - doesn't affect invested_capital
             
         elif t.type == TransactionType.TRANSFER_OUT:
-            # Money LEFT the system. To my pocket.
-            # Cash balance went DOWN. t.total is negative.
-            # for XIRR: Positive flow (return).
-            # CRITICAL FIX: Sign should be POSITIVE for XIRR (money returned to investor)
-            self.cash_flows.append((t.date, abs(amount_eur)))  # Positive for withdrawal
-            self.invested_capital += amount_eur # amount_eur is negative, so this reduces invested cap
-            self.total_withdrawn += abs(amount_eur) # Keep original total_withdrawn logic
+            # TRANSFER_OUT can be cash withdrawal OR stock transfer
+            # Only count CASH withdrawals towards invested_capital
+            if not t.ticker or t.ticker.strip() == '':
+                # Cash-only transfer = actual withdrawal
+                # TRANSFER_OUT has POSITIVE value in CSV (money out)
+                # So we SUBTRACT it from invested_capital
+                self.cash_flows.append((t.date, abs(amount_eur)))  # Positive for XIRR (money returned)
+                self.invested_capital -= abs(amount_eur)  # SUBTRACT withdrawals
+                self.total_withdrawn += abs(amount_eur)
+            # else: Stock transfer - doesn't affect invested_capital
         
         elif t.type == TransactionType.DEPOSIT:
             # Cash deposit (similar to TRANSFER_IN)
@@ -158,6 +215,11 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                     
                     sold_cost = cost_per_share * shares_to_remove
                     pos.cost_basis -= sold_cost
+                    
+                    # Track realized gain from CSV (for SELL transactions)
+                    # The CSV already has the correct realized gain calculated
+                    if t.type == TransactionType.SELL and t.realized_gain != 0:
+                        self.realized_gains += t.realized_gain
                 
                 pos.shares -= t.shares
                 
@@ -220,6 +282,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             # If no price available, market_value remains at last known value (or 0 if never set)
             holdings_value += pos.market_value
         
+        # Use cash_balance calculated from all cash-affecting transactions
         total = holdings_value + self.cash_balance
         logger.info(f"Total value: €{total:.2f} (holdings: €{holdings_value:.2f}, cash: €{self.cash_balance:.2f})")
         

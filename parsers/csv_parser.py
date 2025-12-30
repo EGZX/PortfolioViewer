@@ -44,6 +44,7 @@ class CSVParser:
         'broker': ['broker', 'depot', 'account'],
         'reference_id': ['reference_id', 'transaction_id', 'order_id', 'trade_id'],
         'withholding_tax': ['withholding_tax', 'tax_withheld', 'withheld'],
+        'realized_gain': ['realizedgains', 'realized_gains', 'realized_gain', 'gain_loss'],
     }
     
     def __init__(self):
@@ -380,6 +381,9 @@ class CSVParser:
                 # Get withholding tax (optional)
                 withholding_tax = self.normalize_decimal(get_val('withholding_tax', 0))
                 
+                # Get realized gain (optional, from CSV for SELL transactions)
+                realized_gain = self.normalize_decimal(get_val('realized_gain', 0))
+                
                 # Create transaction
                 transaction = Transaction(
                     date=trans_date,
@@ -397,6 +401,7 @@ class CSVParser:
                     broker=broker,
                     reference_id=reference_id,
                     withholding_tax=withholding_tax,
+                    realized_gain=realized_gain,
                 )
                 
                 transactions.append(transaction)
