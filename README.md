@@ -19,7 +19,6 @@ A high-performance financial analytics dashboard built with Streamlit, designed 
 - **Hybrid Caching**:
     - **Market Data**: Tiered SQLite caching strategy for high-frequency pricing data.
     - **Computation**: Memoized transaction processing for sub-second dashboard reloads.
-- **Security**: SHA-256 hashed authentication and optional AES-256 encryption for cached market data at rest.
 
 ## 🚀 Quick Start
 
@@ -34,18 +33,7 @@ A high-performance financial analytics dashboard built with Streamlit, designed 
     pip install -r requirements.txt
     ```
 
-2.  **Configuration (Optional)**
-    Create `.streamlit/secrets.toml` to secure the instance:
-    ```toml
-    [passwords]
-    # SHA-256 hash of your password
-    app_password_hash = "e6c3da5b206634d7f3f3586d747ffdb36b5c675757b380c6a5fe5c570c714349" 
-    
-    # Optional: AES Key for cache encryption (generate via utils/auth.py)
-    MARKET_CACHE_ENCRYPTION_KEY = "..." 
-    ```
-
-3.  **Execution**
+2.  **Execution**
     ```bash
     streamlit run portfolio_viewer.py
     ```
@@ -97,13 +85,3 @@ The application maintains structured, rotating logs in `logs/portfolio_viewer.lo
 # Verify integrity of tax logic and calculations
 python -m unittest discover tests
 ```
-
-### Password Hashing Utility
-```bash
-# Generate hash for secrets.toml
-python -c "from utils.auth import generate_password_hash; print(generate_password_hash('your_password'))"
-```
-
-## License
-
-MIT License. See `LICENSE` for details.

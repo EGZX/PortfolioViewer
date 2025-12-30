@@ -333,49 +333,36 @@ def main():
     holdings_cost_basis = sum(pos.cost_basis for pos in portfolio.holdings.values())
     unrealized_gain = current_value - portfolio.cash_balance - holdings_cost_basis
     
-    # Absolute Gain = Realized + Dividends + Interest + Unrealized
-    # This method is robust against missing deposit history (unlike "Net Worth - Net Invested")
+    # Absolute Gain = Realized + Dividends + Interest + Unrealized - Fees
     total_absolute_gain = (portfolio.realized_gains + 
                           portfolio.total_dividends + 
                           portfolio.total_interest + 
-                          unrealized_gain)
+                          unrealized_gain - 
+                          portfolio.total_fees)
     
-    # Calculate return % based on Cost Basis (more accurate reflection of performance than Net Deposits)
+    # Calculate return % based on Cost Basis
     total_return_pct = (total_absolute_gain / holdings_cost_basis * 100) if holdings_cost_basis > 0 else 0
     
-    col1, col2, col3, col4, col5 = st.columns(5)
+    # Optimized Layout for FHD: 3 Top Metrics + 3 Secondary
+    m_col1, m_col2, m_col3 = st.columns(3)
     
-    with col1:
+    with m_col1:
         st.metric(
             label="Net Worth",
-            value=f"€{current_value:,.2f}",
+            value=f"eur {current_value:,.2f}",
             help="Current portfolio value (Holdings + Cash)"
         )
     
-    with col2:
-        st.metric(
-            label="Net Deposits",
-            value=f"€{portfolio.invested_capital:,.2f}",
-            help="Total Cash Deposited - Total Cash Withdrawn"
-        )
-
-    with col3:
-        st.metric(
-            label="Cost Basis",
-            value=f"€{holdings_cost_basis:,.2f}",
-            help="Total cost of current holdings"
-        )
-    
-    with col4:
+    with m_col2:
         gain_color = "normal" if total_absolute_gain >= 0 else "inverse"
         st.metric(
             label="Absolute Gain",
-            value=f"€{total_absolute_gain:,.2f}",
+            value=f"eur {total_absolute_gain:,.2f}",
             delta=f"{total_return_pct:.2f}%",
-            help="Realized + Dividends + Interest + (Market Value - Cost Basis)"
+            help="Realized + Dividends + Interest + (MV - Cost) - Fees"
         )
     
-    with col5:
+    with m_col3:
         if xirr_value is not None:
             xirr_pct = xirr_value * 100
             st.metric(
@@ -384,68 +371,54 @@ def main():
                 help="Annualized money-weighted return"
             )
         else:
-            st.metric(
-                label="XIRR",
-                value="N/A",
-                help="Not enough data or invalid cash flow pattern"
-            )
+            st.metric("XIRR", "N/A")
+            
+    # Secondary Metrics Row
+    m_col4, m_col5, m_col6 = st.columns(3)
+    with m_col4:
+        st.metric("Net Deposits", f"eur {portfolio.invested_capital:,.2f}")
+    with m_col5:
+        st.metric("Cost Basis", f"eur {holdings_cost_basis:,.2f}")
+    with m_col6:
+        st.metric("Total Fees", f"eur {portfolio.total_fees:,.2f}")
     
     st.divider()
     
-    # Two-column layout for visualizations
-    col_left, col_right = st.columns([1, 1])
+    # Optimized Chart Layout: Performance (2/3) | Allocation (1/3)
+    chart_col_main, chart_col_side = st.columns([2, 1])
     
-    with col_left:
-        st.subheader("🥧 Portfolio Allocation")
-        try:
-            holdings_df = portfolio.get_holdings_summary(prices)
-            if not holdings_df.empty:
-                fig_allocation = create_allocation_donut(holdings_df)
-                st.plotly_chart(fig_allocation, use_container_width=True)
-            else:
-                st.info("No holdings to display")
-        except Exception as e:
-            st.error(f"Failed to create allocation chart: {e}")
-            logger.error(f"Allocation chart error: {e}", exc_info=True)
-    
-    with col_right:
+    with chart_col_main:
         st.subheader("📈 Performance History")
         
-        # Timeframe selector
-        timeframe_col1, timeframe_col2 = st.columns([3, 7])
-        with timeframe_col1:
-            timeframe = st.selectbox(
-                "Timeframe",
-                options=["1M", "3M", "6M", "1Y", "All"],
-                index=3,  # Default to 1Y
-                key="performance_timeframe"
-            )
+        # Timeframe selector (inline)
+        timeframe = st.selectbox(
+            "Timeframe",
+            options=["1M", "3M", "6M", "1Y", "All"],
+            index=3,
+            key="performance_timeframe",
+            label_visibility="collapsed"
+        )
         
         try:
             # Calculate date range based on timeframe
             end_date = datetime.now()
             if timeframe == "1M":
                 start_date = end_date - timedelta(days=30)
-                interval_days = 2  # Every 2 days
+                interval_days = 2
             elif timeframe == "3M":
                 start_date = end_date - timedelta(days=90)
-                interval_days = 3  # Every 3 days
+                interval_days = 3
             elif timeframe == "6M":
                 start_date = end_date - timedelta(days=180)
-                interval_days = 7  # Weekly
+                interval_days = 7
             elif timeframe == "1Y":
                 start_date = end_date - timedelta(days=365)
-                interval_days = 7  # Weekly
+                interval_days = 7
             else:  # All
-                # Use first transaction date
                 if transactions:
                     start_date = min(t.date for t in transactions)
-                    # Adjust interval based on total duration
                     total_days = (end_date - start_date).days
-                    if total_days > 730:  # > 2 years
-                        interval_days = 14  # Bi-weekly
-                    else:
-                        interval_days = 7  # Weekly
+                    interval_days = 14 if total_days > 730 else 7
                 else:
                     start_date = end_date - timedelta(days=365)
                     interval_days = 7
@@ -539,13 +512,26 @@ def main():
         except Exception as e:
             st.error(f"Failed to create performance chart: {e}")
             logger.error(f"Performance chart error: {e}", exc_info=True)
+            
+    with chart_col_side:
+        st.subheader("🥧 Portfolio Allocation")
+        try:
+            holdings_df = portfolio.get_holdings_summary(prices)
+            if not holdings_df.empty:
+                fig_allocation = create_allocation_donut(holdings_df)
+                st.plotly_chart(fig_allocation, use_container_width=True)
+            else:
+                st.info("No holdings to display")
+        except Exception as e:
+            st.error(f"Failed to create allocation chart: {e}")
+            logger.error(f"Allocation chart error: {e}", exc_info=True)
     
     st.divider()
     
     # Holdings table
     st.subheader("📋 Current Holdings")
     
-    # Add filter controls (before fetching data, so they don't trigger refresh)
+    # Add filter controls
     filter_col1, filter_col2, filter_col3 = st.columns([2, 2, 6])
     
     with filter_col1:
@@ -563,24 +549,22 @@ def main():
     try:
         holdings_df = portfolio.get_holdings_summary(prices)
         if not holdings_df.empty:
-            # Apply filtering on the already-loaded data (no API/DB calls)
+            # Apply filtering
             filtered_df = holdings_df.copy()
             
             if asset_filter == "Assets Only":
-                # Exclude cash-like assets
                 filtered_df = filtered_df[~filtered_df['Asset Type'].isin(['Cash', 'Unknown'])]
             elif asset_filter == "Cash Only":
-                # Only show cash
                 filtered_df = filtered_df[filtered_df['Asset Type'] == 'Cash']
             
             if not filtered_df.empty:
                 # Format for display
                 holdings_display = filtered_df.copy()
                 holdings_display['Shares'] = holdings_display['Shares'].apply(lambda x: f"{x:.4f}")
-                holdings_display['Avg Cost'] = holdings_display['Avg Cost'].apply(lambda x: f"€{x:.2f}")
-                holdings_display['Current Price'] = holdings_display['Current Price'].apply(lambda x: f"€{x:.2f}")
-                holdings_display['Market Value'] = holdings_display['Market Value'].apply(lambda x: f"€{x:,.2f}")
-                holdings_display['Gain/Loss'] = holdings_display['Gain/Loss'].apply(lambda x: f"€{x:,.2f}")
+                holdings_display['Avg Cost'] = holdings_display['Avg Cost'].apply(lambda x: f"eur {x:.2f}")
+                holdings_display['Current Price'] = holdings_display['Current Price'].apply(lambda x: f"eur {x:.2f}")
+                holdings_display['Market Value'] = holdings_display['Market Value'].apply(lambda x: f"eur {x:,.2f}")
+                holdings_display['Gain/Loss'] = holdings_display['Gain/Loss'].apply(lambda x: f"eur {x:,.2f}")
                 holdings_display['Gain %'] = holdings_display['Gain %'].apply(lambda x: f"{x:.2f}%")
                 
                 st.dataframe(
