@@ -50,3 +50,4 @@ logs/
 
 # Configuration tools
 scripts/config_helper.py
+scripts/generate_cache_key.py
