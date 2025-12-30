@@ -156,9 +156,9 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             self.cash_flows.append((t.date, abs(amount_eur)))  # Positive (return)
             self.invested_capital += amount_eur  # amount_eur is negative
             self.total_withdrawn += abs(amount_eur)
-            
-        # Update holdings
-        # Update holdings
+        
+        # Update holdings for transactions with tickers
+        if t.ticker and t.ticker.strip():
             if t.ticker not in self.holdings:
                 self.holdings[t.ticker] = Position(
                     ticker=t.ticker, 
@@ -250,9 +250,27 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         """Reconstruct current portfolio state from all transactions."""
         logger.info(f"Reconstructing portfolio from {len(self.transactions)} transactions")
         
-        for trans in self.transactions:
-            self.process_transaction(trans) # Call the new process_transaction method
+        # DEBUG: Log first few transactions to verify parsing
+        if self.transactions:
+            logger.info("First 5 transactions preview:")
+            logger.info(f"{'Date':<12} | {'Type':<15} | {'Ticker':<12} | {'Shares':<10} | {'Total'}")
+            logger.info("-" * 65)
+            for t in self.transactions[:5]:
+                shares_str = f"{t.shares:.4f}" if t.shares else "0"
+                total_str = f"{t.total:.2f}"
+                logger.info(f"{str(t.date.date()):<12} | {t.type.value:<15} | {t.ticker or 'N/A':<12} | {shares_str:<10} | {total_str}")
         
+        for trans in self.transactions:
+            self.process_transaction(trans)
+
+        
+        # DEBUG: Log holdings before filtering
+        logger.info(f"Pre-filter holdings: {len(self.holdings)}")
+        if self.holdings:
+            logger.info("Sample holdings state (before filtering 0-share positions):")
+            for ticker, pos in list(self.holdings.items())[:10]:
+                logger.info(f"  {ticker}: Shares={pos.shares}, Cost={pos.cost_basis:.2f}")
+
         # Remove holdings with zero shares
         self.holdings = {
             ticker: holding
@@ -304,11 +322,17 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 logger.debug(f"Skipping {ticker} with {pos.shares} shares (fully sold)")
                 continue
             
+            # Determine the currency of the price
+            price_currency = get_currency_for_ticker(ticker)
+            
+            # Get current price
             current_price = prices.get(ticker)
+            price_source = "live"
+            
             if current_price is not None:
                 pos.update_market_value(Decimal(str(current_price)))
             else:
-                # FALLBACK: Try to get last cached price
+                # FALLBACK 1: Try to get last cached price
                 try:
                     cache = get_market_cache()
                     
@@ -319,13 +343,38 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                         if cached_price:
                             current_price = cached_price
                             pos.update_market_value(Decimal(str(current_price)))
-                            logger.warning(f"{ticker}: Using cached price from {check_date} ({cached_price:.2f})")
+                            price_source = f"cached_{check_date}"
+                            logger.warning(f"{ticker}: Using cached price from {check_date} ({cached_price:.2f} {price_currency})")
                             break
                 except Exception as e:
                     logger.error(f"Failed to get cached price for {ticker}: {e}")
+                
+                # FALLBACK 2: If still no price, use average cost as price
+                if current_price is None:
+                    avg_cost_per_share = pos.cost_basis / pos.shares if pos.shares > 0 else Decimal(0)
+                    current_price = float(avg_cost_per_share)
+                    pos.update_market_value(avg_cost_per_share)
+                    price_source = "cost_basis"
+                    price_currency = "EUR"  # Cost basis is always in EUR
+                    logger.warning(f"{ticker}: No price found, using average cost basis ({current_price:.2f} EUR)")
 
+            # Convert price to EUR for display
+            current_price_eur = current_price
+            if price_currency != "EUR" and current_price:
+                try:
+                    fx_rate = get_fx_rate(price_currency, "EUR")
+                    current_price_eur = current_price * float(fx_rate)  # Convert Decimal to float
+                except Exception as e:
+                    logger.error(f"Failed to get FX rate for {price_currency}/EUR: {e}")
+                    current_price_eur = current_price  # Fallback to original
+            
+            # Calculate market value in EUR
+            market_value_eur = float(pos.shares) * current_price_eur
+            
             # Calculate metrics
             avg_cost = pos.cost_basis / pos.shares if pos.shares > 0 else 0
+            gain_loss_eur = market_value_eur - float(pos.cost_basis)
+            gain_loss_pct = (gain_loss_eur / float(pos.cost_basis) * 100) if pos.cost_basis > 0 else 0
             
             # Get asset type display name
             asset_type_display = pos.asset_type.value if pos.asset_type else "Unknown"
@@ -335,18 +384,18 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 'Name': pos.name if pos.name else ticker,
                 'Asset Type': asset_type_display,
                 'Shares': float(pos.shares),
-                'Avg Cost': float(avg_cost),
-                'Current Price': float(current_price) if current_price else 0.0,
-                'Market Value': float(pos.market_value),
-                'Gain/Loss': float(pos.gain_loss),
-                'Gain %': float(pos.gain_loss_pct)
+                'Avg Cost (EUR)': float(avg_cost),
+                'Current Price (EUR)': current_price_eur,
+                'Market Value (EUR)': market_value_eur,
+                'Gain/Loss (EUR)': gain_loss_eur,
+                'Gain %': gain_loss_pct
             })
         
         df = pd.DataFrame(data)
         if not df.empty:
-            df = df.sort_values('Market Value', ascending=False)
+            df = df.sort_values('Market Value (EUR)', ascending=False)
             # Reorder columns
-            cols = ['Ticker', 'Name', 'Asset Type', 'Shares', 'Avg Cost', 'Current Price', 'Market Value', 'Gain/Loss', 'Gain %']
+            cols = ['Ticker', 'Name', 'Asset Type', 'Shares', 'Avg Cost (EUR)', 'Current Price (EUR)', 'Market Value (EUR)', 'Gain/Loss (EUR)', 'Gain %']
             df = df[cols]
         
         return df

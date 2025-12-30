@@ -42,6 +42,25 @@ def process_data_pipeline(file_content: str):
         
         if not transactions:
             return None, [], 0, None
+            
+        # 1.5. ISIN Resolution
+        # Convert ISINs to Tickers to ensure yfinance finds splits/prices
+        from services.isin_resolver import ISINResolver
+        
+        tickers_to_check = {t.ticker for t in transactions if t.ticker}
+        resolved_map = ISINResolver.resolve_batch(list(tickers_to_check))
+        
+        # Update transactions with resolved tickers
+        resolved_count = 0
+        for t in transactions:
+            if t.ticker in resolved_map and resolved_map[t.ticker] != t.ticker:
+                # Log only distinct changes to avoid massive spam
+                # logger.debug(f"Mapping {t.ticker} -> {resolved_map[t.ticker]}")
+                t.ticker = resolved_map[t.ticker]
+                resolved_count += 1
+                
+        if resolved_count > 0:
+            logger.info(f"Resolved ISINs to Tickers for {resolved_count} transactions")
         
         # 2. Splits
         # Note: CorporateActionService should have internal caching if possible, 
@@ -116,182 +135,257 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS - Banking-Grade Professional UI
+# Custom CSS - Cyber-Fintech Professional
 st.markdown("""
 <style>
-    /* Import Professional Font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    /* Import Professional Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
     
-    /* Design Tokens */
+    /* Design Tokens - Deep Space / FinTech */
     :root {
-        --primary-blue: #2563EB;
-        --primary-dark: #1E40AF;
-        --success-green: #10B981;
-        --gray-50: #F9FAFB;
-        --gray-100: #F3F4F6;
-        --gray-600: #4B5563;
-        --gray-700: #374151;
-        --gray-900: #111827;
+        --bg-color: #0b0e11;        /* Ultra dark slate */
+        --sidebar-bg: #15191e;      /* Distinct sidebar */
+        --card-bg: #1e2329;         /* Lighter card */
+        --card-border: #2b313a;     /* Subtle border */
+        --text-primary: #e6e6e6;
+        --text-secondary: #8b949e;
+        --accent-primary: #3b82f6;  /* Professional Blue */
+        --accent-glow: rgba(59, 130, 246, 0.4);
+        --accent-secondary: #6366f1; /* Indigo */
+        --glass-bg: rgba(30, 35, 41, 0.7);
     }
     
-    /* Global Font */
-    * {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    /* Global App Styling with Radial Gradient */
+    .stApp {
+        background-color: var(--bg-color);
+        background-image: radial-gradient(circle at 50% 0%, #1f2937 0%, #0b0e11 75%);
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
     }
     
-    /* Main Header with Gradient */
+    /* Cyber-Tech Headers */
     .main-header {
+        font-family: 'JetBrains Mono', monospace;
         font-size: 2.5rem;
         font-weight: 700;
-        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+        letter-spacing: -0.05em;
+        background: linear-gradient(90deg, #60A5FA 0%, #A78BFA 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.025em;
-        animation: fadeInDown 0.6s ease-out;
+        margin-bottom: 0.2rem;
+        text-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
     }
     
     .sub-header {
-        font-size: 1.2rem;
-        color: var(--gray-600);
-        margin-bottom: 2rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
         font-weight: 400;
-        animation: fadeInUp 0.6s ease-out 0.2s both;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
     }
     
-    /* Professional Metric Cards */
-    [data-testid="stMetric"] {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-        border: 1px solid var(--gray-100);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    [data-testid="stMetric"]::before {
+    .sub-header::before {
         content: '';
+        display: block;
+        width: 6px;
+        height: 6px;
+        background-color: var(--accent-primary);
+        box-shadow: 0 0 8px var(--accent-primary);
+    }
+
+    /* Section Headers */
+    h3 {
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        color: var(--text-primary) !important;
+        border-left: 4px solid var(--accent-primary);
+        padding-left: 1.5rem; /* Increased Spacing */
+        margin-top: 2rem !important;
+        margin-bottom: 1.5rem !important;
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    
+    /* Dashboard Tiles (Metrics) */
+    [data-testid="stMetric"] {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-top: 2px solid var(--card-border);
+        padding: 0.8rem;
+        border-radius: 4px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden; /* For scanline effect */
+    }
+    
+    /* Subtle Scanline/Glow Effect */
+    [data-testid="stMetric"]::after {
+        content: " ";
+        display: block;
         position: absolute;
         top: 0;
         left: 0;
-        right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(37, 99, 235, 0.02) 0%, rgba(30, 64, 175, 0.05) 100%);
-        opacity: 0;
-        transition: opacity 0.3s;
+        right: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+        z-index: 1;
+        background-size: 100% 2px, 3px 100%;
         pointer-events: none;
+    }
+
+    [data-testid="stMetric"]::before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        width: 10px;
+        height: 10px;
+        border-top: 2px solid var(--accent-primary);
+        border-left: 2px solid var(--accent-primary);
+        border-radius: 4px 0 0 0;
+        z-index: 2;
     }
     
     [data-testid="stMetric"]:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-        border-color: var(--primary-blue);
+        border-color: var(--accent-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
     }
     
-    [data-testid="stMetric"]:hover::before {
-        opacity: 1;
-    }
-    
+    /* KPI Value & Delta Side-by-Side */
     [data-testid="stMetricValue"] {
-        font-size: 2rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.5rem !important;
         font-weight: 700;
-        color: var(--gray-900);
-        letter-spacing: -0.02em;
+        color: var(--text-primary) !important;
+        display: inline-block !important; /* Force inline */
+    }
+    
+    [data-testid="stMetricDelta"] {
+        display: inline-block !important; /* Force inline */
+        margin-left: 12px !important;
+        vertical-align: bottom !important;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem !important;
+        background-color: rgba(0,0,0,0.2) !important;
+        padding: 2px 6px !important;
+        border-radius: 4px !important;
+        position: relative; 
+        top: -4px; /* Adjust alignment */
     }
     
     [data-testid="stMetricLabel"] {
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--gray-600);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem !important;
+        color: var(--text-secondary) !important;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.1em;
+        margin-bottom: 4px !important;
     }
     
-    /* Professional Button Styling */
-    .stButton>button {
-        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.75rem 1.5rem;
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: var(--sidebar-bg);
+        border-right: 1px solid var(--card-border);
+    }
+    
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
+        color: var(--text-secondary);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
         font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Input Fields & Selectboxes */
+    .stSelectbox > div > div {
+        background-color: var(--card-bg) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Buttons usually */
+    .stButton>button {
+        background-color: var(--card-bg);
+        color: var(--accent-primary);
+        border: 1px solid var(--card-border);
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.2s;
+        padding: 0.6rem 1rem;
     }
     
     .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 12px rgba(37, 99, 235, 0.4);
+        background: rgba(59, 130, 246, 0.1);
+        border-color: var(--accent-primary);
+        color: #fff;
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
     }
     
-    /* Enhanced Sidebar */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, var(--gray-50) 0%, white 100%);
-    }
-    
-    /* Dataframe Styling */
+    /* Tables/Dataframes - Tile Style */
     .dataframe {
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        border: 1px solid var(--gray-100);
+        background-color: var(--card-bg) !important;
+        border: none !important;
+        font-family: 'JetBrains Mono', monospace;
     }
     
-    .dataframe thead th {
-        background: var(--gray-100);
-        font-weight: 600;
-        text-transform: uppercase;
+    .stDataFrame {
+        border: 1px solid var(--card-border);
+        border-radius: 4px;
+        background-color: var(--card-bg);
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        position: relative;
+    }
+    
+    th {
+        background-color: #11151a !important;
+        color: var(--accent-primary) !important;
+        font-family: 'JetBrains Mono', monospace;
         font-size: 0.75rem;
-        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
     }
     
-    .dataframe tbody tr:hover {
-        background: var(--gray-50);
+    td {
+        color: var(--text-primary) !important;
+        font-size: 0.8rem;
     }
     
-    /* Plotly Chart Container */
-    .js-plotly-plot {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-        border: 1px solid var(--gray-100);
+    /* Chart Containers */
+    [data-testid="stPlotlyChart"] {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 4px;
+        padding: 1rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
     
-    /* Animations */
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* Alerts */
+    .stAlert {
+        background-color: rgba(59, 130, 246, 0.05);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        color: var(--text-primary);
+        border-radius: 4px;
     }
     
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .main-header {
-            font-size: 2rem;
-        }
-        [data-testid="stMetricValue"] {
-            font-size: 1.5rem;
-        }
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -301,272 +395,155 @@ def main():
     
     # Authentication check
     if not check_authentication():
-        st.stop()  # Stop execution if not authenticated
+        st.stop()
     
-    # Show logout button for authenticated users
     show_logout_button()
     
-    # Header
-    st.markdown('<div class="main-header">📊 Portfolio Viewer</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Professional portfolio tracker with XIRR calculations</div>', unsafe_allow_html=True)
+    # Header - Cyber Tech
+    st.markdown('<div class="main-header">PORTFOLIO DASHBOARD</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">Financial Analytics & Performance Tracking</div>', unsafe_allow_html=True)
     
-    # Sidebar
+    # ==========================================
+    # SIDEBAR: COMPACT & CLEAN
+    # ==========================================
     with st.sidebar:
-        st.header("📁 Data Import")
+        st.markdown("### Data Source")
         
         uploaded_file = st.file_uploader(
-            "Upload Transaction CSV",
+            "Import CSV",
             type=['csv'],
-            help="Upload your transaction history in CSV format (max 10MB)"
+            label_visibility="collapsed",
+            help="Upload transaction history"
         )
         
+        # Cache Loading Logic
+        cache = get_market_cache()
+        cached_data = cache.get_last_transactions_csv()
+        
+        file_content = None
+        filename = None
+        using_cache = False
+
         if uploaded_file is not None:
-            # Check file size
-            file_size = uploaded_file.size
-            if file_size > 10 * 1024 * 1024:  # 10MB
-                st.error("File size exceeds 10MB limit")
-                return
-            
-            st.success(f"File uploaded: {uploaded_file.name} ({file_size / 1024:.1f} KB)")
+            file_content = uploaded_file.getvalue().decode('utf-8')
+            filename = uploaded_file.name
+            st.caption(f"Loaded: {filename}")
+            try:
+                cache.save_transactions_csv(file_content, filename)
+            except Exception as e:
+                logger.error(f"Cache save failed: {e}")
+                
+        elif cached_data:
+            csv_content, cache_filename, uploaded_at = cached_data
+            file_content = csv_content
+            filename = cache_filename
+            using_cache = True
+            st.caption(f"Cached: {cache_filename}")
+            st.caption(f"Time: {uploaded_at.strftime('%m-%d %H:%M')}")
         
+        if file_content is None:
+            st.info("Awaiting Data Import")
+            return
+
+        # Session State Init
+        if 'enrichment_done' not in st.session_state:
+            st.session_state.enrichment_done = False
+        if 'last_processed_content' not in st.session_state:
+            st.session_state.last_processed_content = None
+        
+        # New File Reset Logic
+        if st.session_state.last_processed_content != file_content:
+            st.session_state.enrichment_done = False
+            st.session_state.last_processed_content = file_content
+            # Auto-detect enrichment from cache
+            try:
+                quick_transactions, _ = parse_csv_only(file_content)
+                if quick_transactions:
+                    sample_isins = [t.ticker for t in quick_transactions[:10] if t.ticker and len(t.ticker) == 12]
+                    if sample_isins:
+                        cached_mappings = sum(1 for isin in sample_isins if cache.get_isin_mapping(isin))
+                        if cached_mappings >= len(sample_isins) * 0.5:
+                            st.session_state.enrichment_done = True
+            except:
+                pass
+
+        st.markdown("### Operations")
+        
+        # Action Buttons - Clean Text
+        col_act1, col_act2 = st.columns(2)
+        
+        with col_act1:
+            enrich_req = st.button("Enrich Data", use_container_width=True, help="Update metadata, splits, and FX")
+        
+        with col_act2:
+            price_req = st.button("Update Prices", use_container_width=True, help="Fetch latest market prices")
+            if price_req:
+                st.session_state.prices_updated = True
+
         st.divider()
-        st.caption("💡 Tip: Your CSV should contain columns like Date, Type, Ticker, Shares, Price, Fees")
-    
-    # Main content
 
-    # Check for cached transactions
-    cache = get_market_cache()
-    cached_data = cache.get_last_transactions_csv()
+    # ==========================================
+    # DATA PROCESSING
+    # ==========================================
     
-    # Determine data source
-    file_content = None
-    filename = None
-    using_cache = False
+    if 'prices_updated' not in st.session_state:
+        st.session_state.prices_updated = False
 
-    if uploaded_file is not None:
-        file_content = uploaded_file.getvalue().decode('utf-8')
-        filename = uploaded_file.name
-        # Save to cache for future auto-loading
-        try:
-            cache.save_transactions_csv(file_content, filename)
-            logger.info(f"Saved CSV to cache: {filename}")
-        except Exception as e:
-            logger.error(f"Failed to save CSV to cache: {e}")
-    elif cached_data:
-        # Auto-load from cache
-        csv_content, cache_filename, uploaded_at = cached_data
-        file_content = csv_content
-        filename = cache_filename
-        using_cache = True
-        # Sidebar notification (simplified)
-        st.sidebar.info(f"📂 Auto-loaded: {cache_filename}\n{uploaded_at.strftime('%Y-%m-%d %H:%M')}")
-
-    if file_content is None:
-        # No upload AND no cache - Show Welcome
-        st.info("👆 Upload a CSV file to get started")
-        
-        with st.expander("📋 Supported CSV Format"):
-            st.markdown("""
-            **Required Columns:**
-            - `Date` (or datetime, datum)
-            - `Type` (Buy, Sell, Dividend, TransferIn, TransferOut, Interest)
-            
-            **Optional Columns:**
-            - `Ticker` (or symbol, ISIN, identifier)
-            - `Shares` (or amount, quantity)
-            - `Price` (or unit_price)
-            - `Fees` (or fee, commission)
-            - `Total` (net cash flow)
-            - `Currency` (or originalcurrency)
-            - `FXRate` (exchange rate to EUR)
-            
-            **Format Detection:**
-            - Automatically detects delimiter (; or ,)
-            - Handles German decimal format (comma as separator)
-            - Fuzzy column name matching
-            """)
-        
-        with st.expander("📊 Features"):
-            col1, col2 = st.columns(2)
-            with col1:
-                st.markdown("""
-                **Performance Metrics:**
-                - XIRR (money-weighted return)
-                - Absolute return (€ and %)
-                - Net worth calculation
-                - Holdings summary
-                """)
-            with col2:
-                st.markdown("""
-                **Visualizations:**
-                - Portfolio allocation donut chart
-                - Performance history area chart
-                - Interactive hover tooltips
-                - Responsive design
-                """)
-        
-        return
-    
-    # Initialize session state for manual update control
-    if 'enrichment_done' not in st.session_state:
-        st.session_state.enrichment_done = False
-    if 'last_processed_content' not in st.session_state:
-        st.session_state.last_processed_content = None
-    
-    # Check if we need to reset enrichment status (new file)
-    if st.session_state.last_processed_content != file_content:
-        st.session_state.enrichment_done = False
-        st.session_state.last_processed_content = file_content
-    
-    # Manual Update Controls in Sidebar
-    with st.sidebar:
-        st.markdown("---")
-        st.markdown("### ⚙️ Data Operations")
-        
-        # Button to enrich transactions (splits, FX, ISINs)
-        enrich_button = st.button(
-            "🔄 Update Transactions",
-            help="Fetch splits, update FX rates, resolve ISINs (takes ~10 min)",
-            use_container_width=True,
-            type="secondary" if not st.session_state.enrichment_done else "primary"
-        )
-        
-        if not st.session_state.enrichment_done:
-            st.caption("⚠️ Transactions not enriched yet")
-        else:
-            st.caption("✅ Transactions enriched")
-    
-    # Process data based on enrichment state
     try:
-        if enrich_button or st.session_state.enrichment_done:
-            # Full pipeline with API calls
+        if enrich_req or st.session_state.enrichment_done:
             transactions, split_log, fx_conversions, validation_data = process_data_pipeline(file_content)
             st.session_state.enrichment_done = True
-            
-            if not transactions:
-                st.error("No valid transactions found in CSV")
-                return
-                
-            # Status display
-            with st.sidebar:
-                st.markdown("---")
-                st.markdown("### 🛠️ Data Status")
-                
-                status_lines = []
-                status_lines.append(f"• **Parsed:** {len(transactions)} transactions")
-                
-                if split_log:
-                    status_lines.append(f"• **Splits:** {len(split_log)} applied")
-                
-                if fx_conversions > 0:
-                    status_lines.append(f"• **FX:** {fx_conversions} historical rates")
-                
-                for line in status_lines:
-                    st.markdown(f"<small>{line}</small>", unsafe_allow_html=True)
-
-                # Data Quality / Warnings
-                if validation_data:
-                    validation_issues, summary = validation_data
-                    if summary and (summary['ERROR'] > 0 or summary['WARNING'] > 0):
-                        with st.expander("🔍 Data Quality Details", expanded=False):
-                            if summary['ERROR'] > 0:
-                                st.markdown(f"**Errors:** {summary['ERROR']}")
-                            if summary['WARNING'] > 0:
-                                st.markdown(f"**Warnings:** {summary['WARNING']}")
-                            for issue in validation_issues[:5]:
-                                st.caption(f"• {issue.message}")
-                
-                if uploaded_file is not None:
-                    st.caption("💾 Saved to local cache")
-                st.markdown("---")
         else:
-            # Fast path: parse only, no API calls
             transactions, validation_data = parse_csv_only(file_content)
-            
-            if not transactions:
-                st.error("No valid transactions found in CSV")
-                return
-            
-            # Minimal status
-            with st.sidebar:
-                st.markdown("---")
-                st.markdown("### 🛠️ Data Status")
-                st.markdown(f"<small>• **Parsed:** {len(transactions)} transactions</small>", unsafe_allow_html=True)
-                st.markdown(f"<small>• **Mode:** View only (no enrichment)</small>", unsafe_allow_html=True)
-                
-                if uploaded_file is not None:
-                    st.caption("💾 Saved to local cache")
-                st.markdown("---")
+            split_log = []
+            fx_conversions = 0
+        
+        if not transactions:
+            st.error("No valid transactions found.")
+            return
 
     except Exception as e:
-        st.error(f"❌ Failed to process data: {str(e)}")
+        st.error(f"Processing Error: {str(e)}")
         return
 
-    
-    # Build portfolio
+    # Build Portfolio
     try:
         portfolio = Portfolio(transactions)
         tickers = portfolio.get_unique_tickers()
-        
-        with st.sidebar:
-            st.markdown(f"<small>• **Universe:** {len(tickers)} unique tickers</small>", unsafe_allow_html=True)
-            
     except Exception as e:
-        st.error(f"❌ Failed to build portfolio: {str(e)}")
-        logger.error(f"Portfolio reconstruction error: {e}", exc_info=True)
+        st.error(f"Portfolio Error: {str(e)}")
         return
-    
-    # Initialize session state for price updates
-    if 'prices_updated' not in st.session_state:
-        st.session_state.prices_updated = False
-    
-    # Manual Price Update Button in Sidebar
-    with st.sidebar:
-        update_prices_button = st.button(
-            "💰 Update Prices",
-            help="Fetch latest market prices from APIs (uses cache when possible)",
-            use_container_width=True,
-            type="secondary"
-        )
-        
-        if update_prices_button:
-            st.session_state.prices_updated = True
-    
-    # Fetch market data only if requested or already done
-    if st.session_state.prices_updated or update_prices_button:
-        with st.spinner("🌐 Fetching live market data..."):
-            try:
-                prices = fetch_prices(tickers)
-                
-                # Count successful/failed fetches
-                success_count = sum(1 for p in prices.values() if p is not None)
-                failed_tickers = [t for t, p in prices.items() if p is None]
-                
-                with st.sidebar:
-                    if failed_tickers:
-                         with st.expander(f"⚠️ {len(failed_tickers)} pricing issues", expanded=False):
-                            for ticker in failed_tickers[:10]:
-                                st.caption(f"• {ticker}: Fallback used")
-                    else:
-                        st.markdown(f"<small>• **Live Data:** {success_count}/{len(tickers)} active</small>", unsafe_allow_html=True)
-                
-            except Exception as e:
-                st.error(f"❌ Failed to fetch market data: {str(e)}")
-                prices = {}
+
+    # Price Fetching
+    if st.session_state.prices_updated:
+        with st.spinner("Syncing market data..."):
+            prices = fetch_prices(tickers)
     else:
-        # Use cached prices only (fast path)
-        cache = get_market_cache()
         prices = cache.get_prices_batch(tickers, datetime.now().date())
+
+    # ==========================================
+    # SIDEBAR STATUS GRID
+    # ==========================================
+    with st.sidebar:
+        st.markdown("### System Status")
         
-        # Count how many we have cached
-        cached_count = sum(1 for p in prices.values() if p is not None)
+        # 2x2 Grid using columns
+        row1_1, row1_2 = st.columns(2)
+        row1_1.metric("TX Count", len(transactions))
+        row1_2.metric("Assets", len(tickers))
         
-        with st.sidebar:
-            if cached_count > 0:
-                st.markdown(f"<small>• **Cached Prices:** {cached_count}/{len(tickers)}</small>", unsafe_allow_html=True)
-                st.caption("💡 Click 'Update Prices' to refresh")
-            else:
-                st.warning("⚠️ No cached prices - click 'Update Prices'")
+        row2_1, row2_2 = st.columns(2)
+        status_txt = "Active" if st.session_state.enrichment_done else "Pending"
+        row2_1.metric("Enrichment", status_txt)
+        
+        live_prices_count = sum(1 for p in prices.values() if p is not None)
+        row2_2.metric("Market Data", f"{live_prices_count}/{len(tickers)}")
+
+        # Validation Warnings
+        if validation_data:
+             _, val_summary = validation_data
+             if val_summary and (val_summary['ERROR'] > 0 or val_summary['WARNING'] > 0):
+                 st.warning(f"Data Issues: {val_summary['ERROR']} Errors, {val_summary['WARNING']} Warnings")
 
     
     # Calculate metrics
@@ -591,7 +568,7 @@ def main():
             return
     
     # Display KPIs
-    st.subheader("📊 Key Performance Indicators")
+    st.markdown('<h3 class="section-header">Key Performance Indicators</h3>', unsafe_allow_html=True)
     
     # Calculate explicit metrics
     holdings_cost_basis = sum(pos.cost_basis for pos in portfolio.holdings.values())
@@ -607,44 +584,37 @@ def main():
     # Calculate return % based on Cost Basis
     total_return_pct = (total_absolute_gain / holdings_cost_basis * 100) if holdings_cost_basis > 0 else 0
     
-    # Optimized Layout for FHD: 3 Top Metrics + 3 Secondary
-    m_col1, m_col2, m_col3 = st.columns(3)
+    # Optimized Layout: Single Compact Row of 6 Columns
+    kpi_cols = st.columns(6)
     
-    with m_col1:
+    with kpi_cols[0]:
         st.metric(
             label="Net Worth",
-            value=f"€{current_value:,.2f}",
-            help="Current portfolio value (Holdings + Cash)"
+            value=f"€{current_value:,.0f}", # No decimals for compactness
+            help="Current portfolio value"
         )
     
-    with m_col2:
-        gain_color = "normal" if total_absolute_gain >= 0 else "inverse"
+    with kpi_cols[1]:
         st.metric(
-            label="Absolute Gain",
-            value=f"€{total_absolute_gain:,.2f}",
-            delta=f"{total_return_pct:.2f}%",
-            help="Realized + Dividends + Interest + (MV - Cost) - Fees"
+            label="Abs Gain",
+            value=f"€{total_absolute_gain:,.0f}",
+            delta=f"{total_return_pct:.1f}%"
         )
     
-    with m_col3:
+    with kpi_cols[2]:
         if xirr_value is not None:
-            xirr_pct = xirr_value * 100
-            st.metric(
-                label="XIRR",
-                value=f"{xirr_pct:.2f}%",
-                help="Annualized money-weighted return"
-            )
+            st.metric("XIRR", f"{xirr_value * 100:.1f}%")
         else:
             st.metric("XIRR", "N/A")
-            
-    # Secondary Metrics Row
-    m_col4, m_col5, m_col6 = st.columns(3)
-    with m_col4:
-        st.metric("Net Deposits", f"€{portfolio.invested_capital:,.2f}")
-    with m_col5:
-        st.metric("Cost Basis", f"€{holdings_cost_basis:,.2f}")
-    with m_col6:
-        st.metric("Total Fees", f"€{portfolio.total_fees:,.2f}")
+
+    with kpi_cols[3]:
+        st.metric("Deposits", f"€{portfolio.invested_capital:,.0f}")
+
+    with kpi_cols[4]:
+        st.metric("Cost Basis", f"€{holdings_cost_basis:,.0f}")
+        
+    with kpi_cols[5]:
+        st.metric("Fees", f"€{portfolio.total_fees:,.0f}")
     
     st.divider()
     
@@ -661,7 +631,7 @@ def main():
         all_tickers = set(t.ticker for t in transactions if t.ticker)
         
         # Fetch ALL historical prices once (cached by Streamlit)
-        with st.spinner("📉 Loading historical price data (one-time)..."):
+        with st.spinner("Loading historical price data (one-time)..."):
             all_hist_prices_df = fetch_historical_prices(
                 list(all_tickers),
                 earliest_transaction.date(),
@@ -676,13 +646,13 @@ def main():
     chart_col_main, chart_col_side = st.columns([2, 1])
     
     with chart_col_main:
-        st.subheader("📈 Performance History")
+        st.markdown('<h3 class="section-header">Performance History</h3>', unsafe_allow_html=True)
         
         # Timeframe selector (inline)
         timeframe = st.selectbox(
             "Timeframe",
             options=["1M", "3M", "6M", "1Y", "All"],
-            index=3,
+            index=4,
             key="performance_timeframe",
             label_visibility="collapsed"
         )
@@ -800,7 +770,7 @@ def main():
                 logger.error(f"Performance chart error: {e}", exc_info=True)
             
     with chart_col_side:
-        st.subheader("🥧 Portfolio Allocation")
+        st.markdown('<h3 class="section-header">Portfolio Allocation</h3>', unsafe_allow_html=True)
         try:
             holdings_df = portfolio.get_holdings_summary(prices)
             if not holdings_df.empty:
@@ -815,7 +785,7 @@ def main():
     st.divider()
     
     # Holdings table
-    st.subheader("📋 Current Holdings")
+    st.markdown('<h3 class="section-header">Current Holdings</h3>', unsafe_allow_html=True)
     
     # Add filter controls
     filter_col1, filter_col2, filter_col3 = st.columns([2, 2, 6])
@@ -847,10 +817,10 @@ def main():
                 # Format for display
                 holdings_display = filtered_df.copy()
                 holdings_display['Shares'] = holdings_display['Shares'].apply(lambda x: f"{x:.4f}")
-                holdings_display['Avg Cost'] = holdings_display['Avg Cost'].apply(lambda x: f"€{x:.2f}")
-                holdings_display['Current Price'] = holdings_display['Current Price'].apply(lambda x: f"€{x:.2f}")
-                holdings_display['Market Value'] = holdings_display['Market Value'].apply(lambda x: f"€{x:,.2f}")
-                holdings_display['Gain/Loss'] = holdings_display['Gain/Loss'].apply(lambda x: f"€{x:,.2f}")
+                holdings_display['Avg Cost (EUR)'] = holdings_display['Avg Cost (EUR)'].apply(lambda x: f"€{x:.2f}")
+                holdings_display['Current Price (EUR)'] = holdings_display['Current Price (EUR)'].apply(lambda x: f"€{x:.2f}")
+                holdings_display['Market Value (EUR)'] = holdings_display['Market Value (EUR)'].apply(lambda x: f"€{x:,.2f}")
+                holdings_display['Gain/Loss (EUR)'] = holdings_display['Gain/Loss (EUR)'].apply(lambda x: f"€{x:,.2f}")
                 holdings_display['Gain %'] = holdings_display['Gain %'].apply(lambda x: f"{x:.2f}%")
                 
                 st.dataframe(
@@ -925,8 +895,10 @@ def main():
                 selected_ticker = st.selectbox("Filter by Ticker", tickers)
             
             with col_filter3:
-                asset_types = ['All'] + sorted(trans_df['Asset Type'].unique().tolist())
-                selected_asset_type = st.selectbox("Filter by Asset Type", asset_types)
+                # Enhanced filter options: Default to Assets Only (hide cash/no-ticker)
+                unique_asset_types = sorted(trans_df['Asset Type'].unique().tolist())
+                filter_options = ["Assets Only", "All"] + unique_asset_types
+                selected_asset_filter = st.selectbox("Filter by Asset Type", filter_options, index=0)
             
             # Apply filters
             filtered_df = trans_df.copy()
@@ -934,8 +906,16 @@ def main():
                 filtered_df = filtered_df[filtered_df['Type'] == selected_type]
             if selected_ticker != 'All':
                 filtered_df = filtered_df[filtered_df['Ticker'] == selected_ticker]
-            if selected_asset_type != 'All':
-                filtered_df = filtered_df[filtered_df['Asset Type'] == selected_asset_type]
+            
+            # Apply Asset View Filter
+            if selected_asset_filter == 'Assets Only':
+                # Filter out transactions with no ticker (Cash)
+                filtered_df = filtered_df[filtered_df['Ticker'] != '-']
+            elif selected_asset_filter == 'All':
+                pass
+            else:
+                # Specific asset type filter
+                filtered_df = filtered_df[filtered_df['Asset Type'] == selected_asset_filter]
             
             st.dataframe(
                 filtered_df,

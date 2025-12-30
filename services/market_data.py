@@ -217,6 +217,7 @@ def get_currency_for_ticker(ticker: str) -> str:
     Determine the trading currency based on the ticker symbol.
     
     Rules:
+    - ISIN format (2-letter country code): Infer currency from country
     - Suffix .DE, .PA, .MI, .AS, .VI, .BR, .HE, .NX -> EUR
     - Suffix .L -> GBP (Note: might be GBp/pencil, handled separately?)
     - Suffix .TO, .V -> CAD
@@ -264,7 +265,53 @@ def get_currency_for_ticker(ticker: str) -> str:
         if suffix == "OL":
             return "NOK"
     
-    # 3. Default to USD for US-style tickers (no suffix)
+    # 3. ISIN format detection (12 characters, starts with 2-letter country code)
+    if len(ticker) == 12 and ticker[:2].isalpha() and ticker[2:].isalnum():
+        country_code = ticker[:2]
+        
+        # Map ISIN country codes to currencies
+        isin_currency_map = {
+            # Eurozone countries
+            "AT": "EUR", "BE": "EUR", "CY": "EUR", "DE": "EUR", "EE": "EUR",
+            "ES": "EUR", "FI": "EUR", "FR": "EUR", "GR": "EUR", "IE": "EUR",
+            "IT": "EUR", "LT": "EUR", "LU": "EUR", "LV": "EUR", "MT": "EUR",
+            "NL": "EUR", "PT": "EUR", "SI": "EUR", "SK": "EUR",
+            
+            # Other European countries
+            "DK": "DKK",  # Denmark
+            "NO": "NOK",  # Norway
+            "SE": "SEK",  # Sweden
+            "CH": "CHF",  # Switzerland
+            "GB": "GBP",  # United Kingdom
+            "PL": "PLN",  # Poland
+            
+            # Americas
+            "US": "USD",  # United States
+            "CA": "CAD",  # Canada
+            "BR": "BRL",  # Brazil
+            
+            # Asia-Pacific
+            "JP": "JPY",  # Japan
+            "HK": "HKD",  # Hong Kong
+            "CN": "CNY",  # China
+            "AU": "AUD",  # Australia
+            "NZ": "NZD",  # New Zealand
+            "SG": "SGD",  # Singapore
+            "KR": "KRW",  # South Korea
+            "IN": "INR",  # India
+            
+            # Others
+            "ZA": "ZAR",  # South Africa
+            "IL": "ILS",  # Israel
+            "TR": "TRY",  # Turkey
+            "KY": "USD",  # Cayman Islands (typically USD)
+        }
+        
+        currency = isin_currency_map.get(country_code)
+        if currency:
+            return currency
+    
+    # 4. Default to USD for US-style tickers (no suffix)
     return "USD"
 
 
