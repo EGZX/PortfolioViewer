@@ -9,6 +9,8 @@ from datetime import datetime, date, timedelta
 from typing import Optional, Dict, List, Tuple
 from pathlib import Path
 import os
+import streamlit as st
+from cryptography.fernet import Fernet
 
 from utils.logging_config import setup_logger
 
@@ -36,6 +38,21 @@ class MarketDataCache:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._init_db()
+        
+        # Initialize encryption
+        self.fernet = None
+        try:
+            # Check for key in secrets (nested under passwords or top level)
+            secrets = st.secrets.get("passwords", {}) if "passwords" in st.secrets else st.secrets
+            key = secrets.get("MARKET_CACHE_ENCRYPTION_KEY")
+            
+            if key:
+                self.fernet = Fernet(key)
+                logger.info("🔒 Cache encryption enabled")
+            else:
+                logger.info("Cache encryption disabled (no key found)")
+        except Exception as e:
+            logger.warning(f"Failed to initialize encryption: {e}")
     
     def _get_conn(self) -> sqlite3.Connection:
         """Get a configured database connection."""
@@ -244,9 +261,6 @@ class MarketDataCache:
                 (isin,)
             )
             result = cursor.fetchone()
-            # result[0] can be None if we cached a "not found" state (though usually we cache actual values)
-            # If we want to support negative caching, we'd need to handle that. 
-            # For now assume mostly positive caching or None if missing.
             return result[0] if result else None
 
     def set_isin_mapping(self, isin: str, ticker: Optional[str], source: str = 'openfigi'):
@@ -262,7 +276,22 @@ class MarketDataCache:
     # ==================== Transaction Cache Methods ====================
 
     def save_transactions_csv(self, csv_content: str, filename: str = "uploaded.csv"):
-        """Save CSV content to cache for auto-loading."""
+        """
+        Save CSV content to cache for auto-loading.
+        Encrypts content if encryption is enabled.
+        """
+        content_to_save = csv_content
+        
+        if self.fernet:
+            try:
+                # Encrypt
+                content_to_save = self.fernet.encrypt(csv_content.encode('utf-8')).decode('utf-8')
+                logger.info("Encrypted transaction data before caching")
+            except Exception as e:
+                logger.error(f"Encryption failed: {e}")
+                # Don't save unencrypted if encryption failed
+                return
+
         with self._get_conn() as conn:
             cursor = conn.cursor()
             # Delete old cached transactions (keep only latest)
@@ -270,7 +299,7 @@ class MarketDataCache:
             # Insert new
             cursor.execute(
                 "INSERT INTO transactions_cache (csv_content, filename) VALUES (?, ?)",
-                (csv_content, filename)
+                (content_to_save, filename)
             )
             conn.commit()
             logger.info(f"Saved transactions CSV to cache: {filename}")
@@ -278,6 +307,7 @@ class MarketDataCache:
     def get_last_transactions_csv(self) -> Optional[Tuple[str, str, datetime]]:
         """
         Get last cached CSV content.
+        Decrypts content if encryption is enabled.
         
         Returns:
             Tuple of (csv_content, filename, uploaded_at) or None if no cache
@@ -288,9 +318,27 @@ class MarketDataCache:
                 "SELECT csv_content, filename, uploaded_at FROM transactions_cache ORDER BY uploaded_at DESC LIMIT 1"
             )
             result = cursor.fetchone()
-            if result:
-                return (result[0], result[1], datetime.fromisoformat(result[2]))
-            return None
+            
+            if not result:
+                return None
+                
+            csv_content, filename, uploaded_at_str = result
+            
+            # Decrypt if enabled
+            if self.fernet:
+                try:
+                    csv_content = self.fernet.decrypt(csv_content.encode('utf-8')).decode('utf-8')
+                    logger.info("Decrypted transaction data from cache")
+                except Exception as e:
+                    # Could be legacy unencrypted data or wrong key
+                    # Fallback: try return as is if it looks like plain text (not ideal but safe for updates)
+                    if csv_content.strip().startswith(('Date', 'Datum', '"Date"', '"Datum"')):
+                         logger.warning("Loaded plain text cache with encryption key present (legacy data?)")
+                    else:
+                         logger.error(f"Decryption failed: {e}")
+                         return None
+            
+            return (csv_content, filename, datetime.fromisoformat(uploaded_at_str))
 
 # Global cache instance
 _cache_instance: Optional[MarketDataCache] = None 
