@@ -54,8 +54,11 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
     
     def process_transaction(self, t: Transaction):
         """Update portfolio state with a single transaction."""
-        # Convert to EUR
-        amount_eur = t.total * t.fx_rate # Use original conversion logic
+        # CRITICAL FIX: t.total is ALREADY in base currency (EUR)
+        # The CSV export shows total in EUR with € symbol
+        # fx_rate was ALREADY APPLIED during CSV parsing
+        # DO NOT multiply by fx_rate again!
+        amount_eur = t.total  # Already in EUR!
         
         # Update cash balance
         self.cash_balance += amount_eur # Use amount_eur
