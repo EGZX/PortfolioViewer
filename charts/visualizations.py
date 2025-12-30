@@ -10,7 +10,12 @@ from utils.logging_config import setup_logger
 logger = setup_logger(__name__)
 
 
-def create_allocation_donut(holdings_df: pd.DataFrame, min_pct: float = 2.0) -> go.Figure:
+def create_allocation_donut(
+    holdings_df: pd.DataFrame, 
+    min_pct: float = 2.0, 
+    title: str = "Portfolio Allocation",
+    privacy_mode: bool = False
+) -> go.Figure:
     """
     Create an interactive donut chart showing portfolio allocation.
     """
@@ -60,12 +65,15 @@ def create_allocation_donut(holdings_df: pd.DataFrame, min_pct: float = 2.0) -> 
         '#6366f1', '#ec4899', '#14b8a6', '#f97316', '#64748b'
     ]
 
+    # Privacy masking for hover
+    val_fmt = "€%{value:,.2f}" if not privacy_mode else "••••••"
+
     fig = go.Figure(data=[go.Pie(
         labels=display_df['Display_Label'],
         values=display_df[market_value_col],
         hole=0.6,
         hovertemplate='<b>%{label}</b><br>' +
-                     '€%{value:,.2f}<br>' +
+                     f'{val_fmt}<br>' +
                      '%{percent}<br>' +
                      '<extra></extra>',
         textinfo='percent',  # Only show percent on chart to avoid clutter/cutoff
@@ -77,6 +85,11 @@ def create_allocation_donut(holdings_df: pd.DataFrame, min_pct: float = 2.0) -> 
     )])
     
     fig.update_layout(
+        title=dict(
+            text=title,
+            x=0,
+            font=dict(size=18, family="JetBrains Mono", color="#e6e6e6")
+        ),
         showlegend=True,
         legend=dict(
             orientation="h",
@@ -86,8 +99,8 @@ def create_allocation_donut(holdings_df: pd.DataFrame, min_pct: float = 2.0) -> 
             x=0.5,
             font=dict(color='#9CA3AF', size=12)
         ),
-        height=600,
-        margin=dict(t=30, b=150, l=20, r=20),
+        height=590, # Increased to match Left Column (Chart + SelectBox)
+        margin=dict(t=60, b=150, l=20, r=20),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Inter", color="#9CA3AF")
@@ -100,7 +113,9 @@ def create_performance_chart(
     dates: List[str],
     net_deposits: List[float],
     portfolio_values: List[float],
-    cost_basis_values: List[float] = None
+    cost_basis_values: List[float] = None,
+    title: str = "Performance History",
+    privacy_mode: bool = False
 ) -> go.Figure:
     """
     Create a modern area chart for portfolio performance.
@@ -110,6 +125,9 @@ def create_performance_chart(
     
     fig = go.Figure()
     
+    # Privacy masking
+    val_fmt = "€%{y:,.0f}" if not privacy_mode else "••••••"
+    
     # 1. Net Deposits (Base Line)
     fig.add_trace(go.Scatter(
         x=dates,
@@ -117,7 +135,7 @@ def create_performance_chart(
         name='Net Deposits',
         mode='lines',
         line=dict(color='#64748b', width=2, dash='dot'),
-        hovertemplate='<b>Deposits</b>: €%{y:,.0f}<extra></extra>'
+        hovertemplate=f'<b>Deposits</b>: {val_fmt}<extra></extra>'
     ))
     
     # 2. Cost Basis (Optional)
@@ -129,7 +147,7 @@ def create_performance_chart(
             mode='lines',
             line=dict(color='#94a3b8', width=1.5), # Made slightly thicker
             # visible='legendonly', # REMOVED: Show by default
-            hovertemplate='<b>Cost</b>: €%{y:,.0f}<extra></extra>'
+            hovertemplate=f'<b>Cost</b>: {val_fmt}<extra></extra>'
         ))
     
     # 3. Net Worth (Gradient Area)
@@ -141,11 +159,15 @@ def create_performance_chart(
         line=dict(color='#3b82f6', width=3),
         fill='tozeroy',
         fillcolor='rgba(59, 130, 246, 0.1)',
-        hovertemplate='<b>Net Worth</b>: €%{y:,.0f}<extra></extra>'
+        hovertemplate=f'<b>Net Worth</b>: {val_fmt}<extra></extra>'
     ))
     
     fig.update_layout(
-        title='', # Explicit empty string to fix "undefined"
+        title=dict(
+            text=title,
+            x=0,
+            font=dict(size=18, family="JetBrains Mono", color="#e6e6e6")
+        ),
         xaxis=dict(
             showgrid=True,
             gridcolor='rgba(255,255,255,0.05)',
@@ -159,20 +181,21 @@ def create_performance_chart(
             gridcolor='rgba(255,255,255,0.05)',
             zeroline=False,
             tickformat='s',
-            tickfont=dict(color='#9CA3AF')
+            tickfont=dict(color='#9CA3AF'),
+            showticklabels=not privacy_mode # Hide Y-axis labels in privacy mode
         ),
         hovermode='x unified',
         legend=dict(
             orientation='h',
             yanchor='bottom',
             y=1.02,
-            xanchor='left',
-            x=0,
+            xanchor='right',
+            x=1,
             font=dict(color='#E5E7EB'),
             bgcolor='rgba(0,0,0,0)'
         ),
-        height=500,
-        margin=dict(t=40, b=60, l=30, r=20),
+        height=510,
+        margin=dict(t=60, b=80, l=30, r=20),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="JetBrains Mono", size=11)

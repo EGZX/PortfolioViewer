@@ -312,6 +312,93 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         
         return total
     
+    def calculate_performance_history_optimized(
+        self,
+        price_history: pd.DataFrame,
+        start_date: datetime,
+        end_date: datetime
+    ) -> Tuple[List[str], List[float], List[float], List[float]]:
+        """
+        Calculates daily portfolio value efficiently using cached price history DataFrame.
+        
+        Args:
+            price_history: DataFrame with Date index and Ticker columns (prices)
+            start_date: Start of calculations
+            end_date: End of calculations
+            
+        Returns:
+            Tuple of (dates, net_deposits, portfolio_values, cost_basis_values)
+        """
+        # Ensure we have data
+        if not self.transactions:
+            return [], [], [], []
+            
+        # Re-index price history to daily frequency (ffill for weekends/holidays)
+        date_range = pd.date_range(start=start_date.date(), end=end_date.date(), freq='D')
+        
+        # If price_history is empty, we still need to calculate using cost/cash
+        if not price_history.empty:
+            price_history.index = pd.to_datetime(price_history.index)
+            # Reindex to full range and forward fill missing prices
+            full_prices = price_history.reindex(date_range, method='ffill')
+        else:
+            full_prices = pd.DataFrame(index=date_range)
+            
+        # Convert DF to dict for O(1) lookups: {date: {ticker: price}}
+        price_lookup = {}
+        if not full_prices.empty:
+            # Timestamp -> {ticker: price}
+            temp_dict = full_prices.to_dict('index')
+            price_lookup = {
+                ts.date(): prices 
+                for ts, prices in temp_dict.items()
+            }
+            
+        # Initialize runner portfolio
+        # We need a fresh portfolio state that we advance day by day
+        running_portfolio = Portfolio([]) # Empty start
+        
+        # Process transactions by date
+        sorted_trans = sorted(self.transactions, key=lambda t: t.date)
+        trans_idx = 0
+        num_trans = len(sorted_trans)
+        
+        dates_list = []
+        net_deposits_list = []
+        value_list = []
+        cost_basis_list = []
+        
+        for current_ts in date_range:
+            current_date = current_ts.date()
+            
+            # Process transactions for this day
+            while trans_idx < num_trans and sorted_trans[trans_idx].date.date() <= current_date:
+                running_portfolio.process_transaction(sorted_trans[trans_idx])
+                trans_idx += 1
+            
+            # Only record if we have started investing
+            if trans_idx > 0:
+                # Calculate Value
+                daily_prices = price_lookup.get(current_date, {})
+                
+                # Convert the dataframe row dict (which replaces nans with NaNs) to optional floats
+                clean_prices = {
+                    k: float(v) if pd.notna(v) else None 
+                    for k, v in daily_prices.items()
+                }
+                
+                total_value = running_portfolio.calculate_total_value(clean_prices)
+                
+                # Get Cost Basis
+                total_cost_basis = sum(pos.cost_basis for pos in running_portfolio.holdings.values())
+                
+                dates_list.append(current_date.strftime('%Y-%m-%d'))
+                net_deposits_list.append(float(running_portfolio.invested_capital))
+                value_list.append(float(total_value))
+                cost_basis_list.append(float(total_cost_basis))
+                
+        return dates_list, net_deposits_list, value_list, cost_basis_list
+
     def get_holdings_summary(self, prices: Dict[str, Optional[float]]) -> pd.DataFrame:
         """Get summary of all holdings as DataFrame (excludes zero-share positions)."""
         data = []
