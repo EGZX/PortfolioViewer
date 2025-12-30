@@ -70,12 +70,12 @@ class CorporateActionService:
             List of CorporateAction objects (excludes future-dated splits)
         """
         try:
-            logger.info(f"Fetching split history for {ticker}")
+            logger.debug(f"Fetching split history for {ticker}")
             stock = yf.Ticker(ticker)
             splits = stock.splits
             
             if splits.empty:
-                logger.info(f"No splits found for {ticker}")
+                logger.debug(f"No splits found for {ticker}")
                 return []
             
             # Get today's date to filter out future splits
@@ -135,7 +135,7 @@ class CorporateActionService:
                     ratio_to=ratio_to
                 )
                 actions.append(action)
-                logger.info(f"Found split: {action}")
+                logger.debug(f"Found split: {action}")
             
             if future_splits_count > 0:
                 logger.warning(
@@ -212,7 +212,7 @@ class CorporateActionService:
                 f"(factor: {cumulative_factor})"
             )
             adjustment_log.append(log_entry)
-            logger.info(log_entry)
+            logger.debug(log_entry)
             
             adjusted_transactions.append(trans)
         

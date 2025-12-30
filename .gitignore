@@ -47,6 +47,7 @@ Testdata/
 # Logs
 *.log
 logs/
+bugfixing/
 
 # Configuration tools
 scripts/config_helper.py

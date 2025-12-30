@@ -67,6 +67,7 @@ class TransactionType(str, Enum):
         
         # Direct mapping
         type_map = {
+            # English
             "BUY": cls.BUY,
             "SELL": cls.SELL,
             "DIVIDEND": cls.DIVIDEND,
@@ -87,13 +88,48 @@ class TransactionType(str, Enum):
             "SPINOFF": cls.SPIN_OFF,
             "RIGHTSISSUE": cls.RIGHTS_ISSUE,
             "FEE": cls.FEE,
+            "FEES": cls.FEE,
             "COST": cls.COST,
             "TAXWITHHOLDING": cls.TAX_WITHHOLDING,
             "RETURNOFCAPITAL": cls.RETURN_OF_CAPITAL,
+            
+            # German
+            "KAUF": cls.BUY,
+            "VERKAUF": cls.SELL,
+            "DIVIDENDE": cls.DIVIDEND,
+            "EINLAGE": cls.DEPOSIT,
+            "EINZAHLUNG": cls.DEPOSIT,
+            "ENTNAHME": cls.WITHDRAWAL,
+            "AUSZAHLUNG": cls.WITHDRAWAL,
+            "ZINSEN": cls.INTEREST,
+            "GEBÜHR": cls.FEE,
+            "GEBUEHR": cls.FEE,
+            "KOSTEN": cls.COST,
+            "STEUER": cls.TAX_WITHHOLDING,
+            "STEUERN": cls.TAX_WITHHOLDING,
+            "KAPITALERTRAGSTEUER": cls.TAX_WITHHOLDING,
+            "EINLIEFERUNG": cls.TRANSFER_IN,
+            "AUSLIEFERUNG": cls.TRANSFER_OUT,
+            "AKTIENSPLIT": cls.STOCK_SPLIT,
+            "TILGUNG": cls.SELL,  # Redemption treated as sell (cash in, security out)
         }
         
         clean_value = value_upper.replace(" ", "").replace("-", "").replace("_", "")
         result = type_map.get(clean_value)
+        
+        # Fallback for subsets (e.g., "Kauf (Sparplan)")
+        if result is None:
+            # Simple substring matching for common German types if exact match failed
+            if "KAUF" in clean_value:
+                return cls.BUY
+            if "VERKAUF" in clean_value:
+                return cls.SELL
+            if "DIVIDEND" in clean_value:  # Catch Dividende, StockDividend etc carefully
+                if "STOCK" in clean_value or "AKTIE" in clean_value:
+                    return cls.STOCK_DIVIDEND
+                return cls.DIVIDEND
+            if "STEUER" in clean_value:
+                return cls.TAX_WITHHOLDING
         
         if result is None:
             raise TransactionTypeError(f"Unknown transaction type: '{value}'")
