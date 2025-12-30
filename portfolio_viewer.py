@@ -12,6 +12,7 @@ import streamlit as st
 from datetime import datetime, timedelta
 from decimal import Decimal
 import pandas as pd
+import textwrap
 
 from parsers.csv_parser import CSVParser
 from parsers.enhanced_transaction import Transaction  # Import enhanced model
@@ -164,39 +165,32 @@ st.markdown("""
     }
     
     /* Cyber-Tech Headers */
+    /* Cyber-Tech Headers */
+    /* Cyber-Tech Headers */
     .main-header {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 2.5rem;
-        font-weight: 700;
-        letter-spacing: -0.05em;
-        background: linear-gradient(90deg, #60A5FA 0%, #A78BFA 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.2rem;
-        text-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
     }
     
     .sub-header {
         font-family: 'Inter', sans-serif;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+        font-weight: 600;
         color: var(--text-secondary);
-        font-weight: 400;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 2.5rem;
+        letter-spacing: 0.15em;
+        margin-bottom: 2rem;
         display: flex;
         align-items: center;
-        gap: 0.8rem;
+        gap: 10px;
     }
     
-    .sub-header::before {
-        content: '';
-        display: block;
-        width: 6px;
-        height: 6px;
-        background-color: var(--accent-primary);
-        box-shadow: 0 0 8px var(--accent-primary);
-    }
+    /* Removed the blue square decoration */
 
     /* Section Headers */
     h3 {
@@ -205,116 +199,270 @@ st.markdown("""
         font-weight: 600 !important;
         color: var(--text-primary) !important;
         border-left: 4px solid var(--accent-primary);
-        padding-left: 1.5rem; /* Increased Spacing */
+        padding-left: 50px; /* Fixed: Greatly increased separation */
         margin-top: 2rem !important;
         margin-bottom: 1.5rem !important;
         background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
-        padding-top: 5px;
-        padding-bottom: 5px;
+        padding-top: 8px;
+        padding-bottom: 8px;
     }
     
-    /* Dashboard Tiles (Metrics) */
-    [data-testid="stMetric"] {
-        background-color: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-top: 2px solid var(--card-border);
-        padding: 0.8rem;
+    /* CUSTOM CYBER METRIC CARD CSS */
+    .cyber-metric-container {
+        display: flex;
+        flex-direction: column;
+        background-color: #1e2329; /* card-bg */
+        border: 1px solid #2b313a; /* card-border */
+        border-top: 2px solid #2b313a;
+        border-left: 3px solid #3b82f6; /* accent-primary */
         border-radius: 4px;
+        padding: 12px 16px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        transition: all 0.2s ease;
         position: relative;
-        overflow: hidden; /* For scanline effect */
+        overflow: hidden;
+        margin-bottom: 1px;
+        height: 100%;
+        min-height: 85px;
+        justify-content: center;
     }
     
-    /* Subtle Scanline/Glow Effect */
-    [data-testid="stMetric"]::after {
-        content: " ";
-        display: block;
+    .cyber-metric-container::before {
+        content: '';
         position: absolute;
         top: 0;
         left: 0;
-        bottom: 0;
-        right: 0;
-        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-        z-index: 1;
-        background-size: 100% 2px, 3px 100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent 48%, rgba(59, 130, 246, 0.03) 50%, transparent 52%);
+        background-size: 200% 200%;
         pointer-events: none;
     }
 
-    [data-testid="stMetric"]::before {
-        content: '';
-        position: absolute;
-        top: -1px;
-        left: -1px;
-        width: 10px;
-        height: 10px;
-        border-top: 2px solid var(--accent-primary);
-        border-left: 2px solid var(--accent-primary);
-        border-radius: 4px 0 0 0;
-        z-index: 2;
-    }
-    
-    [data-testid="stMetric"]:hover {
-        border-color: var(--accent-primary);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
-    }
-    
-    /* KPI Value & Delta Side-by-Side */
-    [data-testid="stMetricValue"] {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 1.5rem !important;
-        font-weight: 700;
-        color: var(--text-primary) !important;
-        display: inline-block !important; /* Force inline */
-    }
-    
-    [data-testid="stMetricDelta"] {
-        display: inline-block !important; /* Force inline */
-        margin-left: 12px !important;
-        vertical-align: bottom !important;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.9rem !important;
-        background-color: rgba(0,0,0,0.2) !important;
-        padding: 2px 6px !important;
-        border-radius: 4px !important;
-        position: relative; 
-        top: -4px; /* Adjust alignment */
-    }
-    
-    [data-testid="stMetricLabel"] {
+    .metric-label {
         font-family: 'Inter', sans-serif;
-        font-size: 0.75rem !important;
-        color: var(--text-secondary) !important;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #8b949e; /* text-secondary */
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        margin-bottom: 4px !important;
+        margin-bottom: 4px;
     }
     
-    /* Sidebar Styling */
+    .metric-value-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+    }
+    
+    .metric-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #e6e6e6; /* text-primary */
+        line-height: 1.1;
+    }
+    
+    .metric-delta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 4px;
+        display: inline-flex;
+        align-items: center;
+        transform: translateY(-2px);
+    }
+    
+    .delta-pos {
+        color: #10b981;
+        background-color: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .delta-neg {
+        color: #ef4444;
+        background-color: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .delta-neu {
+        color: #9CA3AF;
+        background-color: rgba(156, 163, 175, 0.1);
+        border: 1px solid rgba(156, 163, 175, 0.2);
+    }
+    
+    /* Section Separation Line */
+    hr {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        border: 0;
+        border-top: 1px solid #2b313a;
+    }
+    
+    /* NEW KPI DASHBOARD STYLES */
+    .kpi-board {
+        background-color: rgba(22, 27, 34, 0.5); 
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        border-radius: 4px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Subtle shadow */
+        margin-bottom: 1rem; /* Standardized Gap */
+    }
+    
+    .kpi-header {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        padding-left: 0;
+    }
+    
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0; /* Seamless look */
+        /* border-top: 1px solid #2b313a; Optional separator from header */
+    }
+    
+    .kpi-item {
+        padding: 1rem;
+        border-right: 1px solid rgba(255,255,255,0.05); /* Subtle separator */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100px;
+        transition: background 0.2s;
+    }
+    
+    .kpi-item:last-child {
+        border-right: none;
+    }
+    
+    .kpi-item:hover {
+        background-color: rgba(255,255,255,0.01);
+    }
+    
+    .kpi-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+    
+    .kpi-value-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+    }
+    
+    .kpi-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.8rem; /* Larger, more impactful */
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+    }
+    
+    /* Make Abs Gain (2nd item) stand out if needed, or all equal */
+
+    
+    /* Sidebar Headers */
+    /* Sidebar Styling - Compact & Professional */
     [data-testid="stSidebar"] {
-        background-color: var(--sidebar-bg);
+        background-color: #0d1117 !important;
         border-right: 1px solid var(--card-border);
     }
     
-    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
-        color: var(--text-secondary);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
+    [data-testid="stSidebar"] .block-container {
+        padding-top: 2rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
     
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] div, [data-testid="stSidebar"] label {
+        font-size: 0.85rem !important;
+    }
+    
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
+        font-family: 'JetBrains Mono', monospace !important;
+        color: var(--text-primary) !important;
+        font-weight: 600 !important;
+    }
+    
+    [data-testid="stSidebar"] h3 {
+        font-size: 0.8rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 1.5rem !important;
+        margin-bottom: 0.75rem !important;
+        padding-left: 0 !important;
+        border-left: none !important;
+        color: var(--text-secondary) !important;
+    }
+    
+    /* File Uploader in Sidebar */
+    [data-testid="stFileUploader"] {
+        padding: 0.5rem;
+    }
+    [data-testid="stFileUploader"] small {
+        font-size: 0.75rem !important;
+    }
+    
+    /* Expander Styling */
+    .streamlit-expanderHeader {
+        background-color: var(--card-bg) !important;
+        color: var(--text-secondary) !important;
+        border: 1px solid var(--card-border) !important;
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        border-radius: 4px;
+        padding-left: 1rem !important;
+    }
+    
+    .streamlit-expanderHeader p {
+         font-family: 'JetBrains Mono', monospace !important;
+         font-weight: 600 !important;
+         font-size: 0.9rem !important;
+    }
+    
+    [data-testid="stExpander"] {
+        background-color: transparent !important;
+        border: none !important;
+        margin-bottom: 1rem;
+        padding-top: 0 !important;
+    }
+    
+    /* Expander Content Adjustment */
+    [data-testid="stExpanderDetails"] > div {
+        padding-bottom: 0.5rem !important; /* Reduce bottom padding */
+        padding-top: 0.5rem !important;
+    }
+
     /* Input Fields & Selectboxes */
+    .stSelectbox label {
+        font-size: 0.75rem !important;
+        color: var(--text-secondary) !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem !important;
+    }
+    
     .stSelectbox > div > div {
         background-color: var(--card-bg) !important;
         color: var(--text-primary) !important;
         border: 1px solid var(--card-border) !important;
         border-radius: 4px;
         font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem !important;
+        min-height: 38px;
     }
     
     /* Buttons usually */
@@ -339,6 +487,11 @@ st.markdown("""
         box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
     }
     
+    /* Toggle Switch Styling */
+    .stToggle {
+        font-family: 'Inter', sans-serif;
+    }
+    
     /* Tables/Dataframes - Tile Style */
     .dataframe {
         background-color: var(--card-bg) !important;
@@ -347,12 +500,9 @@ st.markdown("""
     }
     
     .stDataFrame {
-        border: 1px solid var(--card-border);
-        border-radius: 4px;
-        background-color: var(--card-bg);
-        padding: 1rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        position: relative;
+        border: none !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
     }
     
     th {
@@ -370,25 +520,63 @@ st.markdown("""
     }
     
     /* Chart Containers */
+    /* Chart Containers */
     [data-testid="stPlotlyChart"] {
-        background-color: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 4px;
-        padding: 1rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
     }
     
-    /* Alerts */
-    .stAlert {
-        background-color: rgba(59, 130, 246, 0.05);
-        border: 1px solid rgba(59, 130, 246, 0.2);
+
+    
+    /* Container Borders (st.container(border=True)) */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        border: 1px solid var(--card-border) !important;
+        background-color: var(--card-bg) !important;
+        border-radius: 4px !important;
+        padding: 1.5rem !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important;
+        margin-bottom: 1rem !important; /* Standardized Gap */
+    }
+    
+    /* Clean Card Titles (No Emoji/Blue Bar) */
+    .card-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.1rem;
+        font-weight: 600;
         color: var(--text-primary);
-        border-radius: 4px;
+        margin-bottom: 1.5rem;
+        /* No border, no extra decoration */
     }
     
 </style>
 """, unsafe_allow_html=True)
 
+
+def render_kpi_dashboard(metrics):
+    """
+    Render the entire KPI dashboard as a single HTML block using CSS Grid.
+    metrics: List of dicts with 'label', 'value', 'delta' (opt), 'delta_color' (opt)
+    """
+    items_html = ""
+    for m in metrics:
+        delta_html = ""
+        if m.get('delta'):
+            color_class = f"delta-{m.get('delta_color', 'neu')}"
+            delta_html = f'<div class="metric-delta {color_class}">{m["delta"]}</div>'
+            
+        # Strictly no indentation in the f-string to prevent markdown code block
+        items_html += f'<div class="kpi-item"><div class="kpi-label">{m["label"]}</div>'
+        items_html += f'<div class="kpi-value-row"><div class="kpi-value">{m["value"]}</div>{delta_html}</div></div>'
+        
+    # Flatten string to avoid Markdown code block interpretation
+    html = '<div class="kpi-board">'
+    html += '<div class="kpi-header">Key Performance Indicators</div>'
+    html += '<div class="kpi-grid">'
+    html += items_html
+    html += '</div></div>'
+    
+    return html
 
 def main():
     """Main application entry point."""
@@ -473,21 +661,50 @@ def main():
         col_act1, col_act2 = st.columns(2)
         
         with col_act1:
-            enrich_req = st.button("Enrich Data", use_container_width=True, help="Update metadata, splits, and FX")
-        
+            if st.button("REFRESH", use_container_width=True):
+                st.session_state.enrichment_done = False
+                st.rerun()
+                
         with col_act2:
-            price_req = st.button("Update Prices", use_container_width=True, help="Fetch latest market prices")
-            if price_req:
-                st.session_state.prices_updated = True
+             if st.button("CLEAR", use_container_width=True):
+                cache.clear_cache()
+                st.rerun()
 
-        st.divider()
+        st.markdown("---")
+        
+        # Privacy Mode Toggle
+        if 'privacy_mode' not in st.session_state:
+            st.session_state.privacy_mode = False
+            
+        privacy_mode = st.toggle("Privacy Mode", value=st.session_state.privacy_mode, help="Hide sensitive financial values")
+        if privacy_mode != st.session_state.privacy_mode:
+            st.session_state.privacy_mode = privacy_mode
+            st.rerun()
 
     # ==========================================
-    # DATA PROCESSING
+    # MAIN DASHBOARD CONTENT
     # ==========================================
     
+    # Process Data
+    transactions = []
+    
+    # helper for privacy masking
+    def mask_currency(val, is_private):
+        return "••••••" if is_private else f"€{val:,.0f}"
+
+    def mask_currency_precise(val, is_private):
+        return "••••••" if is_private else f"€{val:,.2f}"
+
     if 'prices_updated' not in st.session_state:
         st.session_state.prices_updated = False
+
+    # Determine if enrichment is requested or already done
+    enrich_req = False # No longer a button, but can be triggered by REFRESH or initial load
+    if not st.session_state.enrichment_done: # If not done, try to enrich
+        enrich_req = True
+    
+    # Determine if prices update is requested
+    price_req = st.session_state.prices_updated # This is now set by the REFRESH button or previous state
 
     try:
         if enrich_req or st.session_state.enrichment_done:
@@ -518,6 +735,7 @@ def main():
     if st.session_state.prices_updated:
         with st.spinner("Syncing market data..."):
             prices = fetch_prices(tickers)
+        st.session_state.prices_updated = False # Reset after fetching
     else:
         prices = cache.get_prices_batch(tickers, datetime.now().date())
 
@@ -567,10 +785,7 @@ def main():
             logger.error(f"Metrics calculation error: {e}", exc_info=True)
             return
     
-    # Display KPIs
-    st.markdown('<h3 class="section-header">Key Performance Indicators</h3>', unsafe_allow_html=True)
-    
-    # Calculate explicit metrics
+    # Calculate explicit metrics (Restored)
     holdings_cost_basis = sum(pos.cost_basis for pos in portfolio.holdings.values())
     unrealized_gain = current_value - portfolio.cash_balance - holdings_cost_basis
     
@@ -583,40 +798,23 @@ def main():
     
     # Calculate return % based on Cost Basis
     total_return_pct = (total_absolute_gain / holdings_cost_basis * 100) if holdings_cost_basis > 0 else 0
-    
-    # Optimized Layout: Single Compact Row of 6 Columns
-    kpi_cols = st.columns(6)
-    
-    with kpi_cols[0]:
-        st.metric(
-            label="Net Worth",
-            value=f"€{current_value:,.0f}", # No decimals for compactness
-            help="Current portfolio value"
-        )
-    
-    with kpi_cols[1]:
-        st.metric(
-            label="Abs Gain",
-            value=f"€{total_absolute_gain:,.0f}",
-            delta=f"{total_return_pct:.1f}%"
-        )
-    
-    with kpi_cols[2]:
-        if xirr_value is not None:
-            st.metric("XIRR", f"{xirr_value * 100:.1f}%")
-        else:
-            st.metric("XIRR", "N/A")
+    gain_color = "pos" if total_absolute_gain >= 0 else "neg"
+    gain_txt = f"+{total_return_pct:.1f}%" if total_absolute_gain >= 0 else f"{total_return_pct:.1f}%"
 
-    with kpi_cols[3]:
-        st.metric("Deposits", f"€{portfolio.invested_capital:,.0f}")
+    # Prepare KPI Data with Privacy Masking
+    kpi_data = [
+        {"label": "Net Worth", "value": mask_currency(current_value, st.session_state.privacy_mode)},
+        {"label": "Abs Gain", "value": mask_currency(total_absolute_gain, st.session_state.privacy_mode), "delta": gain_txt, "delta_color": gain_color},
+        {"label": "XIRR", "value": f"{xirr_value * 100:.1f}%" if xirr_value is not None else "N/A", "delta": None, "delta_color": "pos" if xirr_value and xirr_value > 0 else "neu"},
+        {"label": "Deposits", "value": mask_currency(portfolio.invested_capital, st.session_state.privacy_mode)},
+        {"label": "Cost Basis", "value": mask_currency(holdings_cost_basis, st.session_state.privacy_mode)},
+        {"label": "Fees", "value": mask_currency(portfolio.total_fees, st.session_state.privacy_mode)}
+    ]
 
-    with kpi_cols[4]:
-        st.metric("Cost Basis", f"€{holdings_cost_basis:,.0f}")
-        
-    with kpi_cols[5]:
-        st.metric("Fees", f"€{portfolio.total_fees:,.0f}")
+    # Optimized Layout: Single Container Tile
+    st.markdown(render_kpi_dashboard(kpi_data), unsafe_allow_html=True)
     
-    st.divider()
+    # st.divider() # Removed separator line
     
     # ==================== FETCH ALL HISTORICAL DATA ONCE ====================
     # This runs once and is cached - timeframe changes only filter the data
@@ -631,305 +829,241 @@ def main():
         all_tickers = set(t.ticker for t in transactions if t.ticker)
         
         # Fetch ALL historical prices once (cached by Streamlit)
-        with st.spinner("Loading historical price data (one-time)..."):
-            all_hist_prices_df = fetch_historical_prices(
-                list(all_tickers),
-                earliest_transaction.date(),
-                latest_date.date()
-            )
-    else:
-        all_hist_prices_df = pd.DataFrame()
-    
-    # ========================================================================
-    
-    # Optimized Chart Layout: Performance (2/3) | Allocation (1/3)
-    chart_col_main, chart_col_side = st.columns([2, 1])
-    
-    with chart_col_main:
-        st.markdown('<h3 class="section-header">Performance History</h3>', unsafe_allow_html=True)
+        price_history = cache.get_historical_prices(all_tickers, earliest_transaction, latest_date)
         
-        # Timeframe selector (inline)
-        timeframe = st.selectbox(
-            "Timeframe",
-            options=["1M", "3M", "6M", "1Y", "All"],
-            index=4,
-            key="performance_timeframe",
-            label_visibility="collapsed"
+        # Calculate daily portfolio values using the history
+        dates, net_deposits, portfolio_values, cost_basis_values = portfolio.calculate_performance_history_optimized(
+            price_history, earliest_transaction, latest_date
         )
-        
-        # Check if we have chart data (only available after enrichment)
-        if not st.session_state.enrichment_done:
-            st.info("📊 **Performance chart requires transaction enrichment**\n\nClick '🔄 Update Transactions' in the sidebar to:\n- Fetch split history\n- Update FX rates\n- Enable performance analysis")
-        else:
-            try:
-                # Calculate date range based on timeframe (for filtering only)
-                end_date = datetime.now()
-                if timeframe == "1M":
-                    start_date = end_date - timedelta(days=30)
-                    interval_days = 2
-                elif timeframe == "3M":
-                    start_date = end_date - timedelta(days=90)
-                    interval_days = 3
-                elif timeframe == "6M":
-                    start_date = end_date - timedelta(days=180)
-                    interval_days = 7
-                elif timeframe == "1Y":
-                    start_date = end_date - timedelta(days=365)
-                    interval_days = 7
-                else:  # All
-                    if transactions:
-                        start_date = min(t.date for t in transactions)
-                        total_days = (end_date - start_date).days
-                        interval_days = 14 if total_days > 730 else 7
-                    else:
-                        start_date = end_date - timedelta(days=365)
-                        interval_days = 7
-                
-                if transactions and not all_hist_prices_df.empty:
-                    # Filter the already-loaded historical data by date range
-                    hist_prices_df = all_hist_prices_df.copy()
-                    if not hist_prices_df.empty:
-                        # Filter to selected timeframe
-                        mask = (hist_prices_df.index >= pd.Timestamp(start_date)) & (hist_prices_df.index <= pd.Timestamp(end_date))
-                        hist_prices_df = hist_prices_df[mask]
-                    
-                    # Calculate at regular intervals for higher resolution
-                    dates_list = []
-                    net_deposits_list = []
-                    value_list = []
-                    cost_basis_list = []
-                    
-                    current_date = start_date
-                    
-                    # Pre-calculate prices map for speed
-                    # Convert DataFrame to dictionary of dictionaries: {date: {ticker: price}}
-                    # timestamp -> {ticker: price}
-                    price_lookup = {}
-                    if not hist_prices_df.empty:
-                        # Iterate once to build lookup (faster than .loc inside loop)
-                        for timestamp, row in hist_prices_df.iterrows():
-                            # Convert timestamp to date object for matching
-                            d_key = timestamp.date()
-                            price_lookup[d_key] = {
-                                t: float(p) for t, p in row.items() if pd.notna(p)
-                            }
+    else:
+        dates, net_deposits, portfolio_values, cost_basis_values = [], [], [], []
 
-                    # OPTIMIZATION: Incremental Portfolio Update
-                    # Sort transactions by date once
-                    sorted_valid_trans = sorted(
-                        [t for t in transactions if t.date <= end_date], 
-                        key=lambda t: t.date
-                    )
-                    
-                    # Initialize empty portfolio runner
-                    running_portfolio = Portfolio([])
-                    
-                    trans_idx = 0
-                    num_trans = len(sorted_valid_trans)
-                    
-                    while current_date <= end_date:
-                        # Process all transactions that happened up to (and including) current_date
-                        # that haven't been processed yet
-                        while trans_idx < num_trans and sorted_valid_trans[trans_idx].date.date() <= current_date.date():
-                            running_portfolio.process_transaction(sorted_valid_trans[trans_idx])
-                            trans_idx += 1
-                        
-                        if trans_idx > 0: # Only record if we have started portfolio history
-                            # Get prices for this date
-                            daily_prices = price_lookup.get(current_date.date(), {})
-                            
-                            # Calculate value
-                            temp_value = running_portfolio.calculate_total_value(daily_prices)
-                            temp_cost_basis = sum(pos.cost_basis for pos in running_portfolio.holdings.values())
-                            
-                            dates_list.append(current_date.strftime('%Y-%m-%d'))
-                            net_deposits_list.append(float(running_portfolio.invested_capital))
-                            value_list.append(float(temp_value))
-                            cost_basis_list.append(float(temp_cost_basis))
-                        
-                        current_date += timedelta(days=interval_days)
-                    
-                    if dates_list:
-                        fig_performance = create_performance_chart(
-                            dates_list, 
-                            net_deposits_list, 
-                            value_list,
-                            cost_basis_list
-                        )
-                        st.plotly_chart(fig_performance, use_container_width=True)
-                        
-                        # Show data point count
-                        st.caption(f"Showing {len(dates_list)} data points over {timeframe}")
+    # ==================== DASHBOARD CHARTS ====================
+    
+    # ==================== DASHBOARD CHARTS ====================
+    # Container tile for charts
+    with st.container(border=True):
+        # Layout: Chart + Allocation (2 Columns)
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            # 1. Get Timeframe from Session State (default to 'All')
+            current_tf = st.session_state.get("performance_timeframe", "All")
+
+            # 2. Filter Logic based on Timeframe
+            if dates and current_tf != "All":
+                days_map = {"1M": 30, "3M": 90, "6M": 180, "1Y": 365}
+                cutoff_date = (datetime.now() - timedelta(days=days_map.get(current_tf, 365))).date()
+                
+                # Filter lists
+                filtered_indices = [i for i, d in enumerate(dates) if datetime.strptime(d[:10], '%Y-%m-%d').date() >= cutoff_date]
+                if filtered_indices:
+                    start_idx = filtered_indices[0]
+                    d_dates = dates[start_idx:]
+                    d_deposits = net_deposits[start_idx:]
+                    d_values = portfolio_values[start_idx:]
+                    if cost_basis_values:
+                        d_basis = cost_basis_values[start_idx:]
                     else:
-                        st.info("Not enough historical data for selected timeframe")
+                        d_basis = None
                 else:
-                    st.info("No transactions available for chart")
-                        
-            except Exception as e:
-                st.error(f"Failed to create performance chart: {e}")
-                logger.error(f"Performance chart error: {e}", exc_info=True)
+                    d_dates, d_deposits, d_values, d_basis = [], [], [], []
+            else:
+                 d_dates, d_deposits, d_values, d_basis = dates, net_deposits, portfolio_values, cost_basis_values
+
+            # 3. Render Chart FIRST (aligned with top of Allocation chart)
+            chart_fig = create_performance_chart(
+                d_dates, d_deposits, d_values, d_basis, 
+                title="Performance History",
+                privacy_mode=st.session_state.privacy_mode
+            )
+            st.plotly_chart(chart_fig, width='stretch')
             
-    with chart_col_side:
-        st.markdown('<h3 class="section-header">Portfolio Allocation</h3>', unsafe_allow_html=True)
+            # 4. Render Timeframe Selector BELOW Chart
+            selected_tf = st.selectbox(
+                "Timeframe",
+                options=["1M", "3M", "6M", "1Y", "All"],
+                index=4, 
+                key="performance_timeframe",
+                label_visibility="visible" # Label visible per request
+            )
+            
+            # Force rerun if changed to update chart immediately
+            if selected_tf != current_tf:
+                st.rerun()
+
+        with col2:
+            holdings_df = pd.DataFrame([
+                {
+                    'Ticker': h.ticker, 
+                    'Name': h.name, 
+                    'Market Value (EUR)': h.market_value, 
+                    'Quantity': h.shares
+                } 
+                for h in portfolio.holdings.values() 
+                if h.market_value > 0
+            ])
+            
+            donut_fig = create_allocation_donut(
+                holdings_df, 
+                title="Portfolio Allocation",
+                privacy_mode=st.session_state.privacy_mode
+            )
+            st.plotly_chart(donut_fig, width='stretch')
+    
+    # Holdings table
+    with st.container(border=True):
+        st.markdown('<div class="card-title">Current Holdings</div>', unsafe_allow_html=True)
+        
+        # Add filter controls
+        filter_col1, filter_col2, filter_col3 = st.columns([2, 2, 6])
+        
+        with filter_col1:
+            asset_filter = st.selectbox(
+                "Filter by Type",
+                options=["All", "Assets Only", "Cash Only"],
+                index=0,
+                key="asset_type_filter"
+            )
+        
+        with filter_col2:
+            st.empty() # Placeholder
+        
         try:
             holdings_df = portfolio.get_holdings_summary(prices)
             if not holdings_df.empty:
-                fig_allocation = create_allocation_donut(holdings_df)
-                st.plotly_chart(fig_allocation, use_container_width=True)
+                # Apply filtering
+                filtered_df = holdings_df.copy()
+                
+                if asset_filter == "Assets Only":
+                    filtered_df = filtered_df[~filtered_df['Asset Type'].isin(['Cash', 'Unknown'])]
+                elif asset_filter == "Cash Only":
+                    filtered_df = filtered_df[filtered_df['Asset Type'] == 'Cash']
+                
+                if not filtered_df.empty:
+                    # Format for display
+                    holdings_display = filtered_df.copy()
+                    holdings_display['Shares'] = holdings_display['Shares'].apply(lambda x: f"{x:.4f}")
+                    holdings_display['Avg Cost (EUR)'] = holdings_display['Avg Cost (EUR)'].apply(lambda x: mask_currency_precise(x, st.session_state.privacy_mode))
+                    holdings_display['Current Price (EUR)'] = holdings_display['Current Price (EUR)'].apply(lambda x: f"€{x:.2f}") # Unit prices usually visible? Or hide too? Hiding for consistency if user wants privacy.
+                    # Actually, usually unit prices are fine, but balances are sensitive. User said "except unit prices".
+                    # "removes the actual Euro values (except unit prices)" -> So KEEP Current Price visible.
+                    
+                    holdings_display['Market Value (EUR)'] = holdings_display['Market Value (EUR)'].apply(lambda x: mask_currency_precise(x, st.session_state.privacy_mode))
+                    holdings_display['Gain/Loss (EUR)'] = holdings_display['Gain/Loss (EUR)'].apply(lambda x: mask_currency_precise(x, st.session_state.privacy_mode))
+                    holdings_display['Gain %'] = holdings_display['Gain %'].apply(lambda x: f"{x:.2f}%")
+                    
+                    st.dataframe(
+                        holdings_display,
+                        width='stretch',
+                        hide_index=True
+                    )
+                    
+                    # Show filtered count
+                    if asset_filter != "All":
+                        st.caption(f"Showing {len(filtered_df)} of {len(holdings_df)} holdings")
+                else:
+                    st.info(f"No holdings match the filter: {asset_filter}")
             else:
-                st.info("No holdings to display")
+                st.info("No current holdings")
         except Exception as e:
-            st.error(f"Failed to create allocation chart: {e}")
-            logger.error(f"Allocation chart error: {e}", exc_info=True)
-    
-    st.divider()
-    
-    # Holdings table
-    st.markdown('<h3 class="section-header">Current Holdings</h3>', unsafe_allow_html=True)
-    
-    # Add filter controls
-    filter_col1, filter_col2, filter_col3 = st.columns([2, 2, 6])
-    
-    with filter_col1:
-        asset_filter = st.selectbox(
-            "Filter by Type",
-            options=["All", "Assets Only", "Cash Only"],
-            index=0,
-            key="asset_type_filter"
-        )
-    
-    with filter_col2:
-        # Placeholder for future filters
-        st.empty()
-    
-    try:
-        holdings_df = portfolio.get_holdings_summary(prices)
-        if not holdings_df.empty:
-            # Apply filtering
-            filtered_df = holdings_df.copy()
-            
-            if asset_filter == "Assets Only":
-                filtered_df = filtered_df[~filtered_df['Asset Type'].isin(['Cash', 'Unknown'])]
-            elif asset_filter == "Cash Only":
-                filtered_df = filtered_df[filtered_df['Asset Type'] == 'Cash']
-            
-            if not filtered_df.empty:
-                # Format for display
-                holdings_display = filtered_df.copy()
-                holdings_display['Shares'] = holdings_display['Shares'].apply(lambda x: f"{x:.4f}")
-                holdings_display['Avg Cost (EUR)'] = holdings_display['Avg Cost (EUR)'].apply(lambda x: f"€{x:.2f}")
-                holdings_display['Current Price (EUR)'] = holdings_display['Current Price (EUR)'].apply(lambda x: f"€{x:.2f}")
-                holdings_display['Market Value (EUR)'] = holdings_display['Market Value (EUR)'].apply(lambda x: f"€{x:,.2f}")
-                holdings_display['Gain/Loss (EUR)'] = holdings_display['Gain/Loss (EUR)'].apply(lambda x: f"€{x:,.2f}")
-                holdings_display['Gain %'] = holdings_display['Gain %'].apply(lambda x: f"{x:.2f}%")
-                
-                st.dataframe(
-                    holdings_display,
-                    use_container_width=True,
-                    hide_index=True
-                )
-                
-                # Show filtered count
-                if asset_filter != "All":
-                    st.caption(f"Showing {len(filtered_df)} of {len(holdings_df)} holdings")
-            else:
-                st.info(f"No holdings match the filter: {asset_filter}")
-        else:
-            st.info("No current holdings")
-    except Exception as e:
-        st.error(f"Failed to display holdings: {e}")
-        logger.error(f"Holdings display error: {e}", exc_info=True)
+            st.error(f"Failed to display holdings: {e}")
+            logger.error(f"Holdings display error: {e}", exc_info=True)
     
     # Additional info
-    with st.expander("ℹ️ Detailed Metrics"):
+    # Additional info
+    # Reverted to Expander per user request
+    with st.expander("Detailed Metrics"):
         summary_col1, summary_col2, summary_col3 = st.columns(3)
         
         with summary_col1:
-            st.metric("Cash Balance", f"€{portfolio.cash_balance:,.2f}")
-            st.metric("Total Fees", f"€{portfolio.total_fees:,.2f}")
-            st.metric("Total Interest", f"€{portfolio.total_interest:,.2f}")
+            st.metric("Cash Balance", mask_currency_precise(portfolio.cash_balance, st.session_state.privacy_mode))
+            st.metric("Total Fees", mask_currency_precise(portfolio.total_fees, st.session_state.privacy_mode))
+            st.metric("Total Interest", mask_currency_precise(portfolio.total_interest, st.session_state.privacy_mode))
         
         with summary_col2:
-            st.metric("Realized Gains", f"€{portfolio.realized_gains:,.2f}")
-            st.metric("Total Dividends", f"€{portfolio.total_dividends:,.2f}")
+            st.metric("Realized Gains", mask_currency_precise(portfolio.realized_gains, st.session_state.privacy_mode))
+            st.metric("Total Dividends", mask_currency_precise(portfolio.total_dividends, st.session_state.privacy_mode))
 
         with summary_col3:
             st.metric("Number of Holdings", len(portfolio.holdings))
             st.metric("Number of Transactions", len(transactions))
     
     # Transaction History
-    st.divider()
-    st.subheader("📝 Transaction History")
+    # st.divider()
     
-    try:
-        # Create transaction history DataFrame
-        trans_data = []
-        for trans in sorted(transactions, key=lambda t: t.date, reverse=True):
-            trans_data.append({
-                'Date': trans.date.strftime('%Y-%m-%d'),
-                'Type': trans.type.value,
-                'Ticker': trans.ticker or '-',
-                'Name': trans.name or '-',
-                'Asset Type': trans.asset_type.value if hasattr(trans, 'asset_type') else 'Unknown',
-                'Shares': float(trans.shares) if trans.shares != 0 else 0.0,  # Keep numeric for Arrow
-                'Price': f"€{float(trans.price):.2f}" if trans.price != 0 else '-',
-                'Fees': f"€{float(trans.fees):.2f}" if trans.fees != 0 else '-',
-                'Total': f"€{float(trans.total):,.2f}",
-                'Currency': trans.original_currency,
-                'FX Rate': f"{float(trans.fx_rate):.4f}" if trans.fx_rate != 1 else '-',
-                'Broker': trans.broker or '-',
-            })
+    with st.container(border=True):
+        st.markdown('<div class="card-title">Transaction History</div>', unsafe_allow_html=True)
         
-        trans_df = pd.DataFrame(trans_data)
-        
-        if not trans_df.empty:
-            # Add filters
-            col_filter1, col_filter2, col_filter3 = st.columns(3)
+        try:
+            # Create transaction history DataFrame
+            trans_data = []
+            for trans in sorted(transactions, key=lambda t: t.date, reverse=True):
+                trans_data.append({
+                    'Date': trans.date.strftime('%Y-%m-%d'),
+                    'Type': trans.type.value,
+                    'Ticker': trans.ticker or '-',
+                    'Name': trans.name or '-',
+                    'Asset Type': trans.asset_type.value if hasattr(trans, 'asset_type') else 'Unknown',
+                    'Shares': float(trans.shares) if trans.shares != 0 else 0.0,  # Keep numeric for Arrow
+                    'Price': f"€{float(trans.price):.2f}" if trans.price != 0 else '-',
+                    'Fees': mask_currency_precise(float(trans.fees), st.session_state.privacy_mode) if trans.fees != 0 else '-',
+                    'Total': mask_currency_precise(float(trans.total), st.session_state.privacy_mode),
+                    'Currency': trans.original_currency,
+                    'FX Rate': f"{float(trans.fx_rate):.4f}" if trans.fx_rate != 1 else '-',
+                    'Broker': trans.broker or '-',
+                })
             
-            with col_filter1:
-                trans_types = ['All'] + sorted(trans_df['Type'].unique().tolist())
-                selected_type = st.selectbox("Filter by Type", trans_types)
+            trans_df = pd.DataFrame(trans_data)
             
-            with col_filter2:
-                tickers = ['All'] + sorted([t for t in trans_df['Ticker'].unique() if t != '-'])
-                selected_ticker = st.selectbox("Filter by Ticker", tickers)
-            
-            with col_filter3:
-                # Enhanced filter options: Default to Assets Only (hide cash/no-ticker)
-                unique_asset_types = sorted(trans_df['Asset Type'].unique().tolist())
-                filter_options = ["Assets Only", "All"] + unique_asset_types
-                selected_asset_filter = st.selectbox("Filter by Asset Type", filter_options, index=0)
-            
-            # Apply filters
-            filtered_df = trans_df.copy()
-            if selected_type != 'All':
-                filtered_df = filtered_df[filtered_df['Type'] == selected_type]
-            if selected_ticker != 'All':
-                filtered_df = filtered_df[filtered_df['Ticker'] == selected_ticker]
-            
-            # Apply Asset View Filter
-            if selected_asset_filter == 'Assets Only':
-                # Filter out transactions with no ticker (Cash)
-                filtered_df = filtered_df[filtered_df['Ticker'] != '-']
-            elif selected_asset_filter == 'All':
-                pass
+            if not trans_df.empty:
+                # Add filters
+                col_filter1, col_filter2, col_filter3 = st.columns(3)
+                
+                with col_filter1:
+                    trans_types = ['All'] + sorted(trans_df['Type'].unique().tolist())
+                    selected_type = st.selectbox("Filter by Type", trans_types)
+                
+                with col_filter2:
+                    tickers = ['All'] + sorted([t for t in trans_df['Ticker'].unique() if t != '-'])
+                    selected_ticker = st.selectbox("Filter by Ticker", tickers)
+                
+                with col_filter3:
+                    # Enhanced filter options: Default to Assets Only (hide cash/no-ticker)
+                    unique_asset_types = sorted(trans_df['Asset Type'].unique().tolist())
+                    filter_options = ["Assets Only", "All"] + unique_asset_types
+                    selected_asset_filter = st.selectbox("Filter by Asset Type", filter_options, index=0)
+                
+                # Apply filters
+                filtered_df = trans_df.copy()
+                if selected_type != 'All':
+                    filtered_df = filtered_df[filtered_df['Type'] == selected_type]
+                if selected_ticker != 'All':
+                    filtered_df = filtered_df[filtered_df['Ticker'] == selected_ticker]
+                
+                # Apply Asset View Filter
+                if selected_asset_filter == 'Assets Only':
+                    # Filter out transactions with no ticker (Cash)
+                    filtered_df = filtered_df[filtered_df['Ticker'] != '-']
+                elif selected_asset_filter == 'All':
+                    pass
+                else:
+                    # Specific asset type filter
+                    filtered_df = filtered_df[filtered_df['Asset Type'] == selected_asset_filter]
+                
+                st.dataframe(
+                    filtered_df,
+                    width='stretch',
+                    hide_index=True
+                )
+                
+                st.caption(f"Showing {len(filtered_df)} of {len(trans_df)} transactions")
             else:
-                # Specific asset type filter
-                filtered_df = filtered_df[filtered_df['Asset Type'] == selected_asset_filter]
-            
-            st.dataframe(
-                filtered_df,
-                use_container_width=True,
-                hide_index=True
-            )
-            
-            st.caption(f"Showing {len(filtered_df)} of {len(trans_df)} transactions")
-        else:
-            st.info("No transactions to display")
-            
-    except Exception as e:
-        st.error(f"Failed to display transaction history: {e}")
-        logger.error(f"Transaction history error: {e}", exc_info=True)
+                st.info("No transactions to display")
+                
+        except Exception as e:
+            st.error(f"Failed to display transaction history: {e}")
+            logger.error(f"Transaction history error: {e}", exc_info=True)
 
 
 if __name__ == "__main__":
