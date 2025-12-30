@@ -267,6 +267,7 @@ class Transaction(BaseModel):
     # Tax-related fields
     withholding_tax: Decimal = Decimal(0)
     withholding_tax_country: Optional[str] = None
+    realized_gain: Decimal = Decimal(0)  # From CSV realizedgains column (for SELL transactions)
     
     # Corporate action metadata
     split_ratio_from: Optional[Decimal] = None  # e.g., 1 for 2-for-1 split
