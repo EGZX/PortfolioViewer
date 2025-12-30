@@ -52,6 +52,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         self.total_withdrawn = Decimal(0) # Kept original attribute name
         self.total_dividends = Decimal(0) # Kept original attribute name
         self.total_fees = Decimal(0) # Kept original attribute name
+        self.total_interest = Decimal(0)  # New: Track total interest
         self.invested_capital = Decimal(0) # New attribute from the provided code
         self.realized_gains = Decimal(0)  # Track realized gains from selling
         self.cash_flows = []  # List of (date, amount) for XIRR # New attribute from the provided code
@@ -65,6 +66,17 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         # fx_rate was ALREADY APPLIED during CSV parsing
         # DO NOT multiply by fx_rate again!
         amount_eur = t.total  # Already in EUR!
+        
+        # Track fees (convert to EUR if needed, assuming fees are in original currency or EUR)
+        # If t.fees is set, add to total
+        if t.fees:
+            # Note: In CSV parser, fees are already decimal.
+            # We assume fees are in the same currency context as the transaction.
+            # If original_currency is not EUR, we might need to convert fees?
+            # However, typically 'fees' column in export is also in reporting currency or handle separately.
+            # Assuming fees in CSV are already normalized or we use t.fx_rate
+            fees_eur = t.fees * t.fx_rate if t.original_currency != 'EUR' else t.fees
+            self.total_fees += fees_eur
         
         # CRITICAL FIX 2: Cash balance tracking - CORRECTED
         # Track cash for all transactions EXCEPT stock transfers (TRANSFER_IN/OUT with ticker)
@@ -241,6 +253,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 self.cash_flows.append((t.date, abs(amount_eur)))
             
             elif t.type == TransactionType.INTEREST:
+                self.total_interest += abs(amount_eur)
                 # Add to XIRR cash flows (positive = return to investor)
                 self.cash_flows.append((t.date, abs(amount_eur)))
             

@@ -302,32 +302,53 @@ def main():
     # Display KPIs
     st.subheader("📊 Key Performance Indicators")
     
-    col1, col2, col3, col4 = st.columns(4)
+    # Calculate explicit metrics
+    holdings_cost_basis = sum(pos.cost_basis for pos in portfolio.holdings.values())
+    unrealized_gain = current_value - portfolio.cash_balance - holdings_cost_basis
+    
+    # Absolute Gain = Realized + Dividends + Interest + Unrealized
+    # This method is robust against missing deposit history (unlike "Net Worth - Net Invested")
+    total_absolute_gain = (portfolio.realized_gains + 
+                          portfolio.total_dividends + 
+                          portfolio.total_interest + 
+                          unrealized_gain)
+    
+    # Calculate return % based on Cost Basis (more accurate reflection of performance than Net Deposits)
+    total_return_pct = (total_absolute_gain / holdings_cost_basis * 100) if holdings_cost_basis > 0 else 0
+    
+    col1, col2, col3, col4, col5 = st.columns(5)
     
     with col1:
         st.metric(
             label="Net Worth",
             value=f"€{current_value:,.2f}",
-            help="Current portfolio value (holdings + cash)"
+            help="Current portfolio value (Holdings + Cash)"
         )
     
     with col2:
         st.metric(
-            label="Total Invested",
-            value=f"€{portfolio.total_invested:,.2f}",
-            help="Total capital invested"
+            label="Net Deposits",
+            value=f"€{portfolio.invested_capital:,.2f}",
+            help="Total Cash Deposited - Total Cash Withdrawn"
         )
-    
+
     with col3:
-        gain_color = "normal" if abs_return >= 0 else "inverse"
         st.metric(
-            label="Absolute Gain",
-            value=f"€{abs_return:,.2f}",
-            delta=f"{return_pct:.2f}%",
-            help="Total profit/loss"
+            label="Cost Basis",
+            value=f"€{holdings_cost_basis:,.2f}",
+            help="Total cost of current holdings"
         )
     
     with col4:
+        gain_color = "normal" if total_absolute_gain >= 0 else "inverse"
+        st.metric(
+            label="Absolute Gain",
+            value=f"€{total_absolute_gain:,.2f}",
+            delta=f"{total_return_pct:.2f}%",
+            help="Realized + Dividends + Interest + (Market Value - Cost Basis)"
+        )
+    
+    with col5:
         if xirr_value is not None:
             xirr_pct = xirr_value * 100
             st.metric(
@@ -432,16 +453,19 @@ def main():
         logger.error(f"Holdings display error: {e}", exc_info=True)
     
     # Additional info
-    with st.expander("ℹ️ Portfolio Summary"):
-        summary_col1, summary_col2 = st.columns(2)
+    with st.expander("ℹ️ Detailed Metrics"):
+        summary_col1, summary_col2, summary_col3 = st.columns(3)
         
         with summary_col1:
             st.metric("Cash Balance", f"€{portfolio.cash_balance:,.2f}")
-            st.metric("Total Dividends", f"€{portfolio.total_dividends:,.2f}")
             st.metric("Total Fees", f"€{portfolio.total_fees:,.2f}")
+            st.metric("Total Interest", f"€{portfolio.total_interest:,.2f}")
         
         with summary_col2:
-            st.metric("Total Withdrawn", f"€{portfolio.total_withdrawn:,.2f}")
+            st.metric("Realized Gains", f"€{portfolio.realized_gains:,.2f}")
+            st.metric("Total Dividends", f"€{portfolio.total_dividends:,.2f}")
+
+        with summary_col3:
             st.metric("Number of Holdings", len(portfolio.holdings))
             st.metric("Number of Transactions", len(transactions))
     
