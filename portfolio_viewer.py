@@ -79,6 +79,34 @@ def process_data_pipeline(file_content: str):
         raise e
 
 
+def parse_csv_only(file_content: str):
+    """
+    Parse CSV without enrichment (no API calls for splits/FX).
+    Fast path for viewing cached data.
+    
+    Returns:
+        (transactions, validation_data) or (None, None)
+    """
+    try:
+        parser = CSVParser()
+        transactions = parser.parse_csv(file_content)
+        
+        if not transactions:
+            return None, None
+        
+        # Light validation only
+        validator = DataValidator()
+        validation_issues = validator.validate_all(transactions)
+        val_summary = validator.get_summary()
+        
+        return transactions, (validation_issues, val_summary)
+        
+    except Exception as e:
+        logger.error(f"CSV parsing error: {e}", exc_info=True)
+        raise e
+
+
+
 
 # Page configuration
 st.set_page_config(
@@ -88,19 +116,181 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Custom CSS - Banking-Grade Professional UI
 st.markdown("""
 <style>
+    /* Import Professional Font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    /* Design Tokens */
+    :root {
+        --primary-blue: #2563EB;
+        --primary-dark: #1E40AF;
+        --success-green: #10B981;
+        --gray-50: #F9FAFB;
+        --gray-100: #F3F4F6;
+        --gray-600: #4B5563;
+        --gray-700: #374151;
+        --gray-900: #111827;
+    }
+    
+    /* Global Font */
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    /* Main Header with Gradient */
     .main-header {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #1E3A8A;
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 0.5rem;
+        letter-spacing: -0.025em;
+        animation: fadeInDown 0.6s ease-out;
     }
+    
     .sub-header {
         font-size: 1.2rem;
-        color: #6B7280;
+        color: var(--gray-600);
         margin-bottom: 2rem;
+        font-weight: 400;
+        animation: fadeInUp 0.6s ease-out 0.2s both;
+    }
+    
+    /* Professional Metric Cards */
+    [data-testid="stMetric"] {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        border: 1px solid var(--gray-100);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    [data-testid="stMetric"]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.02) 0%, rgba(30, 64, 175, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+    }
+    
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        border-color: var(--primary-blue);
+    }
+    
+    [data-testid="stMetric"]:hover::before {
+        opacity: 1;
+    }
+    
+    [data-testid="stMetricValue"] {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        letter-spacing: -0.02em;
+    }
+    
+    [data-testid="stMetricLabel"] {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--gray-600);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    /* Professional Button Styling */
+    .stButton>button {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+    }
+    
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 12px rgba(37, 99, 235, 0.4);
+    }
+    
+    /* Enhanced Sidebar */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, var(--gray-50) 0%, white 100%);
+    }
+    
+    /* Dataframe Styling */
+    .dataframe {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--gray-100);
+    }
+    
+    .dataframe thead th {
+        background: var(--gray-100);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+    }
+    
+    .dataframe tbody tr:hover {
+        background: var(--gray-50);
+    }
+    
+    /* Plotly Chart Container */
+    .js-plotly-plot {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        border: 1px solid var(--gray-100);
+    }
+    
+    /* Animations */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 2rem;
+        }
+        [data-testid="stMetricValue"] {
+            font-size: 1.5rem;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -156,6 +346,12 @@ def main():
     if uploaded_file is not None:
         file_content = uploaded_file.getvalue().decode('utf-8')
         filename = uploaded_file.name
+        # Save to cache for future auto-loading
+        try:
+            cache.save_transactions_csv(file_content, filename)
+            logger.info(f"Saved CSV to cache: {filename}")
+        except Exception as e:
+            logger.error(f"Failed to save CSV to cache: {e}")
     elif cached_data:
         # Auto-load from cache
         csv_content, cache_filename, uploaded_at = cached_data
@@ -210,51 +406,102 @@ def main():
                 """)
         
         return
-    # Process data pipeline (Cached)
-    try:
-        transactions, split_log, fx_conversions, validation_data = process_data_pipeline(file_content)
+    
+    # Initialize session state for manual update control
+    if 'enrichment_done' not in st.session_state:
+        st.session_state.enrichment_done = False
+    if 'last_processed_content' not in st.session_state:
+        st.session_state.last_processed_content = None
+    
+    # Check if we need to reset enrichment status (new file)
+    if st.session_state.last_processed_content != file_content:
+        st.session_state.enrichment_done = False
+        st.session_state.last_processed_content = file_content
+    
+    # Manual Update Controls in Sidebar
+    with st.sidebar:
+        st.markdown("---")
+        st.markdown("### ⚙️ Data Operations")
         
-        if not transactions:
-            st.error("No valid transactions found in CSV")
-            return
+        # Button to enrich transactions (splits, FX, ISINs)
+        enrich_button = st.button(
+            "🔄 Update Transactions",
+            help="Fetch splits, update FX rates, resolve ISINs (takes ~10 min)",
+            use_container_width=True,
+            type="secondary" if not st.session_state.enrichment_done else "primary"
+        )
+        
+        if not st.session_state.enrichment_done:
+            st.caption("⚠️ Transactions not enriched yet")
+        else:
+            st.caption("✅ Transactions enriched")
+    
+    # Process data based on enrichment state
+    try:
+        if enrich_button or st.session_state.enrichment_done:
+            # Full pipeline with API calls
+            transactions, split_log, fx_conversions, validation_data = process_data_pipeline(file_content)
+            st.session_state.enrichment_done = True
             
-        # Unified Status Block (Compact & Professional)
-        with st.sidebar:
-            st.markdown("---")
-            st.markdown("### 🛠️ Data Status")
-            
-            status_lines = []
-            status_lines.append(f"• **Parsed:** {len(transactions)} transactions")
-            
-            if split_log:
-                status_lines.append(f"• **Splits:** {len(split_log)} applied")
-            
-            if fx_conversions > 0:
-                status_lines.append(f"• **FX:** {fx_conversions} historical rates")
-            
-            # Add to list before displaying
-            for line in status_lines:
-                st.markdown(f"<small>{line}</small>", unsafe_allow_html=True)
+            if not transactions:
+                st.error("No valid transactions found in CSV")
+                return
+                
+            # Status display
+            with st.sidebar:
+                st.markdown("---")
+                st.markdown("### 🛠️ Data Status")
+                
+                status_lines = []
+                status_lines.append(f"• **Parsed:** {len(transactions)} transactions")
+                
+                if split_log:
+                    status_lines.append(f"• **Splits:** {len(split_log)} applied")
+                
+                if fx_conversions > 0:
+                    status_lines.append(f"• **FX:** {fx_conversions} historical rates")
+                
+                for line in status_lines:
+                    st.markdown(f"<small>{line}</small>", unsafe_allow_html=True)
 
-            # Data Quality / Warnings in a quiet expander
-            if validation_data:
-                validation_issues, summary = validation_data
-                if summary and (summary['ERROR'] > 0 or summary['WARNING'] > 0):
-                    with st.expander("🔍 Data Quality Details", expanded=False):
-                        if summary['ERROR'] > 0:
-                            st.markdown(f"**Errors:** {summary['ERROR']}")
-                        if summary['WARNING'] > 0:
-                            st.markdown(f"**Warnings:** {summary['WARNING']}")
-                        for issue in validation_issues[:5]:
-                            st.caption(f"• {issue.message}")
+                # Data Quality / Warnings
+                if validation_data:
+                    validation_issues, summary = validation_data
+                    if summary and (summary['ERROR'] > 0 or summary['WARNING'] > 0):
+                        with st.expander("🔍 Data Quality Details", expanded=False):
+                            if summary['ERROR'] > 0:
+                                st.markdown(f"**Errors:** {summary['ERROR']}")
+                            if summary['WARNING'] > 0:
+                                st.markdown(f"**Warnings:** {summary['WARNING']}")
+                            for issue in validation_issues[:5]:
+                                st.caption(f"• {issue.message}")
+                
+                if uploaded_file is not None:
+                    st.caption("💾 Saved to local cache")
+                st.markdown("---")
+        else:
+            # Fast path: parse only, no API calls
+            transactions, validation_data = parse_csv_only(file_content)
             
-            if uploaded_file is not None:
-                st.caption("💾 Saved to local cache")
-            st.markdown("---")
+            if not transactions:
+                st.error("No valid transactions found in CSV")
+                return
+            
+            # Minimal status
+            with st.sidebar:
+                st.markdown("---")
+                st.markdown("### 🛠️ Data Status")
+                st.markdown(f"<small>• **Parsed:** {len(transactions)} transactions</small>", unsafe_allow_html=True)
+                st.markdown(f"<small>• **Mode:** View only (no enrichment)</small>", unsafe_allow_html=True)
+                
+                if uploaded_file is not None:
+                    st.caption("💾 Saved to local cache")
+                st.markdown("---")
 
     except Exception as e:
         st.error(f"❌ Failed to process data: {str(e)}")
         return
+
     
     # Build portfolio
     try:
@@ -269,26 +516,58 @@ def main():
         logger.error(f"Portfolio reconstruction error: {e}", exc_info=True)
         return
     
-    # Fetch market data
-    with st.spinner("🌐 Fetching live market data..."):
-        try:
-            prices = fetch_prices(tickers)
-            
-            # Count successful/failed fetches
-            success_count = sum(1 for p in prices.values() if p is not None)
-            failed_tickers = [t for t, p in prices.items() if p is None]
-            
-            with st.sidebar:
-                if failed_tickers:
-                     with st.expander(f"⚠️ {len(failed_tickers)} pricing issues", expanded=False):
-                        for ticker in failed_tickers[:10]:
-                            st.caption(f"• {ticker}: Fallback used")
-                else:
-                    st.markdown(f"<small>• **Live Data:** {success_count}/{len(tickers)} active</small>", unsafe_allow_html=True)
-            
-        except Exception as e:
-            st.error(f"❌ Failed to fetch market data: {str(e)}")
-            prices = {}
+    # Initialize session state for price updates
+    if 'prices_updated' not in st.session_state:
+        st.session_state.prices_updated = False
+    
+    # Manual Price Update Button in Sidebar
+    with st.sidebar:
+        update_prices_button = st.button(
+            "💰 Update Prices",
+            help="Fetch latest market prices from APIs (uses cache when possible)",
+            use_container_width=True,
+            type="secondary"
+        )
+        
+        if update_prices_button:
+            st.session_state.prices_updated = True
+    
+    # Fetch market data only if requested or already done
+    if st.session_state.prices_updated or update_prices_button:
+        with st.spinner("🌐 Fetching live market data..."):
+            try:
+                prices = fetch_prices(tickers)
+                
+                # Count successful/failed fetches
+                success_count = sum(1 for p in prices.values() if p is not None)
+                failed_tickers = [t for t, p in prices.items() if p is None]
+                
+                with st.sidebar:
+                    if failed_tickers:
+                         with st.expander(f"⚠️ {len(failed_tickers)} pricing issues", expanded=False):
+                            for ticker in failed_tickers[:10]:
+                                st.caption(f"• {ticker}: Fallback used")
+                    else:
+                        st.markdown(f"<small>• **Live Data:** {success_count}/{len(tickers)} active</small>", unsafe_allow_html=True)
+                
+            except Exception as e:
+                st.error(f"❌ Failed to fetch market data: {str(e)}")
+                prices = {}
+    else:
+        # Use cached prices only (fast path)
+        cache = get_market_cache()
+        prices = cache.get_prices_batch(tickers, datetime.now().date())
+        
+        # Count how many we have cached
+        cached_count = sum(1 for p in prices.values() if p is not None)
+        
+        with st.sidebar:
+            if cached_count > 0:
+                st.markdown(f"<small>• **Cached Prices:** {cached_count}/{len(tickers)}</small>", unsafe_allow_html=True)
+                st.caption("💡 Click 'Update Prices' to refresh")
+            else:
+                st.warning("⚠️ No cached prices - click 'Update Prices'")
+
     
     # Calculate metrics
     with st.spinner("🧮 calculating performance metrics..."):
@@ -369,6 +648,30 @@ def main():
     
     st.divider()
     
+    # ==================== FETCH ALL HISTORICAL DATA ONCE ====================
+    # This runs once and is cached - timeframe changes only filter the data
+    # ONLY if transactions have been enriched (to avoid split API calls)
+    
+    if st.session_state.enrichment_done and transactions:
+        # Determine the full date range needed
+        earliest_transaction = min(t.date for t in transactions)
+        latest_date = datetime.now()
+        
+        # Get all unique tickers
+        all_tickers = set(t.ticker for t in transactions if t.ticker)
+        
+        # Fetch ALL historical prices once (cached by Streamlit)
+        with st.spinner("📉 Loading historical price data (one-time)..."):
+            all_hist_prices_df = fetch_historical_prices(
+                list(all_tickers),
+                earliest_transaction.date(),
+                latest_date.date()
+            )
+    else:
+        all_hist_prices_df = pd.DataFrame()
+    
+    # ========================================================================
+    
     # Optimized Chart Layout: Performance (2/3) | Allocation (1/3)
     chart_col_main, chart_col_side = st.columns([2, 1])
     
@@ -384,119 +687,117 @@ def main():
             label_visibility="collapsed"
         )
         
-        try:
-            # Calculate date range based on timeframe
-            end_date = datetime.now()
-            if timeframe == "1M":
-                start_date = end_date - timedelta(days=30)
-                interval_days = 2
-            elif timeframe == "3M":
-                start_date = end_date - timedelta(days=90)
-                interval_days = 3
-            elif timeframe == "6M":
-                start_date = end_date - timedelta(days=180)
-                interval_days = 7
-            elif timeframe == "1Y":
-                start_date = end_date - timedelta(days=365)
-                interval_days = 7
-            else:  # All
-                if transactions:
-                    start_date = min(t.date for t in transactions)
-                    total_days = (end_date - start_date).days
-                    interval_days = 14 if total_days > 730 else 7
-                else:
+        # Check if we have chart data (only available after enrichment)
+        if not st.session_state.enrichment_done:
+            st.info("📊 **Performance chart requires transaction enrichment**\n\nClick '🔄 Update Transactions' in the sidebar to:\n- Fetch split history\n- Update FX rates\n- Enable performance analysis")
+        else:
+            try:
+                # Calculate date range based on timeframe (for filtering only)
+                end_date = datetime.now()
+                if timeframe == "1M":
+                    start_date = end_date - timedelta(days=30)
+                    interval_days = 2
+                elif timeframe == "3M":
+                    start_date = end_date - timedelta(days=90)
+                    interval_days = 3
+                elif timeframe == "6M":
+                    start_date = end_date - timedelta(days=180)
+                    interval_days = 7
+                elif timeframe == "1Y":
                     start_date = end_date - timedelta(days=365)
                     interval_days = 7
-            
-            # Filter transactions within date range
-            hist_trans = [t for t in transactions if start_date.date() <= t.date.date() <= end_date.date()]
-            
-            if hist_trans or timeframe == "All":
-                # Fetch historical prices for ALL involved tickers for correct valuation
-                impacted_tickers = set(t.ticker for t in transactions if t.ticker)
+                else:  # All
+                    if transactions:
+                        start_date = min(t.date for t in transactions)
+                        total_days = (end_date - start_date).days
+                        interval_days = 14 if total_days > 730 else 7
+                    else:
+                        start_date = end_date - timedelta(days=365)
+                        interval_days = 7
                 
-                with st.spinner("📉 Loading historical price data..."):
-                    hist_prices_df = fetch_historical_prices(
-                        list(impacted_tickers),
-                        start_date.date(),
-                        end_date.date()
-                    )
-                
-                # Calculate at regular intervals for higher resolution
-                dates_list = []
-                net_deposits_list = []
-                value_list = []
-                cost_basis_list = []
-                
-                current_date = start_date
-                
-                # Pre-calculate prices map for speed
-                # Convert DataFrame to dictionary of dictionaries: {date: {ticker: price}}
-                # timestamp -> {ticker: price}
-                price_lookup = {}
-                if not hist_prices_df.empty:
-                    # Iterate once to build lookup (faster than .loc inside loop)
-                    for timestamp, row in hist_prices_df.iterrows():
-                        # Convert timestamp to date object for matching
-                        d_key = timestamp.date()
-                        price_lookup[d_key] = {
-                            t: float(p) for t, p in row.items() if pd.notna(p)
-                        }
+                if transactions and not all_hist_prices_df.empty:
+                    # Filter the already-loaded historical data by date range
+                    hist_prices_df = all_hist_prices_df.copy()
+                    if not hist_prices_df.empty:
+                        # Filter to selected timeframe
+                        mask = (hist_prices_df.index >= pd.Timestamp(start_date)) & (hist_prices_df.index <= pd.Timestamp(end_date))
+                        hist_prices_df = hist_prices_df[mask]
+                    
+                    # Calculate at regular intervals for higher resolution
+                    dates_list = []
+                    net_deposits_list = []
+                    value_list = []
+                    cost_basis_list = []
+                    
+                    current_date = start_date
+                    
+                    # Pre-calculate prices map for speed
+                    # Convert DataFrame to dictionary of dictionaries: {date: {ticker: price}}
+                    # timestamp -> {ticker: price}
+                    price_lookup = {}
+                    if not hist_prices_df.empty:
+                        # Iterate once to build lookup (faster than .loc inside loop)
+                        for timestamp, row in hist_prices_df.iterrows():
+                            # Convert timestamp to date object for matching
+                            d_key = timestamp.date()
+                            price_lookup[d_key] = {
+                                t: float(p) for t, p in row.items() if pd.notna(p)
+                            }
 
-                # OPTIMIZATION: Incremental Portfolio Update
-                # Sort transactions by date once
-                sorted_valid_trans = sorted(
-                    [t for t in transactions if t.date <= end_date], 
-                    key=lambda t: t.date
-                )
-                
-                # Initialize empty portfolio runner
-                running_portfolio = Portfolio([])
-                
-                trans_idx = 0
-                num_trans = len(sorted_valid_trans)
-                
-                while current_date <= end_date:
-                    # Process all transactions that happened up to (and including) current_date
-                    # that haven't been processed yet
-                    while trans_idx < num_trans and sorted_valid_trans[trans_idx].date.date() <= current_date.date():
-                        running_portfolio.process_transaction(sorted_valid_trans[trans_idx])
-                        trans_idx += 1
-                    
-                    if trans_idx > 0: # Only record if we have started portfolio history
-                        # Get prices for this date
-                        daily_prices = price_lookup.get(current_date.date(), {})
-                        
-                        # Calculate value
-                        temp_value = running_portfolio.calculate_total_value(daily_prices)
-                        temp_cost_basis = sum(pos.cost_basis for pos in running_portfolio.holdings.values())
-                        
-                        dates_list.append(current_date.strftime('%Y-%m-%d'))
-                        net_deposits_list.append(float(running_portfolio.invested_capital))
-                        value_list.append(float(temp_value))
-                        cost_basis_list.append(float(temp_cost_basis))
-                    
-                    current_date += timedelta(days=interval_days)
-                
-                if dates_list:
-                    fig_performance = create_performance_chart(
-                        dates_list, 
-                        net_deposits_list, 
-                        value_list,
-                        cost_basis_list
+                    # OPTIMIZATION: Incremental Portfolio Update
+                    # Sort transactions by date once
+                    sorted_valid_trans = sorted(
+                        [t for t in transactions if t.date <= end_date], 
+                        key=lambda t: t.date
                     )
-                    st.plotly_chart(fig_performance, use_container_width=True)
                     
-                    # Show data point count
-                    st.caption(f"Showing {len(dates_list)} data points over {timeframe}")
+                    # Initialize empty portfolio runner
+                    running_portfolio = Portfolio([])
+                    
+                    trans_idx = 0
+                    num_trans = len(sorted_valid_trans)
+                    
+                    while current_date <= end_date:
+                        # Process all transactions that happened up to (and including) current_date
+                        # that haven't been processed yet
+                        while trans_idx < num_trans and sorted_valid_trans[trans_idx].date.date() <= current_date.date():
+                            running_portfolio.process_transaction(sorted_valid_trans[trans_idx])
+                            trans_idx += 1
+                        
+                        if trans_idx > 0: # Only record if we have started portfolio history
+                            # Get prices for this date
+                            daily_prices = price_lookup.get(current_date.date(), {})
+                            
+                            # Calculate value
+                            temp_value = running_portfolio.calculate_total_value(daily_prices)
+                            temp_cost_basis = sum(pos.cost_basis for pos in running_portfolio.holdings.values())
+                            
+                            dates_list.append(current_date.strftime('%Y-%m-%d'))
+                            net_deposits_list.append(float(running_portfolio.invested_capital))
+                            value_list.append(float(temp_value))
+                            cost_basis_list.append(float(temp_cost_basis))
+                        
+                        current_date += timedelta(days=interval_days)
+                    
+                    if dates_list:
+                        fig_performance = create_performance_chart(
+                            dates_list, 
+                            net_deposits_list, 
+                            value_list,
+                            cost_basis_list
+                        )
+                        st.plotly_chart(fig_performance, use_container_width=True)
+                        
+                        # Show data point count
+                        st.caption(f"Showing {len(dates_list)} data points over {timeframe}")
+                    else:
+                        st.info("Not enough historical data for selected timeframe")
                 else:
-                    st.info("Not enough historical data for selected timeframe")
-            else:
-                st.info(f"No transactions in the selected timeframe ({timeframe})")
-                
-        except Exception as e:
-            st.error(f"Failed to create performance chart: {e}")
-            logger.error(f"Performance chart error: {e}", exc_info=True)
+                    st.info("No transactions available for chart")
+                        
+            except Exception as e:
+                st.error(f"Failed to create performance chart: {e}")
+                logger.error(f"Performance chart error: {e}", exc_info=True)
             
     with chart_col_side:
         st.subheader("🥧 Portfolio Allocation")

@@ -294,6 +294,13 @@ class CorporateActionService:
         Get splits for a ticker, checking cache first then API.
         Applies blacklist and future date filtering.
         """
+        from parsers.enhanced_transaction import AssetType
+        
+        # CRITICAL: Never apply splits to Crypto assets
+        # Mismatched ticker symbols (e.g. BTC vs stock ticker) can cause false positives
+        if AssetType.infer_from_ticker(ticker) == AssetType.CRYPTO:
+            return []
+            
         from services.market_cache import get_market_cache
         cache = get_market_cache()
         

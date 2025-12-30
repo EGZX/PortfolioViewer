@@ -255,6 +255,14 @@ def get_currency_for_ticker(ticker: str) -> str:
             return "ZAR"
         if suffix in ["SA", "SP"]:
             return "BRL"
+        if suffix == "CO":
+            return "DKK"
+        if suffix == "WA":
+            return "PLN"
+        if suffix == "ST":
+            return "SEK"
+        if suffix == "OL":
+            return "NOK"
     
     # 3. Default to USD for US-style tickers (no suffix)
     return "USD"

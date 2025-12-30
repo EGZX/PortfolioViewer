@@ -9,10 +9,17 @@ import pandas as pd
 
 from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
 from utils.logging_config import setup_logger
-from services.market_data import get_fx_rate
+from services.market_data import get_fx_rate, get_currency_for_ticker
+from services.market_cache import get_market_cache
+from datetime import date, timedelta
 
 logger = setup_logger(__name__)
 
+# Brokers that track cash balances in their export
+CASH_TRACKING_BROKERS = frozenset([
+    'Scalable Capital',
+    'Trade Republic'
+])
 
 @dataclass
 class Position:
@@ -62,63 +69,30 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
     
     def process_transaction(self, t: Transaction):
         """Update portfolio state with a single transaction."""
-        # CRITICAL FIX: t.total is ALREADY in base currency (EUR)
-        # The CSV export shows total in EUR with € symbol
-        # fx_rate was ALREADY APPLIED during CSV parsing
-        # DO NOT multiply by fx_rate again!
-        amount_eur = t.total  # Already in EUR!
+        # Transaction totals are already in EUR from CSV parser
+        amount_eur = t.total
         
-        # Track fees (convert to EUR if needed, assuming fees are in original currency or EUR)
-        # If t.fees is set, add to total
+        # Convert and track fees
         if t.fees:
-            # Note: In CSV parser, fees are already decimal.
-            # We assume fees are in the same currency context as the transaction.
-            # If original_currency is not EUR, we might need to convert fees?
-            # However, typically 'fees' column in export is also in reporting currency or handle separately.
-            # Assuming fees in CSV are already normalized or we use t.fx_rate
             fees_eur = t.fees * t.fx_rate if t.original_currency != 'EUR' else t.fees
             self.total_fees += fees_eur
         
-        # CRITICAL FIX 2: Cash balance tracking - CORRECTED
-        # Track cash for all transactions EXCEPT stock transfers (TRANSFER_IN/OUT with ticker)
-        # 
-        # The CSV transaction `total` field is already correctly signed:
-        # - BUY: negative (cash out)
-        # - SELL: positive (cash in)
-        # - DIVIDEND: positive (cash in)
-        # - TRANSFER_IN (cash deposit): positive (cash in)
-        # - TRANSFER_OUT (cash withdrawal): positive (cash in to your bank, out of portfolio)
-        # - TRANSFER_IN (stock): shouldn't affect cash (moving stocks between brokers)
-        #  - TRANSFER_OUT (stock): shouldn't affect cash (moving stocks between brokers)
-        
-        # Determine if this transaction affects cash balance
+        # Cash balance excludes stock transfers (only actual cash movements)
         should_update_cash = True
         
         if t.type in [TransactionType.TRANSFER_IN, TransactionType.TRANSFER_OUT]:
-            # TRANSFER_IN/OUT can be either:
-            # 1. Stock transfer (has ticker) - doesn't affect cash
-            # 2. Cash deposit/withdrawal (no ticker) - affects cash
+            # Stock transfers (with ticker) don't affect cash balance
             if t.ticker and t.ticker.strip() != '':
-                # Has ticker = stock transfer = skip cash update
                 should_update_cash = False
         
-        # Track cash balance: sum ALL cash-affecting transaction totals
-        # User Rule: Cash is tracked for Scalable/Trade Republic (auto-import)
-        # BUT NOT for Crypto OR Interactive Brokers (manual/external)
-        
-        tracks_cash = True
-        
-        # 1. Check for manual/unknown broker (Manual entries usually have no broker)
-        if not t.broker or str(t.broker).lower() == 'nan' or t.broker.strip() == '':
-             tracks_cash = False
-             
-        # 2. Check explicitly excluded brokers
-        elif t.broker.lower() == 'interactive_brokers':
-             tracks_cash = False
-             
-        # 3. Check Asset Type
-        if t.asset_type == AssetType.CRYPTO:
-             tracks_cash = False
+        # Cash balance tracking rules:
+        # Only track for specific brokers (Scalable Capital, Trade Republic)
+        # Exclude crypto assets regardless of broker
+        tracks_cash = (
+            t.broker 
+            and t.broker in CASH_TRACKING_BROKERS 
+            and t.asset_type != AssetType.CRYPTO
+        )
 
         if should_update_cash and tracks_cash:
             # For TRANSFER_OUT, the total is positive (money leaving portfolio)
@@ -184,7 +158,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             self.total_withdrawn += abs(amount_eur)
             
         # Update holdings
-        if t.ticker:
+        # Update holdings
             if t.ticker not in self.holdings:
                 self.holdings[t.ticker] = Position(
                     ticker=t.ticker, 
@@ -304,8 +278,6 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 pos.update_market_value(Decimal(str(price)))
             
             # Convert to EUR based on PRICE SOURCE currency (not position currency)
-            # This handles cases where we hold a US stock (USD price) but bought it on a collection (EUR)
-            from services.market_data import get_currency_for_ticker
             price_currency = get_currency_for_ticker(ticker)
             
             position_val_eur = pos.market_value
@@ -336,8 +308,21 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             if current_price is not None:
                 pos.update_market_value(Decimal(str(current_price)))
             else:
-                # No price available - market value remains at last known value
-                pass
+                # FALLBACK: Try to get last cached price
+                try:
+                    cache = get_market_cache()
+                    
+                    # Try the last 90 days for a price
+                    for days_ago in range(1, 90):
+                        check_date = date.today() - timedelta(days=days_ago)
+                        cached_price = cache.get_price(ticker, check_date)
+                        if cached_price:
+                            current_price = cached_price
+                            pos.update_market_value(Decimal(str(current_price)))
+                            logger.warning(f"{ticker}: Using cached price from {check_date} ({cached_price:.2f})")
+                            break
+                except Exception as e:
+                    logger.error(f"Failed to get cached price for {ticker}: {e}")
 
             # Calculate metrics
             avg_cost = pos.cost_basis / pos.shares if pos.shares > 0 else 0
