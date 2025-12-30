@@ -17,6 +17,14 @@ from utils.logging_config import setup_logger
 logger = setup_logger(__name__)
 
 
+
+# Blacklist for known erroneous splits from data providers
+# Format: ticker -> list of (date_str, ratio) tuples to ignore
+SPLIT_BLACKLIST = {
+    '1211.HK': [('2025-07-30', 6.0)],
+    'CNE100000296': [('2025-07-30', 6.0)],
+}
+
 class CorporateAction:
     """Represents a corporate action event."""
     
@@ -80,6 +88,19 @@ class CorporateActionService:
             for split_date, ratio in splits.items():
                 # Convert to date for comparison
                 split_date_obj = split_date.date()
+                split_date_str = split_date_obj.strftime('%Y-%m-%d')
+                
+                # CHECK BLACKLIST
+                blacklist = SPLIT_BLACKLIST.get(ticker, [])
+                is_blacklisted = False
+                for bl_date, bl_ratio in blacklist:
+                    if bl_date == split_date_str and abs(ratio - bl_ratio) < 0.1:
+                        is_blacklisted = True
+                        break
+                
+                if is_blacklisted:
+                    logger.warning(f"Ignoring BLACKLISTED split for {ticker} on {split_date_str} (ratio: {ratio}x)")
+                    continue
                 
                 # CRITICAL: Ignore future-dated splits
                 # These are often incorrect/speculative data from yfinance
@@ -241,59 +262,13 @@ class CorporateActionService:
         
         for ticker in tickers:
             # Check cache first
-            cached_splits = cache.get_splits(ticker)
-            
-            if cached_splits:
+            split_actions = CorporateActionService.get_cached_splits(ticker)
+            if split_actions:
                 cache_hits += 1
-                logger.info(f"Cache HIT: {ticker} has {len(cached_splits)} cached splits")
-                # Convert back to CorporateAction objects
-                split_actions = []
-                today = date.today()
-                
-                for split_date, ratio in cached_splits:
-                    # SPLIT BLACKLIST check for erroneous data (e.g. phantom 6x split for BYD)
-                    if ticker == 'CNE100000296' and split_date.strftime('%Y-%m-%d') == '2025-07-30' and abs(ratio - 6.0) < 0.1:
-                         logger.warning(f"Ignoring BLACKLISTED split for {ticker} on {split_date} (ratio: {ratio}x)")
-                         continue
-                        
-                    # Filter future dates from cache
-                    if split_date > today:
-                        logger.warning(f"Ignoring cached future split for {ticker} on {split_date}")
-                        continue
-                        
-                    if ratio > 1:
-                        action = CorporateAction(
-                            ticker=ticker,
-                            action_date=split_date,
-                            action_type="StockSplit",
-                            ratio_from=Decimal(1),
-                            ratio_to=Decimal(str(ratio))
-                        )
-                    else:
-                        action = CorporateAction(
-                            ticker=ticker,
-                            action_date=split_date,
-                            action_type="ReverseSplit",
-                            ratio_from=Decimal(str(1/ratio)),
-                            ratio_to=Decimal(1)
-                        )
-                    split_actions.append(action)
-                
                 splits_by_ticker[ticker] = split_actions
             else:
                 cache_misses += 1
-                logger.info(f"Cache MISS: Fetching splits for {ticker} from API")
-                split_history = CorporateActionService.fetch_split_history(ticker)
-                if split_history:
-                    splits_by_ticker[ticker] = split_history
-                    # Cache the splits
-                    splits_for_cache = [
-                        (action.action_date, float(action.adjustment_factor))
-                        for action in split_history
-                    ]
-                    cache.set_splits(ticker, splits_for_cache)
-                    logger.info(f"Cached {len(split_history)} splits for {ticker}")
-        
+                
         logger.info(f"Split cache stats: {cache_hits} hits, {cache_misses} misses")
         
         if not splits_by_ticker:
@@ -312,3 +287,68 @@ class CorporateActionService:
         logger.info("=" * 60)
         
         return adjusted_transactions, adjustment_log
+
+    @staticmethod
+    def get_cached_splits(ticker: str) -> List[CorporateAction]:
+        """
+        Get splits for a ticker, checking cache first then API.
+        Applies blacklist and future date filtering.
+        """
+        from services.market_cache import get_market_cache
+        cache = get_market_cache()
+        
+        cached_splits = cache.get_splits(ticker)
+        split_actions = []
+        today = date.today()
+        
+        if cached_splits:
+            # Process cached splits
+            for split_date, ratio in cached_splits:
+                # SPLIT BLACKLIST check
+                blacklist = SPLIT_BLACKLIST.get(ticker, [])
+                is_blacklisted = False
+                split_date_str = split_date.strftime('%Y-%m-%d')
+                for bl_date, bl_ratio in blacklist:
+                    if bl_date == split_date_str and abs(ratio - bl_ratio) < 0.1:
+                        is_blacklisted = True
+                        break
+                
+                if is_blacklisted:
+                    continue
+                    
+                # Filter future dates from cache
+                if split_date > today:
+                    continue
+                    
+                if ratio > 1:
+                    action = CorporateAction(
+                        ticker=ticker,
+                        action_date=split_date,
+                        action_type="StockSplit",
+                        ratio_from=Decimal(1),
+                        ratio_to=Decimal(str(ratio))
+                    )
+                else:
+                    action = CorporateAction(
+                        ticker=ticker,
+                        action_date=split_date,
+                        action_type="ReverseSplit",
+                        ratio_from=Decimal(str(1/ratio)),
+                        ratio_to=Decimal(1)
+                    )
+                split_actions.append(action)
+            return split_actions
+            
+        else:
+            # Fetch from API
+            split_history = CorporateActionService.fetch_split_history(ticker)
+            if split_history:
+                # Cache the splits
+                splits_for_cache = [
+                    (action.action_date, float(action.adjustment_factor))
+                    for action in split_history
+                ]
+                cache.set_splits(ticker, splits_for_cache)
+                return split_history
+        
+        return []

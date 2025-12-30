@@ -71,7 +71,7 @@ def create_allocation_donut(holdings_df: pd.DataFrame, min_pct: float = 2.0) -> 
                      'Value: €%{value:,.2f}<br>' +
                      'Percentage: %{percent}<br>' +
                      '<extra></extra>',
-        textinfo='label+percent',
+        textinfo='percent',
         textposition='auto',
         marker=dict(
             colors=px.colors.qualitative.Set3,
@@ -80,22 +80,16 @@ def create_allocation_donut(holdings_df: pd.DataFrame, min_pct: float = 2.0) -> 
     )])
     
     fig.update_layout(
-        title={
-            'text': 'Portfolio Allocation',
-            'x': 0.5,
-            'xanchor': 'center',
-            'font': {'size': 20, 'color': '#333'}
-        },
         showlegend=True,
         legend=dict(
-            orientation='v',
-            yanchor='middle',
-            y=0.5,
-            xanchor='left',
-            x=1.02
+            orientation="h",
+            yanchor="top",
+            y=-0.05,
+            xanchor="center",
+            x=0.5
         ),
         height=500,
-        margin=dict(t=80, b=20, l=20, r=200)
+        margin=dict(t=30, b=150, l=20, r=20)
     )
     
     logger.info(f"Created allocation chart with {len(display_df)} segments")

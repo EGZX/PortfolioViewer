@@ -118,7 +118,7 @@ def main():
     
     # Header
     st.markdown('<div class="main-header">📊 Portfolio Viewer</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Parqet-lite portfolio tracker with XIRR calculations</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-header">Professional portfolio tracker with XIRR calculations</div>', unsafe_allow_html=True)
     
     # Sidebar
     with st.sidebar:
@@ -156,30 +156,18 @@ def main():
     if uploaded_file is not None:
         file_content = uploaded_file.getvalue().decode('utf-8')
         filename = uploaded_file.name
-    elif 'use_cache' in st.session_state and st.session_state['use_cache']:
-        file_content = st.session_state['cached_csv']
-        filename = st.session_state['cached_filename']
+    elif cached_data:
+        # Auto-load from cache
+        csv_content, cache_filename, uploaded_at = cached_data
+        file_content = csv_content
+        filename = cache_filename
         using_cache = True
-        st.sidebar.success(f"✅ Using cached data: {filename}")
-        
+        # Sidebar notification (simplified)
+        st.sidebar.info(f"📂 Auto-loaded: {cache_filename}\n{uploaded_at.strftime('%Y-%m-%d %H:%M')}")
+
     if file_content is None:
-        # No active data source - Show Welcome / Load Cache UI
-        
-        if cached_data:
-            csv_content, cache_filename, uploaded_at = cached_data
-            st.info(f"📦 Found cached portfolio data from {uploaded_at.strftime('%Y-%m-%d %H:%M')}")
-            
-            col1, col2 = st.columns([1, 2])
-            with col1:
-                if st.button("📂 Load Cached Data", type="primary", use_container_width=True):
-                    st.session_state['use_cache'] = True
-                    st.session_state['cached_csv'] = csv_content
-                    st.session_state['cached_filename'] = cache_filename
-                    st.rerun()
-            with col2:
-                st.caption(f"Last file: {cache_filename}")
-        else:
-            st.info("👆 Upload a CSV file to get started")
+        # No upload AND no cache - Show Welcome
+        st.info("👆 Upload a CSV file to get started")
         
         with st.expander("📋 Supported CSV Format"):
             st.markdown("""
@@ -230,54 +218,56 @@ def main():
             st.error("No valid transactions found in CSV")
             return
             
-        st.sidebar.success(f"✅ Parsed {len(transactions)} transactions")
-        
-        # Save to cache if this was a new upload and successful
-        if uploaded_file is not None:
-            cache.save_transactions_csv(file_content, filename)
-            st.sidebar.info("💾 Saved to cache for next login")
-        
-        # Display Split info
-        if split_log:
-            st.sidebar.info(f"📊 Applied {len(split_log)} split adjustments")
-            with st.sidebar.expander("Split Adjustments", expanded=False):
-                for log_entry in split_log[:5]:
-                    st.text(log_entry)
-                if len(split_log) > 5:
-                    st.text(f"... and {len(split_log) - 5} more")
-        
-        # Display FX info
-        if fx_conversions > 0:
-            st.sidebar.success(f"💱 Applied {fx_conversions} historical FX rates")
+        # Unified Status Block (Compact & Professional)
+        with st.sidebar:
+            st.markdown("---")
+            st.markdown("### 🛠️ Data Status")
             
-        # Display Validation info
-        if validation_data:
-            validation_issues, summary = validation_data
-            if summary and summary['ERROR'] > 0:
-                st.sidebar.error(f"❌ {summary['ERROR']} data errors found")
-                with st.sidebar.expander("Data Quality Report", expanded=True):
-                    for issue in validation_issues[:10]:
-                        st.text(f"❌ {issue.message}")
-            elif summary and summary['WARNING'] > 0:
-                st.sidebar.warning(f"⚠️ {summary['WARNING']} warnings")
-    
+            status_lines = []
+            status_lines.append(f"• **Parsed:** {len(transactions)} transactions")
+            
+            if split_log:
+                status_lines.append(f"• **Splits:** {len(split_log)} applied")
+            
+            if fx_conversions > 0:
+                status_lines.append(f"• **FX:** {fx_conversions} historical rates")
+            
+            # Add to list before displaying
+            for line in status_lines:
+                st.markdown(f"<small>{line}</small>", unsafe_allow_html=True)
+
+            # Data Quality / Warnings in a quiet expander
+            if validation_data:
+                validation_issues, summary = validation_data
+                if summary and (summary['ERROR'] > 0 or summary['WARNING'] > 0):
+                    with st.expander("🔍 Data Quality Details", expanded=False):
+                        if summary['ERROR'] > 0:
+                            st.markdown(f"**Errors:** {summary['ERROR']}")
+                        if summary['WARNING'] > 0:
+                            st.markdown(f"**Warnings:** {summary['WARNING']}")
+                        for issue in validation_issues[:5]:
+                            st.caption(f"• {issue.message}")
+            
+            if uploaded_file is not None:
+                st.caption("💾 Saved to local cache")
+            st.markdown("---")
+
     except Exception as e:
         st.error(f"❌ Failed to process data: {str(e)}")
-        # Don't return, let user retry or see stuck state
         return
     
     # Build portfolio
-    with st.spinner("💼 Reconstructing portfolio state..."):
-        try:
-            portfolio = Portfolio(transactions)
-            tickers = portfolio.get_unique_tickers()
+    try:
+        portfolio = Portfolio(transactions)
+        tickers = portfolio.get_unique_tickers()
+        
+        with st.sidebar:
+            st.markdown(f"<small>• **Universe:** {len(tickers)} unique tickers</small>", unsafe_allow_html=True)
             
-            st.sidebar.info(f"📈 {len(tickers)} unique tickers")
-            
-        except Exception as e:
-            st.error(f"❌ Failed to build portfolio: {str(e)}")
-            logger.error(f"Portfolio reconstruction error: {e}", exc_info=True)
-            return
+    except Exception as e:
+        st.error(f"❌ Failed to build portfolio: {str(e)}")
+        logger.error(f"Portfolio reconstruction error: {e}", exc_info=True)
+        return
     
     # Fetch market data
     with st.spinner("🌐 Fetching live market data..."):
@@ -288,21 +278,16 @@ def main():
             success_count = sum(1 for p in prices.values() if p is not None)
             failed_tickers = [t for t, p in prices.items() if p is None]
             
-            if failed_tickers:
-                with st.sidebar:
-                    with st.expander(f"⚠️ {len(failed_tickers)} tickers failed", expanded=False):
-                        st.warning("Using last transaction price as fallback:")
-                        for ticker in failed_tickers[:10]:  # Show max 10
-                            st.text(f"• {ticker}")
-                        if len(failed_tickers) > 10:
-                            st.text(f"... and {len(failed_tickers) - 10} more")
-            else:
-                st.sidebar.success(f"✅ Fetched prices for all {success_count} tickers")
+            with st.sidebar:
+                if failed_tickers:
+                     with st.expander(f"⚠️ {len(failed_tickers)} pricing issues", expanded=False):
+                        for ticker in failed_tickers[:10]:
+                            st.caption(f"• {ticker}: Fallback used")
+                else:
+                    st.markdown(f"<small>• **Live Data:** {success_count}/{len(tickers)} active</small>", unsafe_allow_html=True)
             
         except Exception as e:
             st.error(f"❌ Failed to fetch market data: {str(e)}")
-            logger.error(f"Market data fetch error: {e}", exc_info=True)
-            # Continue with empty prices dict
             prices = {}
     
     # Calculate metrics
@@ -349,7 +334,7 @@ def main():
     with m_col1:
         st.metric(
             label="Net Worth",
-            value=f"eur {current_value:,.2f}",
+            value=f"€{current_value:,.2f}",
             help="Current portfolio value (Holdings + Cash)"
         )
     
@@ -357,7 +342,7 @@ def main():
         gain_color = "normal" if total_absolute_gain >= 0 else "inverse"
         st.metric(
             label="Absolute Gain",
-            value=f"eur {total_absolute_gain:,.2f}",
+            value=f"€{total_absolute_gain:,.2f}",
             delta=f"{total_return_pct:.2f}%",
             help="Realized + Dividends + Interest + (MV - Cost) - Fees"
         )
@@ -376,11 +361,11 @@ def main():
     # Secondary Metrics Row
     m_col4, m_col5, m_col6 = st.columns(3)
     with m_col4:
-        st.metric("Net Deposits", f"eur {portfolio.invested_capital:,.2f}")
+        st.metric("Net Deposits", f"€{portfolio.invested_capital:,.2f}")
     with m_col5:
-        st.metric("Cost Basis", f"eur {holdings_cost_basis:,.2f}")
+        st.metric("Cost Basis", f"€{holdings_cost_basis:,.2f}")
     with m_col6:
-        st.metric("Total Fees", f"eur {portfolio.total_fees:,.2f}")
+        st.metric("Total Fees", f"€{portfolio.total_fees:,.2f}")
     
     st.divider()
     
@@ -561,10 +546,10 @@ def main():
                 # Format for display
                 holdings_display = filtered_df.copy()
                 holdings_display['Shares'] = holdings_display['Shares'].apply(lambda x: f"{x:.4f}")
-                holdings_display['Avg Cost'] = holdings_display['Avg Cost'].apply(lambda x: f"eur {x:.2f}")
-                holdings_display['Current Price'] = holdings_display['Current Price'].apply(lambda x: f"eur {x:.2f}")
-                holdings_display['Market Value'] = holdings_display['Market Value'].apply(lambda x: f"eur {x:,.2f}")
-                holdings_display['Gain/Loss'] = holdings_display['Gain/Loss'].apply(lambda x: f"eur {x:,.2f}")
+                holdings_display['Avg Cost'] = holdings_display['Avg Cost'].apply(lambda x: f"€{x:.2f}")
+                holdings_display['Current Price'] = holdings_display['Current Price'].apply(lambda x: f"€{x:.2f}")
+                holdings_display['Market Value'] = holdings_display['Market Value'].apply(lambda x: f"€{x:,.2f}")
+                holdings_display['Gain/Loss'] = holdings_display['Gain/Loss'].apply(lambda x: f"€{x:,.2f}")
                 holdings_display['Gain %'] = holdings_display['Gain %'].apply(lambda x: f"{x:.2f}%")
                 
                 st.dataframe(

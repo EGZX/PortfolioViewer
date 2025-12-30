@@ -48,7 +48,5 @@ Testdata/
 *.log
 logs/
 
-# Data cache
-data/
-*.db
-*.db-journal
+# Configuration tools
+scripts/config_helper.py

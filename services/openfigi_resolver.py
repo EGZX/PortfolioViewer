@@ -182,23 +182,81 @@ class OpenFIGIResolver:
     
     def resolve_batch(self, isins: List[str]) -> Dict[str, Optional[str]]:
         """
-        Resolve multiple ISINs in batch.
-        
-        Note: OpenFIGI supports batch requests, but we process one at a time
-        to stay well within rate limits and handle errors gracefully.
-        
-        Args:
-            isins: List of ISIN codes
-        
-        Returns:
-            Dictionary mapping ISIN -> Ticker (or None)
+        Resolve multiple ISINs in batch using OpenFIGI's batch API.
+        Checks cache first, then fetches missing ISINs in chunks of 100.
         """
         results = {}
+        to_fetch = []
         
+        # 1. Check Cache
         for isin in isins:
-            ticker = self.resolve_isin(isin)
-            results[isin] = ticker
+            cached = self.cache_store.get_isin_mapping(isin)
+            if cached:
+                results[isin] = cached
+            elif isin and len(isin) == 12: # Only valid ISINs
+                to_fetch.append(isin)
+            else:
+                results[isin] = None # Invalid, don't try
         
+        if not to_fetch:
+            return results
+            
+        logger.info(f"OpenFIGI Batch: {len(results)} cached, {len(to_fetch)} to resolve")
+        
+        # 2. Chunk into groups of 10 (OpenFIGI limit)
+        CHUNK_SIZE = 10
+        for i in range(0, len(to_fetch), CHUNK_SIZE):
+            chunk = to_fetch[i:i + CHUNK_SIZE]
+            
+            # Rate limit
+            self._rate_limit()
+            
+            # Prepare payload
+            payload = [{"idType": "ID_ISIN", "idValue": isin, "exchCode": "US"} for isin in chunk]
+            
+            try:
+                logger.info(f"Fetching OpenFIGI batch {i//CHUNK_SIZE + 1} ({len(chunk)} items)...")
+                response = requests.post(
+                    self.API_URL,
+                    json=payload,
+                    headers={"Content-Type": "application/json"},
+                    timeout=30 # Increased timeout for batch
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    
+                    # OpenFIGI returns array of results corresponding to the input array
+                    # Each item is either {data: [...]} or {error: ...}
+                    for idx, item_result in enumerate(data):
+                        original_isin = chunk[idx]
+                        
+                        if 'data' in item_result:
+                            # Extract best ticker
+                            ticker = self._extract_best_ticker(item_result['data'], original_isin)
+                            if ticker:
+                                results[original_isin] = ticker
+                                self.cache_store.set_isin_mapping(original_isin, ticker)
+                                logger.debug(f"Resolved {original_isin} -> {ticker}")
+                            else:
+                                results[original_isin] = None
+                                logger.warning(f"No suitable ticker parsing for {original_isin}")
+                        else:
+                            # Error or not found
+                            results[original_isin] = None
+                            logger.debug(f"No match for {original_isin}")
+                            
+                else:
+                    logger.error(f"OpenFIGI batch failed: {response.status_code} - {response.text}")
+                    # Mark all this chunks as failed
+                    for isin in chunk:
+                        results[isin] = None
+                        
+            except Exception as e:
+                logger.error(f"OpenFIGI batch exception: {e}")
+                for isin in chunk:
+                    results[isin] = None
+            
         return results
     
     def get_cache_stats(self) -> Dict[str, int]:
