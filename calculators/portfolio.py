@@ -198,6 +198,14 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             # Update asset_type if transaction has better info
             if t.asset_type and t.asset_type != AssetType.UNKNOWN:
                 pos.asset_type = t.asset_type
+            # If still unknown, try to infer from name
+            elif pos.asset_type == AssetType.UNKNOWN or not pos.asset_type:
+                inferred_type = AssetType.infer_from_name(pos.name or t.name or "")
+                if inferred_type:
+                    pos.asset_type = inferred_type
+                else:
+                    # Fallback to ticker-based inference
+                    pos.asset_type = AssetType.infer_from_ticker(t.ticker)
             
             # INCREASE POSITION
             if t.type in [TransactionType.BUY, TransactionType.TRANSFER_IN, TransactionType.STOCK_DIVIDEND]:
@@ -321,9 +329,13 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             # Calculate metrics
             avg_cost = pos.cost_basis / pos.shares if pos.shares > 0 else 0
             
+            # Get asset type display name
+            asset_type_display = pos.asset_type.value if pos.asset_type else "Unknown"
+            
             data.append({
                 'Ticker': ticker,
                 'Name': pos.name if pos.name else ticker,
+                'Asset Type': asset_type_display,
                 'Shares': float(pos.shares),
                 'Avg Cost': float(avg_cost),
                 'Current Price': float(current_price) if current_price else 0.0,
@@ -336,7 +348,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         if not df.empty:
             df = df.sort_values('Market Value', ascending=False)
             # Reorder columns
-            cols = ['Ticker', 'Name', 'Shares', 'Avg Cost', 'Current Price', 'Market Value', 'Gain/Loss', 'Gain %']
+            cols = ['Ticker', 'Name', 'Asset Type', 'Shares', 'Avg Cost', 'Current Price', 'Market Value', 'Gain/Loss', 'Gain %']
             df = df[cols]
         
         return df

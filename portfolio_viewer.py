@@ -17,15 +17,67 @@ from parsers.csv_parser import CSVParser
 from parsers.enhanced_transaction import Transaction  # Import enhanced model
 from calculators.portfolio import Portfolio
 from calculators.metrics import xirr, calculate_absolute_return
-from services.market_data import fetch_prices
+from services.market_data import fetch_prices, fetch_historical_prices
 from services.corporate_actions import CorporateActionService
 from services.fx_rates import FXRateService
 from services.data_validator import DataValidator, ValidationIssue  # Data quality
 from charts.visualizations import create_allocation_donut, create_performance_chart
 from utils.logging_config import setup_logger
 from utils.auth import check_authentication, show_logout_button
+from services.market_cache import get_market_cache
 
 logger = setup_logger(__name__)
+
+
+@st.cache_data(show_spinner="🔄 Processing portfolio data...", ttl=3600)
+def process_data_pipeline(file_content: str):
+    """
+    Process CSV content into enriched transactions with caching.
+    Includes: Parse -> Splits -> FX -> Validation
+    """
+    try:
+        # 1. Parse
+        parser = CSVParser()
+        transactions = parser.parse_csv(file_content)
+        
+        if not transactions:
+            return None, [], 0, None
+        
+        # 2. Splits
+        # Note: CorporateActionService should have internal caching if possible, 
+        # but this function cache covers it for the same file.
+        transactions, split_log = CorporateActionService.detect_and_apply_splits(
+            transactions,
+            fetch_splits=True
+        )
+        
+        # 3. FX Rates
+        fx_conversions = 0
+        for trans in transactions:
+            if trans.original_currency != 'EUR':
+                # Fetch historical FX rate for this transaction date
+                historical_rate = FXRateService.get_rate(
+                    trans.original_currency,
+                    'EUR',
+                    trans.date.date()
+                )
+                
+                # Update FX rate if we got a historical one
+                if historical_rate != trans.fx_rate:
+                    trans.fx_rate = historical_rate
+                    fx_conversions += 1
+        
+        # 4. Validation
+        validator = DataValidator()
+        validation_issues = validator.validate_all(transactions)
+        val_summary = validator.get_summary()
+        
+        return transactions, split_log, fx_conversions, (validation_issues, val_summary)
+        
+    except Exception as e:
+        logger.error(f"Pipeline processing error: {e}", exc_info=True)
+        raise e
+
 
 
 # Page configuration
@@ -91,9 +143,43 @@ def main():
         st.caption("💡 Tip: Your CSV should contain columns like Date, Type, Ticker, Shares, Price, Fees")
     
     # Main content
-    if uploaded_file is None:
-        # Welcome screen
-        st.info("👆 Upload a CSV file to get started")
+
+    # Check for cached transactions
+    cache = get_market_cache()
+    cached_data = cache.get_last_transactions_csv()
+    
+    # Determine data source
+    file_content = None
+    filename = None
+    using_cache = False
+
+    if uploaded_file is not None:
+        file_content = uploaded_file.getvalue().decode('utf-8')
+        filename = uploaded_file.name
+    elif 'use_cache' in st.session_state and st.session_state['use_cache']:
+        file_content = st.session_state['cached_csv']
+        filename = st.session_state['cached_filename']
+        using_cache = True
+        st.sidebar.success(f"✅ Using cached data: {filename}")
+        
+    if file_content is None:
+        # No active data source - Show Welcome / Load Cache UI
+        
+        if cached_data:
+            csv_content, cache_filename, uploaded_at = cached_data
+            st.info(f"📦 Found cached portfolio data from {uploaded_at.strftime('%Y-%m-%d %H:%M')}")
+            
+            col1, col2 = st.columns([1, 2])
+            with col1:
+                if st.button("📂 Load Cached Data", type="primary", use_container_width=True):
+                    st.session_state['use_cache'] = True
+                    st.session_state['cached_csv'] = csv_content
+                    st.session_state['cached_filename'] = cache_filename
+                    st.rerun()
+            with col2:
+                st.caption(f"Last file: {cache_filename}")
+        else:
+            st.info("👆 Upload a CSV file to get started")
         
         with st.expander("📋 Supported CSV Format"):
             st.markdown("""
@@ -136,108 +222,49 @@ def main():
                 """)
         
         return
-    
-    # Process file
-    with st.spinner("📖 Parsing CSV..."):
-        try:
-            file_content = uploaded_file.getvalue().decode('utf-8')
-            parser = CSVParser()
-            transactions = parser.parse_csv(file_content)
-            
-            if not transactions:
-                st.error("No valid transactions found in CSV")
-                return
-            
-            st.sidebar.success(f"✅ Parsed {len(transactions)} transactions")
-            
-        except Exception as e:
-            st.error(f"❌ Failed to parse CSV: {str(e)}")
-            logger.error(f"CSV parsing error: {e}", exc_info=True)
+    # Process data pipeline (Cached)
+    try:
+        transactions, split_log, fx_conversions, validation_data = process_data_pipeline(file_content)
+        
+        if not transactions:
+            st.error("No valid transactions found in CSV")
             return
+            
+        st.sidebar.success(f"✅ Parsed {len(transactions)} transactions")
+        
+        # Save to cache if this was a new upload and successful
+        if uploaded_file is not None:
+            cache.save_transactions_csv(file_content, filename)
+            st.sidebar.info("💾 Saved to cache for next login")
+        
+        # Display Split info
+        if split_log:
+            st.sidebar.info(f"📊 Applied {len(split_log)} split adjustments")
+            with st.sidebar.expander("Split Adjustments", expanded=False):
+                for log_entry in split_log[:5]:
+                    st.text(log_entry)
+                if len(split_log) > 5:
+                    st.text(f"... and {len(split_log) - 5} more")
+        
+        # Display FX info
+        if fx_conversions > 0:
+            st.sidebar.success(f"💱 Applied {fx_conversions} historical FX rates")
+            
+        # Display Validation info
+        if validation_data:
+            validation_issues, summary = validation_data
+            if summary and summary['ERROR'] > 0:
+                st.sidebar.error(f"❌ {summary['ERROR']} data errors found")
+                with st.sidebar.expander("Data Quality Report", expanded=True):
+                    for issue in validation_issues[:10]:
+                        st.text(f"❌ {issue.message}")
+            elif summary and summary['WARNING'] > 0:
+                st.sidebar.warning(f"⚠️ {summary['WARNING']} warnings")
     
-    # Apply stock split adjustments
-    with st.spinner("🔄 Detecting and applying stock splits..."):
-        try:
-            adjusted_transactions, split_log = CorporateActionService.detect_and_apply_splits(
-                transactions,
-                fetch_splits=True
-            )
-            
-            transactions = adjusted_transactions
-            
-            if split_log:
-                st.sidebar.info(f"📊 Applied {len(split_log)} split adjustments")
-                with st.sidebar.expander("Split Adjustments", expanded=False):
-                    for log_entry in split_log[:5]:  # Show first 5
-                        st.text(log_entry)
-                    if len(split_log) > 5:
-                        st.text(f"... and {len(split_log) - 5} more")
-            else:
-                st.sidebar.info("✓ No splits detected")
-                
-        except Exception as e:
-            st.warning(f"⚠️ Could not fetch split data: {str(e)}")
-            logger.error(f"Split detection error: {e}", exc_info=True)
-            # Continue without split adjustments
-    
-    # Apply historical FX rates (convert to EUR at historical rates)
-    with st.spinner("💱 Applying historical FX rates..."):
-        try:
-            fx_conversions = 0
-            for trans in transactions:
-                if trans.original_currency != 'EUR':
-                    # Fetch historical FX rate for this transaction date
-                    historical_rate = FXRateService.get_rate(
-                        trans.original_currency,
-                        'EUR',
-                        trans.date.date()
-                    )
-                    
-                    # Update FX rate if we got a historical one
-                    if historical_rate != trans.fx_rate:
-                        trans.fx_rate = historical_rate
-                        fx_conversions += 1
-            
-            if fx_conversions > 0:
-                st.sidebar.success(f"💱 Applied {fx_conversions} historical FX rates")
-            
-        except Exception as e:
-            st.warning(f"⚠️ Could not fetch historical FX rates: {str(e)}")
-            logger.error(f"Historical FX error: {e}", exc_info=True)
-            # Continue with default/current FX rates
-    
-    # Validate data quality
-    with st.spinner("✓ Validating data quality..."):
-        try:
-            validator = DataValidator()
-            validation_issues = validator.validate_all(transactions)
-            summary = validator.get_summary()
-            
-            if validation_issues:
-                # Display validation summary in sidebar
-                if summary['ERROR'] > 0:
-                    st.sidebar.error(f"❌ {summary['ERROR']} data errors found")
-                if summary['WARNING'] > 0:
-                    st.sidebar.warning(f"⚠️ {summary['WARNING']} warnings")
-                if summary['INFO'] > 0:
-                    st.sidebar.info(f"ℹ️ {summary['INFO']} info messages")
-                
-                # Show detailed validation results in expander
-                with st.sidebar.expander("Data Quality Report", expanded=(summary['ERROR'] > 0)):
-                    for issue in validation_issues[:20]:  # Show first 20
-                        severity_icon = "❌" if issue.severity == "ERROR" else ("⚠️" if issue.severity == "WARNING" else "ℹ️")
-                        st.text(f"{severity_icon} {issue.category}: {issue.message}")
-                        if issue.transaction_ref:
-                            st.caption(f"   Transaction: {issue.transaction_ref}")
-                    
-                    if len(validation_issues) > 20:
-                        st.text(f"... and {len(validation_issues) - 20} more issues")
-            else:
-                st.sidebar.success("✅ Data quality validation passed")
-                
-        except Exception as e:
-            logger.error(f"Data validation error: {e}", exc_info=True)
-            # Continue even if validation fails
+    except Exception as e:
+        st.error(f"❌ Failed to process data: {str(e)}")
+        # Don't return, let user retry or see stuck state
+        return
     
     # Build portfolio
     with st.spinner("💼 Reconstructing portfolio state..."):
@@ -374,7 +401,7 @@ def main():
             holdings_df = portfolio.get_holdings_summary(prices)
             if not holdings_df.empty:
                 fig_allocation = create_allocation_donut(holdings_df)
-                st.plotly_chart(fig_allocation, width="stretch")
+                st.plotly_chart(fig_allocation, use_container_width=True)
             else:
                 st.info("No holdings to display")
         except Exception as e:
@@ -383,43 +410,129 @@ def main():
     
     with col_right:
         st.subheader("📈 Performance History")
+        
+        # Timeframe selector
+        timeframe_col1, timeframe_col2 = st.columns([3, 7])
+        with timeframe_col1:
+            timeframe = st.selectbox(
+                "Timeframe",
+                options=["1M", "3M", "6M", "1Y", "All"],
+                index=3,  # Default to 1Y
+                key="performance_timeframe"
+            )
+        
         try:
-            # Calculate historical portfolio values (simplified - last 365 days)
-            # Note: Full reconstruction is expensive, this is a simplified version
+            # Calculate date range based on timeframe
             end_date = datetime.now()
-            start_date = end_date - timedelta(days=365)
+            if timeframe == "1M":
+                start_date = end_date - timedelta(days=30)
+                interval_days = 2  # Every 2 days
+            elif timeframe == "3M":
+                start_date = end_date - timedelta(days=90)
+                interval_days = 3  # Every 3 days
+            elif timeframe == "6M":
+                start_date = end_date - timedelta(days=180)
+                interval_days = 7  # Weekly
+            elif timeframe == "1Y":
+                start_date = end_date - timedelta(days=365)
+                interval_days = 7  # Weekly
+            else:  # All
+                # Use first transaction date
+                if transactions:
+                    start_date = min(t.date for t in transactions)
+                    # Adjust interval based on total duration
+                    total_days = (end_date - start_date).days
+                    if total_days > 730:  # > 2 years
+                        interval_days = 14  # Bi-weekly
+                    else:
+                        interval_days = 7  # Weekly
+                else:
+                    start_date = end_date - timedelta(days=365)
+                    interval_days = 7
             
             # Filter transactions within date range
             hist_trans = [t for t in transactions if start_date.date() <= t.date.date() <= end_date.date()]
             
-            if hist_trans:
-                # Group by month for performance
-                dates_list = []
-                invested_list = []
-                value_list = []
+            if hist_trans or timeframe == "All":
+                # Fetch historical prices for ALL involved tickers for correct valuation
+                impacted_tickers = set(t.ticker for t in transactions if t.ticker)
                 
-                # Simple approach: calculate at monthly intervals
+                with st.spinner("📉 Loading historical price data..."):
+                    hist_prices_df = fetch_historical_prices(
+                        list(impacted_tickers),
+                        start_date.date(),
+                        end_date.date()
+                    )
+                
+                # Calculate at regular intervals for higher resolution
+                dates_list = []
+                net_deposits_list = []
+                value_list = []
+                cost_basis_list = []
+                
                 current_date = start_date
+                
+                # Pre-calculate prices map for speed if possible, or just use df usage inside loop
+                
                 while current_date <= end_date:
                     # Get transactions up to this date
+                    # OPTIMIZATION: Assuming transactions are sorted by date
                     trans_until = [t for t in transactions if t.date <= current_date]
-                    if trans_until:
-                        temp_portfolio = Portfolio(trans_until)
-                        temp_value = temp_portfolio.calculate_total_value(prices)
-                        
-                        dates_list.append(current_date.strftime('%Y-%m'))
-                        invested_list.append(float(temp_portfolio.total_invested))
-                        value_list.append(float(temp_value))
                     
-                    current_date += timedelta(days=30)  # Roughly monthly
+                    if trans_until:
+                        temp_portfolio = Portfolio(trans_until) # This is effectively an accumulator/snapshot
+                        
+                        # CRITICAL FIX: Use prices AT current_date, not today's prices
+                        # Build price map for this date
+                        daily_prices = {}
+                        date_key = pd.Timestamp(current_date.date())
+                        
+                        if not hist_prices_df.empty:
+                            try:
+                                # Get row for this date (nearest available previous date via ffill)
+                                # Since we reindexed to daily and ffilled in fetch_historical_prices, .loc should work
+                                # But let's use asof/nearest logic if index mismatch, though reindex handles it.
+                                if date_key in hist_prices_df.index:
+                                    row = hist_prices_df.loc[date_key]
+                                    daily_prices = row.to_dict()
+                                    # Convert to float/None
+                                    final_prices = {}
+                                    for t, p in daily_prices.items():
+                                        if pd.notna(p):
+                                            final_prices[t] = float(p)
+                                        else:
+                                            final_prices[t] = None
+                                    daily_prices = final_prices
+                            except Exception as price_err:
+                                # Fallback or just empty
+                                pass
+                        
+                        # Use daily prices for historical value
+                        temp_value = temp_portfolio.calculate_total_value(daily_prices)
+                        temp_cost_basis = sum(pos.cost_basis for pos in temp_portfolio.holdings.values())
+                        
+                        dates_list.append(current_date.strftime('%Y-%m-%d'))
+                        net_deposits_list.append(float(temp_portfolio.invested_capital))
+                        value_list.append(float(temp_value))
+                        cost_basis_list.append(float(temp_cost_basis))
+                    
+                    current_date += timedelta(days=interval_days)
                 
                 if dates_list:
-                    fig_performance = create_performance_chart(dates_list, invested_list, value_list)
-                    st.plotly_chart(fig_performance, width="stretch")
+                    fig_performance = create_performance_chart(
+                        dates_list, 
+                        net_deposits_list, 
+                        value_list,
+                        cost_basis_list
+                    )
+                    st.plotly_chart(fig_performance, use_container_width=True)
+                    
+                    # Show data point count
+                    st.caption(f"Showing {len(dates_list)} data points over {timeframe}")
                 else:
-                    st.info("Not enough historical data")
+                    st.info("Not enough historical data for selected timeframe")
             else:
-                st.info("No transactions in the last 365 days")
+                st.info(f"No transactions in the selected timeframe ({timeframe})")
                 
         except Exception as e:
             st.error(f"Failed to create performance chart: {e}")
@@ -429,23 +542,56 @@ def main():
     
     # Holdings table
     st.subheader("📋 Current Holdings")
+    
+    # Add filter controls (before fetching data, so they don't trigger refresh)
+    filter_col1, filter_col2, filter_col3 = st.columns([2, 2, 6])
+    
+    with filter_col1:
+        asset_filter = st.selectbox(
+            "Filter by Type",
+            options=["All", "Assets Only", "Cash Only"],
+            index=0,
+            key="asset_type_filter"
+        )
+    
+    with filter_col2:
+        # Placeholder for future filters
+        st.empty()
+    
     try:
         holdings_df = portfolio.get_holdings_summary(prices)
         if not holdings_df.empty:
-            # Format for display
-            holdings_display = holdings_df.copy()
-            holdings_display['Shares'] = holdings_display['Shares'].apply(lambda x: f"{x:.4f}")
-            holdings_display['Avg Cost'] = holdings_display['Avg Cost'].apply(lambda x: f"€{x:.2f}")
-            holdings_display['Current Price'] = holdings_display['Current Price'].apply(lambda x: f"€{x:.2f}")
-            holdings_display['Market Value'] = holdings_display['Market Value'].apply(lambda x: f"€{x:,.2f}")
-            holdings_display['Gain/Loss'] = holdings_display['Gain/Loss'].apply(lambda x: f"€{x:,.2f}")
-            holdings_display['Gain %'] = holdings_display['Gain %'].apply(lambda x: f"{x:.2f}%")
+            # Apply filtering on the already-loaded data (no API/DB calls)
+            filtered_df = holdings_df.copy()
             
-            st.dataframe(
-                holdings_display,
-                use_container_width=True,
-                hide_index=True
-            )
+            if asset_filter == "Assets Only":
+                # Exclude cash-like assets
+                filtered_df = filtered_df[~filtered_df['Asset Type'].isin(['Cash', 'Unknown'])]
+            elif asset_filter == "Cash Only":
+                # Only show cash
+                filtered_df = filtered_df[filtered_df['Asset Type'] == 'Cash']
+            
+            if not filtered_df.empty:
+                # Format for display
+                holdings_display = filtered_df.copy()
+                holdings_display['Shares'] = holdings_display['Shares'].apply(lambda x: f"{x:.4f}")
+                holdings_display['Avg Cost'] = holdings_display['Avg Cost'].apply(lambda x: f"€{x:.2f}")
+                holdings_display['Current Price'] = holdings_display['Current Price'].apply(lambda x: f"€{x:.2f}")
+                holdings_display['Market Value'] = holdings_display['Market Value'].apply(lambda x: f"€{x:,.2f}")
+                holdings_display['Gain/Loss'] = holdings_display['Gain/Loss'].apply(lambda x: f"€{x:,.2f}")
+                holdings_display['Gain %'] = holdings_display['Gain %'].apply(lambda x: f"{x:.2f}%")
+                
+                st.dataframe(
+                    holdings_display,
+                    use_container_width=True,
+                    hide_index=True
+                )
+                
+                # Show filtered count
+                if asset_filter != "All":
+                    st.caption(f"Showing {len(filtered_df)} of {len(holdings_df)} holdings")
+            else:
+                st.info(f"No holdings match the filter: {asset_filter}")
         else:
             st.info("No current holdings")
     except Exception as e:
