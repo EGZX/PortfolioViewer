@@ -9,6 +9,7 @@ import pandas as pd
 
 from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
 from utils.logging_config import setup_logger
+from services.market_data import get_fx_rate
 
 logger = setup_logger(__name__)
 
@@ -188,7 +189,8 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 self.holdings[t.ticker] = Position(
                     ticker=t.ticker, 
                     name=t.name,
-                    asset_type=t.asset_type
+                    asset_type=t.asset_type,
+                    currency=t.original_currency
                 )
             
             pos = self.holdings[t.ticker]
@@ -293,19 +295,26 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         return list(self.holdings.keys())
     
     def calculate_total_value(self, prices: Dict[str, Optional[float]]) -> Decimal:
-        """Calculate total portfolio value (holdings + cash)."""
+        """Calculate total portfolio value (holdings + cash) in EUR."""
         holdings_value = Decimal(0)
         
         for ticker, pos in self.holdings.items():
             price = prices.get(ticker)
             if price is not None:
                 pos.update_market_value(Decimal(str(price)))
-            # If no price available, market_value remains at last known value (or 0 if never set)
-            holdings_value += pos.market_value
+            
+            # Convert to EUR if necessary
+            position_val_eur = pos.market_value
+            if pos.currency != "EUR":
+                # Fetch live FX rate
+                rate = get_fx_rate(pos.currency, "EUR")
+                position_val_eur *= rate
+                
+            holdings_value += position_val_eur
         
         # Use cash_balance calculated from all cash-affecting transactions
         total = holdings_value + self.cash_balance
-        logger.info(f"Total value: €{total:.2f} (holdings: €{holdings_value:.2f}, cash: €{self.cash_balance:.2f})")
+        logger.debug(f"Total value: €{total:.2f} (holdings: €{holdings_value:.2f}, cash: €{self.cash_balance:.2f})")
         
         return total
     
