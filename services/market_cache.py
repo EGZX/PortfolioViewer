@@ -9,6 +9,7 @@ from datetime import datetime, date, timedelta
 from typing import Optional, Dict, List, Tuple
 from pathlib import Path
 import os
+import pandas as pd
 import streamlit as st
 from cryptography.fernet import Fernet
 
@@ -182,6 +183,60 @@ class MarketDataCache:
         hit_count = sum(1 for p in prices.values() if p is not None)
         logger.debug(f"Batch cache lookup: {hit_count}/{len(tickers)} hits on {target_date}")
         return prices
+        
+    def get_historical_prices(self, tickers: List[str], start_date: date, end_date: date) -> pd.DataFrame:
+        """
+        Get cached historical prices for multiple tickers in a date range.
+        Returns a DataFrame compatible with yfinance structure (Date index, Ticker columns).
+        """
+        if not tickers:
+            return pd.DataFrame()
+            
+        with self._get_conn() as conn:
+            # Optimize read with pandas directly
+            placeholders = ','.join('?' * len(tickers))
+            query = f"""
+                SELECT date, ticker, price 
+                FROM prices 
+                WHERE ticker IN ({placeholders}) 
+                AND date BETWEEN ? AND ?
+            """
+            params = (*tickers, start_date, end_date)
+            
+            try:
+                df = pd.read_sql_query(query, conn, params=params)
+                
+                if df.empty:
+                    return pd.DataFrame()
+                
+                # Pivot to match yfinance structure: Index=Date, Cols=Tickers, Vals=Price
+                df['date'] = pd.to_datetime(df['date'])
+                pivot_df = df.pivot(index='date', columns='ticker', values='price')
+                
+                # Reindex to ensure we cover the requested range (optional, handled by caller mostly)
+                return pivot_df
+                
+            except Exception as e:
+                logger.error(f"Failed to read historical prices from cache: {e}")
+                return pd.DataFrame()
+
+    def set_prices_batch(self, prices_data: List[Tuple[str, date, float, str]]):
+        """
+        Batch insert multiple price records.
+        Args:
+            prices_data: List of (ticker, date, price, source) tuples
+        """
+        if not prices_data:
+            return
+            
+        with self._get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.executemany(
+                "INSERT OR REPLACE INTO prices (ticker, date, price, source) VALUES (?, ?, ?, ?)",
+                prices_data
+            )
+            conn.commit()
+            logger.info(f"Bulk cached {len(prices_data)} price records")
     
     # ==================== Split Methods ====================
     

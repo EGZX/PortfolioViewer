@@ -43,6 +43,11 @@ class ISINResolver:
         'IE00B3RBWM25': 'VWRL.AS',  # Vanguard FTSE All-World (Amsterdam)
         'US64110L1061': 'NFLX',     # Netflix
         'DE000A0HHJR3': 'CLIQ.DE',  # Cliq Digital
+        
+        # Crypto
+        'BTC': 'BTC-EUR',
+        'ETH': 'ETH-EUR',
+        'SOL': 'SOL-EUR',
     }
     
     @classmethod
@@ -56,14 +61,19 @@ class ISINResolver:
         3. Use provided fallback_ticker
         4. Return ISIN as-is (will use last transaction price)
         """
-        if not isin or len(isin) != 12:
-            return fallback_ticker or isin
-        
+        if not isin:
+            return fallback_ticker or ""
+            
         # Check manual overrides first
+        # This works for both ISINs and other identifiers (e.g. BTC)
         if isin in cls.TICKER_OVERRIDES:
             override = cls.TICKER_OVERRIDES[isin]
             logger.info(f"Using manual override for {isin}: {override}")
             return override
+        
+        # If not an ISIN (length 12), return as is (unless overridden above)
+        if len(isin) != 12:
+             return fallback_ticker or isin
         
         # If we have a fallback ticker explicitly provided, use it
         if fallback_ticker:
@@ -88,10 +98,62 @@ class ISINResolver:
         return isin
     
     @classmethod
+    def resolve_batch(cls, tickers: list[str]) -> Dict[str, str]:
+        """
+        Resolve a batch of tickers/ISINs.
+        Returns map of {original_ticker: resolved_ticker}.
+        """
+        results = {}
+        isins_to_resolve = []
+        
+        # 1. Check overrides and simple cases
+        for t in tickers:
+            if not t:
+                continue
+                
+            if t in cls.TICKER_OVERRIDES:
+                results[t] = cls.TICKER_OVERRIDES[t]
+            elif len(t) == 12 and re.match(r'^[A-Z]{2}[A-Z0-9]{9}[0-9]$', t):
+                # Is likely an ISIN, needs OpenFIGI
+                isins_to_resolve.append(t)
+            else:
+                # Not an ISIN, assume it's already a ticker
+                results[t] = t
+                
+        # 2. Batch resolve ISINs
+        if isins_to_resolve:
+            try:
+                from services.openfigi_resolver import get_openfigi_resolver
+                resolver = get_openfigi_resolver()
+                
+                # This uses the optimized batch method we just added
+                batch_results = resolver.resolve_batch(isins_to_resolve)
+                
+                for isin, resolved in batch_results.items():
+                    if resolved:
+                        results[isin] = resolved
+                    else:
+                        results[isin] = isin # Fallback to original
+                        
+            except Exception as e:
+                logger.error(f"Batch resolution failed: {e}")
+                for isin in isins_to_resolve:
+                    results[isin] = isin
+                    
+        return results
+
+    @classmethod
     def needs_resolution(cls, identifier: str) -> bool:
-        """Check if identifier is an ISIN that needs resolution."""
+        """Check if identifier is an ISIN or overridden ticker that needs resolution."""
+        if not identifier:
+            return False
+            
+        # Check overrides first (allows remapping non-ISINs like BTC)
+        if identifier in cls.TICKER_OVERRIDES:
+            return True
+            
         # ISIN format: 2-letter country code + 9 alphanumeric + 1 check digit
-        if not identifier or len(identifier) != 12:
+        if len(identifier) != 12:
             return False
         
         # Check if it matches ISIN pattern

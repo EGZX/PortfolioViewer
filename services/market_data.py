@@ -61,19 +61,16 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         mapped_tickers = []
         ticker_map = {}  # mapped -> original
         
+        # Batch resolve all needed tickers
+        batch_map = ISINResolver.resolve_batch(tickers_to_fetch)
+        
         for original_ticker in tickers_to_fetch:
-            # Resolve ISIN if applicable, otherwise returns original
-            # Note: resolve_isin accepts non-ISINs and returns them as-is (mostly)
-            # or checks if we should even try resolving.
-            
-            resolved_ticker = original_ticker
-            if ISINResolver.needs_resolution(original_ticker):
-                resolved_ticker = ISINResolver.resolve_isin(original_ticker)
-                if resolved_ticker != original_ticker:
-                    logger.debug(f"Resolved {original_ticker} -> {resolved_ticker}")
+            # Use batched result
+            resolved_ticker = batch_map.get(original_ticker, original_ticker)
+            if resolved_ticker != original_ticker:
+                logger.debug(f"Resolved {original_ticker} -> {resolved_ticker}")
 
-            # Skip empty tickers (fully sold positions or failed resolution returning None?)
-            # resolve_isin returns original if failed, but let's be safe
+            # Skip empty tickers
             if not resolved_ticker:
                  resolved_ticker = original_ticker
 
@@ -212,15 +209,55 @@ def fetch_single_price(ticker: str, max_retries: int = 3) -> Optional[float]:
             return None
             
         except Exception as e:
-            if attempt < max_retries - 1:
-                wait_time = (2 ** attempt)  # Exponential backoff
-                logger.warning(f"{ticker}: Attempt {attempt + 1} failed, retrying in {wait_time}s - {e}")
-                time.sleep(wait_time)
-            else:
-                logger.error(f"{ticker}: All {max_retries} attempts failed - {e}")
-                return None
+            logger.warning(f"Error fetching SINGLE price for {ticker}: {e}")
+            return None
+
+def get_currency_for_ticker(ticker: str) -> str:
+    """
+    Determine the trading currency based on the ticker symbol.
     
-    return None
+    Rules:
+    - Suffix .DE, .PA, .MI, .AS, .VI, .BR, .HE, .NX -> EUR
+    - Suffix .L -> GBP (Note: might be GBp/pencil, handled separately?)
+    - Suffix .TO, .V -> CAD
+    - Suffix .SW -> CHF
+    - Suffix .HK -> HKD
+    - Suffix -EUR -> EUR (Crypto)
+    - Suffix -USD -> USD (Crypto)
+    - No suffix -> USD (US Market default)
+    """
+    if not ticker:
+        return "EUR"
+        
+    ticker = ticker.upper()
+    
+    # 1. Crypto explicit
+    if ticker.endswith("-EUR"):
+        return "EUR"
+    if ticker.endswith("-USD"):
+        return "USD"
+        
+    # 2. Exchange Suffixes
+    if "." in ticker:
+        suffix = ticker.split(".")[-1]
+        
+        if suffix in ["DE", "PA", "MI", "AS", "VI", "BR", "HE", "NX", "BM", "HM", "BE", "DU", "SG", "F"]:
+            return "EUR"
+        if suffix == "L":
+            return "GBP" # Potential GBp issue, but assume GBP for FX lookup for now
+        if suffix in ["TO", "V", "CN"]:
+            return "CAD"
+        if suffix in ["SW", "S"]:
+            return "CHF"
+        if suffix == "HK":
+            return "HKD"
+        if suffix == "JO":
+            return "ZAR"
+        if suffix in ["SA", "SP"]:
+            return "BRL"
+    
+    # 3. Default to USD for US-style tickers (no suffix)
+    return "USD"
 
 
 @st.cache_data(ttl=3600)  # Cache for 1 hour
@@ -275,60 +312,225 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
     logger.info(f"Fetching historical prices for {len(tickers)} tickers from {start_date} to {end_date}")
     
     # Resolve ISINs
+    from services.market_cache import get_market_cache
+    
+    # Resolve ISINs first
     mapped_tickers = []
     ticker_map = {}
     
     # Import locally to avoid circular imports if any
     from services.isin_resolver import ISINResolver
     
+    # Batch resolve all tickers
+    batch_map = ISINResolver.resolve_batch(tickers)
+    
+    mapped_tickers = []
+    ticker_map = {}
+    
     for t in tickers:
-        mapped = t
-        if ISINResolver.needs_resolution(t):
-            mapped = ISINResolver.resolve_isin(t) or t
+        mapped = batch_map.get(t, t)
         mapped_tickers.append(mapped)
         ticker_map[mapped] = t
+        
+    unique_mapped = list(set(mapped_tickers))
+    
+    # 1. Check Cache
+    cache = get_market_cache()
+    
+    # Query cache using original tickers (since that's how we store them)
+    cached_df = cache.get_historical_prices(tickers, start_date, end_date)
+    
+    tickers_to_fetch = []
+    valid_cached_tickers = []
+    
+    # Check staleness/missing
+    cutoff_date = pd.Timestamp(end_date) - pd.Timedelta(days=3)  # Re-fetch if older than 3 days
+    
+    if not cached_df.empty:
+        for t in tickers:
+            if t in cached_df.columns:
+                # Check lateness
+                last_valid = cached_df[t].last_valid_index()
+                if last_valid and last_valid >= cutoff_date:
+                    valid_cached_tickers.append(t)
+                else:
+                    tickers_to_fetch.append(t)
+            else:
+                tickers_to_fetch.append(t)
+    else:
+        tickers_to_fetch = list(tickers)
+        
+    logger.info(f"Historical Data: {len(valid_cached_tickers)} cached, {len(tickers_to_fetch)} to fetch")
+    
+    fetched_df = pd.DataFrame()
+    
+    if tickers_to_fetch:
+        # Map these specific tickers
+        fetch_mapped = []
+        fetch_map = {} # mapped -> original
+        for t in tickers_to_fetch:
+            # Use the pre-calculated batch_map
+            mapped = batch_map.get(t, t)
+            fetch_mapped.append(mapped)
+            fetch_map[mapped] = t
+            
+        try:
+            # Fetch data
+            data = yf.download(
+                fetch_mapped,
+                start=start_date,
+                end=end_date,
+                interval="1d",
+                group_by='ticker',
+                auto_adjust=False,
+                threads=True,
+                progress=False
+            )
+            
+            # Process result
+            fetched_data = {}
+            
+            # Prepare for batch cache update
+            cache_updates = []
+            
+            if len(fetch_mapped) == 1:
+                mapped = fetch_mapped[0]
+                original = fetch_map[mapped]
+                if 'Close' in data.columns:
+                    series = data['Close']
+                    fetched_data[original] = series
+                    
+                    # Prepare cache data
+                    for dt, price in series.items():
+                        if pd.notna(price):
+                            cache_updates.append((original, dt.date(), float(price), 'yfinance'))
+            else:
+                for mapped in fetch_mapped:
+                    original = fetch_map.get(mapped)
+                    if not original: continue
+                    
+                    if mapped in data.columns.levels[0]:
+                        series = data[mapped]['Close']
+                        fetched_data[original] = series
+                        
+                        # Prepare cache data
+                        for dt, price in series.items():
+                            if pd.notna(price):
+                                cache_updates.append((original, dt.date(), float(price), 'yfinance'))
+            
+            if fetched_data:
+                fetched_df = pd.DataFrame(fetched_data, index=data.index)
+            else:
+                fetched_df = pd.DataFrame(index=data.index)
+
+            # Bulk save to cache
+            if cache_updates:
+                cache.set_prices_batch(cache_updates)
+                
+        except Exception as e:
+            logger.error(f"Failed to fetch historical prices: {e}")
+            
+    # Combine Cached and Fetched
+    # We prioritize Fetched (newer) over Cached if overlap
+    
+    final_df = pd.DataFrame()
+    
+    # Start with cached data for valid tickers
+    if not cached_df.empty:
+        # Only keep valid columns
+        valid_cols = [c for c in cached_df.columns if c in valid_cached_tickers]
+        if valid_cols:
+            final_df = cached_df[valid_cols].copy()
+    
+    # Combine with fetched
+    if not fetched_df.empty:
+        # If final_df is empty, just use fetched
+        if final_df.empty:
+            final_df = fetched_df
+        else:
+            # Combine/update
+            final_df = final_df.combine_first(fetched_df)
+            # Or distinct update?
+            # We want to overwrite with fetched_df where it exists
+            final_df.update(fetched_df)
+            
+            # Add any new columns that weren't in final_df
+            new_cols = [c for c in fetched_df.columns if c not in final_df.columns]
+            if new_cols:
+                final_df = pd.concat([final_df, fetched_df[new_cols]], axis=1)
+
+    # Normalize Index to remove timezones (ensure Naive) for consistent split comparison
+    if not final_df.empty:
+        try:
+            if final_df.index.tz is not None:
+                final_df.index = final_df.index.tz_localize(None)
+            final_df.index = final_df.index.normalize()
+        except Exception as e:
+            logger.warning(f"Failed to normalize index: {e}")
+
+    # ----------------------------------------------------
+    # CRITICAL: Apply Split Adjustments to Price History
+    # ----------------------------------------------------
+    # Since transactions are back-adjusted (shares increased in the past),
+    # price history must also be back-adjusted (prices decreased in the past).
+    # We use CorporateActionService to get verified/blacklisted splits.
     
     try:
-        # Fetch data
-        data = yf.download(
-            mapped_tickers,
-            start=start_date,
-            end=end_date,
-            interval="1d",
-            group_by='ticker',
-            auto_adjust=False, # We want Close, not Adj Close usually, or maybe Adj Close?
-            # Standard is Close for market value. Total Return includes Dividends which we track via transactions.
-            # Using 'Close' matches broker value.
-            threads=True,
-            progress=False
-        )
+        # Import inside function to avoid potential circular initializations
+        from services.corporate_actions import CorporateActionService
         
-        # Process result into a simple DataFrame (Index=Date, Cols=OriginalTickers)
-        prices_df = pd.DataFrame(index=data.index)
-        
-        if len(mapped_tickers) == 1:
-            mapped = mapped_tickers[0]
-            original = ticker_map[mapped]
-            if 'Close' in data.columns:
-                prices_df[original] = data['Close']
-        else:
-            for mapped in mapped_tickers:
-                original = ticker_map[mapped]
-                if mapped in data.columns.levels[0]:
-                    prices_df[original] = data[mapped]['Close']
-        
+        # Apply only to columns in final_df
+        for ticker in final_df.columns:
+            # Get split history using same logic as transaction adjustment
+            splits = CorporateActionService.get_cached_splits(ticker)
+            
+            if splits:
+                price_series = final_df[ticker]
+                series_modified = False
+                
+                # Sort splits by date descending (latest first)
+                # But for back-adjustment, we iterate through all splits.
+                # Logic: If split happened on Date S, then ALL prices < Date S
+                # must be divided by the split ratio.
+                
+                for split in splits:
+                    try:
+                        split_date = pd.Timestamp(split.action_date)
+                        
+                        # Handle timezone if index is aware
+                        if price_series.index.tz is not None:
+                            if split_date.tzinfo is None:
+                                split_date = split_date.tz_localize(price_series.index.tz)
+                            else:
+                                split_date = split_date.tz_convert(price_series.index.tz)
+                                
+                        factor = float(split.adjustment_factor)
+                        
+                        logger.debug(f"Checking split for {ticker}: Date={split_date}, Factor={factor}")
+                        
+                        mask = price_series.index < split_date
+                        if mask.any():
+                            # Apply adjustment
+                            final_df.loc[mask, ticker] = final_df.loc[mask, ticker] / factor
+                            series_modified = True
+                            logger.info(f"APPLIED SPLIT for {ticker}: Divided prices before {split_date.date()} by {factor}")
+                        else:
+                            logger.debug(f"No prices found before split date {split_date} for {ticker}")
+                            
+                    except Exception as e:
+                        logger.warning(f"Error applying split {split} to {ticker}: {e}")
+                
+                if series_modified:
+                    logger.info(f"Successfully back-adjusted price history for {ticker}")
+                    
+    except Exception as e:
+        logger.error(f"Failed to apply split adjustments: {e}")
+    
+    # Standardize result
+    if not final_df.empty:
         # Determine frequency to reindex (daily)
         full_idx = pd.date_range(start=start_date, end=end_date, freq='D')
-        prices_df = prices_df.reindex(full_idx)
+        final_df = final_df.reindex(full_idx)
+        final_df = final_df.ffill().bfill()
         
-        # Forward fill to handle weekends/holidays (use Friday price for Saturday)
-        prices_df = prices_df.ffill()
-        
-        # Also backward fill start if needed
-        prices_df = prices_df.bfill()
-        
-        return prices_df
-        
-    except Exception as e:
-        logger.error(f"Failed to fetch historical prices: {e}")
-        return pd.DataFrame()
+    return final_df

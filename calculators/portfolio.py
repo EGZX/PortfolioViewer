@@ -303,11 +303,15 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             if price is not None:
                 pos.update_market_value(Decimal(str(price)))
             
-            # Convert to EUR if necessary
+            # Convert to EUR based on PRICE SOURCE currency (not position currency)
+            # This handles cases where we hold a US stock (USD price) but bought it on a collection (EUR)
+            from services.market_data import get_currency_for_ticker
+            price_currency = get_currency_for_ticker(ticker)
+            
             position_val_eur = pos.market_value
-            if pos.currency != "EUR":
+            if price_currency != "EUR":
                 # Fetch live FX rate
-                rate = get_fx_rate(pos.currency, "EUR")
+                rate = get_fx_rate(price_currency, "EUR")
                 position_val_eur *= rate
                 
             holdings_value += position_val_eur
