@@ -45,33 +45,7 @@ Verify that structured logging is active.
     ```
     *Look for lines containing `[INFO]`, `[market_cache]`, or `[csv_parser]`.*
 
-## 2. Production Hardening
-
-### Cache Encryption (AES-256)
-For environments where the SQLite cache file (`data/market_cache.db`) might be exposed or stored on shared storage, enable at-rest operations encryption.
-
-1.  **Generate Key**:
-    ```bash
-    python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-    ```
-
-2.  **Configure Secrets**:
-    Add the key to `.streamlit/secrets.toml`:
-    ```toml
-    [passwords]
-    MARKET_CACHE_ENCRYPTION_KEY = "YOUR_GENERATED_KEY_HERE"
-    ```
-
-3.  **Verify Encryption**:
-    Restart the application. Check logs for:
-    `[INFO] [services.market_cache] Cache encryption enabled`
-
-### Security Best Practices
-*   **Secrets Management**: Ensure `.streamlit/secrets.toml` is added to `.gitignore`.
-*   **Network**: Run behind a reverse proxy (Nginx/Apache) with SSL termination in production.
-*   **Access Control**: Always configure `app_password_hash` if the instance is public.
-
-## 3. Maintenance
+## 2. Maintenance
 
 ### Log Rotation
 Logs are automatically rotated at 10MB. To change this policy, modify `utils/logging_config.py`.

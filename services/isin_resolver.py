@@ -38,7 +38,7 @@ class ISINResolver:
         'CNE100000296': '1211.HK',  # BYD Company (Hong Kong)
         
         # European ETFs - add .L suffix for London listing or use local ticker
-        'IE000716YHJ7': 'FWRA.L',  # Invesco FTSE All-World UCITS ETF (London)
+        'IE000716YHJ7': 'FWRA.MI',  # Invesco FTSE All-World UCITS ETF (Milan - EUR)
         'AT0000A0E9W5': 'SPIW.DE',  # Example
         'IE00B3RBWM25': 'VWRL.AS',  # Vanguard FTSE All-World (Amsterdam)
         'US64110L1061': 'NFLX',     # Netflix
