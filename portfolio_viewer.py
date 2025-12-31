@@ -190,6 +190,7 @@ st.markdown("""
     /* Cyber-Tech Headers */
     /* Cyber-Tech Headers */
     /* Cyber-Tech Headers */
+    /* Cyber-Tech Headers */
     .main-header {
         font-family: 'JetBrains Mono', monospace;
         font-size: 1.8rem;
@@ -198,6 +199,7 @@ st.markdown("""
         letter-spacing: -0.02em;
         margin-bottom: 0.5rem;
         text-transform: uppercase;
+        text-shadow: 0 0 20px rgba(59, 130, 246, 0.4); /* Dynamic Glow */
     }
     
     .sub-header {
@@ -397,6 +399,19 @@ st.markdown("""
         color: #ffffff; /* Absolute White for data */
         line-height: 1;
         letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums; /* Stable alignment */
+    }
+    
+    /* Animation: Subtle Pulse for Net Worth */
+    @keyframes pulse-blue {
+        0% { text-shadow: 0 0 0 rgba(59, 130, 246, 0); }
+        50% { text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+        100% { text-shadow: 0 0 0 rgba(59, 130, 246, 0); }
+    }
+    
+    .kpi-item:first-child .kpi-value {
+        color: var(--accent-primary) !important;
+        animation: pulse-blue 3s infinite ease-in-out;
     }
     
     /* Make Abs Gain (2nd item) stand out if needed, or all equal */
@@ -592,6 +607,7 @@ st.markdown("""
         font-family: 'JetBrains Mono', monospace; /* Reverted to Tech Font */
         font-size: 0.8rem;
         border-bottom: 1px solid #21262d !important;
+        font-variant-numeric: tabular-nums; /* Aligned numbers */
     }
     
     /* RIGID ALERTS (Terminal Style) */
