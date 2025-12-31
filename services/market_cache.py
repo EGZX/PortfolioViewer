@@ -57,7 +57,8 @@ class MarketDataCache:
     
     def _get_conn(self) -> sqlite3.Connection:
         """Get a configured database connection."""
-        return sqlite3.connect(self.db_path)
+        # Timeout increased to 30s to handle concurrent writes from parallel workers
+        return sqlite3.connect(self.db_path, timeout=30.0)
 
     def _init_db(self):
         """Create database tables if they don't exist."""

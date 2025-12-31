@@ -226,6 +226,7 @@ class CorporateActionService:
         """
         Detect splits for all tickers and apply adjustments.
         Uses cache to avoid redundant API calls.
+        Parallelized for faster cache warming.
         
         Args:
             transactions: List of transactions
@@ -235,16 +236,16 @@ class CorporateActionService:
             Tuple of (adjusted_transactions, adjustment_log)
         """
         from services.market_cache import get_market_cache
+        from concurrent.futures import ThreadPoolExecutor, as_completed
         
         if not fetch_splits:
             return transactions, []
         
         logger.info("=" * 60)
         logger.info("Starting split detection and adjustment")
-        logger.info("=" * 60)
         
         # Get unique tickers
-        tickers = {t.ticker for t in transactions if t.ticker}
+        tickers = list({t.ticker for t in transactions if t.ticker})
         
         if not tickers:
             logger.info("No tickers found in transactions")
@@ -255,29 +256,34 @@ class CorporateActionService:
         # Get cache instance
         cache = get_market_cache()
         
-        # Fetch split history for each ticker
+        # Fetch split history for each ticker (Parallelized)
         splits_by_ticker = {}
-        cache_hits = 0
-        cache_misses = 0
         
-        for ticker in tickers:
-            # Check cache first
-            split_actions = CorporateActionService.get_cached_splits(ticker)
-            if split_actions:
-                cache_hits += 1
-                splits_by_ticker[ticker] = split_actions
-            else:
-                cache_misses += 1
-                
-        logger.info(f"Split cache stats: {cache_hits} hits, {cache_misses} misses")
+        # Helper function for threading
+        def fetch_ticker_splits(ticker):
+            return ticker, CorporateActionService.get_cached_splits(ticker)
+
+        # Use 4 workers to speed up warm-up without hitting rate limits too hard
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            future_to_ticker = {executor.submit(fetch_ticker_splits, t): t for t in tickers}
+            
+            for future in as_completed(future_to_ticker):
+                try:
+                    ticker, split_actions = future.result()
+                    if split_actions:
+                        splits_by_ticker[ticker] = split_actions
+                except Exception as e:
+                    logger.error(f"Error checking splits for {future_to_ticker[future]}: {e}")
+
+        logger.info(f"Split check complete. Found splits for {len(splits_by_ticker)} tickers.")
         
         if not splits_by_ticker:
-            logger.info("No splits found for any tickers")
+            logger.info("No actionable splits found.")
             logger.info("=" * 60)
             return transactions, []
         
         # Apply adjustments
-        logger.info(f"Applying split adjustments for {len(splits_by_ticker)} tickers")
+        logger.info(f"Applying split adjustments...")
         adjusted_transactions, adjustment_log = CorporateActionService.adjust_transactions_for_splits(
             transactions,
             splits_by_ticker
