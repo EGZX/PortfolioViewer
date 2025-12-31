@@ -161,11 +161,15 @@ st.markdown("""
         --glass-bg: rgba(30, 35, 41, 0.7); /* Restored Glass */
     }
     
-    /* Global App Styling with Radial Gradient */
+    /* Global App Styling with Organic Nebula Background */
     .stApp {
         background-color: var(--bg-color);
-        /* Richer blue-black gradient for depth */
-        background-image: radial-gradient(circle at 50% -20%, #1e293b 0%, #0d1117 80%);
+        /* Organic Nebula Pattern: Multiple subtle radial gradients */
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 25%),
+            radial-gradient(circle at 50% -20%, #1e293b 0%, transparent 80%);
+        background-size: 100% 100%;
         color: var(--text-primary);
         font-family: 'Inter', sans-serif;
     }
@@ -332,13 +336,13 @@ st.markdown("""
     
     /* NEW KPI DASHBOARD STYLES */
     .kpi-board {
-        background-color: rgba(13, 17, 23, 0.7); /* Glassy Blue-Black */
+        background-color: rgba(13, 17, 23, 0.4); /* Matched to Tile Opacity */
         backdrop-filter: blur(12px); /* Dynamic Blur */
-        border: 1px solid rgba(59, 130, 246, 0.15); /* Subtle Blue Border */
+        border: 1px solid rgba(75, 85, 99, 0.6); /* Lighter Border to match containers */
         border-radius: 6px; 
         padding: 1.5rem;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2); /* Soft depth */
-        margin-bottom: 2rem; 
+        margin-bottom: 2rem !important; /* Enforcing WIDER spacing */
         margin-top: 1rem; 
     }
     
@@ -347,24 +351,24 @@ st.markdown("""
         font-size: 1.1rem;
         font-weight: 600;
         color: var(--text-primary);
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem; /* Reduced from 1.5rem */
         padding-left: 0;
     }
     
     .kpi-grid {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        gap: 0; /* Seamless look */
+        gap: 0; 
         /* border-top: 1px solid #2b313a; Optional separator from header */
     }
     
     .kpi-item {
-        padding: 0.8rem;
-        border-right: 1px solid rgba(255,255,255,0.05); /* Subtle separator */
+        padding: 0.5rem 0.8rem; /* Reduced vertical padding from 0.8rem */
+        border-right: 1px solid rgba(255,255,255,0.05); 
         display: flex;
         flex-direction: column;
         justify-content: center;
-        min-height: 80px;
+        min-height: 60px; /* Reduced min-height from 80px */
         transition: background 0.2s;
     }
     
@@ -402,16 +406,10 @@ st.markdown("""
         font-variant-numeric: tabular-nums; /* Stable alignment */
     }
     
-    /* Animation: Subtle Pulse for Net Worth */
-    @keyframes pulse-blue {
-        0% { text-shadow: 0 0 0 rgba(59, 130, 246, 0); }
-        50% { text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
-        100% { text-shadow: 0 0 0 rgba(59, 130, 246, 0); }
-    }
-    
+    /* Animation Removed as requested */
     .kpi-item:first-child .kpi-value {
-        color: var(--accent-primary) !important;
-        animation: pulse-blue 3s infinite ease-in-out;
+        color: #ffffff !important; /* Reverted to white */
+        animation: none;
     }
     
     /* Make Abs Gain (2nd item) stand out if needed, or all equal */
@@ -481,29 +479,34 @@ st.markdown("""
     }
     
     /* Expander Styling */
+    /* Expander Styling - Matched to Card Titles */
     .streamlit-expanderHeader {
         background-color: var(--card-bg) !important;
-        color: var(--text-secondary) !important;
+        color: var(--text-primary) !important; /* Match Card Title White */
         border: 1px solid var(--card-border) !important;
         font-family: 'JetBrains Mono', monospace !important;
-        font-size: 0.9rem !important;
+        font-size: 1.1rem !important; /* Match Card Title Size */
         font-weight: 600 !important;
-        text-transform: uppercase !important;
+        text-transform: default !important; /* Remove uppercase forced if card title is mixed, but card title was also JetBrains */
         letter-spacing: 0.05em !important;
         border-radius: 4px;
         padding-left: 1rem !important;
+        padding-bottom: 0.5rem !important;
+        padding-top: 0.5rem !important;
     }
     
-    .streamlit-expanderHeader p {
+    /* Force exact font match for Expander Summaries (Text Only) */
+    div[data-testid="stExpander"] details summary p {
          font-family: 'JetBrains Mono', monospace !important;
          font-weight: 600 !important;
-         font-size: 0.9rem !important;
+         font-size: 1.1rem !important;
+         color: var(--text-primary) !important;
     }
     
     [data-testid="stExpander"] {
         background-color: transparent !important;
         border: none !important;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem !important; /* Match Global Spacing */
         padding-top: 0 !important;
     }
     
@@ -638,12 +641,12 @@ st.markdown("""
     /* Container Borders - Instrument Panel Cards */
     [data-testid="stVerticalBlockBorderWrapper"] {
         border: 1px solid rgba(60, 66, 75, 0.5) !important;
-        background-color: rgba(13, 17, 23, 0.6) !important; /* Semi-transparent */
+        background-color: rgba(13, 17, 23, 0.4) !important; /* Increased Transparency for Nebula */
         backdrop-filter: blur(8px); /* Subtle blur for dashboard cards */
         border-radius: 6px !important;
         padding: 1.5rem !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important;
-        margin-bottom: 1rem !important;
+        margin-bottom: 2rem !important; /* Match KPI spacing (Wider) */
         transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
@@ -685,7 +688,7 @@ st.markdown("""
             grid-template-columns: repeat(3, 1fr);
         }
         .kpi-item {
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: ispx solid rgba(255,255,255,0.05);
         }
         .kpi-item:nth-child(3n) {
             border-right: none; 
@@ -1161,9 +1164,11 @@ def main():
             )
             st.plotly_chart(donut_fig, width='stretch')
     
-    # Holdings table
-    with st.container(border=True):
-        st.markdown('<div class="card-title">Current Holdings</div>', unsafe_allow_html=True)
+    # Spacer to separate Charts from Holdings
+    st.markdown('<div style="margin-bottom: 2rem;"></div>', unsafe_allow_html=True)
+    
+    # Holdings table - Collapsible
+    with st.expander("Current Holdings", expanded=True):
         
         # Add filter controls
         filter_col1, filter_col2, filter_col3 = st.columns([2, 2, 6])
@@ -1195,9 +1200,7 @@ def main():
                     holdings_display = filtered_df.copy()
                     holdings_display['Shares'] = holdings_display['Shares'].apply(lambda x: f"{x:.4f}")
                     holdings_display['Avg Cost (EUR)'] = holdings_display['Avg Cost (EUR)'].apply(lambda x: mask_currency_precise(x, st.session_state.privacy_mode))
-                    holdings_display['Current Price (EUR)'] = holdings_display['Current Price (EUR)'].apply(lambda x: f"€{x:.2f}") # Unit prices usually visible? Or hide too? Hiding for consistency if user wants privacy.
-                    # Actually, usually unit prices are fine, but balances are sensitive. User said "except unit prices".
-                    # "removes the actual Euro values (except unit prices)" -> So KEEP Current Price visible.
+                    holdings_display['Current Price (EUR)'] = holdings_display['Current Price (EUR)'].apply(lambda x: f"€{x:.2f}") 
                     
                     holdings_display['Market Value (EUR)'] = holdings_display['Market Value (EUR)'].apply(lambda x: mask_currency_precise(x, st.session_state.privacy_mode))
                     holdings_display['Allocation %'] = holdings_display['Allocation %'].apply(lambda x: f"{x:.2f}%")
@@ -1248,8 +1251,8 @@ def main():
     # Transaction History
     # st.divider()
     
-    with st.container(border=True):
-        st.markdown('<div class="card-title">Transaction History</div>', unsafe_allow_html=True)
+    # Transaction History
+    with st.expander("Transaction History", expanded=False):
         
         try:
             # Create transaction history DataFrame
