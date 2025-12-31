@@ -14,11 +14,15 @@ def create_allocation_donut(
     holdings_df: pd.DataFrame, 
     min_pct: float = 2.0, 
     title: str = "Portfolio Allocation",
-    privacy_mode: bool = False
+    privacy_mode: bool = False,
+    compact_mode: bool = False  # NEW: Explicit mobile signal
 ) -> go.Figure:
     """
     Create an interactive donut chart showing portfolio allocation.
     Optimized for futuristic look and cleaner legend.
+    
+    Args:
+        compact_mode: If True, generates a compact chart for mobile (smaller height, tighter margins)
     """
     if holdings_df.empty:
         return go.Figure()
@@ -105,12 +109,22 @@ def create_allocation_donut(
     # Center text showing total or top item? 
     # Let's keep it clean for now.
     
+    # Layout Logic: Use compact_mode parameter instead of title check
+    if compact_mode:
+        # Mobile: compact sizing
+        title_dict = dict(text="") if not title else dict(text=title, x=0, font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
+        margin_t = 0 if not title else 40
+        margin_b = 50  # Mobile: space for legend
+        chart_height = 450  # Mobile: balanced height (fits legend without being too tall)
+    else:
+        # Desktop: full sizing
+        title_dict = dict(text="") if not title else dict(text=title, x=0, font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
+        margin_t = 0 if not title else 40
+        margin_b = 120  # Desktop: space for legend
+        chart_height = 580  # Desktop: full size
+
     fig.update_layout(
-        title=dict(
-            text=title,
-            x=0,
-            font=dict(size=18, family="JetBrains Mono", color="#e6e6e6")
-        ),
+        title=title_dict,
         showlegend=True,
         legend=dict(
             orientation="h",
@@ -121,8 +135,8 @@ def create_allocation_donut(
             font=dict(color='#9CA3AF', size=11, family="Inter"),
             bgcolor='rgba(0,0,0,0)',
         ),
-        height=580, # LOCKED HEIGHT
-        margin=dict(t=40, b=120, l=20, r=20), 
+        height=chart_height,
+        margin=dict(t=margin_t, b=margin_b, l=20, r=20), 
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Inter", color="#9CA3AF")
@@ -136,12 +150,16 @@ def create_performance_chart(
     net_deposits: List[float],
     portfolio_values: List[float],
     cost_basis_values: List[float] = None,
-    title: str = "Performance History",
-    privacy_mode: bool = False
+    title: Optional[str] = "Performance History",
+    privacy_mode: bool = False,
+    compact_mode: bool = False  # NEW: Explicit mobile signal
 ) -> go.Figure:
     """
     Create a modern area chart for portfolio performance.
     Includes native Range Selector to replace external UI elements.
+    
+    Args:
+        compact_mode: If True, generates a compact chart for mobile (smaller height, tighter margins)
     """
     if not dates or not net_deposits or not portfolio_values:
         return go.Figure()
@@ -184,12 +202,22 @@ def create_performance_chart(
         hovertemplate=f'<b>Net Worth</b>: {val_fmt}<extra></extra>'
     ))
     
+    # Layout Logic: Use compact_mode parameter instead of title check
+    if compact_mode:
+        # Mobile: compact sizing
+        title_dict = dict(text="") if not title else dict(text=title, x=0, font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
+        margin_t = 0 if not title else 60
+        margin_b = 30  # Mobile: compact bottom margin
+        chart_height = 420  # Mobile: compact height
+    else:
+        # Desktop: full sizing
+        title_dict = dict(text="") if not title else dict(text=title, x=0, font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
+        margin_t = 0 if not title else 60
+        margin_b = 80  # Desktop: space for legend
+        chart_height = 580  # Desktop: full size
+    
     fig.update_layout(
-        title=dict(
-            text=title,
-            x=0,
-            font=dict(size=18, family="JetBrains Mono", color="#e6e6e6")
-        ),
+        title=title_dict,
         xaxis=dict(
             showgrid=True,
             gridcolor='rgba(255,255,255,0.05)',
@@ -231,8 +259,8 @@ def create_performance_chart(
             font=dict(color='#E5E7EB'),
             bgcolor='rgba(0,0,0,0)'
         ),
-        height=580, # LOCKED HEIGHT
-        margin=dict(t=60, b=80, l=30, r=20),
+        height=chart_height,
+        margin=dict(t=margin_t, b=margin_b, l=30, r=20),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="JetBrains Mono", size=11)
