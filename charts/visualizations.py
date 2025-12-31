@@ -50,9 +50,8 @@ def create_allocation_donut(
     # Sort by value descending
     holdings_df = holdings_df.sort_values(market_value_col, ascending=False)
     
-    # Logic: Take Top 9, Group rest as "Others"
-    # This ensures the legend never overflows screen space
-    top_n = 9
+    # Logic: Take Top 15 (Utilize full space without legend)
+    top_n = 15
     
     if len(holdings_df) > top_n:
         large_holdings = holdings_df.iloc[:top_n].copy()
@@ -74,73 +73,73 @@ def create_allocation_donut(
     else:
         display_df = holdings_df
         
-    # Telemetry / Aerospace Palette (High Contrast, Technical)
+    # Telemetry / Aerospace Palette (Expanded)
     colors = [
-        '#0ea5e9', # Sky Blue (Primary)
-        '#6366f1', # Indigo (Secondary)
-        '#22c55e', # Signal Green
-        '#eab308', # Amber (Warning)
-        '#ec4899', # Pink (Highlight)
-        '#8b5cf6', # Violet
-        '#f97316', # Orange
-        '#14b8a6', # Teal
-        '#64748b', # Slate
-        '#334155', # Dark Slate (Others)
+        '#0ea5e9', '#6366f1', '#22c55e', '#eab308', '#ec4899', 
+        '#8b5cf6', '#f97316', '#14b8a6', '#64748b', '#ef4444',
+        '#d946ef', '#84cc16', '#06b6d4', '#a855f7', '#334155'
     ]
 
     # Privacy masking for hover
     val_fmt = "€%{value:,.2f}" if not privacy_mode else "••••••"
 
     fig = go.Figure(data=[go.Pie(
-        labels=display_df['Display_Label'],
+        labels=display_df['Display_Label'], # Full names suitable for hover
         values=display_df[market_value_col],
-        hole=0.75, # Thinner ring
+        hole=0.60, # Slightly thicker ring for "Immersive" look
         hovertemplate='<b>%{label}</b><br>' +
                      f'{val_fmt}<br>' +
                      '%{percent}<br>' +
                      '<extra></extra>',
-        textinfo='none',  # Clean look, no text on chart
+        hoverlabel=dict(font_size=16, font_family="JetBrains Mono"), # Larger tooltip font
+        textinfo='none',  # Clean look
         marker=dict(
             colors=colors,
-            line=dict(color='#0e1117', width=3) # Match dark background
+            line=dict(color='#0e1117', width=2) # Thinner separator for elegance
         )
     )])
     
-    # Center text showing total or top item? 
-    # Let's keep it clean for now.
+    # Layout Logic: Unified "Immersive" Mode (No Legend)
+    # Title logic
+    title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
     
-    # Layout Logic: Use compact_mode parameter instead of title check
-    if compact_mode:
-        # Mobile: compact sizing
-        title_dict = dict(text="") if not title else dict(text=title, x=0, font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
-        margin_t = 0 if not title else 40
-        margin_b = 50  # Mobile: space for legend
-        chart_height = 450  # Mobile: balanced height (fits legend without being too tall)
-    else:
-        # Desktop: full sizing
-        title_dict = dict(text="") if not title else dict(text=title, x=0, font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
-        margin_t = 0 if not title else 40
-        margin_b = 120  # Desktop: space for legend
-        chart_height = 580  # Desktop: full size
+    # Universal Layout (Desktop & Mobile)
+    # Desktop Height must match Performance Chart (580px)
+    # Mobile Height remains compact (450px)
+    final_height = 450 if compact_mode else 580
+    
+    # Legend Logic: 
+    # Desktop: False (Immersive, use Hover)
+    # Mobile: True (Touch can be tricky, Legend helps identification)
+    show_legend_bool = True if compact_mode else False
 
     fig.update_layout(
         title=title_dict,
-        showlegend=True,
+        showlegend=show_legend_bool, 
         legend=dict(
             orientation="h",
-            yanchor="top",
-            y=-0.15, 
+            yanchor="bottom",
+            y=-0.1, 
             xanchor="center",
             x=0.5,
-            font=dict(color='#9CA3AF', size=11, family="Inter"),
+            font=dict(color='#E5E7EB', size=11),
+            itemwidth=70,  
             bgcolor='rgba(0,0,0,0)',
         ),
-        height=chart_height,
-        margin=dict(t=margin_t, b=margin_b, l=20, r=20), 
+        height=final_height, 
+        # Increase margins to pad the pie (shrink it) and center it
+        margin=dict(t=60 if title else 40, b=40, l=40, r=40), 
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(family="Inter", color="#9CA3AF")
+        font=dict(family="Inter", color="#9CA3AF"),
+        annotations=[dict(text=f"{total_value:,.0f} €", x=0.5, y=0.5, font_size=22, showarrow=False, font=dict(family="JetBrains Mono", color="white", weight=700))] if total_value > 0 else []
     )
+    
+    # No domain shifting needed - center is natural
+    # fig.update_traces(domain=dict(x=[0, 1], y=[0, 1])) - Default is fine
+    
+    # Update traces separately to safely set hole size
+    fig.update_traces(hole=0.60, hoverinfo="label+percent+value")
     
     return fig
 
@@ -191,27 +190,28 @@ def create_performance_chart(
         ))
     
     # 3. Net Worth (Gradient Area)
+    # Reverted to standard area fill (High aesthetic)
     fig.add_trace(go.Scatter(
         x=dates,
         y=portfolio_values,
         name='Net Worth',
         mode='lines',
-        line=dict(color='#3b82f6', width=3),
-        fill='tozeroy',
-        fillcolor='rgba(59, 130, 246, 0.05)', # Ultra-subtle fill
+        line=dict(color='#3b82f6', width=2.5), # Sharp core line
+        fill='tozeroy', 
+        fillcolor='rgba(59, 130, 246, 0.12)', # Standard semi-transparent fill
         hovertemplate=f'<b>Net Worth</b>: {val_fmt}<extra></extra>'
     ))
     
-    # Layout Logic: Use compact_mode parameter instead of title check
+    # Layout Configuration
     if compact_mode:
         # Mobile: compact sizing
-        title_dict = dict(text="") if not title else dict(text=title, x=0, font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
-        margin_t = 0 if not title else 60
-        margin_b = 30  # Mobile: compact bottom margin
-        chart_height = 420  # Mobile: compact height
+        title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=14, family="JetBrains Mono", color="#e6e6e6"))
+        margin_t = 0 if not title else 40
+        margin_b = 40
+        chart_height = 300
     else:
         # Desktop: full sizing
-        title_dict = dict(text="") if not title else dict(text=title, x=0, font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
+        title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
         margin_t = 0 if not title else 60
         margin_b = 80  # Desktop: space for legend
         chart_height = 580  # Desktop: full size
@@ -220,7 +220,9 @@ def create_performance_chart(
         title=title_dict,
         xaxis=dict(
             showgrid=True,
-            gridcolor='rgba(255,255,255,0.05)',
+            gridcolor='rgba(255,255,255,0.08)', # Slightly clearer grid
+            gridwidth=1,
+            griddash='dot', # Technical dotted grid
             zeroline=False,
             showline=True,
             linecolor='#374151',
@@ -245,7 +247,9 @@ def create_performance_chart(
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor='rgba(255,255,255,0.05)',
+            gridcolor='rgba(255,255,255,0.08)',
+            gridwidth=1,
+            griddash='dot', # Technical dotted grid
             zeroline=False,
             tickformat='s',
             tickfont=dict(color='#9CA3AF'),
@@ -264,7 +268,7 @@ def create_performance_chart(
             entrywidth=120,
         ),
         height=chart_height,
-        margin=dict(t=margin_t + 30, b=margin_b + 30, l=30, r=20), # Increased top margin for selector
+        margin=dict(t=margin_t + 30, b=margin_b + 30, l=0, r=20), # Increased top margin for selector
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="JetBrains Mono", size=11)
