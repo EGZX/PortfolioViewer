@@ -65,29 +65,32 @@ def check_authentication() -> bool:
         st.session_state["authenticated"] = True
         return True
     
-    # Show login form
-    st.markdown("### 🔒 Authentication Required")
-    st.markdown("Please enter the password to access the Portfolio viewer.")
+    # Centered Login Card
+    col1, col2, col3 = st.columns([1, 2, 1])
     
-    password_input = st.text_input(
-        "Password",
-        type="password",
-        key="password_input",
-        help="Enter the application password"
-    )
-    
-    col1, col2 = st.columns([1, 4])
-    
-    with col1:
-        login_button = st.button("Login", type="primary")
+    with col2:
+        with st.container(border=True):
+            st.markdown('<div style="text-align: center; margin-bottom: 20px;">🔒 SECURE ACCESS</div>', unsafe_allow_html=True)
+            
+            password_input = st.text_input(
+                "PASSPHRASE",
+                type="password",
+                key="password_input",
+                help="Enter authorization key",
+                label_visibility="visible"
+            )
+            
+            submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
+            with submit_col2:
+                login_button = st.button("AUTHENTICATE", type="primary", use_container_width=True)
     
     if login_button:
         if verify_password(password_input, expected_hash):
             st.session_state["authenticated"] = True
-            st.success("✅ Authentication successful!")
+            st.success("ACCESS GRANTED")
             st.rerun()
         else:
-            st.error("❌ Incorrect password. Please try again.")
+            st.error("ACCESS DENIED: Invalid Passphrase")
             return False
     
     return False
