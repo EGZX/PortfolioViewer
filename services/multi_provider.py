@@ -15,6 +15,7 @@ from typing import Optional, Dict, List
 from decimal import Decimal
 from datetime import date
 import os
+import streamlit as st
 
 from utils.logging_config import setup_logger
 
@@ -51,7 +52,15 @@ class AlphaVantageProvider(MarketDataProvider):
     
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv('ALPHA_VANTAGE_API_KEY')
-        self._enabled = self.api_key is not None
+        
+        # Also check Streamlit secrets (nested under passwords as per user config)
+        if not self.api_key and hasattr(st, "secrets"):
+            if "passwords" in st.secrets and "ALPHA_VANTAGE_API_KEY" in st.secrets["passwords"]:
+                self.api_key = st.secrets["passwords"]["ALPHA_VANTAGE_API_KEY"]
+            elif "ALPHA_VANTAGE_API_KEY" in st.secrets:
+                 self.api_key = st.secrets["ALPHA_VANTAGE_API_KEY"]
+                 
+        self._enabled = self.api_key is not None and len(self.api_key) > 5
     
     @property
     def name(self) -> str:
@@ -117,7 +126,15 @@ class FinnhubProvider(MarketDataProvider):
     
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv('FINNHUB_API_KEY')
-        self._enabled = self.api_key is not None
+
+        # Also check Streamlit secrets (nested under passwords as per user config)
+        if not self.api_key and hasattr(st, "secrets"):
+            if "passwords" in st.secrets and "FINNHUB_API_KEY" in st.secrets["passwords"]:
+                self.api_key = st.secrets["passwords"]["FINNHUB_API_KEY"]
+            elif "FINNHUB_API_KEY" in st.secrets:
+                 self.api_key = st.secrets["FINNHUB_API_KEY"]
+
+        self._enabled = self.api_key is not None and len(self.api_key) > 5
     
     @property
     def name(self) -> str:
