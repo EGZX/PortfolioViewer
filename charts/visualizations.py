@@ -233,12 +233,14 @@ def create_performance_chart(
                     dict(count=1, label="1Y", step="year", stepmode="backward"),
                     dict(step="all", label="ALL")
                 ]),
-                bgcolor='rgba(20, 20, 20, 0.8)', # Darker, more solid background
+                bgcolor='rgba(20, 20, 20, 0.9)', 
                 activecolor='#3b82f6',
-                font=dict(color='#FFFFFF', size=11, weight=700), # Bright white text
-                y=1.12, # Moved up to avoid hover collision
-                x=1,
-                xanchor='right'
+                bordercolor='#30363d',
+                borderwidth=1,
+                font=dict(color='#FFFFFF', size=11, weight=700),
+                y=1.02, # Slightly lower, closer to chart top
+                x=0,    # Left aligned to avoid Mode Bar on right
+                xanchor='left'
             )
         ),
         yaxis=dict(
