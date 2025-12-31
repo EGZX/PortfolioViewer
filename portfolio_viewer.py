@@ -149,26 +149,32 @@ st.markdown("""
     
     /* Design Tokens - Deep Space / FinTech */
     :root {
-        --bg-color: #0d1117;        /* Deep Space Blue */
-        --sidebar-bg: #161b22;      /* Slate Blue Dark */
-        --card-bg: rgba(22, 27, 34, 0.75); /* Semi-transparent blue-grey */
-        --card-border: rgba(48, 54, 61, 0.8);     /* Subtle structural border */
-        --text-primary: #f0f6fc;    /* High-contrast white/blue tint */
-        --text-secondary: #8b949e;  /* HUD dimmed text */
-        --accent-primary: #3b82f6;  /* System Blue */
-        --accent-glow: rgba(59, 130, 246, 0.25); /* Subtle bloom */
-        --accent-secondary: #6366f1; 
-        --glass-bg: rgba(30, 35, 41, 0.7); /* Restored Glass */
+        --bg-color: #12161f;        /* Deep Navy Stone Base */
+        --sidebar-bg: rgba(23, 28, 38, 0.85); /* Semi-transparent Sidebar */
+        --card-bg: rgba(28, 34, 45, 0.45); /* High Transparency Stone Card */
+        --card-border: rgba(75, 125, 163, 0.35);  /* Radiant Stone Border */
+        --text-primary: #ecf3fa;    /* Bright Grey-White */
+        --text-secondary: #94a3b8;  /* Stone Grey text */
+        --accent-primary: #4B7DA3;  /* Stone Blue */
+        --accent-glow: rgba(75, 125, 163, 0.3); /* Visible Bloom */
+        --accent-secondary: #1F456E; /* Deep Blue */
+        --glass-bg: rgba(30, 38, 48, 0.4); /* Glassy Transparency */
     }
     
     /* Global App Styling with Organic Nebula Background */
     .stApp {
-        background-color: var(--bg-color);
-        /* Organic Nebula Pattern: Multiple subtle radial gradients */
+        background-color: #0d1117; /* Deep Navy Abyss (More Blue Base) */
+        /* Organic Nebula Pattern: "Perfect Moonlit Foggy Sea" */
         background-image: 
-            radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 25%),
-            radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 25%),
-            radial-gradient(circle at 50% -20%, #1e293b 0%, transparent 80%);
+            /* 1. The Moon Source (Extended Reach / Shallower Drop) */
+            radial-gradient(circle at 50% -10%, rgba(170, 190, 210, 0.15) 0%, transparent 80%),
+            
+            /* 2. The Foggy Haze (Wider / softer) */
+            radial-gradient(ellipse at 50% 25%, rgba(89, 120, 142, 0.10) 0%, transparent 75%),
+            
+            /* 3. Deep Vignette (Dark Sides - Pushed out further) */
+            linear-gradient(90deg, rgba(13, 17, 23, 0.95) 0%, transparent 20%, transparent 80%, rgba(13, 17, 23, 0.95) 100%);
+            
         background-size: 100% 100%;
         color: var(--text-primary);
         font-family: 'Inter', sans-serif;
@@ -237,7 +243,7 @@ st.markdown("""
         padding-left: 12px;
         margin-top: 2rem !important;
         margin-bottom: 1.5rem !important;
-        background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+        background: linear-gradient(90deg, var(--accent-glow) 0%, transparent 50%);
         padding-top: 6px;
         padding-bottom: 6px;
     }
@@ -336,9 +342,9 @@ st.markdown("""
     
     /* NEW KPI DASHBOARD STYLES */
     .kpi-board {
-        background-color: rgba(13, 17, 23, 0.4); /* Matched to Tile Opacity */
-        backdrop-filter: blur(12px); /* Dynamic Blur */
-        border: 1px solid rgba(75, 85, 99, 0.6); /* Lighter Border to match containers */
+        background-color: var(--card-bg); /* Matched to Tile Opacity */
+        backdrop-filter: blur(8px); /* Dynamic Blur */
+        border: 1px solid var(--card-border); /* Lighter Border to match containers */
         border-radius: 6px; 
         padding: 1.5rem;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2); /* Soft depth */
@@ -415,17 +421,28 @@ st.markdown("""
     /* Make Abs Gain (2nd item) stand out if needed, or all equal */
 
     
-    /* Sidebar Headers */
     /* Sidebar Styling - Compact & Professional */
     [data-testid="stSidebar"] {
-        background-color: #0d1117 !important;
+        background-color: var(--sidebar-bg) !important;
         border-right: 1px solid var(--card-border);
+        backdrop-filter: blur(10px);
     }
     
     [data-testid="stSidebar"] .block-container {
         padding-top: 3rem; /* Increased top padding matching main */
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+    
+    /* Transparent DataFrames to show Nebula */
+    [data-testid="stDataFrame"] {
+        background-color: transparent !important;
+    }
+    [data-testid="stDataFrame"] div[class*="st"] {
+        background-color: transparent !important;
+    }
+    div[data-testid="stTable"] {
+        background-color: transparent !important;
     }
     
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] div, [data-testid="stSidebar"] label {
