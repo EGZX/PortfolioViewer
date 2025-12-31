@@ -65,17 +65,27 @@ class AlphaVantageProvider(MarketDataProvider):
     @property
     def name(self) -> str:
         return "Alpha Vantage"
-    
     def get_price(self, symbol: str) -> Optional[float]:
         if not self._enabled:
             return None
+        
+        # Alpha Vantage is picky about suffixes. 
+        # Primarily supports US stocks (no suffix) or specific exchanges.
+        # Try to normalize for common cases
+        av_symbol = symbol
+        if "." in symbol:
+             # Strip common suffixes for dual-listed stocks to try the US listing
+             # (e.g. SHOP.TO -> SHOP)
+             # This is a heuristic: often the fallback is needed precisely because 
+             # the US listing is the liquid one we want if the local one fails.
+             av_symbol = symbol.split(".")[0]
         
         try:
             import requests
             url = f"https://www.alphavantage.co/query"
             params = {
                 'function': 'GLOBAL_QUOTE',
-                'symbol': symbol,
+                'symbol': av_symbol,
                 'apikey': self.api_key
             }
             response = requests.get(url, params=params, timeout=5)
@@ -143,12 +153,18 @@ class FinnhubProvider(MarketDataProvider):
     def get_price(self, symbol: str) -> Optional[float]:
         if not self._enabled:
             return None
+            
+        # Finnhub prefers US tickers for global coverage in free tier often
+        fh_symbol = symbol
+        if "." in symbol:
+             # Basic normalization
+             fh_symbol = symbol.split(".")[0]
         
         try:
             import requests
             url = f"https://finnhub.io/api/v1/quote"
             params = {
-                'symbol': symbol,
+                'symbol': fh_symbol,
                 'token': self.api_key
             }
             response = requests.get(url, params=params, timeout=5)

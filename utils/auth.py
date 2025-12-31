@@ -78,10 +78,19 @@ def check_authentication() -> bool:
     - Fail Secure (Deny by default)
     - Anti-Brute Force Delay
     - Constant Time Comparison
-    
-    Returns:
-        True if authenticated, False otherwise
     """
+    # Session Timeout Logic
+    if "last_activity" in st.session_state:
+        if time.time() - st.session_state["last_activity"] > 1800:  # 30 minutes
+            st.session_state["authenticated"] = False
+            st.session_state.pop("last_activity", None)
+            st.warning("⚠️ Session timed out due to inactivity. Please log in again.")
+            st.rerun()
+            return False
+            
+    # Update activity timestamp
+    st.session_state["last_activity"] = time.time()
+
     # Check if already authenticated in session
     if st.session_state.get("authenticated", False):
         return True
