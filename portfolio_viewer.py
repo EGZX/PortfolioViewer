@@ -531,12 +531,25 @@ st.markdown("""
     
     /* Container Borders (st.container(border=True)) */
     [data-testid="stVerticalBlockBorderWrapper"] {
-        border: 1px solid var(--card-border) !important;
-        background-color: var(--card-bg) !important;
-        border-radius: 4px !important;
+        border: 1px solid #4b5563 !important;
+        background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(31, 41, 55, 0.7)) !important;
+        border-radius: 8px !important;
         padding: 1.5rem !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important;
-        margin-bottom: 1rem !important; /* Standardized Gap */
+        box-shadow: 
+            0 4px 6px rgba(0,0,0,0.1),
+            0 0 20px rgba(59, 130, 246, 0.05) !important;
+        margin-bottom: 1rem !important;
+        backdrop-filter: blur(8px) !important;
+        transition: all 0.3s ease;
+    }
+    
+    /* Subtle Hover Effect on Cards */
+    [data-testid="stVerticalBlockBorderWrapper"]:hover {
+        border-color: rgba(96, 165, 250, 0.4) !important;
+        box-shadow: 
+            0 8px 16px rgba(0,0,0,0.15),
+            0 0 30px rgba(59, 130, 246, 0.1) !important;
+        transform: translateY(-2px);
     }
     
     /* Clean Card Titles (No Emoji/Blue Bar) */
