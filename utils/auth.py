@@ -36,16 +36,13 @@ def hash_password(password: str) -> str:
 def verify_password(password: str, stored_hash: str) -> bool:
     """
     Verify a password against its stored hash.
-    Supports both legacy SHA-256 (hex) and new PBKDF2 formats.
+    Strictly forces PBKDF2 format (NO legacy SHA-256 support).
     """
     try:
-        # 1. Check for Legacy SHA-256 (simple hex string, length 64)
-        if len(stored_hash) == 64 and '$' not in stored_hash:
-            # Legacy verification (Vulnerable to rainbow tables if leaked, but supported for migration)
-            legacy_hash = hashlib.sha256(password.encode()).hexdigest()
-            return hmac.compare_digest(legacy_hash, stored_hash)
+        # Parse PBKDF2 format
+        if '$' not in stored_hash:
+            return False
             
-        # 2. Parse PBKDF2 format
         parts = stored_hash.split('$')
         if len(parts) != 4 or parts[0] != 'pbkdf2_sha256':
             # Unknown format
@@ -55,7 +52,7 @@ def verify_password(password: str, stored_hash: str) -> bool:
         salt = base64.b64decode(parts[2])
         expected_key = base64.b64decode(parts[3])
         
-        # 3. Calculate hash with extracted salt/iterations
+        # Calculate hash with extracted salt/iterations
         derived_key = hashlib.pbkdf2_hmac(
             'sha256',
             password.encode('utf-8'),
@@ -63,7 +60,7 @@ def verify_password(password: str, stored_hash: str) -> bool:
             iterations
         )
         
-        # 4. Constant time comparison (Timing Attack Proof)
+        # Constant time comparison (Timing Attack Proof)
         return hmac.compare_digest(derived_key, expected_key)
         
     except Exception:
