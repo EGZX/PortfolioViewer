@@ -73,11 +73,24 @@ def create_allocation_donut(
     else:
         display_df = holdings_df
         
-    # Telemetry / Aerospace Palette (Expanded)
+    # Screenshot Match Palette (High Contrast / Neon)
+    # Cyan, White, Purple, Pink, Green, Yellow
     colors = [
-        '#0ea5e9', '#6366f1', '#22c55e', '#eab308', '#ec4899', 
-        '#8b5cf6', '#f97316', '#14b8a6', '#64748b', '#ef4444',
-        '#d946ef', '#84cc16', '#06b6d4', '#a855f7', '#334155'
+        '#00e5ff', # Cyan (Electric - Top Slice)
+        '#ffffff', # White (High Contrast - Second Slice)
+        '#d500f9', # Neon Purple
+        '#ff1744', # Neon Red/Pink
+        '#00e676', # Neon Green
+        '#ffea00', # Neon Yellow
+        '#2979ff', # Blue (Backup)
+        '#ff9100', # Orange
+        '#76ff03', # Lime
+        '#f50057', # Pink
+        '#3d5afe', # Indigo
+        '#1de9b6', # Teal
+        '#ffc400', # Amber
+        '#90a4ae', # Blue Grey
+        '#546e7a'  # Dark Slate
     ]
 
     # Privacy masking for hover
@@ -104,14 +117,28 @@ def create_allocation_donut(
     title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
     
     # Universal Layout (Desktop & Mobile)
-    # Desktop Height must match Performance Chart (580px)
+    # Desktop Height must match Performance Chart (520px)
     # Mobile Height remains compact (450px)
-    final_height = 450 if compact_mode else 580
+    final_height = 450 if compact_mode else 520
     
     # Legend Logic: 
-    # Desktop: False (Immersive, use Hover)
+    # Desktop: False (Immersive, use Hover) as requested
     # Mobile: True (Touch can be tricky, Legend helps identification)
     show_legend_bool = True if compact_mode else False
+
+    if compact_mode:
+        margin_t = 0 if not title else 40
+        margin_b = 50 
+        margin_l = 20
+        margin_r = 20
+        legend_y = -0.1
+    else:
+        # Desktop (Immersive - No Legend)
+        margin_t = 0 if not title else 60
+        margin_b = 40 # Reduced bottom margin since legend is gone
+        margin_l = 40 # Maintain padding for centered pie
+        margin_r = 40
+        legend_y = -0.1 # N/A but safe default
 
     fig.update_layout(
         title=title_dict,
@@ -119,16 +146,15 @@ def create_allocation_donut(
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=-0.1, 
+            y=legend_y,
             xanchor="center",
             x=0.5,
-            font=dict(color='#E5E7EB', size=11),
+            font=dict(color='#E5E7EB', size=11, family="Inter"),
             itemwidth=70,  
             bgcolor='rgba(0,0,0,0)',
         ),
         height=final_height, 
-        # Increase margins to pad the pie (shrink it) and center it
-        margin=dict(t=60 if title else 40, b=40, l=40, r=40), 
+        margin=dict(t=margin_t, b=margin_b, l=margin_l, r=margin_r), 
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Inter", color="#9CA3AF"),
@@ -207,14 +233,14 @@ def create_performance_chart(
         # Mobile: compact sizing
         title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=14, family="JetBrains Mono", color="#e6e6e6"))
         margin_t = 0 if not title else 40
-        margin_b = 40
-        chart_height = 300
+        margin_b = 30
+        chart_height = 420
     else:
         # Desktop: full sizing
         title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
         margin_t = 0 if not title else 60
         margin_b = 80  # Desktop: space for legend
-        chart_height = 580  # Desktop: full size
+        chart_height = 520  # Desktop: compact size
     
     fig.update_layout(
         title=title_dict,
