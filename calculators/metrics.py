@@ -110,7 +110,7 @@ def calculate_absolute_return(
     absolute_return = current_value + total_withdrawn - total_invested
     return_pct = (absolute_return / total_invested) * 100
     
-    logger.info(f"Absolute return: €{absolute_return:.2f} ({return_pct:.2f}%)")
+    logger.info(f"Absolute return calculated: {return_pct:.2f}%")
     
     return absolute_return, return_pct
 

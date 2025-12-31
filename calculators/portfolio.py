@@ -224,9 +224,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                     logger.warning(
                         f"{t.ticker}: Selling/Transferring more shares than owned! "
                         f"Type: {t.type.value}, "
-                        f"Qty: {t.shares}, "
-                        f"Had: {pos.shares + t.shares}, "
-                        f"Capping to zero."
+                        f"Capping to zero. (Check source data)"
                     )
                     pos.shares = Decimal(0)
                     pos.cost_basis = Decimal(0)
@@ -278,7 +276,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         # We keep them in history/performance calc, but for "Current Holdings" display they are noise
         self.holdings = {k: v for k, v in self.holdings.items() if abs(v.shares) > 0.000001}
         
-        logger.info(f"Portfolio state: {len(self.holdings)} holdings, €{self.cash_balance:.2f} cash, €{self.invested_capital:.2f} invested")
+        logger.info(f"Portfolio state rebuilt: {len(self.holdings)} holdings active.")
                    
     def get_unique_tickers(self) -> List[str]:
         """Get list of all unique tickers with current holdings."""
@@ -306,7 +304,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         
         # Use cash_balance calculated from all cash-affecting transactions
         total = holdings_value + self.cash_balance
-        logger.debug(f"Total value: €{total:.2f} (holdings: €{holdings_value:.2f}, cash: €{self.cash_balance:.2f})")
+        logger.debug(f"Total value calculated (holdings + cash)")
         
         return total
     
@@ -525,8 +523,6 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         dates = [datetime.combine(d, datetime.min.time(), tzinfo=timezone.utc) for d, _ in sorted_flows]
         amounts = [float(amt) for _, amt in sorted_flows]
         
-        logger.info(f"XIRR cash flows: {len(dates)} dates, "
-                   f"total invested: {sum(a for a in amounts if a < 0):.2f}, "
-                   f"total returned: {sum(a for a in amounts if a > 0):.2f}")
+        logger.info(f"XIRR cash flows prepared: {len(dates)} dates")
         
         return dates, amounts
