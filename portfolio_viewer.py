@@ -548,6 +548,74 @@ st.markdown("""
         margin-bottom: 1.5rem;
         /* No border, no extra decoration */
     }
+
+    /* ============================================= */
+    /* ============================================= */
+    /* RESPONSIVE DESIGN (MOBILE/TABLET ADAPTATIONS) */
+    /* ============================================= */
+    
+    /* Tablet/Small Laptop (Max Width: 1024px) */
+    @media only screen and (max-width: 1024px) {
+        /* KPI Grid - 3 columns */
+        .kpi-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .kpi-item {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .kpi-item:nth-child(3n) {
+            border-right: none; 
+        }
+        .kpi-item:nth-child(n+4) {
+            border-bottom: none;
+        }
+    }
+    
+    /* Mobile (Max Width: 768px) */
+    @media only screen and (max-width: 768px) {
+        
+        /* 1. FORCE COLUMN STACKING */
+        [data-testid="column"] {
+            width: 100% !important;
+            flex: 1 1 auto !important;
+            min-width: 100% !important;
+        }
+
+        /* 2. KPI GRID - 2 Columns */
+        .kpi-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .kpi-item {
+            border-right: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 0.5rem;
+            min-height: 70px;
+        }
+        .kpi-item:nth-child(2n) { border-right: none; }
+        .kpi-item:nth-child(n+5) { border-bottom: none; }
+        .kpi-item:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.05); }
+        .kpi-item:nth-child(3), .kpi-item:nth-child(4) { 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+        }
+        
+        /* 3. COMPACT SPACING */
+        [data-testid="stVerticalBlockBorderWrapper"] {
+            padding: 1rem !important;
+        }
+        .card-title {
+            margin-bottom: 0.5rem !important;
+            font-size: 1.0rem;
+        }
+        
+        /* 4. TYPOGRAPHY */
+        .main-header { font-size: 1.4rem; }
+        .sub-header { font-size: 0.7rem; margin-bottom: 1.5rem; }
+        .kpi-value { font-size: 1.0rem; }
+        .metric-label { font-size: 0.65rem; }
+        
+        /* 5. MOBILE CHART ADJUSTMENTS - Python controls size via compact_mode */
+        /* No need for aggressive CSS overrides anymore */
+    }
     
 </style>
 """, unsafe_allow_html=True)
@@ -909,16 +977,21 @@ def main():
     with col1:
         with st.container(border=True):
             # Render Chart with FULL data (filtering handled by Plotly native Range Selector)
-            # This allows removing the external selectbox for perfect vertical alignment
+            # Layout changed: Title Moved OUTSIDE of chart to prevent Mobile Overlap
+            st.markdown('<div class="card-title">Performance History</div>', unsafe_allow_html=True)
+            
             chart_fig = create_performance_chart(
                 dates, net_deposits, portfolio_values, cost_basis_values, 
-                title="Performance History",
+                title=None, # Title handled externally for responsiveness
                 privacy_mode=st.session_state.privacy_mode
             )
             st.plotly_chart(chart_fig, width='stretch')
 
     with col2:
         with st.container(border=True):
+            # Layout changed: Title Moved OUTSIDE of chart
+            st.markdown('<div class="card-title">Asset Allocation</div>', unsafe_allow_html=True)
+            
             # Filter OUT Cash and Apply FX Conversion for accurate allocation
             allocation_data = []
             for h in portfolio.holdings.values():
@@ -944,7 +1017,7 @@ def main():
             
             donut_fig = create_allocation_donut(
                 holdings_df, 
-                title="Asset Allocation", 
+                title=None, # Title handled externally
                 privacy_mode=st.session_state.privacy_mode
             )
             st.plotly_chart(donut_fig, width='stretch')
