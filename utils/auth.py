@@ -10,7 +10,7 @@ import base64
 from typing import Optional
 
 # Configuration
-ITERATIONS = 600_000  # High iteration count for PBKDF2 (OWASP recommended 2023: 600k for HMAC-SHA256)
+ITERATIONS = 600_000  # OWASP recommended iteration count for PBKDF2-HMAC-SHA256 (2023)
 SALT_SIZE = 32        # 32 bytes = 256 bits
 
 def hash_password(password: str) -> str:
@@ -36,7 +36,7 @@ def hash_password(password: str) -> str:
 def verify_password(password: str, stored_hash: str) -> bool:
     """
     Verify a password against its stored hash.
-    Strictly forces PBKDF2 format (NO legacy SHA-256 support).
+    Strictly forces PBKDF2 format.
     """
     try:
         # Parse PBKDF2 format
@@ -45,7 +45,6 @@ def verify_password(password: str, stored_hash: str) -> bool:
             
         parts = stored_hash.split('$')
         if len(parts) != 4 or parts[0] != 'pbkdf2_sha256':
-            # Unknown format
             return False
             
         iterations = int(parts[1])
@@ -60,7 +59,7 @@ def verify_password(password: str, stored_hash: str) -> bool:
             iterations
         )
         
-        # Constant time comparison (Timing Attack Proof)
+        # Constant time comparison
         return hmac.compare_digest(derived_key, expected_key)
         
     except Exception:
@@ -71,17 +70,17 @@ def check_authentication() -> bool:
     """
     Check if user is authenticated.
     
-    Features:
-    - Fail Secure (Deny by default)
-    - Anti-Brute Force Delay
-    - Constant Time Comparison
+    Implements:
+    - Session timeout (30 min)
+    - Anti-brute force delay
+    - Fail-secure configuration check
     """
     # Session Timeout Logic
     if "last_activity" in st.session_state:
         if time.time() - st.session_state["last_activity"] > 1800:  # 30 minutes
             st.session_state["authenticated"] = False
             st.session_state.pop("last_activity", None)
-            st.warning("⚠️ Session timed out due to inactivity. Please log in again.")
+            st.warning("Session timed out due to inactivity. Please log in again.")
             st.rerun()
             return False
             
@@ -95,32 +94,30 @@ def check_authentication() -> bool:
     # Get expected hash from secrets
     try:
         if "passwords" not in st.secrets:
-             st.error("⛔ Security Error: 'passwords' section missing in secrets.toml. Access Denied.")
+             st.error("Configuration Error: 'passwords' section missing in secrets.toml.")
              return False
 
         expected_hash = st.secrets["passwords"].get("app_password_hash")
         
         if not expected_hash:
-            st.error("⛔ Security Error: 'app_password_hash' not configured. Access Denied.")
+            st.error("Configuration Error: 'app_password_hash' not configured.")
             return False
             
     except Exception as e:
-        # Fail Secure: If we can't verify configuration, DENY access
-        st.error(f"⛔ Security Error: Could not load secrets ({str(e)}). Access Denied.")
+        st.error(f"Configuration Error: Could not load secrets ({str(e)}).")
         return False
     
-    # Centered Login Card
+    # Login Interface
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
         with st.container(border=True):
-            st.markdown('<div style="text-align: center; margin-bottom: 20px;">🔒 SECURE ACCESS</div>', unsafe_allow_html=True)
+            st.markdown('<div style="text-align: center; margin-bottom: 20px;">ACCESS CONTROL</div>', unsafe_allow_html=True)
             
             password_input = st.text_input(
                 "PASSPHRASE",
                 type="password",
                 key="password_input",
-                help="Enter authorization key",
                 label_visibility="visible"
             )
             
@@ -135,12 +132,10 @@ def check_authentication() -> bool:
             st.success("ACCESS GRANTED")
             st.rerun()
         else:
-            # ANTI-BRUTE FORCE DELAY
-            # Sleep for random time between 1.0 and 2.0 seconds
-            # This makes brute forcing via the UI agonizingly slow
+            # Anti-brute force delay
             time.sleep(1.0 + random.random())
             
-            st.error("ACCESS DENIED: Invalid Passphrase")
+            st.error("Invalid Passphrase")
             return False
     
     return False
@@ -156,21 +151,19 @@ def show_logout_button():
     """Display logout button in sidebar."""
     with st.sidebar:
         st.divider()
-        if st.button("🚪 Logout", help="Log out of the application"):
+        if st.button("Logout", help="Log out of the application"):
             logout()
 
 
-# Helper function to generate password hash for setup
 def generate_password_hash(password: str) -> str:
     """
     Generate a secure hash for a password (for initial setup).
-    Uses PBKDF2-HMAC-SHA256 with 600,000 iterations and random salt.
+    Uses PBKDF2-HMAC-SHA256.
     """
     return hash_password(password)
 
 
 if __name__ == "__main__":
-    # Quick hash generator
     import sys
     if len(sys.argv) > 1:
         password = sys.argv[1]
@@ -181,4 +174,3 @@ if __name__ == "__main__":
         print(f'[passwords]\napp_password_hash = "{h}"')
     else:
         print("Usage: python auth.py <password>")
-

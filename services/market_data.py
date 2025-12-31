@@ -1,6 +1,5 @@
 """Market data service with yfinance integration and fallback strategies."""
 
-import time
 from datetime import date
 from decimal import Decimal
 from typing import Dict, Optional, List
@@ -13,10 +12,6 @@ from services.isin_resolver import ISINResolver
 from services.multi_provider import MarketDataAggregator
 
 logger = setup_logger(__name__)
-
-# Initialize fallback providers
-_fallback_aggregator = MarketDataAggregator()
-
 
 # Initialize fallback providers
 _fallback_aggregator = MarketDataAggregator()
@@ -57,7 +52,6 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         logger.info(f"Cache: {len(prices)} hits, {len(tickers_to_fetch)} to fetch from API")
         
         # Step 1: Resolve ISINs to tickers
-        # ISINResolver now handles overrides internally
         mapped_tickers = []
         ticker_map = {}  # mapped -> original
         
@@ -83,7 +77,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         # Batch fetch for efficiency
         try:
             data = yf.download(
-                mapped_tickers,  # Use mapped tickers
+                mapped_tickers,
                 period='1d',
                 interval='1d',
                 group_by='ticker',
@@ -100,7 +94,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
                     if price is not None and not pd.isna(price):
                         price_val = float(price)
                         prices[original_ticker] = price_val
-                        cache.set_price(original_ticker, price_val, today)  # Cache it
+                        cache.set_price(original_ticker, price_val, today)
                         logger.info(f"{original_ticker}: {price_val:.2f}")
                     else:
                         prices[original_ticker] = None
@@ -120,7 +114,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
                                 if price is not None and not pd.isna(price):
                                     price_val = float(price)
                                     prices[original_ticker] = price_val
-                                    cache.set_price(original_ticker, price_val, today)  # Cache it
+                                    cache.set_price(original_ticker, price_val, today)
                                     logger.info(f"{original_ticker}: {price_val:.2f}")
                                 else:
                                     prices[original_ticker] = None
@@ -152,7 +146,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
                     price = _fallback_aggregator.get_price_with_fallback(mapped_ticker)
                 
                 if price is not None:
-                    cache.set_price(original_ticker, price, today)  # Cache it
+                    cache.set_price(original_ticker, price, today)
                 
                 prices[original_ticker] = price
         
@@ -174,18 +168,10 @@ def fetch_single_price(ticker: str, max_retries: int = 3) -> Optional[float]:
     Fallback chain:
     1. Current price (1d)
     2. Historical price (5d)
-    3. None (caller should handle)
-    
-    Args:
-        ticker: Ticker symbol
-        max_retries: Maximum number of retry attempts
-    
-    Returns:
-        Current price or None if all attempts failed
+    3. None
     """
     for attempt in range(max_retries):
         try:
-            # Try current price
             stock = yf.Ticker(ticker)
             info = stock.info
             
@@ -205,7 +191,6 @@ def fetch_single_price(ticker: str, max_retries: int = 3) -> Optional[float]:
                     logger.info(f"{ticker}: {price:.2f} (from historical)")
                     return float(price)
             
-            logger.warning(f"{ticker}: No price data available")
             return None
             
         except Exception as e:
@@ -215,17 +200,7 @@ def fetch_single_price(ticker: str, max_retries: int = 3) -> Optional[float]:
 def get_currency_for_ticker(ticker: str) -> str:
     """
     Determine the trading currency based on the ticker symbol.
-    
-    Rules:
-    - ISIN format (2-letter country code): Infer currency from country
-    - Suffix .DE, .PA, .MI, .AS, .VI, .BR, .HE, .NX -> EUR
-    - Suffix .L -> GBP (Note: might be GBp/pencil, handled separately?)
-    - Suffix .TO, .V -> CAD
-    - Suffix .SW -> CHF
-    - Suffix .HK -> HKD
-    - Suffix -EUR -> EUR (Crypto)
-    - Suffix -USD -> USD (Crypto)
-    - No suffix -> USD (US Market default)
+    Defaults to USD if cannot determine.
     """
     if not ticker:
         return "EUR"
@@ -245,7 +220,7 @@ def get_currency_for_ticker(ticker: str) -> str:
         if suffix in ["DE", "PA", "MI", "AS", "VI", "BR", "HE", "NX", "BM", "HM", "BE", "DU", "SG", "F"]:
             return "EUR"
         if suffix == "L":
-            return "GBP" # Potential GBp issue, but assume GBP for FX lookup for now
+            return "GBP"
         if suffix in ["TO", "V", "CN"]:
             return "CAD"
         if suffix in ["SW", "S"]:
@@ -271,47 +246,32 @@ def get_currency_for_ticker(ticker: str) -> str:
         
         # Map ISIN country codes to currencies
         isin_currency_map = {
-            # Eurozone countries
+            # Eurozone
             "AT": "EUR", "BE": "EUR", "CY": "EUR", "DE": "EUR", "EE": "EUR",
             "ES": "EUR", "FI": "EUR", "FR": "EUR", "GR": "EUR", "IE": "EUR",
             "IT": "EUR", "LT": "EUR", "LU": "EUR", "LV": "EUR", "MT": "EUR",
             "NL": "EUR", "PT": "EUR", "SI": "EUR", "SK": "EUR",
             
-            # Other European countries
-            "DK": "DKK",  # Denmark
-            "NO": "NOK",  # Norway
-            "SE": "SEK",  # Sweden
-            "CH": "CHF",  # Switzerland
-            "GB": "GBP",  # United Kingdom
-            "PL": "PLN",  # Poland
+            # Europe
+            "DK": "DKK", "NO": "NOK", "SE": "SEK", "CH": "CHF", 
+            "GB": "GBP", "PL": "PLN",
             
             # Americas
-            "US": "USD",  # United States
-            "CA": "CAD",  # Canada
-            "BR": "BRL",  # Brazil
+            "US": "USD", "CA": "CAD", "BR": "BRL",
             
             # Asia-Pacific
-            "JP": "JPY",  # Japan
-            "HK": "HKD",  # Hong Kong
-            "CN": "CNY",  # China
-            "AU": "AUD",  # Australia
-            "NZ": "NZD",  # New Zealand
-            "SG": "SGD",  # Singapore
-            "KR": "KRW",  # South Korea
-            "IN": "INR",  # India
+            "JP": "JPY", "HK": "HKD", "CN": "CNY", "AU": "AUD", 
+            "NZ": "NZD", "SG": "SGD", "KR": "KRW", "IN": "INR",
             
             # Others
-            "ZA": "ZAR",  # South Africa
-            "IL": "ILS",  # Israel
-            "TR": "TRY",  # Turkey
-            "KY": "USD",  # Cayman Islands (typically USD)
+            "ZA": "ZAR", "IL": "ILS", "TR": "TRY", "KY": "USD"
         }
         
         currency = isin_currency_map.get(country_code)
         if currency:
             return currency
     
-    # 4. Default to USD for US-style tickers (no suffix)
+    # 4. Default to USD for US-style tickers
     return "USD"
 
 
@@ -321,8 +281,8 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     Fetch current FX rate using yfinance with robust fallbacks.
     
     Args:
-        from_currency: Source currency code (e.g., 'USD')
-        to_currency: Target currency code (default: 'EUR')
+        from_currency: Source currency code
+        to_currency: Target currency code
     
     Returns:
         Exchange rate as Decimal. Uses fallback if fetch fails.
@@ -333,7 +293,7 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     # 0. Define Fallbacks (updated 2024/2025)
     fallback_rates = {
         "DKK": {"EUR": 0.1341},
-        "USD": {"EUR": 0.95},  # Updated from 0.92
+        "USD": {"EUR": 0.95},
         "GBP": {"EUR": 1.18},
         "CHF": {"EUR": 1.06},
         "SEK": {"EUR": 0.088},
@@ -343,7 +303,7 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     }
     
     try:
-        # 1. Try SQLite Cache first (persistence across Streamlit re-runs)
+        # 1. Try SQLite Cache first
         from services.market_cache import get_market_cache
         cache = get_market_cache()
         cached_val = cache.get_fx_rate(from_currency, to_currency, date.today())
@@ -362,7 +322,6 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
         
         # Validate rate
         if rate is not None:
-            # Suspicious check: if currencies differ but rate is EXACTLY 1.0, it's likely a data error
             if abs(rate - 1.0) < 0.0001 and from_currency != to_currency:
                 logger.warning(f"FX Rate for {fx_ticker} returned 1.0, treating as invalid.")
                 rate = None
@@ -374,16 +333,15 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
 
     except Exception as e:
         logger.error(f"Error fetching FX rate {from_currency}/{to_currency}: {e}")
-        # Continue to fallback
     
-    # 3. Fallback Logic (Executes if rate is None OR Exception occurred)
+    # 3. Fallback Logic
     if from_currency in fallback_rates and to_currency in fallback_rates[from_currency]:
         fallback = fallback_rates[from_currency][to_currency]
-        logger.warning(f"Using HARDCODED fallback FX rate for {from_currency}/{to_currency}: {fallback}")
+        logger.warning(f"Using hardcoded fallback FX rate for {from_currency}/{to_currency}: {fallback}")
         return Decimal(str(fallback))
     
-    # 4. Final Fallback (Unfortunate 1:1)
-    logger.warning(f"Could not fetch FX rate for {from_currency}/{to_currency} and no fallback found. Using 1.0")
+    # 4. Final Fallback (1:1)
+    logger.warning(f"Could not fetch FX rate for {from_currency}/{to_currency}. Using 1.0")
     return Decimal(1)
 
 
@@ -392,11 +350,6 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
     """
     Fetch historical closing prices for a list of tickers.
     
-    Args:
-        tickers: List of ticker symbols
-        start_date: Start date
-        end_date: End date
-        
     Returns:
         DataFrame with Date index and Ticker columns containing Close prices.
         Forward filled to handle missing days/weekends.
@@ -408,12 +361,6 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
     
     # Resolve ISINs
     from services.market_cache import get_market_cache
-    
-    # Resolve ISINs first
-    mapped_tickers = []
-    ticker_map = {}
-    
-    # Import locally to avoid circular imports if any
     from services.isin_resolver import ISINResolver
     
     # Batch resolve all tickers
@@ -427,24 +374,21 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
         mapped_tickers.append(mapped)
         ticker_map[mapped] = t
         
-    unique_mapped = list(set(mapped_tickers))
-    
-    # 1. Check Cache
+    # Check Cache
     cache = get_market_cache()
     
-    # Query cache using original tickers (since that's how we store them)
+    # Query cache using original tickers
     cached_df = cache.get_historical_prices(tickers, start_date, end_date)
     
     tickers_to_fetch = []
     valid_cached_tickers = []
     
-    # Check staleness/missing
-    cutoff_date = pd.Timestamp(end_date) - pd.Timedelta(days=3)  # Re-fetch if older than 3 days
+    # Check staleness/missing. Re-fetch if older than 3 days.
+    cutoff_date = pd.Timestamp(end_date) - pd.Timedelta(days=3)
     
     if not cached_df.empty:
         for t in tickers:
             if t in cached_df.columns:
-                # Check lateness
                 last_valid = cached_df[t].last_valid_index()
                 if last_valid and last_valid >= cutoff_date:
                     valid_cached_tickers.append(t)
@@ -460,17 +404,14 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
     fetched_df = pd.DataFrame()
     
     if tickers_to_fetch:
-        # Map these specific tickers
         fetch_mapped = []
         fetch_map = {} # mapped -> original
         for t in tickers_to_fetch:
-            # Use the pre-calculated batch_map
             mapped = batch_map.get(t, t)
             fetch_mapped.append(mapped)
             fetch_map[mapped] = t
             
         try:
-            # Fetch data
             data = yf.download(
                 fetch_mapped,
                 start=start_date,
@@ -482,10 +423,7 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
                 progress=False
             )
             
-            # Process result
             fetched_data = {}
-            
-            # Prepare for batch cache update
             cache_updates = []
             
             if len(fetch_mapped) == 1:
@@ -495,7 +433,6 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
                     series = data['Close']
                     fetched_data[original] = series
                     
-                    # Prepare cache data
                     for dt, price in series.items():
                         if pd.notna(price):
                             cache_updates.append((original, dt.date(), float(price), 'yfinance'))
@@ -508,7 +445,6 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
                         series = data[mapped]['Close']
                         fetched_data[original] = series
                         
-                        # Prepare cache data
                         for dt, price in series.items():
                             if pd.notna(price):
                                 cache_updates.append((original, dt.date(), float(price), 'yfinance'))
@@ -526,35 +462,25 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
             logger.error(f"Failed to fetch historical prices: {e}")
             
     # Combine Cached and Fetched
-    # We prioritize Fetched (newer) over Cached if overlap
-    
     final_df = pd.DataFrame()
     
-    # Start with cached data for valid tickers
     if not cached_df.empty:
-        # Only keep valid columns
         valid_cols = [c for c in cached_df.columns if c in valid_cached_tickers]
         if valid_cols:
             final_df = cached_df[valid_cols].copy()
     
-    # Combine with fetched
     if not fetched_df.empty:
-        # If final_df is empty, just use fetched
         if final_df.empty:
             final_df = fetched_df
         else:
-            # Combine/update
             final_df = final_df.combine_first(fetched_df)
-            # Or distinct update?
-            # We want to overwrite with fetched_df where it exists
             final_df.update(fetched_df)
             
-            # Add any new columns that weren't in final_df
             new_cols = [c for c in fetched_df.columns if c not in final_df.columns]
             if new_cols:
                 final_df = pd.concat([final_df, fetched_df[new_cols]], axis=1)
 
-    # Normalize Index to remove timezones (ensure Naive) for consistent split comparison
+    # Normalize Index
     if not final_df.empty:
         try:
             if final_df.index.tz is not None:
@@ -563,36 +489,22 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
         except Exception as e:
             logger.warning(f"Failed to normalize index: {e}")
 
-    # ----------------------------------------------------
-    # CRITICAL: Apply Split Adjustments to Price History
-    # ----------------------------------------------------
-    # Since transactions are back-adjusted (shares increased in the past),
-    # price history must also be back-adjusted (prices decreased in the past).
-    # We use CorporateActionService to get verified/blacklisted splits.
-    
+    # Apply Split Adjustments to Price History
+    # Since transactions are back-adjusted, price history must also be back-adjusted.
     try:
-        # Import inside function to avoid potential circular initializations
         from services.corporate_actions import CorporateActionService
         
-        # Apply only to columns in final_df
         for ticker in final_df.columns:
-            # Get split history using same logic as transaction adjustment
             splits = CorporateActionService.get_cached_splits(ticker)
             
             if splits:
                 price_series = final_df[ticker]
                 series_modified = False
                 
-                # Sort splits by date descending (latest first)
-                # But for back-adjustment, we iterate through all splits.
-                # Logic: If split happened on Date S, then ALL prices < Date S
-                # must be divided by the split ratio.
-                
                 for split in splits:
                     try:
                         split_date = pd.Timestamp(split.action_date)
                         
-                        # Handle timezone if index is aware
                         if price_series.index.tz is not None:
                             if split_date.tzinfo is None:
                                 split_date = split_date.tz_localize(price_series.index.tz)
@@ -600,30 +512,19 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
                                 split_date = split_date.tz_convert(price_series.index.tz)
                                 
                         factor = float(split.adjustment_factor)
-                        
-                        logger.debug(f"Checking split for {ticker}: Date={split_date}, Factor={factor}")
-                        
                         mask = price_series.index < split_date
                         if mask.any():
-                            # Apply adjustment
                             final_df.loc[mask, ticker] = final_df.loc[mask, ticker] / factor
                             series_modified = True
-                            logger.info(f"APPLIED SPLIT for {ticker}: Divided prices before {split_date.date()} by {factor}")
-                        else:
-                            logger.debug(f"No prices found before split date {split_date} for {ticker}")
                             
                     except Exception as e:
                         logger.warning(f"Error applying split {split} to {ticker}: {e}")
                 
-                if series_modified:
-                    logger.info(f"Successfully back-adjusted price history for {ticker}")
-                    
     except Exception as e:
         logger.error(f"Failed to apply split adjustments: {e}")
     
     # Standardize result
     if not final_df.empty:
-        # Determine frequency to reindex (daily)
         full_idx = pd.date_range(start=start_date, end=end_date, freq='D')
         final_df = final_df.reindex(full_idx)
         final_df = final_df.ffill().bfill()

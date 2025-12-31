@@ -1,87 +1,109 @@
 # Portfolio Viewer
 
-A high-performance financial analytics dashboard built with Streamlit, designed for precision portfolio tracking, sophisticated performance metrics, and enterprise-grade data handling.
+A high-performance implementation of a portfolio tracking system designed for privacy, precision, and speed. Built with Python and Streamlit, it reconstructs portfolio history chronologically to provide institutional-grade metrics (XIRR, Volatility, Sharpe Ratio, Maximum Drawdown) without relying on external cloud aggregators.
 
-## 📋 Capabilities
+## Overview
 
-### Core Features
-- **Universal Import**: Smart parsing of CSV transaction logs with auto-detection for delimiters, locales (DE/EN), and column mappings.
-- **Multi-Asset Support**: Native handling of Stocks, ETFs, Crypto, and Cash with automated asset type classification.
-- **Foreign Exchange**: Automatic historical FX conversion (USD/EUR/DKK/etc.) for accurate base-currency valuation.
+This application serves as a personal "blind trust" engine, allowing users to visualize and analyze their multi-asset portfolios (Stocks, ETFs, Crypto) securely on their local machine.
 
-### Analytics & Visualization
-- **XIRR Calculation**: Financial industry-standard Money-Weighted Return calculation using the Newton-Raphson method (via `scipy.optimize`).
-- **Performance Attribution**: Interactive visualization of Net Deposits vs. Cost Basis vs. Market Value over configurable timeframes.
-- **Holdings Analysis**: Drilling down into allocation, gains/losses, and tax-lot simulacra.
+**Key Technical Differentiators:**
+*   **Privacy-First Architecture:** No data upload. All processing happens locally on the user's machine.
+*   **O(N) State Reconstruction:** Efficient linear-time algorithm to rebuild portfolio state from transaction logs vs standard O(N²) approaches.
+*   **Institutional Metrics:** Implements Newton-Raphson method for precise XIRR (Money-Weighted Return) calculation.
+*   **Hybrid Caching Layer:** Multi-tiered caching (Memory + SQLite) for market data and FX rates to minimize API latency and handle rate limits.
 
-### Technical Architecture
-- **Incremental Calculation Engine**: Implements an **O(N)** chronological state reconstruction algorithm for instantaneous historical charting, replacing legacy O(N²) methods.
-- **Hybrid Caching**:
-    - **Market Data**: Tiered SQLite caching strategy for high-frequency pricing data.
-    - **Computation**: Memoized transaction processing for sub-second dashboard reloads.
+## Technical Architecture
 
-## 🚀 Quick Start
+The system follows a modular micro-services architecture pattern within a monolithic application:
+
+```mermaid
+graph TD
+    User[CSV Input] -->|Ingest| Parser[Universal Parser]
+    Parser -->|Normalize| Stream[Transaction Stream]
+    Stream -->|Process| Engine[Portfolio Engine]
+    
+    subgraph "Data Services"
+        Market[Market Data Service]
+        FX[FX Rate Service]
+        Actions[Corporate Actions]
+        Cache[(SQLite / Encrypted)]
+    end
+    
+    Market <--> Cache
+    Engine <--> Market
+    Engine <--> FX
+    
+    Engine -->|State| Analytics[Analytics Layer]
+    Analytics -->|Render| UI[Streamlit Front-end]
+```
+
+### Core Components
+
+*   **Portfolio Engine (`calculators/portfolio.py`)**: The kernel of the application. Processes the event stream of transactions (Buys, Sells, Dividends, Splits) to deterministic reconstruction of holdings and cash balances at any point in time.
+*   **Market Data Service (`services/market_data.py`)**: A robust data fetcher that abstract multiple providers (yfinance, etc.). Handles fallback logic, rate limiting, and persistent caching.
+*   **Universal Parser (`parsers/`)**: Heuristic-based CSV parser that auto-detects broker formats and normalizes them into a standard transaction model.
+
+## Features
+
+*   **Precision Tracking**: Handles stock splits, reverse splits, and spin-offs automatically via a dedicated Corporate Action Engine.
+*   **Multi-Currency**: Native handling of assets in USD, EUR, GBP, CHF, etc., with historical spot-rate conversion to base currency.
+*   **Performance Attribution**:
+    *   **XIRR**: True money-weighted return.
+    *   **Absolute Return**: Total gain/loss considering all cash flows.
+    *   **Dividend Yield**: Tracking of income streams separate from capital appreciation.
+*   **Secure Access**: Local authentication module with PBKDF2 hashing and anti-brute force delays.
+
+## Installation & Usage
 
 ### Prerequisites
-- Python 3.9+
-- pip
+*   Python 3.9+
+*   pip
 
-### Installation
+### Setup
 
-1.  **Clone and Install Dependencies**
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/your-repo/portfolio-viewer.git
+    cd portfolio-viewer
+    ```
+
+2.  **Install Dependencies**
     ```bash
     pip install -r requirements.txt
     ```
 
-2.  **Execution**
+3.  **Run Application**
     ```bash
     streamlit run portfolio_viewer.py
     ```
 
-## 📂 Data Ingestion
+### Configuration
 
-The ingestion engine supports flexible CSV schemas. The parser uses fuzzy matching to identify columns.
+Create a `.streamlit/secrets.toml` file for API keys and local security credentials.
 
-**Required Columns:**
-- `Date` (ISO 8601 or local format)
-- `Type` (Buy, Sell, Dividend, TransferIn/Out, etc.)
+```toml
+[passwords]
+app_password_hash = "pbkdf2_sha256$..." # Generated via utils/auth.py
 
-**Recommended Columns:**
-- `Ticker` / `ISIN`
-- `Shares` / `Quantity`
-- `Price` / `Amount`
-- `Total` (Net flux)
-- `Currency` (if non-EUR)
-
-## 🏗️ System Architecture
-
-```mermaid
-graph TD
-    User[User CSV] -->|Upload| Parser[CSV Parser]
-    Parser -->|Normalize| Trans[Transaction Model]
-    Trans -->|Process| Portfolio[Portfolio Engine]
-    
-    subgraph "Data Layer"
-        YF[yfinance API] -->|Fetch| Cache[(SQLite Cache)]
-        Cache -->|Serve| Service[Market Data Service]
-    end
-    
-    Service -->|Prices| Portfolio
-    Portfolio -->|Metrics| UI[Streamlit Dashboard]
+[api]
+# Optional: Fallback API keys for enhanced reliability
+alpha_vantage_key = ""
+finnhub_key = ""
 ```
 
-### Logging & Observability
+## Data Privacy & Security
 
-The application maintains structured, rotating logs in `logs/portfolio_viewer.log` for debugging and audit trails.
+*   **Local Execution**: Transaction data is never sent to any server.
+*   **Encryption**: Optional encryption keys can be configured to encrypt the local SQLite cache.
+*   **Operational Security**: The application is designed to run in an air-gapped or local-only environment if necessary (excluding price fetching).
 
-- **Rotation**: 10MB limit, 5 backups.
-- **Format**: `[TIMESTAMP] [LEVEL] [MODULE] Message`
-- **Performance Tracing**: Operations exceeding 1000ms are flagged with `SLOW` log entries for bottleneck identification.
+## Development
 
-## 🛠️ Development
+To run the test suite:
 
-### Testing
 ```bash
-# Verify integrity of tax logic and calculations
 python -m unittest discover tests
 ```
+
+---
+*Built for the discerning investor who demands ownership of their data.*

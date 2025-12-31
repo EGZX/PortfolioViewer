@@ -1,5 +1,5 @@
 """
-Market Data Cache with SQLite
+Market Data Cache with SQLite.
 
 Stores historical prices, split data, FX rates, and ISIN mappings to minimize API calls.
 """
@@ -49,7 +49,7 @@ class MarketDataCache:
             
             if key:
                 self.fernet = Fernet(key)
-                logger.info("🔒 Cache encryption enabled")
+                logger.info("Cache encryption enabled")
             else:
                 logger.info("Cache encryption disabled (no key found)")
         except Exception as e:
@@ -57,7 +57,7 @@ class MarketDataCache:
     
     def _get_conn(self) -> sqlite3.Connection:
         """Get a configured database connection."""
-        # Timeout increased to 30s to handle concurrent writes from parallel workers
+        # Timeout increased to 30s to handle concurrent writes
         return sqlite3.connect(self.db_path, timeout=30.0)
 
     def _init_db(self):
@@ -240,7 +240,6 @@ class MarketDataCache:
                 df['date'] = pd.to_datetime(df['date'])
                 pivot_df = df.pivot(index='date', columns='ticker', values='price')
                 
-                # Reindex to ensure we cover the requested range (optional, handled by caller mostly)
                 return pivot_df
                 
             except Exception as e:
@@ -290,7 +289,7 @@ class MarketDataCache:
         """Cache split events for a ticker."""
         if not splits:
             return
-
+            
         with self._get_conn() as conn:
             cursor = conn.cursor()
             cursor.executemany(
@@ -412,10 +411,9 @@ class MarketDataCache:
                     csv_content = self.fernet.decrypt(csv_content.encode('utf-8')).decode('utf-8')
                     logger.info("Decrypted transaction data from cache")
                 except Exception as e:
-                    # Could be legacy unencrypted data or wrong key
-                    # Fallback: try return as is if it looks like plain text (not ideal but safe for updates)
+                    # Fallback: try return as is if it looks like plain text
                     if csv_content.strip().startswith(('Date', 'Datum', '"Date"', '"Datum"')):
-                         logger.warning("Loaded plain text cache with encryption key present (legacy data?)")
+                         logger.warning("Loaded plain text cache with encryption key present")
                     else:
                          logger.error(f"Decryption failed: {e}")
                          return None

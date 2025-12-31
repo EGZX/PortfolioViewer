@@ -115,29 +115,6 @@ def calculate_absolute_return(
     return absolute_return, return_pct
 
 
-def time_weighted_return(
-    dates: List[datetime],
-    portfolio_values: List[float],
-    external_cash_flows: List[float]
-) -> Optional[float]:
-    """
-    Calculate Time-Weighted Return (TWR) for comparison with XIRR.
-    
-    TWR eliminates the effect of cash flows and measures pure investment performance.
-    This is optional and more complex - not implementing for MVP.
-    
-    Args:
-        dates: List of dates for portfolio snapshots
-        portfolio_values: Portfolio value at each date
-        external_cash_flows: External cash flows at each date
-    
-    Returns:
-        Annualized time-weighted return
-    """
-    logger.info("Time-weighted return not yet implemented")
-    return None
-
-
 def calculate_volatility(daily_values: List[float], annualize: bool = True) -> Optional[float]:
     """
     Calculate annualized volatility (standard deviation of daily returns).
@@ -145,36 +122,23 @@ def calculate_volatility(daily_values: List[float], annualize: bool = True) -> O
     if len(daily_values) < 2:
         return None
         
-    # Calculate daily returns: (today - yesterday) / yesterday
-    # Using numpy for speed
     vals = np.array(daily_values)
     
-    # Filter out zero values to avoid division by zero or infinite returns
-    # We only care about days where value > 0 for returns calculation
-    # Or, if value is 0, return is -100% (-1.0) relative to previous, but previous can't be 0
-    
-    # Simple robust approach:
-    # 1. prices/values should generally be positive.
-    # 2. If we have 0s at start, trim them.
-    
-    # Find first non-zero index
+    # Filter out initial zero values
     non_zero_indices = np.nonzero(vals)[0]
     if len(non_zero_indices) < 2:
          return None
          
     vals = vals[non_zero_indices[0]:]
     
-    # Avoid division by zero in diff (if any 0 remains after start, which shouldn't happen in normal portfolio history unless bankruptcy)
     with np.errstate(divide='ignore', invalid='ignore'):
         returns = np.diff(vals) / vals[:-1]
         
-    # clean NaNs or Infs
     returns = returns[~np.isnan(returns) & ~np.isinf(returns)]
     
     if len(returns) < 2:
         return None
     
-    # Standard deviation of returns
     std_dev = np.std(returns)
     
     if annualize:
@@ -202,7 +166,6 @@ def calculate_sharpe_ratio(
         
     vals = np.array(daily_values)
     
-    # Robust returns calculation (same as volatility)
     non_zero_indices = np.nonzero(vals)[0]
     if len(non_zero_indices) < 2:
          return None
@@ -222,11 +185,9 @@ def calculate_sharpe_ratio(
     if std_dev == 0:
         return 0.0
         
-    # Annualize mean return (compounded or simple? Simple for Sharpe usually sufficient for approx)
     # Daily RF rate
     daily_rf = (1 + risk_free_rate) ** (1/252) - 1
     
-    # Sharpe = (Mean Daily Return - Daily RF) / Daily Std Dev * sqrt(252)
     sharpe = (mean_return - daily_rf) / std_dev * np.sqrt(252)
     
     return float(sharpe)
@@ -243,10 +204,6 @@ def calculate_max_drawdown(daily_values: List[float]) -> Optional[float]:
         
     vals = np.array(daily_values)
     
-    # Filter zeros/NaNs same as above? 
-    # Max Drawdown should probably respect the actual path.
-    # But if path starts with 0, "drawdown" is undefined?
-    # Let's use the robust trim.
     non_zero_indices = np.nonzero(vals)[0]
     if len(non_zero_indices) < 2:
          return None
@@ -256,17 +213,14 @@ def calculate_max_drawdown(daily_values: List[float]) -> Optional[float]:
     cumulative_max = np.maximum.accumulate(vals)
     
     # Calculate drawdown at each point
-    # Protect against div by zero if max is 0 (shouldn't be possible with trim, but still)
     with np.errstate(divide='ignore', invalid='ignore'):
         drawdowns = (vals - cumulative_max) / cumulative_max
     
-    # Filter nans/infs
     drawdowns = drawdowns[~np.isnan(drawdowns) & ~np.isinf(drawdowns)]
     
     if len(drawdowns) == 0:
         return 0.0
         
-    # Max Drawdown is the MINIMUM value (most negative) of the drawdown series
     max_dd = np.min(drawdowns)
     
     return float(max_dd)

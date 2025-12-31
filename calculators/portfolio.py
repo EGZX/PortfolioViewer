@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date, timedelta
 from decimal import Decimal, ROUND_HALF_EVEN
 from typing import Dict, List, Optional, Tuple
 import pandas as pd
@@ -11,7 +11,6 @@ from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
 from utils.logging_config import setup_logger
 from services.market_data import get_fx_rate, get_currency_for_ticker
 from services.market_cache import get_market_cache
-from datetime import date, timedelta
 
 logger = setup_logger(__name__)
 
@@ -32,7 +31,7 @@ class Position:
     gain_loss: Decimal = Decimal(0)
     gain_loss_pct: Decimal = Decimal(0)
     currency: str = "EUR"
-    asset_type: 'AssetType' = None  # Will be set from transaction
+    asset_type: 'AssetType' = None
 
     def update_market_value(self, price: Decimal):
         """Update market value based on current price."""
@@ -44,26 +43,26 @@ class Position:
             self.gain_loss = self.market_value
             self.gain_loss_pct = Decimal(0)
 
-class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match original class name
-    """Portfolio state manager.""" # Original docstring
+class Portfolio:
+    """Portfolio state manager."""
     
     def __init__(self, transactions: List[Transaction]):
         self.transactions = sorted(transactions, key=lambda t: t.date)
         self.holdings: Dict[str, Position] = {}  # ticker -> Position
         
-        # NOTE: cash_balance cannot be accurately calculated from transaction history alone
-        # when the CSV only contains partial history. It would need the starting cash balance.
-        # For now, set to 0 and allow manual override via set_cash_balance()
-        self.cash_balance = Decimal(0)  # Will be set manually or from broker data
+        # Cash balance tracking
+        # Accurately determining cash balance requires the full transaction history.
+        # Manual override available via set_cash_balance()
+        self.cash_balance = Decimal(0)
         
-        self.total_invested = Decimal(0) # Kept original attribute name
-        self.total_withdrawn = Decimal(0) # Kept original attribute name
-        self.total_dividends = Decimal(0) # Kept original attribute name
-        self.total_fees = Decimal(0) # Kept original attribute name
-        self.total_interest = Decimal(0)  # New: Track total interest
-        self.invested_capital = Decimal(0) # New attribute from the provided code
-        self.realized_gains = Decimal(0)  # Track realized gains from selling
-        self.cash_flows = []  # List of (date, amount) for XIRR # New attribute from the provided code
+        self.total_invested = Decimal(0)
+        self.total_withdrawn = Decimal(0)
+        self.total_dividends = Decimal(0)
+        self.total_fees = Decimal(0)
+        self.total_interest = Decimal(0)
+        self.invested_capital = Decimal(0)
+        self.realized_gains = Decimal(0)
+        self.cash_flows = []  # List of (date, amount) for XIRR
         
         self._reconstruct_state()
     
@@ -86,8 +85,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 should_update_cash = False
         
         # Cash balance tracking rules:
-        # Only track for specific brokers (Scalable Capital, Trade Republic)
-        # Exclude crypto assets regardless of broker
+        # Only track for specific brokers and exclude crypto assets
         tracks_cash = (
             t.broker 
             and t.broker in CASH_TRACKING_BROKERS 
@@ -95,34 +93,14 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         )
 
         if should_update_cash and tracks_cash:
-            # For TRANSFER_OUT, the total is positive (money leaving portfolio)
-            # So we need to SUBTRACT it
+            # Transfer Out generally represents money leaving the portfolio
             if t.type == TransactionType.TRANSFER_OUT and (not t.ticker or t.ticker.strip() == ''):
-                self.cash_balance -= abs(amount_eur)  # Subtract withdrawals
+                self.cash_balance -= abs(amount_eur)
             else:
-                self.cash_balance += amount_eur  # Add all other cash transactions
+                self.cash_balance += amount_eur
         
         # Track cash flows for XIRR
-        # Inflows (Buys) are negative for wallet, but positive investment flow? 
-        # XIRR expects: Dates, Amounts. 
-        # Deposit/Buy: Negative (cash out of pocket)
-        # Withdraw/Sell: Positive (cash into pocket)
-        # BUT: For Portfolio XIRR, we usually track transfer IN/OUT as external flows.
-        # Buys/Sells are internal if we track cash account.
-        
-        # If we assume the Portfolio includes Cash:
-        # Transfer In -> Cash Increases (Negative Flow for XIRR? No, usually Transfer In is synonymous with Deposit)
-        # Standard XIRR:
-        # - Deposit: Negative (money left me to go to port)
-        # - Withdraw: Positive (money came back)
-        # - Current Value: Positive (theoretical withdrawal)
-        
-        # Logic:
-        # t.total is change in CASH balance.
-        # Buy: total < 0. Cash goes down. Stock goes up. Internal swap?
-        # If we track the WHOLE portfolio (Cash + Stock), Buys are neutral.
-        # ONLY TransferIn/TransferOut affects the "External" flows.
-        
+        # Inflows (Buys) are negative for wallet.
         if t.type == TransactionType.TRANSFER_IN:
             # TRANSFER_IN can be cash deposit OR stock transfer
             # Only count CASH deposits towards invested_capital
@@ -131,30 +109,26 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 self.cash_flows.append((t.date, -amount_eur))
                 self.invested_capital += amount_eur
                 self.total_invested += abs(amount_eur)
-            # else: Stock transfer - doesn't affect invested_capital
             
         elif t.type == TransactionType.TRANSFER_OUT:
             # TRANSFER_OUT can be cash withdrawal OR stock transfer
             # Only count CASH withdrawals towards invested_capital
             if not t.ticker or t.ticker.strip() == '':
                 # Cash-only transfer = actual withdrawal
-                # TRANSFER_OUT has POSITIVE value in CSV (money out)
-                # So we SUBTRACT it from invested_capital
                 self.cash_flows.append((t.date, abs(amount_eur)))  # Positive for XIRR (money returned)
-                self.invested_capital -= abs(amount_eur)  # SUBTRACT withdrawals
+                self.invested_capital -= abs(amount_eur)
                 self.total_withdrawn += abs(amount_eur)
-            # else: Stock transfer - doesn't affect invested_capital
         
         elif t.type == TransactionType.DEPOSIT:
             # Cash deposit (similar to TRANSFER_IN)
-            self.cash_flows.append((t.date, -amount_eur))  # Negative (investment)
+            self.cash_flows.append((t.date, -amount_eur))
             self.invested_capital += amount_eur
             self.total_invested += abs(amount_eur)
         
         elif t.type == TransactionType.WITHDRAWAL:
             # Cash withdrawal (similar to TRANSFER_OUT)
-            self.cash_flows.append((t.date, abs(amount_eur)))  # Positive (return)
-            self.invested_capital += amount_eur  # amount_eur is negative
+            self.cash_flows.append((t.date, abs(amount_eur)))
+            self.invested_capital += amount_eur
             self.total_withdrawn += abs(amount_eur)
         
         # Update holdings for transactions with tickers
@@ -180,28 +154,20 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 if inferred_type:
                     pos.asset_type = inferred_type
                 else:
-                    # Fallback to ticker-based inference
                     pos.asset_type = AssetType.infer_from_ticker(t.ticker)
             
-            # INCREASE POSITION
+            # Increase Position
             if t.type in [TransactionType.BUY, TransactionType.TRANSFER_IN, TransactionType.STOCK_DIVIDEND]:
                 pos.shares += t.shares
                 
-                # For transfers, we assume cost basis increases by the value transferred (if provided)
-                # t.total is negative for outflows (Buys), but for TransferIn it depends on sign convention.
-                # Standard: TransferIn is "Money In", total > 0. But stock value?
-                # Usually TransferIn comes with a cost basis or market value.
-                # If t.total is the Value, it increases cost basis.
-                # Logic: cost_basis += abs(amount_eur)
-                # But wait, earlier we subtract amount_eur for BUYS (because amount is negative).
-                # Let's trust absolute value for cost basis increment.
+                # For transfers, assume cost basis increases by the value transferred
                 amt = abs(amount_eur)
                 if t.type == TransactionType.STOCK_DIVIDEND:
-                    amt = 0 # Usually 0 cost
+                    amt = 0
                 
                 pos.cost_basis += amt
                 
-            # DECREASE POSITION
+            # Decrease Position
             elif t.type in [TransactionType.SELL, TransactionType.TRANSFER_OUT]:
                 if pos.shares > 0:
                     # Pro-rata reduce cost basis
@@ -213,13 +179,12 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                     pos.cost_basis -= sold_cost
                     
                     # Track realized gain from CSV (for SELL transactions)
-                    # The CSV already has the correct realized gain calculated
                     if t.type == TransactionType.SELL and t.realized_gain != 0:
                         self.realized_gains += t.realized_gain
                 
                 pos.shares -= t.shares
                 
-                # CRITICAL: Cap to prevent negative holdings
+                # Prevent negative holdings
                 if pos.shares < 0:
                     logger.warning(
                         f"{t.ticker}: Selling/Transferring more shares than owned! "
@@ -239,7 +204,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 # Add to XIRR cash flows (negative = cost to investor)
                 self.cash_flows.append((t.date, -abs(amount_eur)))
 
-        # Handle Interest (often has no ticker, so handled outside the ticker block)
+        # Handle Interest
         if t.type == TransactionType.INTEREST:
             self.total_interest += abs(amount_eur)
             # Add to XIRR cash flows (positive = return to investor)
@@ -254,8 +219,6 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         
         if self.transactions:
             logger.debug("First 5 transactions preview:")
-            logger.debug(f"{'Date':<12} | {'Type':<15} | {'Ticker':<12} | {'Shares':<10} | {'Total'}")
-            logger.debug("-" * 65)
             for t in self.transactions[:5]:
                 t_ticker = t.ticker if t.ticker else "N/A"
                 logger.debug(f"{t.date.date() if hasattr(t.date, 'date') else t.date} | {t.type.value:<15} | {t_ticker:<12} | {t.shares:<10.4f} | {t.total:.2f}")
@@ -263,17 +226,8 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         for t in self.transactions:
             self.process_transaction(t)
             
-        # Filter out closed positions (0 shares)
-        # But first log the pre-filter state for debugging
-        logger.debug(f"Pre-filter holdings: {len(self.holdings)}")
-        
-        if len(self.holdings) > 0:
-            logger.debug("Sample holdings state (before filtering 0-share positions):")
-            for ticker, h in list(self.holdings.items())[:10]:
-                 logger.debug(f"  {ticker}: Shares={h.shares}, Cost={h.cost_basis:.2f}")
-
-        # Actually remove closed positions from self.holdings for cleaner interface
-        # We keep them in history/performance calc, but for "Current Holdings" display they are noise
+        # Filter out closed positions (0 shares) for cleaner interface
+        # We keep them in history/performance calc, but for "Current Holdings" display they are not needed
         self.holdings = {k: v for k, v in self.holdings.items() if abs(v.shares) > 0.000001}
         
         logger.info(f"Portfolio state rebuilt: {len(self.holdings)} holdings active.")
@@ -291,7 +245,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             if price is not None:
                 pos.update_market_value(Decimal(str(price)))
             
-            # Convert to EUR based on PRICE SOURCE currency (not position currency)
+            # Convert to EUR based on Price Source currency
             price_currency = get_currency_for_ticker(ticker)
             
             position_val_eur = pos.market_value
@@ -302,10 +256,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 
             holdings_value += position_val_eur
         
-        # Use cash_balance calculated from all cash-affecting transactions
         total = holdings_value + self.cash_balance
-        logger.debug(f"Total value calculated (holdings + cash)")
-        
         return total
     
     def calculate_performance_history_optimized(
@@ -377,7 +328,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 # Calculate Value
                 daily_prices = price_lookup.get(current_date, {})
                 
-                # Convert the dataframe row dict (which replaces nans with NaNs) to optional floats
+                # Convert the dataframe row dict to optional floats
                 clean_prices = {
                     k: float(v) if pd.notna(v) else None 
                     for k, v in daily_prices.items()
@@ -400,9 +351,8 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         data = []
         
         for ticker, pos in self.holdings.items():
-            # CRITICAL FIX: Skip positions with zero or negative shares
+            # Skip positions with zero or negative shares
             if pos.shares <= 0:
-                logger.debug(f"Skipping {ticker} with {pos.shares} shares (fully sold)")
                 continue
             
             # Determine the currency of the price
@@ -410,12 +360,11 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             
             # Get current price
             current_price = prices.get(ticker)
-            price_source = "live"
             
             if current_price is not None:
                 pos.update_market_value(Decimal(str(current_price)))
             else:
-                # FALLBACK 1: Try to get last cached price
+                # Fallback 1: Try to get last cached price
                 try:
                     cache = get_market_cache()
                     
@@ -426,18 +375,16 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                         if cached_price:
                             current_price = cached_price
                             pos.update_market_value(Decimal(str(current_price)))
-                            price_source = f"cached_{check_date}"
                             logger.warning(f"{ticker}: Using cached price from {check_date} ({cached_price:.2f} {price_currency})")
                             break
                 except Exception as e:
                     logger.error(f"Failed to get cached price for {ticker}: {e}")
                 
-                # FALLBACK 2: If still no price, use average cost as price
+                # Fallback 2: If still no price, use average cost as price
                 if current_price is None:
                     avg_cost_per_share = pos.cost_basis / pos.shares if pos.shares > 0 else Decimal(0)
                     current_price = float(avg_cost_per_share)
                     pos.update_market_value(avg_cost_per_share)
-                    price_source = "cost_basis"
                     price_currency = "EUR"  # Cost basis is always in EUR
                     logger.warning(f"{ticker}: No price found, using average cost basis ({current_price:.2f} EUR)")
 
@@ -446,10 +393,10 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             if price_currency != "EUR" and current_price:
                 try:
                     fx_rate = get_fx_rate(price_currency, "EUR")
-                    current_price_eur = current_price * float(fx_rate)  # Convert Decimal to float
+                    current_price_eur = current_price * float(fx_rate)
                 except Exception as e:
                     logger.error(f"Failed to get FX rate for {price_currency}/EUR: {e}")
-                    current_price_eur = current_price  # Fallback to original
+                    current_price_eur = current_price
             
             # Calculate market value in EUR
             market_value_eur = float(pos.shares) * current_price_eur
@@ -481,7 +428,7 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
             df['Allocation %'] = (df['Market Value (EUR)'] / total_portfolio_value * 100)
             
             df = df.sort_values('Market Value (EUR)', ascending=False)
-            # Reorder columns - add Allocation % after Market Value
+            # Reorder columns
             cols = ['Ticker', 'Name', 'Asset Type', 'Shares', 'Avg Cost (EUR)', 
                     'Current Price (EUR)', 'Market Value (EUR)', 'Allocation %', 
                     'Gain/Loss (EUR)', 'Gain %']
@@ -493,18 +440,11 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         """
         Prepare cash flows for XIRR calculation.
         
-        CRITICAL: Only includes EXTERNAL cash flows (TRANSFER_IN/OUT, DIVIDEND, INTEREST, COST)
+        Only includes EXTERNAL cash flows (TRANSFER_IN/OUT, DIVIDEND, INTEREST, COST).
         Excludes internal position changes (BUY/SELL) as those are portfolio rebalancing.
         
-        Returns: (dates, amounts) where amounts are negative for investments, positive for returns
+        Returns: (dates, amounts) where amounts are negative for investments, positive for returns.
         """
-        # Cash flows are already tracked in self.cash_flows during process_transaction
-        # They follow the correct sign convention:
-        # - TRANSFER_IN, DEPOSIT: Negative (money invested)
-        # - TRANSFER_OUT, WITHDRAWAL: Positive (money withdrawn)
-        # - DIVIDEND, INTEREST: Positive (return to investor)
-        # - COST: Negative (money out)
-        
         # Aggregate by date (using timezone-aware datetime)
         aggregated: Dict[datetime, Decimal] = defaultdict(Decimal)
         
@@ -522,7 +462,5 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         sorted_flows = sorted(aggregated.items())
         dates = [datetime.combine(d, datetime.min.time(), tzinfo=timezone.utc) for d, _ in sorted_flows]
         amounts = [float(amt) for _, amt in sorted_flows]
-        
-        logger.info(f"XIRR cash flows prepared: {len(dates)} dates")
         
         return dates, amounts
