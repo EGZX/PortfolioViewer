@@ -15,10 +15,10 @@ import pandas as pd
 import textwrap
 
 from parsers.csv_parser import CSVParser
-from parsers.enhanced_transaction import Transaction  # Import enhanced model
+from parsers.enhanced_transaction import Transaction, AssetType  # Import enhanced model
 from calculators.portfolio import Portfolio
 from calculators.metrics import xirr, calculate_absolute_return, calculate_volatility, calculate_sharpe_ratio, calculate_max_drawdown
-from services.market_data import fetch_prices, fetch_historical_prices
+from services.market_data import fetch_prices, fetch_historical_prices, get_currency_for_ticker, get_fx_rate
 from services.corporate_actions import CorporateActionService
 from services.fx_rates import FXRateService
 from services.data_validator import DataValidator, ValidationIssue  # Data quality
@@ -798,6 +798,27 @@ def main():
         try:
             current_value = portfolio.calculate_total_value(prices)
             
+            # CRITICAL: Re-calculate Net Worth with proper FX conversion for display
+            # (The portfolio.calculate_total_value uses raw prices to prevent history spikes)
+            corrected_net_worth = Decimal(0)
+            for h in portfolio.holdings.values():
+                if h.shares > 0:
+                    val = h.market_value
+                    curr = get_currency_for_ticker(h.ticker)
+                    if curr != "EUR":
+                        try:
+                            rate = get_fx_rate(curr, "EUR")
+                            val = val * Decimal(str(rate))
+                        except Exception:
+                            pass
+                    corrected_net_worth += val
+            
+            # Add cash balance
+            corrected_net_worth += portfolio.cash_balance
+            
+            # Update current_value to use the FX-adjusted total for the KPI
+            current_value = corrected_net_worth
+            
             # XIRR calculation
             dates, amounts = portfolio.get_cash_flows_for_xirr(current_value)
             xirr_value = xirr(dates, amounts)
@@ -881,11 +902,12 @@ def main():
     
     # ==================== DASHBOARD CHARTS ====================
     # Container tile for charts
-    with st.container(border=True):
-        # Layout: Chart + Allocation (2 Columns)
-        col1, col2 = st.columns([2, 1])
-        
-        with col1:
+    # ==================== DASHBOARD CHARTS ====================
+    # Split Layout: Two separate tiles for cleaner visual distinction
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        with st.container(border=True):
             # 1. Get Timeframe from Session State (default to 'All')
             current_tf = st.session_state.get("performance_timeframe", "All")
 
@@ -910,7 +932,7 @@ def main():
             else:
                  d_dates, d_deposits, d_values, d_basis = dates, net_deposits, portfolio_values, cost_basis_values
 
-            # 3. Render Chart FIRST (aligned with top of Allocation chart)
+            # 3. Render Chart
             chart_fig = create_performance_chart(
                 d_dates, d_deposits, d_values, d_basis, 
                 title="Performance History",
@@ -918,34 +940,47 @@ def main():
             )
             st.plotly_chart(chart_fig, width='stretch')
             
-            # 4. Render Timeframe Selector BELOW Chart
+            # 4. Render Timeframe Selector
             selected_tf = st.selectbox(
                 "Timeframe",
                 options=["1M", "3M", "6M", "1Y", "All"],
                 index=4, 
                 key="performance_timeframe",
-                label_visibility="visible" # Label visible per request
+                label_visibility="visible"
             )
             
-            # Force rerun if changed to update chart immediately
+            # Force rerun if changed
             if selected_tf != current_tf:
                 st.rerun()
 
-        with col2:
-            holdings_df = pd.DataFrame([
-                {
-                    'Ticker': h.ticker, 
-                    'Name': h.name, 
-                    'Market Value (EUR)': h.market_value, 
-                    'Quantity': h.shares
-                } 
-                for h in portfolio.holdings.values() 
-                if h.market_value > 0
-            ])
+    with col2:
+        with st.container(border=True):
+            # Filter OUT Cash and Apply FX Conversion for accurate allocation
+            allocation_data = []
+            for h in portfolio.holdings.values():
+                if h.market_value > 0 and h.asset_type != AssetType.CASH:
+                    # Convert to EUR using current FX rate
+                    val_eur = h.market_value
+                    currency = get_currency_for_ticker(h.ticker)
+                    if currency != "EUR":
+                         try:
+                             rate = get_fx_rate(currency, "EUR")
+                             val_eur = val_eur * Decimal(str(rate))
+                         except Exception:
+                             pass # Keep original if fails
+                    
+                    allocation_data.append({
+                        'Ticker': h.ticker, 
+                        'Name': h.name, 
+                        'Market Value (EUR)': float(val_eur), 
+                        'Quantity': h.shares
+                    })
+            
+            holdings_df = pd.DataFrame(allocation_data)
             
             donut_fig = create_allocation_donut(
                 holdings_df, 
-                title="Portfolio Allocation",
+                title="Asset Allocation", 
                 privacy_mode=st.session_state.privacy_mode
             )
             st.plotly_chart(donut_fig, width='stretch')
