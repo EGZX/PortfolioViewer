@@ -30,7 +30,7 @@ from services.market_cache import get_market_cache
 logger = setup_logger(__name__)
 
 
-@st.cache_data(show_spinner="🔄 Processing portfolio data...", ttl=3600)
+@st.cache_data(show_spinner="Loading chart data...", ttl=3600)
 def process_data_pipeline(file_content: str):
     """
     Process CSV content into enriched transactions with caching.
@@ -87,12 +87,10 @@ def process_data_pipeline(file_content: str):
                     trans.fx_rate = historical_rate
                     fx_conversions += 1
         
-        # 4. Validation
-        validator = DataValidator()
-        validation_issues = validator.validate_all(transactions)
-        val_summary = validator.get_summary()
+        # Validation moved OUT of cached function to avoid pickling errors
+        # (ValidationIssue objects were likely causing serialization failures)
         
-        return transactions, split_log, fx_conversions, (validation_issues, val_summary)
+        return transactions, split_log, fx_conversions
         
     except Exception as e:
         logger.error(f"Pipeline processing error: {e}", exc_info=True)
@@ -137,31 +135,56 @@ st.set_page_config(
 )
 
 # Custom CSS - Cyber-Fintech Professional
+# Custom CSS - Cyber-Fintech Professional
 st.markdown("""
 <style>
-    /* Import Professional Fonts */
+    /* Import Professional Fonts - RESTORED */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    
+    /* Main Container Padding Override */
+    .block-container {
+        padding-top: 5rem !important; /* Force space below hamburger menu/running man */
+        padding-bottom: 3rem !important;
+    }
     
     /* Design Tokens - Deep Space / FinTech */
     :root {
-        --bg-color: #0b0e11;        /* Ultra dark slate */
-        --sidebar-bg: #15191e;      /* Distinct sidebar */
-        --card-bg: #1e2329;         /* Lighter card */
-        --card-border: #2b313a;     /* Subtle border */
-        --text-primary: #e6e6e6;
-        --text-secondary: #8b949e;
-        --accent-primary: #3b82f6;  /* Professional Blue */
-        --accent-glow: rgba(59, 130, 246, 0.4);
-        --accent-secondary: #6366f1; /* Indigo */
-        --glass-bg: rgba(30, 35, 41, 0.7);
+        --bg-color: #0d1117;        /* Deep Space Blue */
+        --sidebar-bg: #161b22;      /* Slate Blue Dark */
+        --card-bg: rgba(22, 27, 34, 0.75); /* Semi-transparent blue-grey */
+        --card-border: rgba(48, 54, 61, 0.8);     /* Subtle structural border */
+        --text-primary: #f0f6fc;    /* High-contrast white/blue tint */
+        --text-secondary: #8b949e;  /* HUD dimmed text */
+        --accent-primary: #3b82f6;  /* System Blue */
+        --accent-glow: rgba(59, 130, 246, 0.25); /* Subtle bloom */
+        --accent-secondary: #6366f1; 
+        --glass-bg: rgba(30, 35, 41, 0.7); /* Restored Glass */
     }
     
     /* Global App Styling with Radial Gradient */
     .stApp {
         background-color: var(--bg-color);
-        background-image: radial-gradient(circle at 50% 0%, #1f2937 0%, #0b0e11 75%);
+        /* Richer blue-black gradient for depth */
+        background-image: radial-gradient(circle at 50% -20%, #1e293b 0%, #0d1117 80%);
         color: var(--text-primary);
         font-family: 'Inter', sans-serif;
+    }
+
+    /* Custom Scrollbar for Cyberpunk Immersion */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--bg-color);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #30363d;
+        border-radius: 5px;
+        border: 2px solid var(--bg-color);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #58a6ff; /* Accent color on hover */
     }
     
     /* Cyber-Tech Headers */
@@ -193,18 +216,24 @@ st.markdown("""
     /* Removed the blue square decoration */
 
     /* Section Headers */
-    h3 {
+    /* Section Headers */
+    h1, h2, h3 {
         font-family: 'JetBrains Mono', monospace !important;
-        font-size: 1.1rem !important;
-        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: -0.02em !important;
+    }
+    
+    h3 {
+        font-size: 1.0rem !important;
+        font-weight: 700 !important;
         color: var(--text-primary) !important;
-        border-left: 4px solid var(--accent-primary);
-        padding-left: 50px; /* Fixed: Greatly increased separation */
+        border-left: 3px solid var(--accent-primary);
+        padding-left: 12px;
         margin-top: 2rem !important;
         margin-bottom: 1.5rem !important;
-        background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
-        padding-top: 8px;
-        padding-bottom: 8px;
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+        padding-top: 6px;
+        padding-bottom: 6px;
     }
     
     /* CUSTOM CYBER METRIC CARD CSS */
@@ -301,13 +330,14 @@ st.markdown("""
     
     /* NEW KPI DASHBOARD STYLES */
     .kpi-board {
-        background-color: rgba(22, 27, 34, 0.5); 
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--card-border);
-        border-radius: 4px;
+        background-color: rgba(13, 17, 23, 0.7); /* Glassy Blue-Black */
+        backdrop-filter: blur(12px); /* Dynamic Blur */
+        border: 1px solid rgba(59, 130, 246, 0.15); /* Subtle Blue Border */
+        border-radius: 6px; 
         padding: 1.5rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Subtle shadow */
-        margin-bottom: 1rem; /* Standardized Gap */
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2); /* Soft depth */
+        margin-bottom: 2rem; 
+        margin-top: 1rem; 
     }
     
     .kpi-header {
@@ -362,10 +392,11 @@ st.markdown("""
     
     .kpi-value {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 1.15rem; /* Reduced from 1.4rem */
+        font-size: 1.15rem;
         font-weight: 700;
-        color: var(--text-primary);
+        color: #ffffff; /* Absolute White for data */
         line-height: 1;
+        letter-spacing: -0.02em;
     }
     
     /* Make Abs Gain (2nd item) stand out if needed, or all equal */
@@ -379,7 +410,7 @@ st.markdown("""
     }
     
     [data-testid="stSidebar"] .block-container {
-        padding-top: 2rem;
+        padding-top: 3rem; /* Increased top padding matching main */
         padding-left: 1rem;
         padding-right: 1rem;
     }
@@ -395,14 +426,35 @@ st.markdown("""
     }
     
     [data-testid="stSidebar"] h3 {
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-top: 1.5rem !important;
-        margin-bottom: 0.75rem !important;
+        letter-spacing: 0.2em;
+        margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
         padding-left: 0 !important;
         border-left: none !important;
-        color: var(--text-secondary) !important;
+        color: #7d8590 !important; /* Muted tech gray */
+        font-weight: 700 !important;
+    }
+
+    /* Professional Control Surface Inputs */
+    [data-testid="stSidebar"] div[data-baseweb="select"] > div {
+        background-color: #0d1117 !important;
+        border: 1px solid #30363d !important;
+        color: #c9d1d9 !important;
+    }
+    
+    [data-testid="stSidebar"] button {
+        border-color: #30363d !important;
+        background-color: #21262d !important;
+        color: #c9d1d9 !important;
+        font-size: 0.7rem !important;
+    }
+    
+    [data-testid="stSidebar"] button:hover {
+        border-color: #8b949e !important;
+        background-color: #30363d !important;
+        color: #ffffff !important;
     }
     
     /* File Uploader in Sidebar */
@@ -466,25 +518,44 @@ st.markdown("""
     }
     
     /* Buttons usually */
+    /* Primary Buttons (Login, Refresh) */
     .stButton>button {
-        background-color: var(--card-bg);
-        color: var(--accent-primary);
-        border: 1px solid var(--card-border);
+        background-color: #21262d;
+        color: #c9d1d9;
+        border: 1px solid #30363d;
         border-radius: 4px;
         font-family: 'JetBrains Mono', monospace;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 0.75rem;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        transition: all 0.2s;
+        letter-spacing: 0.1em;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         padding: 0.6rem 1rem;
+        box-shadow: 0 1px 0 rgba(27,31,36,0.04);
     }
     
     .stButton>button:hover {
-        background: rgba(59, 130, 246, 0.1);
-        border-color: var(--accent-primary);
-        color: #fff;
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        background-color: #30363d;
+        border-color: #8b949e;
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .stButton>button:active {
+        background-color: #21262d;
+        transform: translateY(0);
+    }
+    
+    /* Primary Action Override (Login) */
+    button[kind="primary"] {
+        background-color: var(--accent-primary) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    
+    button[kind="primary"]:hover {
+        box-shadow: 0 0 15px var(--accent-glow) !important;
     }
     
     /* Toggle Switch Styling */
@@ -499,24 +570,42 @@ st.markdown("""
         font-family: 'JetBrains Mono', monospace;
     }
     
-    .stDataFrame {
-        border: none !important;
-        background-color: transparent !important;
-        box-shadow: none !important;
+    /* Dataframes - Precision Grid */
+    [data-testid="stDataFrame"] {
+        border: 1px solid var(--card-border) !important;
+        border-radius: 4px;
+        background-color: #0d1117 !important; /* Apply background to main wrapper only */
     }
     
     th {
-        background-color: #11151a !important;
-        color: var(--accent-primary) !important;
+        background-color: #161b22 !important;
+        color: var(--text-secondary) !important;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         text-transform: uppercase;
         letter-spacing: 0.1em;
+        border-bottom: 1px solid #30363d !important;
     }
     
     td {
-        color: var(--text-primary) !important;
+        color: #ffffff !important; /* Force White Text */
+        font-family: 'JetBrains Mono', monospace; /* Reverted to Tech Font */
         font-size: 0.8rem;
+        border-bottom: 1px solid #21262d !important;
+    }
+    
+    /* RIGID ALERTS (Terminal Style) */
+    [data-testid="stAlert"] {
+        background-color: #0d1117 !important;
+        border: 1px solid var(--card-border) !important;
+        border-left-width: 4px !important;
+        border-radius: 4px !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-testid="stAlert"] [data-testid="stMarkdownContainer"] {
+         font-family: 'JetBrains Mono', monospace !important;
+         font-size: 0.85rem !important;
     }
     
     /* Chart Containers */
@@ -530,17 +619,23 @@ st.markdown("""
 
     
     /* Container Borders (st.container(border=True)) */
+    /* Container Borders - Instrument Panel Cards */
     [data-testid="stVerticalBlockBorderWrapper"] {
-        border: 1px solid #4b5563 !important;
-        background: linear-gradient(135deg, rgba(17, 24, 39, 0.85), rgba(31, 41, 55, 0.7)) !important;
-        border-radius: 8px !important;
+        border: 1px solid rgba(60, 66, 75, 0.5) !important;
+        background-color: rgba(13, 17, 23, 0.6) !important; /* Semi-transparent */
+        backdrop-filter: blur(8px); /* Subtle blur for dashboard cards */
+        border-radius: 6px !important;
         padding: 1.5rem !important;
-        box-shadow: 
-            0 4px 6px rgba(0,0,0,0.1),
-            0 0 20px rgba(59, 130, 246, 0.05) !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important;
         margin-bottom: 1rem !important;
-        backdrop-filter: blur(8px) !important;
-        transition: all 0.3s ease;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    /* Active Component Border */
+    [data-testid="stVerticalBlockBorderWrapper"]:hover {
+        border-color: rgba(59, 130, 246, 0.4) !important; /* Blue highlight */
+        transform: translateY(-2px); /* Slight lift */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
     }
     
     /* Subtle Hover Effect on Cards */
@@ -693,18 +788,21 @@ def main():
     # Authentication check
     if not check_authentication():
         st.stop()
+        
+    # FLUSH GHOST: Force a rendering update to clear the login screen before processing starts
+    st.markdown('<div id="flush-ghost" style="height:1px; width:1px;"></div>', unsafe_allow_html=True)
     
     show_logout_button()
     
     # Header - Cyber Tech
-    st.markdown('<div class="main-header">PORTFOLIO DASHBOARD</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Financial Analytics & Performance Tracking</div>', unsafe_allow_html=True)
+    # Header - Excised for Data Density
+    # (Vertical space reclaimed)
     
     # ==========================================
     # SIDEBAR: COMPACT & CLEAN
     # ==========================================
     with st.sidebar:
-        st.markdown("### Data Source")
+        st.markdown("### DATA IMPORT")
         
         uploaded_file = st.file_uploader(
             "Import CSV",
@@ -735,8 +833,7 @@ def main():
             file_content = csv_content
             filename = cache_filename
             using_cache = True
-            st.caption(f"Cached: {cache_filename}")
-            st.caption(f"Time: {uploaded_at.strftime('%m-%d %H:%M')}")
+            st.caption(f"Cached: {cache_filename} | {uploaded_at.strftime('%H:%M')}")
         
         if file_content is None:
             st.info("Awaiting Data Import")
@@ -764,7 +861,7 @@ def main():
             except:
                 pass
 
-        st.markdown("### Operations")
+        st.markdown("### OPERATIONS")
         
         # Action Buttons - Clean Text
         col_act1, col_act2 = st.columns(2)
@@ -775,7 +872,7 @@ def main():
                 st.rerun()
                 
         with col_act2:
-             if st.button("CLEAR", use_container_width=True):
+            if st.button("PURGE CACHE", use_container_width=True):
                 cache.clear_cache()
                 st.rerun()
 
@@ -785,7 +882,7 @@ def main():
         if 'privacy_mode' not in st.session_state:
             st.session_state.privacy_mode = False
             
-        privacy_mode = st.toggle("Privacy Mode", value=st.session_state.privacy_mode, help="Hide sensitive financial values")
+        privacy_mode = st.toggle("Privacy Mode", value=st.session_state.privacy_mode)
         if privacy_mode != st.session_state.privacy_mode:
             st.session_state.privacy_mode = privacy_mode
             st.rerun()
@@ -817,8 +914,15 @@ def main():
 
     try:
         if enrich_req or st.session_state.enrichment_done:
-            transactions, split_log, fx_conversions, validation_data = process_data_pipeline(file_content)
+            transactions, split_log, fx_conversions = process_data_pipeline(file_content)
             st.session_state.enrichment_done = True
+            
+            # Run Validation locally (fast, avoids caching pickle issues)
+            validator = DataValidator()
+            validation_issues = validator.validate_all(transactions)
+            val_summary = validator.get_summary()
+            validation_data = (validation_issues, val_summary)
+            
         else:
             transactions, validation_data = parse_csv_only(file_content)
             split_log = []
@@ -827,9 +931,15 @@ def main():
         if not transactions:
             st.error("No valid transactions found.")
             return
-
+            
     except Exception as e:
         st.error(f"Processing Error: {str(e)}")
+        # If cache is corrupted, offer to clear it
+        if "serialize" in str(e) or "pickle" in str(e):
+             st.warning("Cache corruption detected. Clearing cache recommended.")
+             if st.button("Emergency Clear Cache"):
+                 st.cache_data.clear()
+                 st.rerun()
         return
 
     # Build Portfolio

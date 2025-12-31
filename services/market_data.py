@@ -339,6 +339,21 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
             logger.info(f"FX Rate {from_currency}/{to_currency}: {rate:.4f}")
             return Decimal(str(rate))
         else:
+            # Fallback for common currencies to prevent 1:1 error
+            fallback_rates = {
+                "DKK": {"EUR": 0.1341},
+                "USD": {"EUR": 0.92},
+                "GBP": {"EUR": 1.17},
+                "CHF": {"EUR": 1.06},
+                "SEK": {"EUR": 0.088},
+                "NOK": {"EUR": 0.087}
+            }
+            
+            if from_currency in fallback_rates and to_currency in fallback_rates[from_currency]:
+                fallback = fallback_rates[from_currency][to_currency]
+                logger.warning(f"Using HARDCODED fallback FX rate for {from_currency}/{to_currency}: {fallback}")
+                return Decimal(str(fallback))
+            
             logger.warning(f"Could not fetch FX rate for {fx_ticker}, using 1.0")
             return Decimal(1)
             

@@ -74,18 +74,18 @@ def create_allocation_donut(
     else:
         display_df = holdings_df
         
-    # High-contrast Neon/Futuristic Palette
+    # Telemetry / Aerospace Palette (High Contrast, Technical)
     colors = [
-        '#00F0FF', # Cyan (Cyberpunk)
-        '#7000FF', # Electric Purple
-        '#FF0055', # Neon Red/Pink
-        '#00FF9F', # Neon Mint
-        '#FFBE0B', # Cyber Yellow
-        '#3A86FF', # Bright Blue
-        '#FB5607', # Neon Orange
-        '#8338EC', # Deep Violet
-        '#FF006E', # Hot Pink
-        '#E0E0E0', # Light Grey (Others)
+        '#0ea5e9', # Sky Blue (Primary)
+        '#6366f1', # Indigo (Secondary)
+        '#22c55e', # Signal Green
+        '#eab308', # Amber (Warning)
+        '#ec4899', # Pink (Highlight)
+        '#8b5cf6', # Violet
+        '#f97316', # Orange
+        '#14b8a6', # Teal
+        '#64748b', # Slate
+        '#334155', # Dark Slate (Others)
     ]
 
     # Privacy masking for hover
@@ -198,7 +198,7 @@ def create_performance_chart(
         mode='lines',
         line=dict(color='#3b82f6', width=3),
         fill='tozeroy',
-        fillcolor='rgba(59, 130, 246, 0.1)',
+        fillcolor='rgba(59, 130, 246, 0.05)', # Ultra-subtle fill
         hovertemplate=f'<b>Net Worth</b>: {val_fmt}<extra></extra>'
     ))
     
@@ -227,16 +227,16 @@ def create_performance_chart(
             tickfont=dict(color='#9CA3AF'),
             rangeselector=dict(
                 buttons=list([
-                    dict(count=1, label="1m", step="month", stepmode="backward"),
-                    dict(count=3, label="3m", step="month", stepmode="backward"),
-                    dict(count=6, label="6m", step="month", stepmode="backward"),
-                    dict(count=1, label="1y", step="year", stepmode="backward"),
-                    dict(step="all", label="All")
+                    dict(count=1, label="1M", step="month", stepmode="backward"),
+                    dict(count=3, label="3M", step="month", stepmode="backward"),
+                    dict(count=6, label="6M", step="month", stepmode="backward"),
+                    dict(count=1, label="1Y", step="year", stepmode="backward"),
+                    dict(step="all", label="ALL")
                 ]),
-                bgcolor='rgba(30, 30, 30, 0.5)',
+                bgcolor='rgba(20, 20, 20, 0.8)', # Darker, more solid background
                 activecolor='#3b82f6',
-                font=dict(color='#9CA3AF', size=11),
-                y=1.05, 
+                font=dict(color='#FFFFFF', size=11, weight=700), # Bright white text
+                y=1.12, # Moved up to avoid hover collision
                 x=1,
                 xanchor='right'
             )
@@ -253,16 +253,16 @@ def create_performance_chart(
         legend=dict(
             orientation='h',
             yanchor='top',
-            y=-0.15,
+            y=-0.2,
             xanchor='center',
             x=0.5,
             font=dict(color='#E5E7EB', size=12),
             bgcolor='rgba(0,0,0,0)',
-            itemsizing='constant',  # Prevents Plotly's auto-truncation bug
-            tracegroupgap=15  # Space between legend items
+            itemsizing='constant',
+            entrywidth=120,
         ),
         height=chart_height,
-        margin=dict(t=margin_t, b=margin_b, l=30, r=20),
+        margin=dict(t=margin_t + 30, b=margin_b + 30, l=30, r=20), # Increased top margin for selector
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="JetBrains Mono", size=11)
