@@ -318,48 +318,73 @@ def get_currency_for_ticker(ticker: str) -> str:
 @st.cache_data(ttl=3600)  # Cache for 1 hour
 def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     """
-    Fetch current FX rate using yfinance.
+    Fetch current FX rate using yfinance with robust fallbacks.
     
     Args:
         from_currency: Source currency code (e.g., 'USD')
         to_currency: Target currency code (default: 'EUR')
     
     Returns:
-        Exchange rate as Decimal, or 1.0 if same currency or fetch fails
+        Exchange rate as Decimal. Uses fallback if fetch fails.
     """
     if from_currency == to_currency:
         return Decimal(1)
+
+    # 0. Define Fallbacks (updated 2024/2025)
+    fallback_rates = {
+        "DKK": {"EUR": 0.1341},
+        "USD": {"EUR": 0.95},  # Updated from 0.92
+        "GBP": {"EUR": 1.18},
+        "CHF": {"EUR": 1.06},
+        "SEK": {"EUR": 0.088},
+        "NOK": {"EUR": 0.087},
+        "CAD": {"EUR": 0.68},
+        "BRL": {"EUR": 0.16}
+    }
     
     try:
-        # Yahoo Finance FX format: USDEUR=X
+        # 1. Try SQLite Cache first (persistence across Streamlit re-runs)
+        from services.market_cache import get_market_cache
+        cache = get_market_cache()
+        cached_val = cache.get_fx_rate(from_currency, to_currency, date.today())
+        
+        if cached_val:
+             # Validate cached rate
+             if abs(cached_val - 1.0) < 0.0001 and from_currency != to_currency:
+                 logger.warning(f"Cached FX Rate for {from_currency}/{to_currency} is 1.0 (invalid). Ignoring cache.")
+             else:
+                 logger.info(f"FX Rate {from_currency}/{to_currency}: {cached_val:.4f} (from SQLite)")
+                 return Decimal(str(cached_val))
+
+        # 2. Yahoo Finance FX format: USDEUR=X
         fx_ticker = f"{from_currency}{to_currency}=X"
         rate = fetch_single_price(fx_ticker)
         
+        # Validate rate
         if rate is not None:
-            logger.info(f"FX Rate {from_currency}/{to_currency}: {rate:.4f}")
-            return Decimal(str(rate))
-        else:
-            # Fallback for common currencies to prevent 1:1 error
-            fallback_rates = {
-                "DKK": {"EUR": 0.1341},
-                "USD": {"EUR": 0.92},
-                "GBP": {"EUR": 1.17},
-                "CHF": {"EUR": 1.06},
-                "SEK": {"EUR": 0.088},
-                "NOK": {"EUR": 0.087}
-            }
-            
-            if from_currency in fallback_rates and to_currency in fallback_rates[from_currency]:
-                fallback = fallback_rates[from_currency][to_currency]
-                logger.warning(f"Using HARDCODED fallback FX rate for {from_currency}/{to_currency}: {fallback}")
-                return Decimal(str(fallback))
-            
-            logger.warning(f"Could not fetch FX rate for {fx_ticker}, using 1.0")
-            return Decimal(1)
-            
+            # Suspicious check: if currencies differ but rate is EXACTLY 1.0, it's likely a data error
+            if abs(rate - 1.0) < 0.0001 and from_currency != to_currency:
+                logger.warning(f"FX Rate for {fx_ticker} returned 1.0, treating as invalid.")
+                rate = None
+            else:
+                logger.info(f"FX Rate {from_currency}/{to_currency}: {rate:.4f}")
+                # Cache successful fetch
+                cache.set_fx_rate(from_currency, to_currency, date.today(), rate)
+                return Decimal(str(rate))
+
     except Exception as e:
         logger.error(f"Error fetching FX rate {from_currency}/{to_currency}: {e}")
-        return Decimal(1)
+        # Continue to fallback
+    
+    # 3. Fallback Logic (Executes if rate is None OR Exception occurred)
+    if from_currency in fallback_rates and to_currency in fallback_rates[from_currency]:
+        fallback = fallback_rates[from_currency][to_currency]
+        logger.warning(f"Using HARDCODED fallback FX rate for {from_currency}/{to_currency}: {fallback}")
+        return Decimal(str(fallback))
+    
+    # 4. Final Fallback (Unfortunate 1:1)
+    logger.warning(f"Could not fetch FX rate for {from_currency}/{to_currency} and no fallback found. Using 1.0")
+    return Decimal(1)
 
 
 @st.cache_data(ttl=3600)  # Cache for 1 hour
