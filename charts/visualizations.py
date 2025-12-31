@@ -121,7 +121,7 @@ def create_allocation_donut(
             font=dict(color='#9CA3AF', size=11, family="Inter"),
             bgcolor='rgba(0,0,0,0)',
         ),
-        height=635, # Exact user adjustment
+        height=580, # LOCKED HEIGHT
         margin=dict(t=40, b=120, l=20, r=20), 
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
@@ -141,6 +141,7 @@ def create_performance_chart(
 ) -> go.Figure:
     """
     Create a modern area chart for portfolio performance.
+    Includes native Range Selector to replace external UI elements.
     """
     if not dates or not net_deposits or not portfolio_values:
         return go.Figure()
@@ -167,8 +168,7 @@ def create_performance_chart(
             y=cost_basis_values,
             name='Cost Basis',
             mode='lines',
-            line=dict(color='#94a3b8', width=1.5), # Made slightly thicker
-            # visible='legendonly', # REMOVED: Show by default
+            line=dict(color='#94a3b8', width=1.5), 
             hovertemplate=f'<b>Cost</b>: {val_fmt}<extra></extra>'
         ))
     
@@ -196,7 +196,22 @@ def create_performance_chart(
             zeroline=False,
             showline=True,
             linecolor='#374151',
-            tickfont=dict(color='#9CA3AF')
+            tickfont=dict(color='#9CA3AF'),
+            rangeselector=dict(
+                buttons=list([
+                    dict(count=1, label="1m", step="month", stepmode="backward"),
+                    dict(count=3, label="3m", step="month", stepmode="backward"),
+                    dict(count=6, label="6m", step="month", stepmode="backward"),
+                    dict(count=1, label="1y", step="year", stepmode="backward"),
+                    dict(step="all", label="All")
+                ]),
+                bgcolor='rgba(30, 30, 30, 0.5)',
+                activecolor='#3b82f6',
+                font=dict(color='#9CA3AF', size=11),
+                y=1.05, 
+                x=1,
+                xanchor='right'
+            )
         ),
         yaxis=dict(
             showgrid=True,
@@ -204,7 +219,7 @@ def create_performance_chart(
             zeroline=False,
             tickformat='s',
             tickfont=dict(color='#9CA3AF'),
-            showticklabels=not privacy_mode # Hide Y-axis labels in privacy mode
+            showticklabels=not privacy_mode 
         ),
         hovermode='x unified',
         legend=dict(
@@ -216,8 +231,8 @@ def create_performance_chart(
             font=dict(color='#E5E7EB'),
             bgcolor='rgba(0,0,0,0)'
         ),
-        height=550,
-        margin=dict(t=40, b=80, l=30, r=20),
+        height=580, # LOCKED HEIGHT
+        margin=dict(t=60, b=80, l=30, r=20),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="JetBrains Mono", size=11)
