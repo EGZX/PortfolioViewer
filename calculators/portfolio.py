@@ -478,9 +478,15 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
         
         df = pd.DataFrame(data)
         if not df.empty:
+            # Calculate allocation percentages
+            total_portfolio_value = df['Market Value (EUR)'].sum()
+            df['Allocation %'] = (df['Market Value (EUR)'] / total_portfolio_value * 100)
+            
             df = df.sort_values('Market Value (EUR)', ascending=False)
-            # Reorder columns
-            cols = ['Ticker', 'Name', 'Asset Type', 'Shares', 'Avg Cost (EUR)', 'Current Price (EUR)', 'Market Value (EUR)', 'Gain/Loss (EUR)', 'Gain %']
+            # Reorder columns - add Allocation % after Market Value
+            cols = ['Ticker', 'Name', 'Asset Type', 'Shares', 'Avg Cost (EUR)', 
+                    'Current Price (EUR)', 'Market Value (EUR)', 'Allocation %', 
+                    'Gain/Loss (EUR)', 'Gain %']
             df = df[cols]
         
         return df

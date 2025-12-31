@@ -256,8 +256,10 @@ def create_performance_chart(
             y=-0.15,
             xanchor='center',
             x=0.5,
-            font=dict(color='#E5E7EB'),
-            bgcolor='rgba(0,0,0,0)'
+            font=dict(color='#E5E7EB', size=12),
+            bgcolor='rgba(0,0,0,0)',
+            itemsizing='constant',  # Prevents Plotly's auto-truncation bug
+            tracegroupgap=15  # Space between legend items
         ),
         height=chart_height,
         margin=dict(t=margin_t, b=margin_b, l=30, r=20),
