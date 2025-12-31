@@ -236,52 +236,50 @@ class Portfolio: # Renamed from PortfolioCalculator to Portfolio to match origin
                 # Add to XIRR cash flows (positive = return to investor)
                 self.cash_flows.append((t.date, abs(amount_eur)))
             
-            elif t.type == TransactionType.INTEREST:
-                self.total_interest += abs(amount_eur)
-                # Add to XIRR cash flows (positive = return to investor)
-                self.cash_flows.append((t.date, abs(amount_eur)))
-            
             elif t.type == TransactionType.COST:
                 self.total_fees += abs(amount_eur)
                 # Add to XIRR cash flows (negative = cost to investor)
                 self.cash_flows.append((t.date, -abs(amount_eur)))
+
+        # Handle Interest (often has no ticker, so handled outside the ticker block)
+        if t.type == TransactionType.INTEREST:
+            self.total_interest += abs(amount_eur)
+            # Add to XIRR cash flows (positive = return to investor)
+            self.cash_flows.append((t.date, abs(amount_eur)))
         
     def _reconstruct_state(self):
         """Reconstruct current portfolio state from all transactions."""
         logger.info(f"Reconstructing portfolio from {len(self.transactions)} transactions")
         
-        # DEBUG: Log first few transactions to verify parsing
+        # Sort transactions by date
+        self.transactions.sort(key=lambda x: x.date if hasattr(x, 'date') else datetime.min)
+        
         if self.transactions:
-            logger.info("First 5 transactions preview:")
-            logger.info(f"{'Date':<12} | {'Type':<15} | {'Ticker':<12} | {'Shares':<10} | {'Total'}")
-            logger.info("-" * 65)
+            logger.debug("First 5 transactions preview:")
+            logger.debug(f"{'Date':<12} | {'Type':<15} | {'Ticker':<12} | {'Shares':<10} | {'Total'}")
+            logger.debug("-" * 65)
             for t in self.transactions[:5]:
-                shares_str = f"{t.shares:.4f}" if t.shares else "0"
-                total_str = f"{t.total:.2f}"
-                logger.info(f"{str(t.date.date()):<12} | {t.type.value:<15} | {t.ticker or 'N/A':<12} | {shares_str:<10} | {total_str}")
-        
-        for trans in self.transactions:
-            self.process_transaction(trans)
+                t_ticker = t.ticker if t.ticker else "N/A"
+                logger.debug(f"{t.date.date() if hasattr(t.date, 'date') else t.date} | {t.type.value:<15} | {t_ticker:<12} | {t.shares:<10.4f} | {t.total:.2f}")
 
+        for t in self.transactions:
+            self.process_transaction(t)
+            
+        # Filter out closed positions (0 shares)
+        # But first log the pre-filter state for debugging
+        logger.debug(f"Pre-filter holdings: {len(self.holdings)}")
         
-        # DEBUG: Log holdings before filtering
-        logger.info(f"Pre-filter holdings: {len(self.holdings)}")
-        if self.holdings:
-            logger.info("Sample holdings state (before filtering 0-share positions):")
-            for ticker, pos in list(self.holdings.items())[:10]:
-                logger.info(f"  {ticker}: Shares={pos.shares}, Cost={pos.cost_basis:.2f}")
+        if len(self.holdings) > 0:
+            logger.debug("Sample holdings state (before filtering 0-share positions):")
+            for ticker, h in list(self.holdings.items())[:10]:
+                 logger.debug(f"  {ticker}: Shares={h.shares}, Cost={h.cost_basis:.2f}")
 
-        # Remove holdings with zero shares
-        self.holdings = {
-            ticker: holding
-            for ticker, holding in self.holdings.items()
-            if holding.shares > 0
-        }
+        # Actually remove closed positions from self.holdings for cleaner interface
+        # We keep them in history/performance calc, but for "Current Holdings" display they are noise
+        self.holdings = {k: v for k, v in self.holdings.items() if abs(v.shares) > 0.000001}
         
-        logger.info(f"Portfolio state: {len(self.holdings)} holdings, "
-                   f"€{self.cash_balance:.2f} cash, "
-                   f"€{self.total_invested:.2f} invested")
-    
+        logger.info(f"Portfolio state: {len(self.holdings)} holdings, €{self.cash_balance:.2f} cash, €{self.invested_capital:.2f} invested")
+                   
     def get_unique_tickers(self) -> List[str]:
         """Get list of all unique tickers with current holdings."""
         return list(self.holdings.keys())

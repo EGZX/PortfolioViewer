@@ -307,8 +307,15 @@ class CorporateActionService:
         cached_splits = cache.get_splits(ticker)
         split_actions = []
         today = date.today()
+        sentinel_date = date(1900, 1, 1)
         
         if cached_splits:
+            # Check for SENTINEL (Negative Cache) indicating no splits exist
+            # If we find the sentinel, we return [] immediately without processing
+            for split_date, ratio in cached_splits:
+                if split_date == sentinel_date:
+                    return []
+
             # Process cached splits
             for split_date, ratio in cached_splits:
                 # SPLIT BLACKLIST check
@@ -357,5 +364,11 @@ class CorporateActionService:
                 ]
                 cache.set_splits(ticker, splits_for_cache)
                 return split_history
+            else:
+                # NEGATIVE CACHING: Cache the fact that no splits exist (or fetch failed)
+                # Use a sentinel record: 1900-01-01 with ratio 1.0 (no effect)
+                # This prevents retrying failed lookups on every reload (saving ~40s)
+                cache.set_splits(ticker, [(sentinel_date, 1.0)])
+                return []
         
         return []
