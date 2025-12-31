@@ -160,10 +160,11 @@ class MarketDataCache:
             conn.commit()
     
     def get_prices_batch(self, tickers: List[str], target_date: Optional[date] = None) -> Dict[str, Optional[float]]:
-        """Get cached prices for multiple tickers."""
-        if target_date is None:
-            target_date = date.today()
-        
+        """
+        Get cached prices for multiple tickers.
+        If target_date is provided, gets prices for that specific date.
+        If target_date is None, gets the LATEST available price for each ticker.
+        """
         prices = {t: None for t in tickers}
         
         if not tickers:
@@ -172,17 +173,42 @@ class MarketDataCache:
         with self._get_conn() as conn:
             cursor = conn.cursor()
             placeholders = ','.join('?' * len(tickers))
-            cursor.execute(
-                f"SELECT ticker, price FROM prices WHERE ticker IN ({placeholders}) AND date = ?",
-                (*tickers, target_date)
-            )
+            
+            if target_date:
+                # Specific date query
+                cursor.execute(
+                    f"SELECT ticker, price FROM prices WHERE ticker IN ({placeholders}) AND date = ?",
+                    (*tickers, target_date)
+                )
+            else:
+                # Latest price query using window function
+                # We want the price from the most recent date for each ticker
+                query = f"""
+                    WITH LatestPrices AS (
+                        SELECT 
+                            ticker, 
+                            price,
+                            ROW_NUMBER() OVER (PARTITION BY ticker ORDER BY date DESC) as rn
+                        FROM prices 
+                        WHERE ticker IN ({placeholders})
+                    )
+                    SELECT ticker, price 
+                    FROM LatestPrices 
+                    WHERE rn = 1
+                """
+                cursor.execute(query, tickers)
             
             for ticker, price in cursor.fetchall():
                 prices[ticker] = float(price)
         
         hit_count = sum(1 for p in prices.values() if p is not None)
-        logger.debug(f"Batch cache lookup: {hit_count}/{len(tickers)} hits on {target_date}")
+        date_msg = f"on {target_date}" if target_date else "(latest)"
+        logger.debug(f"Batch cache lookup: {hit_count}/{len(tickers)} hits {date_msg}")
         return prices
+    
+    def get_latest_prices(self, tickers: List[str]) -> Dict[str, Optional[float]]:
+        """Convenience alias for get_prices_batch(tickers, None)."""
+        return self.get_prices_batch(tickers, target_date=None)
         
     def get_historical_prices(self, tickers: List[str], start_date: date, end_date: date) -> pd.DataFrame:
         """

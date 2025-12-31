@@ -17,7 +17,7 @@ import textwrap
 from parsers.csv_parser import CSVParser
 from parsers.enhanced_transaction import Transaction  # Import enhanced model
 from calculators.portfolio import Portfolio
-from calculators.metrics import xirr, calculate_absolute_return
+from calculators.metrics import xirr, calculate_absolute_return, calculate_volatility, calculate_sharpe_ratio, calculate_max_drawdown
 from services.market_data import fetch_prices, fetch_historical_prices
 from services.corporate_actions import CorporateActionService
 from services.fx_rates import FXRateService
@@ -327,12 +327,12 @@ st.markdown("""
     }
     
     .kpi-item {
-        padding: 1rem;
+        padding: 0.8rem;
         border-right: 1px solid rgba(255,255,255,0.05); /* Subtle separator */
         display: flex;
         flex-direction: column;
         justify-content: center;
-        min-height: 100px;
+        min-height: 80px;
         transition: background 0.2s;
     }
     
@@ -346,7 +346,7 @@ st.markdown("""
     
     .kpi-label {
         font-family: 'Inter', sans-serif;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 500;
         color: var(--text-secondary);
         text-transform: uppercase;
@@ -362,7 +362,7 @@ st.markdown("""
     
     .kpi-value {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 1.8rem; /* Larger, more impactful */
+        font-size: 1.15rem; /* Reduced from 1.4rem */
         font-weight: 700;
         color: var(--text-primary);
         line-height: 1;
@@ -553,7 +553,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-def render_kpi_dashboard(metrics):
+def render_kpi_dashboard(metrics, title="Key Performance Indicators"):
     """
     Render the entire KPI dashboard as a single HTML block using CSS Grid.
     metrics: List of dicts with 'label', 'value', 'delta' (opt), 'delta_color' (opt)
@@ -571,12 +571,40 @@ def render_kpi_dashboard(metrics):
         
     # Flatten string to avoid Markdown code block interpretation
     html = '<div class="kpi-board">'
-    html += '<div class="kpi-header">Key Performance Indicators</div>'
+    if title:
+        html += f'<div class="kpi-header">{title}</div>'
     html += '<div class="kpi-grid">'
     html += items_html
     html += '</div></div>'
     
     return html
+
+@st.cache_data(show_spinner=False, ttl=3600)
+def get_performance_history_cached(transactions, price_history, start_date, end_date):
+    """
+    Cached wrapper for portfolio history calculation.
+    This avoids re-calculating the daily path on every rerun if data hasn't changed.
+    """
+    # Create a temporary portfolio instance to access the logic
+    # Note: This does trigger one state reconstruction, but we save the expensive daily loop
+    temp_portfolio = Portfolio(transactions)
+    return temp_portfolio.calculate_performance_history_optimized(
+        price_history, start_date, end_date
+    )
+
+@st.cache_data(show_spinner=False, ttl=3600*12)
+def apply_corporate_actions_cached(transactions):
+    """
+    Cached wrapper for corporate actions (splits).
+    This is the most expensive operation on startup (40s+).
+    """
+    corp_actions = CorporateActionService()
+    # Ensure we don't modify the input list in place if it's cached from somewhere else (safety copy)
+    # Although apply_splits usually returns a new list or modifies. 
+    # Streamlit cache returns a copy by default on subsequent calls, but first run modifies?
+    # Safe to pass as is.
+    return corp_actions.detect_and_apply_splits(transactions)
+
 
 def main():
     """Main application entry point."""
@@ -737,7 +765,8 @@ def main():
             prices = fetch_prices(tickers)
         st.session_state.prices_updated = False # Reset after fetching
     else:
-        prices = cache.get_prices_batch(tickers, datetime.now().date())
+        # Load from cache (latest available prices)
+        prices = cache.get_prices_batch(tickers, target_date=None)
 
     # ==========================================
     # SIDEBAR STATUS GRID
@@ -801,24 +830,11 @@ def main():
     gain_color = "pos" if total_absolute_gain >= 0 else "neg"
     gain_txt = f"+{total_return_pct:.1f}%" if total_absolute_gain >= 0 else f"{total_return_pct:.1f}%"
 
-    # Prepare KPI Data with Privacy Masking
-    kpi_data = [
-        {"label": "Net Worth", "value": mask_currency(current_value, st.session_state.privacy_mode)},
-        {"label": "Abs Gain", "value": mask_currency(total_absolute_gain, st.session_state.privacy_mode), "delta": gain_txt, "delta_color": gain_color},
-        {"label": "XIRR", "value": f"{xirr_value * 100:.1f}%" if xirr_value is not None else "N/A", "delta": None, "delta_color": "pos" if xirr_value and xirr_value > 0 else "neu"},
-        {"label": "Deposits", "value": mask_currency(portfolio.invested_capital, st.session_state.privacy_mode)},
-        {"label": "Cost Basis", "value": mask_currency(holdings_cost_basis, st.session_state.privacy_mode)},
-        {"label": "Fees", "value": mask_currency(portfolio.total_fees, st.session_state.privacy_mode)}
-    ]
-
-    # Optimized Layout: Single Container Tile
-    st.markdown(render_kpi_dashboard(kpi_data), unsafe_allow_html=True)
-    
-    # st.divider() # Removed separator line
-    
     # ==================== FETCH ALL HISTORICAL DATA ONCE ====================
     # This runs once and is cached - timeframe changes only filter the data
     # ONLY if transactions have been enriched (to avoid split API calls)
+    
+    dates, net_deposits, portfolio_values, cost_basis_values = [], [], [], []
     
     if st.session_state.enrichment_done and transactions:
         # Determine the full date range needed
@@ -831,12 +847,35 @@ def main():
         # Fetch ALL historical prices once (cached by Streamlit)
         price_history = cache.get_historical_prices(all_tickers, earliest_transaction, latest_date)
         
-        # Calculate daily portfolio values using the history
-        dates, net_deposits, portfolio_values, cost_basis_values = portfolio.calculate_performance_history_optimized(
-            price_history, earliest_transaction, latest_date
+        # Calculate daily portfolio values using the history (CACHED)
+        dates, net_deposits, portfolio_values, cost_basis_values = get_performance_history_cached(
+            transactions, price_history, earliest_transaction, latest_date
         )
-    else:
-        dates, net_deposits, portfolio_values, cost_basis_values = [], [], [], []
+
+    # Calculate advanced metrics (Vola, Sharpe, Max Drawdown)
+    volatility = None
+    sharpe_ratio = None
+    max_dd = None
+    
+    if portfolio_values and len(portfolio_values) > 1:
+         volatility = calculate_volatility(portfolio_values)
+         sharpe_ratio = calculate_sharpe_ratio(portfolio_values)
+         max_dd = calculate_max_drawdown(portfolio_values)
+
+    # Prepare KPI Data with Privacy Masking
+    kpi_data = [
+        {"label": "Net Worth", "value": mask_currency(current_value, st.session_state.privacy_mode)},
+        {"label": "Abs Gain", "value": mask_currency(total_absolute_gain, st.session_state.privacy_mode), "delta": gain_txt, "delta_color": gain_color},
+        {"label": "XIRR", "value": f"{xirr_value * 100:.1f}%" if xirr_value is not None else "N/A", "delta": None, "delta_color": "pos" if xirr_value and xirr_value > 0 else "neu"},
+        {"label": "Realized P&L", "value": mask_currency(portfolio.realized_gains, st.session_state.privacy_mode)},
+        {"label": "Invested", "value": mask_currency(portfolio.invested_capital, st.session_state.privacy_mode)},
+        {"label": "Holdings", "value": str(len(portfolio.holdings))},
+    ]
+
+    # Optimized Layout: Single Container Tile
+    st.markdown(render_kpi_dashboard(kpi_data), unsafe_allow_html=True)
+    
+    # st.divider() # Removed separator line
 
     # ==================== DASHBOARD CHARTS ====================
     
@@ -971,23 +1010,28 @@ def main():
             logger.error(f"Holdings display error: {e}", exc_info=True)
     
     # Additional info
+    # Reverted to Expander per user request
     # Additional info
     # Reverted to Expander per user request
-    with st.expander("Detailed Metrics"):
-        summary_col1, summary_col2, summary_col3 = st.columns(3)
+    with st.expander("Detailed Metrics", expanded=True):
+        detailed_metrics = [
+            {"label": "Cash Balance", "value": mask_currency_precise(portfolio.cash_balance, st.session_state.privacy_mode)},
+            {"label": "Cost Basis", "value": mask_currency(holdings_cost_basis, st.session_state.privacy_mode)},
+            {"label": "Total Dividends", "value": mask_currency_precise(portfolio.total_dividends, st.session_state.privacy_mode)},
+            {"label": "Total Interest", "value": mask_currency_precise(portfolio.total_interest, st.session_state.privacy_mode)},
+            {"label": "Total Fees", "value": mask_currency_precise(portfolio.total_fees, st.session_state.privacy_mode)},
+            {"label": "Transactions", "value": str(len(transactions))},
+            {"label": "Volatility (Ann.)", "value": f"{volatility*100:.1f}%" if volatility is not None else "N/A"},
+            {"label": "Sharpe Ratio", "value": f"{sharpe_ratio:.2f}" if sharpe_ratio is not None else "N/A"},
+            {"label": "Max Drawdown", "value": f"{max_dd*100:.1f}%" if max_dd is not None else "N/A", "delta": None, "delta_color": "neg"}
+        ]
         
-        with summary_col1:
-            st.metric("Cash Balance", mask_currency_precise(portfolio.cash_balance, st.session_state.privacy_mode))
-            st.metric("Total Fees", mask_currency_precise(portfolio.total_fees, st.session_state.privacy_mode))
-            st.metric("Total Interest", mask_currency_precise(portfolio.total_interest, st.session_state.privacy_mode))
-        
-        with summary_col2:
-            st.metric("Realized Gains", mask_currency_precise(portfolio.realized_gains, st.session_state.privacy_mode))
-            st.metric("Total Dividends", mask_currency_precise(portfolio.total_dividends, st.session_state.privacy_mode))
-
-        with summary_col3:
-            st.metric("Number of Holdings", len(portfolio.holdings))
-            st.metric("Number of Transactions", len(transactions))
+        # Render using the same style as KPI board, but with no title (handled by expander) or custom title
+        # User asked for "Detailed Metrics" to be same size.
+        # We can pass title=None and let Expander be the container, OR render the title inside.
+        # Expander header is styled differently. 
+        # Let's simple render the grid.
+        st.markdown(render_kpi_dashboard(detailed_metrics, title=None), unsafe_allow_html=True)
     
     # Transaction History
     # st.divider()
