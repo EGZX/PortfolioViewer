@@ -2,45 +2,82 @@
 
 import streamlit as st
 import hashlib
+import hmac
+import os
+import time
+import random
+import base64
 from typing import Optional
 
+# Configuration
+ITERATIONS = 600_000  # High iteration count for PBKDF2 (OWASP recommended 2023: 600k for HMAC-SHA256)
+SALT_SIZE = 32        # 32 bytes = 256 bits
 
 def hash_password(password: str) -> str:
     """
-    Hash a password using SHA-256.
+    Hash a password using PBKDF2-HMAC-SHA256 with a random salt.
     
-    Args:
-        password: Plain text password
-    
-    Returns:
-        Hexadecimal hash string
+    Format: pbkdf2_sha256$iterations$salt_b64$hash_b64
     """
-    return hashlib.sha256(password.encode()).hexdigest()
+    salt = os.urandom(SALT_SIZE)
+    key = hashlib.pbkdf2_hmac(
+        'sha256',
+        password.encode('utf-8'),
+        salt,
+        ITERATIONS
+    )
+    
+    salt_b64 = base64.b64encode(salt).decode('ascii')
+    key_b64 = base64.b64encode(key).decode('ascii')
+    
+    return f"pbkdf2_sha256${ITERATIONS}${salt_b64}${key_b64}"
 
 
-def verify_password(password: str, hashed: str) -> bool:
+def verify_password(password: str, stored_hash: str) -> bool:
     """
-    Verify a password against its hash.
-    
-    Args:
-        password: Plain text password to verify
-        hashed: Expected hash
-    
-    Returns:
-        True if password matches, False otherwise
+    Verify a password against its stored hash.
+    Supports both legacy SHA-256 (hex) and new PBKDF2 formats.
     """
-    return hash_password(password) == hashed
+    try:
+        # 1. Check for Legacy SHA-256 (simple hex string, length 64)
+        if len(stored_hash) == 64 and '$' not in stored_hash:
+            # Legacy verification (Vulnerable to rainbow tables if leaked, but supported for migration)
+            legacy_hash = hashlib.sha256(password.encode()).hexdigest()
+            return hmac.compare_digest(legacy_hash, stored_hash)
+            
+        # 2. Parse PBKDF2 format
+        parts = stored_hash.split('$')
+        if len(parts) != 4 or parts[0] != 'pbkdf2_sha256':
+            # Unknown format
+            return False
+            
+        iterations = int(parts[1])
+        salt = base64.b64decode(parts[2])
+        expected_key = base64.b64decode(parts[3])
+        
+        # 3. Calculate hash with extracted salt/iterations
+        derived_key = hashlib.pbkdf2_hmac(
+            'sha256',
+            password.encode('utf-8'),
+            salt,
+            iterations
+        )
+        
+        # 4. Constant time comparison (Timing Attack Proof)
+        return hmac.compare_digest(derived_key, expected_key)
+        
+    except Exception:
+        return False
 
 
 def check_authentication() -> bool:
     """
     Check if user is authenticated.
     
-    Uses Streamlit secrets for storing hashed password.
-    Secrets should be configured in .streamlit/secrets.toml:
-    
-    [passwords]
-    app_password_hash = "hashed_password_here"
+    Features:
+    - Fail Secure (Deny by default)
+    - Anti-Brute Force Delay
+    - Constant Time Comparison
     
     Returns:
         True if authenticated, False otherwise
@@ -51,19 +88,20 @@ def check_authentication() -> bool:
     
     # Get expected hash from secrets
     try:
-        expected_hash = st.secrets.get("passwords", {}).get("app_password_hash")
+        if "passwords" not in st.secrets:
+             st.error("⛔ Security Error: 'passwords' section missing in secrets.toml. Access Denied.")
+             return False
+
+        expected_hash = st.secrets["passwords"].get("app_password_hash")
         
         if not expected_hash:
-            # No password configured - allow access
-            st.warning("⚠️ No password configured. Set 'passwords.app_password_hash' in .streamlit/secrets.toml for security.")
-            st.session_state["authenticated"] = True
-            return True
+            st.error("⛔ Security Error: 'app_password_hash' not configured. Access Denied.")
+            return False
             
     except Exception as e:
-        # Secrets file doesn't exist or other error - allow access with warning
-        st.warning(f"⚠️ Could not load secrets: {e}. Access granted without authentication.")
-        st.session_state["authenticated"] = True
-        return True
+        # Fail Secure: If we can't verify configuration, DENY access
+        st.error(f"⛔ Security Error: Could not load secrets ({str(e)}). Access Denied.")
+        return False
     
     # Centered Login Card
     col1, col2, col3 = st.columns([1, 2, 1])
@@ -85,11 +123,17 @@ def check_authentication() -> bool:
                 login_button = st.button("AUTHENTICATE", type="primary", use_container_width=True)
     
     if login_button:
+        # Verify Password
         if verify_password(password_input, expected_hash):
             st.session_state["authenticated"] = True
             st.success("ACCESS GRANTED")
             st.rerun()
         else:
+            # ANTI-BRUTE FORCE DELAY
+            # Sleep for random time between 1.0 and 2.0 seconds
+            # This makes brute forcing via the UI agonizingly slow
+            time.sleep(1.0 + random.random())
+            
             st.error("ACCESS DENIED: Invalid Passphrase")
             return False
     
@@ -113,16 +157,8 @@ def show_logout_button():
 # Helper function to generate password hash for setup
 def generate_password_hash(password: str) -> str:
     """
-    Generate a hash for a password (for initial setup).
-    
-    Usage:
-        python -c "from utils.auth import generate_password_hash; print(generate_password_hash('your_password'))"
-    
-    Args:
-        password: Plain text password
-    
-    Returns:
-        Hash to put in secrets.toml
+    Generate a secure hash for a password (for initial setup).
+    Uses PBKDF2-HMAC-SHA256 with 600,000 iterations and random salt.
     """
     return hash_password(password)
 
@@ -132,10 +168,11 @@ if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1:
         password = sys.argv[1]
-        print(f"Password hash for '{password}':")
-        print(generate_password_hash(password))
-        print("\nAdd this to .streamlit/secrets.toml:")
-        print(f'[passwords]\napp_password_hash = "{generate_password_hash(password)}"')
+        print(f"Generating Secure Hash for '{password}'...")
+        h = generate_password_hash(password)
+        print(f"\nHash: {h}")
+        print("\nUpdate .streamlit/secrets.toml with:")
+        print(f'[passwords]\napp_password_hash = "{h}"')
     else:
         print("Usage: python auth.py <password>")
-        print("Example: python auth.py mySecurePassword123")
+

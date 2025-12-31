@@ -49,6 +49,11 @@ Testdata/
 logs/
 bugfixing/
 
+# Database and Cache
+# *.db  <-- Uncomment to ignore DB if not using it for persistence
+# data/ <-- Uncomment to ignore data dir
+
+
 # Configuration tools
 scripts/config_helper.py
 scripts/generate_cache_key.py
