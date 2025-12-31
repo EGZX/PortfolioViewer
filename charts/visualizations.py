@@ -18,6 +18,7 @@ def create_allocation_donut(
 ) -> go.Figure:
     """
     Create an interactive donut chart showing portfolio allocation.
+    Optimized for futuristic look and cleaner legend.
     """
     if holdings_df.empty:
         return go.Figure()
@@ -33,7 +34,7 @@ def create_allocation_donut(
     holdings_df = holdings_df.copy()
     holdings_df['Percentage'] = (holdings_df[market_value_col] / total_value) * 100
     
-    # Use Name for display, fallback to Ticker if Name is missing
+    # Use Name for display
     if 'Name' in holdings_df.columns:
         holdings_df['Display_Label'] = holdings_df.apply(
             lambda row: row['Name'] if row['Name'] and row['Name'] != row['Ticker'] else row['Ticker'],
@@ -42,27 +43,45 @@ def create_allocation_donut(
     else:
         holdings_df['Display_Label'] = holdings_df['Ticker']
     
-    # Group small holdings
-    large_holdings = holdings_df[holdings_df['Percentage'] >= min_pct].copy()
-    small_holdings = holdings_df[holdings_df['Percentage'] < min_pct]
+    # Sort by value descending
+    holdings_df = holdings_df.sort_values(market_value_col, ascending=False)
     
-    if not small_holdings.empty:
-        other_row = pd.DataFrame([{
-            'Display_Label': 'Others',
-            market_value_col: small_holdings[market_value_col].sum(),
-            'Percentage': small_holdings['Percentage'].sum()
-        }])
-        display_df = pd.concat([large_holdings, other_row], ignore_index=True)
+    # Logic: Take Top 9, Group rest as "Others"
+    # This ensures the legend never overflows screen space
+    top_n = 9
+    
+    if len(holdings_df) > top_n:
+        large_holdings = holdings_df.iloc[:top_n].copy()
+        small_holdings = holdings_df.iloc[top_n:]
+        
+        if not small_holdings.empty:
+            other_val = small_holdings[market_value_col].sum()
+            other_pct = small_holdings['Percentage'].sum()
+            
+            other_row = pd.DataFrame([{
+                'Display_Label': 'Others',
+                'Ticker': 'OTHERS',
+                market_value_col: other_val,
+                'Percentage': other_pct
+            }])
+            display_df = pd.concat([large_holdings, other_row], ignore_index=True)
+        else:
+            display_df = large_holdings
     else:
-        display_df = large_holdings
-    
-    # Sort
-    display_df = display_df.sort_values(market_value_col, ascending=False)
-    
-    # Custom Cyber Palette
-    cyber_colors = [
-        '#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', 
-        '#6366f1', '#ec4899', '#14b8a6', '#f97316', '#64748b'
+        display_df = holdings_df
+        
+    # High-contrast Neon/Futuristic Palette
+    colors = [
+        '#00F0FF', # Cyan (Cyberpunk)
+        '#7000FF', # Electric Purple
+        '#FF0055', # Neon Red/Pink
+        '#00FF9F', # Neon Mint
+        '#FFBE0B', # Cyber Yellow
+        '#3A86FF', # Bright Blue
+        '#FB5607', # Neon Orange
+        '#8338EC', # Deep Violet
+        '#FF006E', # Hot Pink
+        '#E0E0E0', # Light Grey (Others)
     ]
 
     # Privacy masking for hover
@@ -71,18 +90,20 @@ def create_allocation_donut(
     fig = go.Figure(data=[go.Pie(
         labels=display_df['Display_Label'],
         values=display_df[market_value_col],
-        hole=0.6,
+        hole=0.75, # Thinner ring
         hovertemplate='<b>%{label}</b><br>' +
                      f'{val_fmt}<br>' +
                      '%{percent}<br>' +
                      '<extra></extra>',
-        textinfo='percent',  # Only show percent on chart to avoid clutter/cutoff
-        textposition='outside',
+        textinfo='none',  # Clean look, no text on chart
         marker=dict(
-            colors=cyber_colors,
-            line=dict(color='#1e2329', width=2)
+            colors=colors,
+            line=dict(color='#0e1117', width=3) # Match dark background
         )
     )])
+    
+    # Center text showing total or top item? 
+    # Let's keep it clean for now.
     
     fig.update_layout(
         title=dict(
@@ -94,13 +115,14 @@ def create_allocation_donut(
         legend=dict(
             orientation="h",
             yanchor="top",
-            y=-0.15,
+            y=-0.15, 
             xanchor="center",
             x=0.5,
-            font=dict(color='#9CA3AF', size=12)
+            font=dict(color='#9CA3AF', size=11, family="Inter"),
+            bgcolor='rgba(0,0,0,0)',
         ),
-        height=590, # Increased to match Left Column (Chart + SelectBox)
-        margin=dict(t=60, b=150, l=20, r=20),
+        height=635, # Exact user adjustment
+        margin=dict(t=40, b=120, l=20, r=20), 
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Inter", color="#9CA3AF")
@@ -187,15 +209,15 @@ def create_performance_chart(
         hovermode='x unified',
         legend=dict(
             orientation='h',
-            yanchor='bottom',
-            y=1.02,
-            xanchor='right',
-            x=1,
+            yanchor='top',
+            y=-0.15,
+            xanchor='center',
+            x=0.5,
             font=dict(color='#E5E7EB'),
             bgcolor='rgba(0,0,0,0)'
         ),
-        height=510,
-        margin=dict(t=60, b=80, l=30, r=20),
+        height=550,
+        margin=dict(t=40, b=80, l=30, r=20),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="JetBrains Mono", size=11)
