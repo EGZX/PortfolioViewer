@@ -2,7 +2,6 @@
 
 from typing import Dict, List, Optional
 import plotly.graph_objects as go
-import plotly.express as px
 import pandas as pd
 
 from utils.logging_config import setup_logger
@@ -15,11 +14,10 @@ def create_allocation_donut(
     min_pct: float = 2.0, 
     title: str = "Portfolio Allocation",
     privacy_mode: bool = False,
-    compact_mode: bool = False  # NEW: Explicit mobile signal
+    compact_mode: bool = False
 ) -> go.Figure:
     """
     Create an interactive donut chart showing portfolio allocation.
-    Optimized for futuristic look and cleaner legend.
     
     Args:
         compact_mode: If True, generates a compact chart for mobile (smaller height, tighter margins)
@@ -73,16 +71,15 @@ def create_allocation_donut(
     else:
         display_df = holdings_df
         
-    # Screenshot Match Palette (High Contrast / Neon)
-    # Cyan, White, Purple, Pink, Green, Yellow
+    # High Contrast / Neon Palette
     colors = [
-        '#00e5ff', # Cyan (Electric - Top Slice)
-        '#ffffff', # White (High Contrast - Second Slice)
+        '#00e5ff', # Cyan 
+        '#ffffff', # White
         '#d500f9', # Neon Purple
         '#ff1744', # Neon Red/Pink
         '#00e676', # Neon Green
         '#ffea00', # Neon Yellow
-        '#2979ff', # Blue (Backup)
+        '#2979ff', # Blue
         '#ff9100', # Orange
         '#76ff03', # Lime
         '#f50057', # Pink
@@ -97,33 +94,30 @@ def create_allocation_donut(
     val_fmt = "€%{value:,.2f}" if not privacy_mode else "••••••"
 
     fig = go.Figure(data=[go.Pie(
-        labels=display_df['Display_Label'], # Full names suitable for hover
+        labels=display_df['Display_Label'],
         values=display_df[market_value_col],
-        hole=0.60, # Slightly thicker ring for "Immersive" look
+        hole=0.60,
         hovertemplate='<b>%{label}</b><br>' +
                      f'{val_fmt}<br>' +
                      '%{percent}<br>' +
                      '<extra></extra>',
-        hoverlabel=dict(font_size=16, font_family="JetBrains Mono"), # Larger tooltip font
-        textinfo='none',  # Clean look
+        hoverlabel=dict(font_size=16, font_family="JetBrains Mono"),
+        textinfo='none',
         marker=dict(
             colors=colors,
-            line=dict(color='#0e1117', width=2) # Thinner separator for elegance
+            line=dict(color='#0e1117', width=2)
         )
     )])
     
-    # Layout Logic: Unified "Immersive" Mode (No Legend)
-    # Title logic
+    # Layout Logic
     title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
     
     # Universal Layout (Desktop & Mobile)
-    # Desktop Height must match Performance Chart (520px)
-    # Mobile Height remains compact (450px)
     final_height = 450 if compact_mode else 520
     
     # Legend Logic: 
-    # Desktop: False (Immersive, use Hover) as requested
-    # Mobile: True (Touch can be tricky, Legend helps identification)
+    # Desktop: Hide (Immersive)
+    # Mobile: Show (Touch accessibility)
     show_legend_bool = True if compact_mode else False
 
     if compact_mode:
@@ -133,12 +127,12 @@ def create_allocation_donut(
         margin_r = 20
         legend_y = -0.1
     else:
-        # Desktop (Immersive - No Legend)
+        # Desktop (Immersive)
         margin_t = 0 if not title else 60
-        margin_b = 40 # Reduced bottom margin since legend is gone
-        margin_l = 40 # Maintain padding for centered pie
+        margin_b = 40
+        margin_l = 40
         margin_r = 40
-        legend_y = -0.1 # N/A but safe default
+        legend_y = -0.1
 
     fig.update_layout(
         title=title_dict,
@@ -161,10 +155,6 @@ def create_allocation_donut(
         annotations=[dict(text=f"{total_value:,.0f} €", x=0.5, y=0.5, font_size=22, showarrow=False, font=dict(family="JetBrains Mono", color="white", weight=700))] if total_value > 0 else []
     )
     
-    # No domain shifting needed - center is natural
-    # fig.update_traces(domain=dict(x=[0, 1], y=[0, 1])) - Default is fine
-    
-    # Update traces separately to safely set hole size
     fig.update_traces(hole=0.60, hoverinfo="label+percent+value")
     
     return fig
@@ -177,11 +167,11 @@ def create_performance_chart(
     cost_basis_values: List[float] = None,
     title: Optional[str] = "Performance History",
     privacy_mode: bool = False,
-    compact_mode: bool = False  # NEW: Explicit mobile signal
+    compact_mode: bool = False
 ) -> go.Figure:
     """
     Create a modern area chart for portfolio performance.
-    Includes native Range Selector to replace external UI elements.
+    Includes native Range Selector.
     
     Args:
         compact_mode: If True, generates a compact chart for mobile (smaller height, tighter margins)
@@ -216,15 +206,14 @@ def create_performance_chart(
         ))
     
     # 3. Net Worth (Gradient Area)
-    # Reverted to standard area fill (High aesthetic)
     fig.add_trace(go.Scatter(
         x=dates,
         y=portfolio_values,
         name='Net Worth',
         mode='lines',
-        line=dict(color='#3b82f6', width=2.5), # Sharp core line
+        line=dict(color='#3b82f6', width=2.5),
         fill='tozeroy', 
-        fillcolor='rgba(59, 130, 246, 0.12)', # Standard semi-transparent fill
+        fillcolor='rgba(59, 130, 246, 0.12)',
         hovertemplate=f'<b>Net Worth</b>: {val_fmt}<extra></extra>'
     ))
     
@@ -239,16 +228,16 @@ def create_performance_chart(
         # Desktop: full sizing
         title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
         margin_t = 0 if not title else 60
-        margin_b = 80  # Desktop: space for legend
-        chart_height = 520  # Desktop: compact size
+        margin_b = 80
+        chart_height = 520
     
     fig.update_layout(
         title=title_dict,
         xaxis=dict(
             showgrid=True,
-            gridcolor='rgba(255,255,255,0.08)', # Slightly clearer grid
+            gridcolor='rgba(255,255,255,0.08)',
             gridwidth=1,
-            griddash='dot', # Technical dotted grid
+            griddash='dot',
             zeroline=False,
             showline=True,
             linecolor='#374151',
@@ -266,8 +255,8 @@ def create_performance_chart(
                 bordercolor='#30363d',
                 borderwidth=1,
                 font=dict(color='#FFFFFF', size=11, weight=700),
-                y=1.02, # Slightly lower, closer to chart top
-                x=0,    # Left aligned to avoid Mode Bar on right
+                y=1.02,
+                x=0,
                 xanchor='left'
             )
         ),
@@ -275,7 +264,7 @@ def create_performance_chart(
             showgrid=True,
             gridcolor='rgba(255,255,255,0.08)',
             gridwidth=1,
-            griddash='dot', # Technical dotted grid
+            griddash='dot',
             zeroline=False,
             tickformat='s',
             tickfont=dict(color='#9CA3AF'),
@@ -294,7 +283,7 @@ def create_performance_chart(
             entrywidth=120,
         ),
         height=chart_height,
-        margin=dict(t=margin_t + 30, b=margin_b + 30, l=0, r=20), # Increased top margin for selector
+        margin=dict(t=margin_t + 30, b=margin_b + 30, l=0, r=20),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="JetBrains Mono", size=11)
