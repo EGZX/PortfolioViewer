@@ -908,50 +908,14 @@ def main():
     
     with col1:
         with st.container(border=True):
-            # 1. Get Timeframe from Session State (default to 'All')
-            current_tf = st.session_state.get("performance_timeframe", "All")
-
-            # 2. Filter Logic based on Timeframe
-            if dates and current_tf != "All":
-                days_map = {"1M": 30, "3M": 90, "6M": 180, "1Y": 365}
-                cutoff_date = (datetime.now() - timedelta(days=days_map.get(current_tf, 365))).date()
-                
-                # Filter lists
-                filtered_indices = [i for i, d in enumerate(dates) if datetime.strptime(d[:10], '%Y-%m-%d').date() >= cutoff_date]
-                if filtered_indices:
-                    start_idx = filtered_indices[0]
-                    d_dates = dates[start_idx:]
-                    d_deposits = net_deposits[start_idx:]
-                    d_values = portfolio_values[start_idx:]
-                    if cost_basis_values:
-                        d_basis = cost_basis_values[start_idx:]
-                    else:
-                        d_basis = None
-                else:
-                    d_dates, d_deposits, d_values, d_basis = [], [], [], []
-            else:
-                 d_dates, d_deposits, d_values, d_basis = dates, net_deposits, portfolio_values, cost_basis_values
-
-            # 3. Render Chart
+            # Render Chart with FULL data (filtering handled by Plotly native Range Selector)
+            # This allows removing the external selectbox for perfect vertical alignment
             chart_fig = create_performance_chart(
-                d_dates, d_deposits, d_values, d_basis, 
+                dates, net_deposits, portfolio_values, cost_basis_values, 
                 title="Performance History",
                 privacy_mode=st.session_state.privacy_mode
             )
             st.plotly_chart(chart_fig, width='stretch')
-            
-            # 4. Render Timeframe Selector
-            selected_tf = st.selectbox(
-                "Timeframe",
-                options=["1M", "3M", "6M", "1Y", "All"],
-                index=4, 
-                key="performance_timeframe",
-                label_visibility="visible"
-            )
-            
-            # Force rerun if changed
-            if selected_tf != current_tf:
-                st.rerun()
 
     with col2:
         with st.container(border=True):
