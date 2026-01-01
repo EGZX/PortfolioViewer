@@ -111,16 +111,16 @@ def render_sidebar_controls():
                     
                     col1, col2 = st.columns(2)
                     with col1:
-                        if st.button("🔍 Review", use_container_width=True):
+                        if st.button("🔍 Review", width='stretch'):
                             st.session_state.show_duplicate_review = True
                             st.rerun()
                     with col2:
-                        if st.button("🔄 Scan Now", use_container_width=True):
+                        if st.button("🔄 Scan Now", width='stretch'):
                             with st.spinner("Scanning for duplicates..."):
                                 store.find_near_duplicates(min_score=60)
                             st.rerun()
                 else:
-                    if st.button("🔍 Scan for Duplicates", use_container_width=True):
+                    if st.button("🔍 Scan for Duplicates", width='stretch'):
                         with st.spinner("Scanning..."):
                             groups = store.find_near_duplicates(min_score=60)
                             if groups:
@@ -133,7 +133,7 @@ def render_sidebar_controls():
                 st.divider()
                 st.markdown("#### Export")
                 
-                if st.button("📥 Export Merged CSV", use_container_width=True):
+                if st.button("📥 Export Merged CSV", width='stretch'):
                     import csv
                     import io
                     from datetime import datetime
@@ -176,7 +176,7 @@ def render_sidebar_controls():
                             data=csv_data,
                             file_name=f"merged_transactions_{datetime.now().strftime('%Y%m%d')}.csv",
                             mime="text/csv",
-                            use_container_width=True
+                            width='stretch'
                         )
                     else:
                         st.warning("No transactions to export")

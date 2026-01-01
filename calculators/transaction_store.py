@@ -156,6 +156,7 @@ class TransactionStore:
                     cost_basis_local_enc TEXT,
                     cost_basis_eur_enc TEXT,
                     fx_rate_enc TEXT,
+                    withholding_tax_enc TEXT,
                     
                     -- Currencies (not encrypted)
                     currency TEXT,
@@ -281,6 +282,7 @@ class TransactionStore:
             'cost_basis_local_enc': self.encryption.encrypt_decimal(getattr(txn, 'cost_basis_local', None)),
             'cost_basis_eur_enc': self.encryption.encrypt_decimal(getattr(txn, 'cost_basis_eur', None)),
             'fx_rate_enc': self.encryption.encrypt_decimal(getattr(txn, 'fx_rate', None)),
+            'withholding_tax_enc': self.encryption.encrypt_decimal(getattr(txn, 'withholding_tax', None)),
             
             'currency': txn.currency,
             'original_currency': getattr(txn, 'original_currency', txn.currency),
@@ -316,6 +318,7 @@ class TransactionStore:
             cost_basis_local=self.encryption.decrypt_decimal(row['cost_basis_local_enc']),
             cost_basis_eur=self.encryption.decrypt_decimal(row['cost_basis_eur_enc']),
             fx_rate=self.encryption.decrypt_decimal(row['fx_rate_enc']) or Decimal(1),
+            withholding_tax=self.encryption.decrypt_decimal(row.get('withholding_tax_enc')) or Decimal(0),
         )
     
     def append_transactions(

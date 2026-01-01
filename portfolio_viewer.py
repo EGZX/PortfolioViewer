@@ -490,12 +490,21 @@ def main():
             # Create transaction history DataFrame
             trans_data = []
             for trans in sorted(transactions, key=lambda t: t.date, reverse=True):
+                # Handle Display Logic
+                ticker_disp = trans.ticker or '-'
+                asset_type_disp = trans.asset_type.value if hasattr(trans, 'asset_type') else 'Unknown'
+                
+                # Interest / Cash handling
+                if trans.type.value == "Interest":
+                     if ticker_disp == '-': ticker_disp = "CASH"
+                     if asset_type_disp == "Unknown": asset_type_disp = "Cash"
+
                 trans_data.append({
                     'Date': trans.date.strftime('%Y-%m-%d'),
                     'Type': trans.type.value,
-                    'Ticker': trans.ticker or '-',
+                    'Ticker': ticker_disp,
                     'Name': trans.name or '-',
-                    'Asset Type': trans.asset_type.value if hasattr(trans, 'asset_type') else 'Unknown',
+                    'Asset Type': asset_type_disp,
                     'Shares': float(trans.shares) if trans.shares != 0 else 0.0,
                     'Price': f"€{float(trans.price):.2f}" if trans.price != 0 else '-',
                     'Fees': mask_currency_precise(float(trans.fees), st.session_state.privacy_mode) if trans.fees != 0 else '-',
@@ -541,7 +550,7 @@ def main():
                 
                 st.dataframe(
                     filtered_df,
-                    use_container_width=True,
+                    width='stretch',
                     hide_index=True
                 )
                 
@@ -652,7 +661,7 @@ def main():
                     
                     st.dataframe(
                         pd.DataFrame(breakdown_data),
-                        use_container_width=True,
+                        width='stretch',
                         hide_index=True
                     )
                 
@@ -661,23 +670,45 @@ def main():
                 
                 events_data = []
                 for event in sorted(events, key=lambda e: e.date_sold, reverse=True):
+                    # Determine clear types
+                    event_type = "Sell"
+                    asset_type = event.asset_type
+                    ticker_disp = event.ticker
+                    
+                    if event.quantity_sold == 0:
+                        # Income Event
+                        if event.notes and "Interest" in event.notes:
+                            event_type = "Interest"
+                            asset_type = "Cash"
+                            if not ticker_disp or ticker_disp == "None":
+                                ticker_disp = "CASH"
+                        elif event.notes and "Dividend" in event.notes:
+                            event_type = "Dividend"
+                        else:
+                            event_type = "Income"
+                    
+                    # Fix "Unknown" asset type if it looks like Cash/Interest
+                    if asset_type == "Unknown" and event_type == "Interest":
+                        asset_type = "Cash"
+
                     events_data.append({
-                        "Date Sold": event.date_sold.strftime("%Y-%m-%d"),
-                        "Ticker": event.ticker,
-                        "Asset Type": event.asset_type,
-                        "Quantity": float(event.quantity_sold),
+                        "Date": event.date_sold.strftime("%Y-%m-%d"),
+                        "Type": event_type,
+                        "Ticker": ticker_disp,
+                        "Asset": asset_type,
+                        "Qty": float(event.quantity_sold) if event.quantity_sold > 0 else "",
                         "Proceeds (EUR)": mask_currency_precise(float(event.proceeds_base), st.session_state.privacy_mode),
-                        "Cost Basis (EUR)": mask_currency_precise(float(event.cost_basis_base), st.session_state.privacy_mode),
-                        "Realized Gain (EUR)": mask_currency_precise(float(event.realized_gain), st.session_state.privacy_mode),
-                        "Holding Period (days)": event.holding_period_days,
-                        "Date Acquired": event.date_acquired.strftime("%Y-%m-%d"),
+                        "Cost (EUR)": mask_currency_precise(float(event.cost_basis_base), st.session_state.privacy_mode),
+                        "Gain/Loss (EUR)": mask_currency_precise(float(event.realized_gain), st.session_state.privacy_mode),
+                        "Days": event.holding_period_days if event.holding_period_days > 0 else "",
+                        "Acquired": event.date_acquired.strftime("%Y-%m-%d"),
                     })
                 
                 events_df = pd.DataFrame(events_data)
                 
                 st.dataframe(
                     events_df,
-                    use_container_width=True,
+                    width='stretch',
                     hide_index=True,
                     height=400
                 )

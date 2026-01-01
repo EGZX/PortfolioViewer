@@ -73,7 +73,12 @@ class AustriaTaxCalculator(TaxCalculator):
         if not year_events:
             return self._create_zero_liability(tax_year)
         
-        # Initialize Pots
+        # Split into Foreign (E1kv - Untaxed) and Domestic (Endbesteuert - Taxed)
+        # Using 0.01 threshold to avoid float dust
+        year_events_foreign = [e for e in year_events if e.tax_already_paid < Decimal('0.01')]
+        year_events_domestic = [e for e in year_events if e.tax_already_paid >= Decimal('0.01')]
+        
+        # Initialize Pots (Foreign Only for E1kv)
         pots = {
             "kz_863": Decimal(0), # Dividends/Interest
             "kz_898": Decimal(0), # Fund Distributions
@@ -89,12 +94,12 @@ class AustriaTaxCalculator(TaxCalculator):
         fund_types = {"ETF", "FUND", "MUTUALFUND"}
         deriv_types = {"OPTION", "FUTURE", "CFD", "WARRANT"}
         
-        for event in year_events:
+        # Process Foreign (Untaxed) Events for E1kv
+        for event in year_events_foreign:
             amount = event.realized_gain
             asset_type_upper = event.asset_type.upper() if event.asset_type else "STOCK"
             
             # Check for Income (Dividend/Interest)
-            # Logic: Quantity Sold == 0 implies pure income event
             is_income = event.quantity_sold == 0
             
             if is_income:
@@ -107,7 +112,7 @@ class AustriaTaxCalculator(TaxCalculator):
                 total_gains += amount
                 
             else:
-                # Sale Event (Realized Gain/Loss)
+                # Sale Event
                 is_deriv = asset_type_upper in deriv_types
                 
                 if is_deriv:
@@ -119,7 +124,6 @@ class AustriaTaxCalculator(TaxCalculator):
                         pots["kz_896"] += loss
                         total_losses += loss
                 else:
-                    # Stock/Fund/Bond Sale
                     if amount >= 0:
                         pots["kz_994"] += amount
                         total_gains += amount
@@ -127,9 +131,13 @@ class AustriaTaxCalculator(TaxCalculator):
                         loss = abs(amount)
                         pots["kz_892"] += loss
                         total_losses += loss
+        
+        # Process Domestic (Taxed) Events for Information
+        domestic_gains = sum(e.realized_gain for e in year_events_domestic if e.realized_gain > 0)
+        domestic_losses = sum(abs(e.realized_gain) for e in year_events_domestic if e.realized_gain < 0)
+        domestic_tax_paid = sum(e.tax_already_paid for e in year_events_domestic)
                         
-        # Netting per § 27 Abs 8 EStG
-        # Losses offset gains within the Schedule
+        # Netting per § 27 Abs 8 EStG (Foreign Only)
         net_taxable_gain = total_gains - total_losses
         
         # Calculate Tax (27.5%)
@@ -139,24 +147,27 @@ class AustriaTaxCalculator(TaxCalculator):
             
         # Breakdown for Report
         breakdown = {
-            "Kz 863 (Dividends/Interest)": pots["kz_863"],
-            "Kz 898 (Fund Distributions)": pots["kz_898"],
-            "Kz 994 (Realized Gains)": pots["kz_994"],
-            "Kz 892 (Realized Losses)": pots["kz_892"],
-            "Kz 995 (Derivative Gains)": pots["kz_995"],
-            "Kz 896 (Derivative Losses)": pots["kz_896"],
+            "Kz 863 (Dividends/Interest Foreign)": pots["kz_863"],
+            "Kz 898 (Fund Distributions Foreign)": pots["kz_898"],
+            "Kz 994 (Realized Gains Foreign)": pots["kz_994"],
+            "Kz 892 (Realized Losses Foreign)": pots["kz_892"],
+            "Kz 995 (Derivative Gains Foreign)": pots["kz_995"],
+            "Kz 896 (Derivative Losses Foreign)": pots["kz_896"],
             "total_gains": total_gains,
             "total_losses": total_losses,
             "net_taxable_gain": net_taxable_gain,
             "tax_rate": self.CAPITAL_GAINS_TAX_RATE,
-            "tax_owed": tax_owed
+            "tax_owed": tax_owed,
+            # Domestic Info
+            "domestic_income_gross": domestic_gains - domestic_losses,
+            "domestic_tax_withheld": domestic_tax_paid
         }
         
         assumptions = [
             f"Capital gains tax rate (KESt): {self.CAPITAL_GAINS_TAX_RATE * 100}%",
-            "Report maps to Form E1kv (Foreign Income/Auslandsdepot)",
-            "Losses offset gains across all categories (Stock/Fund/Derivative)",
-            "Fees and transaction costs do not reduce taxable gains (Standard AT assumption)",
+            "Report maps to Form E1kv (Foreign Income/Auslandsdepot) ONLY",
+            f"Excluded {len(year_events_domestic)} domestic transactions where tax was already withheld (Endbesteuert)",
+            "Losses offset gains within the same tax year (Foreign bucket)",
             "FX gains calculated day-accurately on transaction dates"
         ]
         

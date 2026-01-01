@@ -112,7 +112,8 @@ class FIFOStrategy(LotMatchingStrategy):
                 lot_matching_method=LotMatchingMethod.FIFO,
                 lot_ids_used=[lot.lot_id],
                 sale_currency=sell_transaction.original_currency,
-                sale_fx_rate=sell_transaction.fx_rate
+                sale_fx_rate=sell_transaction.fx_rate,
+                tax_already_paid=(qty_from_lot / sell_transaction.shares) * sell_transaction.withholding_tax * sell_transaction.fx_rate
             )
             
             events.append(event)
@@ -198,9 +199,9 @@ class WeightedAverageStrategy(LotMatchingStrategy):
             holding_period_days=(sell_transaction.date.date() - merged_lot.acquisition_date).days,
             lot_matching_method=LotMatchingMethod.WEIGHTED_AVERAGE,
             lot_ids_used=[merged_lot.lot_id],
-            sale_currency=sell_transaction.original_currency,
             sale_fx_rate=sell_transaction.fx_rate,
-            notes="Calculated using weighted average cost basis"
+            notes="Calculated using weighted average cost basis",
+            tax_already_paid=(qty_to_sell / sell_transaction.shares) * sell_transaction.withholding_tax * sell_transaction.fx_rate
         )
         
         # Update merged lot state
@@ -364,7 +365,8 @@ class TaxBasisEngine:
                 lot_matching_method=LotMatchingMethod.SPECIFIC_ID,
                 sale_currency=txn.original_currency,
                 sale_fx_rate=txn.fx_rate,
-                notes=txn.type.value # Stores "Dividend" or "Interest"
+                notes=txn.type.value, # Stores "Dividend" or "Interest"
+                tax_already_paid=txn.withholding_tax * txn.fx_rate
             )
             self.realized_events.append(event)
     

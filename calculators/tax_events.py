@@ -101,6 +101,7 @@ class TaxEvent:
     sale_fx_rate: Decimal = field(default_factory=lambda: Decimal(1))
     sale_fx_source: str = "unknown"
     notes: Optional[str] = None
+    tax_already_paid: Decimal = field(default_factory=lambda: Decimal(0))
     
     def is_short_term(self, threshold_days: int = 365) -> bool:
         """Check if this is a short-term gain (US/UK style)."""

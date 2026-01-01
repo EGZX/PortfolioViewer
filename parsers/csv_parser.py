@@ -43,7 +43,7 @@ class CSVParser:
         'fx_rate': ['fxrate', 'exchange_rate', 'fx', 'rate'],
         'broker': ['broker', 'depot', 'account'],
         'reference_id': ['reference_id', 'transaction_id', 'order_id', 'trade_id'],
-        'withholding_tax': ['withholding_tax', 'tax_withheld', 'withheld'],
+        'withholding_tax': ['withholding_tax', 'tax_withheld', 'withheld', 'tax'],
         'realized_gain': ['realizedgains', 'realized_gains', 'realized_gain', 'gain_loss'],
     }
     
