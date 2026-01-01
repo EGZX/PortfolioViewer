@@ -68,12 +68,23 @@ class Portfolio:
     
     def process_transaction(self, t: Transaction):
         """Update portfolio state with a single transaction."""
-        # Transaction totals are already in EUR from CSV parser
-        amount_eur = t.total
+        # Transaction totals are in NATIVE currency
+        amount_native = t.total
         
-        # Convert and track fees
+        # Calculate EUR equivalent for Portfolio Aggregates
+        amount_eur = amount_native
+        if t.original_currency != 'EUR':
+             # Use transaction's FX rate (default 1 if missing)
+             rate = t.fx_rate if t.fx_rate and t.fx_rate > 0 else Decimal(1)
+             amount_eur = amount_native * rate
+        
+        # Convert and track fees (aggregates always EUR)
         if t.fees:
-            fees_eur = t.fees * t.fx_rate if t.original_currency != 'EUR' else t.fees
+            fees_native = t.fees
+            fees_eur = fees_native
+            if t.original_currency != 'EUR':
+                rate = t.fx_rate if t.fx_rate and t.fx_rate > 0 else Decimal(1)
+                fees_eur = fees_native * rate
             self.total_fees += fees_eur
         
         # Cash balance excludes stock transfers (only actual cash movements)
@@ -160,12 +171,12 @@ class Portfolio:
             if t.type in [TransactionType.BUY, TransactionType.TRANSFER_IN, TransactionType.STOCK_DIVIDEND]:
                 pos.shares += t.shares
                 
-                # For transfers, assume cost basis increases by the value transferred
-                amt = abs(amount_eur)
+                # Cost Basis tracked in NATIVE currency
+                amt_native = abs(amount_native)
                 if t.type == TransactionType.STOCK_DIVIDEND:
-                    amt = 0
+                    amt_native = 0
                 
-                pos.cost_basis += amt
+                pos.cost_basis += amt_native
                 
             # Decrease Position
             elif t.type in [TransactionType.SELL, TransactionType.TRANSFER_OUT]:
