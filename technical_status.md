@@ -8,14 +8,14 @@
 
 ## ✅ COMPLETED COMPONENTS
 
-### 1. Enhanced FX Rate Service ([services/fx_rates.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/services/fx_rates.py))
+### 1. Enhanced FX Rate Service ([services/fx_rates.py](PortfolioViewer/services/fx_rates.py))
 
 **Status:** IMPLEMENTED & TESTED
 
 **What was done:**
-- Created [CentralBankRateFetcher](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/services/fx_rates.py#46-171) class with ECB and Fed API integration
+- Created [CentralBankRateFetcher](PortfolioViewer/services/fx_rates.py#46-171) class with ECB and Fed API integration
 - Implemented priority chain: Central Bank APIs → yfinance fallback
-- Enhanced `FXRateService.get_rate()` to return [(Decimal, str)](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#28-71) tuple
+- Enhanced `FXRateService.get_rate()` to return [(Decimal, str)](PortfolioViewer/calculators/tax_events.py#28-71) tuple
   - First value: exchange rate
   - Second value: source tag ("CB:ECB", "CB:Fed", "yfinance", "cache")
 - Persistent caching in SQLite via existing `market_cache`
@@ -40,22 +40,22 @@ FXRateService.get_rate(from, to, date, prefer_official=True) -> Tuple[Decimal, s
 
 ---
 
-### 2. Tax Data Models ([calculators/tax_events.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py))
+### 2. Tax Data Models ([calculators/tax_events.py](PortfolioViewer/calculators/tax_events.py))
 
 **Status:** IMPLEMENTED
 
 **What was done:**
-- [LotMatchingMethod](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#21-26) enum (FIFO, WeightedAverage, SpecificID)
-- [TaxLot](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#28-71) dataclass - represents a specific purchase lot
+- [LotMatchingMethod](PortfolioViewer/calculators/tax_events.py#21-26) enum (FIFO, WeightedAverage, SpecificID)
+- [TaxLot](PortfolioViewer/calculators/tax_events.py#28-71) dataclass - represents a specific purchase lot
   - Required fields: lot_id, ticker, acquisition_date, quantity, cost_basis_base, etc.
   - Optional fields: ISIN, asset_name, fees, FX metadata
-  - Methods: [remaining_cost_basis()](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#58-61), [is_exhausted()](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#68-71)
-- [TaxEvent](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#73-112) dataclass - represents a realized taxable sale
+  - Methods: [remaining_cost_basis()](PortfolioViewer/calculators/tax_events.py#58-61), [is_exhausted()](PortfolioViewer/calculators/tax_events.py#68-71)
+- [TaxEvent](PortfolioViewer/calculators/tax_events.py#73-112) dataclass - represents a realized taxable sale
   - Tracks: event_id, dates, quantities, proceeds, cost_basis, realized_gain
-  - Methods: [is_short_term()](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#105-108), [is_long_term()](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#109-112)
-- [TaxLiability](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#114-133) dataclass - country-specific tax calculation result
+  - Methods: [is_short_term()](PortfolioViewer/calculators/tax_events.py#105-108), [is_long_term()](PortfolioViewer/calculators/tax_events.py#109-112)
+- [TaxLiability](PortfolioViewer/calculators/tax_events.py#114-133) dataclass - country-specific tax calculation result
   - Contains: jurisdiction, tax_year, total_gain, taxable_gain, tax_owed, breakdown
-- [ImportResult](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#135-144), [DuplicateWarning](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_events.py#146-155) - for multi-CSV workflow (structures only)
+- [ImportResult](PortfolioViewer/calculators/tax_events.py#135-144), [DuplicateWarning](PortfolioViewer/calculators/tax_events.py#146-155) - for multi-CSV workflow (structures only)
 
 **Field Ordering:** Fixed dataclass field ordering (required fields before optional)
 
@@ -65,19 +65,19 @@ FXRateService.get_rate(from, to, date, prefer_official=True) -> Tuple[Decimal, s
 
 ---
 
-### 3. Universal Tax Basis Engine ([calculators/tax_basis.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_basis.py))
+### 3. Universal Tax Basis Engine ([calculators/tax_basis.py](PortfolioViewer/calculators/tax_basis.py))
 
 **Status:** IMPLEMENTED & TESTED
 
 **What was done:**
 
 #### Core Architecture:
-- [LotMatchingStrategy](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_basis.py#28-71) abstract base class
-- [FIFOStrategy](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_basis.py#73-159) - First-In-First-Out implementation
+- [LotMatchingStrategy](PortfolioViewer/calculators/tax_basis.py#28-71) abstract base class
+- [FIFOStrategy](PortfolioViewer/calculators/tax_basis.py#73-159) - First-In-First-Out implementation
   - Sorts lots by acquisition date (oldest first)
   - Matches sells against multiple lots if needed
   - Generates one TaxEvent per lot consumed
-- [WeightedAverageStrategy](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_basis.py#161-265) - German/DACH implementation
+- [WeightedAverageStrategy](PortfolioViewer/calculators/tax_basis.py#161-265) - German/DACH implementation
   - Merges all lots on every BUY
   - Maintains single averaged lot per asset
   - Generates one TaxEvent per sell (from merged lot)
@@ -102,7 +102,7 @@ export_to_json(filepath)
 **Test Results:**
 - FIFO: ✅ Correctly matches 100 shares from lot 1, 20 from lot 2
 - Weighted Average: ✅ Correctly merges lots and calculates average cost basis
-- Test file: [tests/test_tax_engine.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/tests/test_tax_engine.py)
+- Test file: [tests/test_tax_engine.py](PortfolioViewer/tests/test_tax_engine.py)
 
 **What's NOT done:**
 - SpecificIDStrategy implementation
@@ -112,14 +112,14 @@ export_to_json(filepath)
 
 ---
 
-### 4. Austrian Tax Calculator ([calculators/tax_calculators/austria.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_calculators/austria.py))
+### 4. Austrian Tax Calculator ([calculators/tax_calculators/austria.py](PortfolioViewer/calculators/tax_calculators/austria.py))
 
 **Status:** IMPLEMENTED & TESTED (2026-01-01)
 
 **What was done:**
 
 #### Tax Calculator Base Architecture:
-- [TaxCalculator](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/tax_calculators/base.py#15-88) abstract base class
+- [TaxCalculator](PortfolioViewer/calculators/tax_calculators/base.py#15-88) abstract base class
 - Registry-based factory pattern with `@register_calculator` decorator
 - `get_calculator(jurisdiction_code)` factory method
 - Helper methods for event filtering and gain aggregation
@@ -157,10 +157,10 @@ Tax Owed (27.5%): €T
 - No holding period exemption verification
 - Loss offsetting within tax year
 - Edge cases (zero events, wrong year)
-- Test file: [tests/test_austria_tax.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/tests/test_austria_tax.py)
+- Test file: [tests/test_austria_tax.py](PortfolioViewer/tests/test_austria_tax.py)
 
 **Demo Script:**
-- [examples/austria_tax_demo.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/examples/austria_tax_demo.py)
+- [examples/austria_tax_demo.py](PortfolioViewer/examples/austria_tax_demo.py)
 - Shows formatted output with real calculations
 - Example: €13,000 taxable gain → €3,575 tax owed
 
@@ -196,7 +196,7 @@ Tax Owed (27.5%): €T
 
 ---
 
-### 5. Tax Reporting UI ([portfolio_viewer.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/portfolio_viewer.py#365-694))
+### 5. Tax Reporting UI ([portfolio_viewer.py](PortfolioViewer/portfolio_viewer.py#365-694))
 
 **Status:** IMPLEMENTED & TESTED (2026-01-01)
 
@@ -268,7 +268,7 @@ strategy = st.selectbox("Lot Matching", ["FIFO", "WeightedAverage"])
 
 ---
 
-### 7. Multi-CSV Ingestion & Encrypted TransactionStore ([calculators/transaction_store.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/calculators/transaction_store.py))
+### 7. Multi-CSV Ingestion & Encrypted TransactionStore ([calculators/transaction_store.py](PortfolioViewer/calculators/transaction_store.py))
 
 **Status:** IMPLEMENTED & TESTED (2026-01-01)
 
@@ -329,7 +329,7 @@ CREATE TABLE import_history (
 - Hash stored for O(1) duplicate detection
 - Configurable strategies: `hash_first`, `keep_all`
 
-#### UI Integration ([ui/sidebar.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/ui/sidebar.py)):
+#### UI Integration ([ui/sidebar.py](PortfolioViewer/ui/sidebar.py)):
 
 **Multi-Source Mode Toggle:**
 - Enable/disable persistent storage
@@ -344,7 +344,7 @@ CREATE TABLE import_history (
    - Transaction count
    - Delete button (🗑️)
 
-**Main App Integration ([portfolio_viewer.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/portfolio_viewer.py)):**
+**Main App Integration ([portfolio_viewer.py](PortfolioViewer/portfolio_viewer.py)):**
 - Detects `MULTI_SOURCE_MODE` marker
 - Loads all transactions from TransactionStore
 - Automatic decryption
@@ -370,7 +370,7 @@ TRANSACTION_STORE_ENCRYPTION_KEY = "base64-encoded-key"
 - ✅ Individual field encryption (not full-row)
 - ✅ Encrypted data verified in tests
 
-#### Test Coverage ([tests/test_transaction_store.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/tests/test_transaction_store.py)):
+#### Test Coverage ([tests/test_transaction_store.py](PortfolioViewer/tests/test_transaction_store.py)):
 
 **EncryptionManager Tests:**
 - String encryption/decryption
@@ -483,7 +483,7 @@ CREATE TABLE transactions (
 CREATE INDEX idx_hash ON transactions(transaction_hash);
 ```
 
-#### B. Enhanced DataValidator ([services/data_validator.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/services/data_validator.py))
+#### B. Enhanced DataValidator ([services/data_validator.py](PortfolioViewer/services/data_validator.py))
 
 **Existing:** Basic validation (orphaned sells, sign conventions, etc.)
 
@@ -523,7 +523,7 @@ class TransactionDeduplicator:
 **Required Components:**
 
 #### A. New Streamlit Tab
-- Location: [portfolio_viewer.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/portfolio_viewer.py) (main app)
+- Location: [portfolio_viewer.py](PortfolioViewer/portfolio_viewer.py) (main app)
 - Tab name: "Tax Reporting"
 - Position: After "Performance" tab
 
@@ -571,7 +571,7 @@ st.download_button("Export JSON", events_to_json(events))
 
 **Required:**
 
-#### Extend [services/corporate_actions.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/services/corporate_actions.py):
+#### Extend [services/corporate_actions.py](PortfolioViewer/services/corporate_actions.py):
 ```python
 def apply_spinoff_basis_split(
     parent_lots: List[TaxLot],
@@ -615,7 +615,7 @@ if txn.type == TransactionType.SPIN_OFF:
 **Status:** BASIC TESTS EXIST, COMPREHENSIVE SUITE NEEDED
 
 **Existing:**
-- [tests/test_tax_engine.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/tests/test_tax_engine.py) - Basic FIFO/WeightedAverage tests (2 test cases)
+- [tests/test_tax_engine.py](PortfolioViewer/tests/test_tax_engine.py) - Basic FIFO/WeightedAverage tests (2 test cases)
 
 **To Add:**
 
@@ -658,7 +658,7 @@ if txn.type == TransactionType.SPIN_OFF:
   - How to export for tax filing
 
 #### Technical Documentation:
-- Update [README.md](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/README.md) with Tax Basis Engine section
+- Update [README.md](PortfolioViewer/README.md) with Tax Basis Engine section
 - API documentation for tax calculators (how to add new countries)
 - Architecture diagram (Mermaid)
 
@@ -681,11 +681,11 @@ if txn.type == TransactionType.SPIN_OFF:
 | **Tax Calculators** | **✅ Austria Complete** | **8-12h (other countries)** |
 | **Tax Reporting UI** | **✅ Complete** | **0h** |
 | **Multi-CSV Ingestion** | **✅ Complete (Encrypted)** | **0h** |
-| Corporate Actions | ❌ Not Started | 6-8h |
-| Testing | 🚧 Minimal | 2-4h (integration) |
+| Corporate Actions | ✅ Complete (Splits) | 2-4h (mergers/dividends) |
+| **Integration Testing** | **✅ Complete** | **0h** |
 | Documentation | ✅ Complete | 0h |
 
-**Total Remaining:** ~18-26 hours
+**Total Remaining:** ~12-18 hours (optional enhancements)
 
 ---
 
@@ -704,7 +704,7 @@ if txn.type == TransactionType.SPIN_OFF:
 **Status:** **Tax reporting and multi-broker portfolio tracking fully operational**
 
 ### Phase 4: Corporate Actions (NEXT)
-1. Add "Tax Reporting" tab to [portfolio_viewer.py](file:///c:/Users/Andre/PycharmProjects/PortfolioViewer/portfolio_viewer.py)
+1. Add "Tax Reporting" tab to [portfolio_viewer.py](PortfolioViewer/portfolio_viewer.py)
 2. Wire up engine + calculator
 3. Display summary metrics
 4. Add export functionality

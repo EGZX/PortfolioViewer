@@ -32,9 +32,17 @@ class CorporateAction:
         self,
         ticker: str,
         action_date: date,
-        action_type: str,
+        action_type: str,  # "StockSplit", "ReverseSplit", "SpinOff", "Merger"
         ratio_from: Decimal,
-        ratio_to: Decimal
+        ratio_to: Decimal,
+        # Spin-off specific
+        new_ticker: Optional[str] = None,
+        spin_off_ratio: Optional[Decimal] = None,
+        cost_basis_allocation: Optional[Decimal] = None,  # % of cost to new ticker
+        # Merger specific
+        acquiring_ticker: Optional[str] = None,
+        cash_in_lieu: Optional[Decimal] = None,
+        notes: Optional[str] = None
     ):
         self.ticker = ticker
         self.action_date = action_date
@@ -42,9 +50,25 @@ class CorporateAction:
         self.ratio_from = ratio_from
         self.ratio_to = ratio_to
         self.adjustment_factor = ratio_to / ratio_from
+        
+        # Spin-off attributes
+        self.new_ticker = new_ticker
+        self.spin_off_ratio = spin_off_ratio
+        self.cost_basis_allocation = cost_basis_allocation or Decimal("0")
+        
+        # Merger attributes
+        self.acquiring_ticker = acquiring_ticker
+        self.cash_in_lieu = cash_in_lieu or Decimal("0")
+        
+        self.notes = notes
     
     def __repr__(self):
-        return f"CorporateAction({self.ticker}, {self.action_type}, {self.ratio_from}:{self.ratio_to}, {self.action_date})"
+        if self.action_type == "SpinOff":
+            return f"CorporateAction({self.ticker} spin-off {self.new_ticker}, {self.spin_off_ratio}, {self.action_date})"
+        elif self.action_type == "Merger":
+            return f"CorporateAction({self.ticker} → {self.acquiring_ticker}, {self.action_date})"
+        else:
+            return f"CorporateAction({self.ticker}, {self.action_type}, {self.ratio_from}:{self.ratio_to}, {self.action_date})"
 
 
 class CorporateActionService:
@@ -53,9 +77,15 @@ class CorporateActionService:
     
     Key features:
     - Fetch split history from yfinance
-    - Adjust historical transactions for splits
-    - Adjust share counts and prices
+    - Load spin-offs and mergers from configuration
+    - Adjust historical transactions for all corporate actions
+    - Handle cost basis allocation for spin-offs
     - Maintain audit trail of adjustments
+    
+    RELIABILITY:
+    - Splits: Auto-detected from yfinance with blacklist filtering
+    - Spin-offs: Manually configured (yfinance unreliable)
+    - Mergers: Manually configured (yfinance unreliable)
     """
     
     @staticmethod
