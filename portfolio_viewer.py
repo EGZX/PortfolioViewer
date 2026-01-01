@@ -19,7 +19,6 @@ import streamlit as st
 from datetime import datetime
 from decimal import Decimal
 import pandas as pd
-
 from calculators.portfolio import Portfolio
 from calculators.metrics import xirr, calculate_absolute_return, calculate_volatility, calculate_sharpe_ratio, calculate_max_drawdown
 from services.market_data import fetch_prices, get_currency_for_ticker, get_fx_rate
@@ -27,12 +26,9 @@ from services.market_cache import get_market_cache
 from services.corporate_actions import CorporateActionService
 from services.data_validator import DataValidator
 from services.pipeline import process_data_pipeline, parse_csv_only
-
 from charts.visualizations import create_allocation_donut, create_performance_chart, create_allocation_treemap
 from utils.logging_config import setup_logger
 from utils.auth import check_authentication, show_logout_button
-
-# UI Imports
 from ui.styles import APP_STYLE
 from ui.components import render_kpi_dashboard
 from ui.sidebar import render_sidebar_controls, render_sidebar_status
