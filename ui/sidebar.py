@@ -8,7 +8,8 @@
 
 import streamlit as st
 from services.market_cache import get_market_cache
-from services.pipeline import parse_csv_only
+from services.pipeline import parse_csv_only, process_data_pipeline
+from calculators.transaction_store import TransactionStore
 from utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
@@ -21,40 +22,130 @@ def render_sidebar_controls():
     with st.sidebar:
         st.markdown("### DATA IMPORT")
         
-        uploaded_file = st.file_uploader(
-            "Import CSV",
-            type=['csv'],
-            label_visibility="collapsed",
-            help="Upload transaction history"
+        # Initialize multi-source mode state
+        if 'use_multi_source' not in st.session_state:
+            st.session_state.use_multi_source = False
+        
+        # Mode toggle
+        multi_source_mode = st.toggle(
+            "Multi-Source Mode",
+            value=st.session_state.use_multi_source,
+            help="Enable persistent storage for multiple broker accounts"
         )
         
-        # Cache Loading Logic
-        cache = get_market_cache()
-        cached_data = cache.get_last_transactions_csv()
+        if multi_source_mode != st.session_state.use_multi_source:
+            st.session_state.use_multi_source = multi_source_mode
+            st.rerun()
         
-        file_content = None
-        filename = None
-        using_cache = False
-
-        if uploaded_file is not None:
-            file_content = uploaded_file.getvalue().decode('utf-8')
-            filename = uploaded_file.name
-            st.caption(f"Loaded: {filename}")
+        # --- MULTI-SOURCE MODE ---
+        if st.session_state.use_multi_source:
             try:
-                cache.save_transactions_csv(file_content, filename)
-            except Exception as e:
-                logger.error(f"Cache save failed: {e}")
+                store = TransactionStore()
                 
-        elif cached_data:
-            csv_content, cache_filename, uploaded_at = cached_data
-            file_content = csv_content
-            filename = cache_filename
-            using_cache = True
-            st.caption(f"Cached: {cache_filename} | {uploaded_at.strftime('%H:%M')}")
+                # Multi-file upload
+                uploaded_files = st.file_uploader(
+                    "Upload CSV Files",
+                    type=['csv'],
+                    accept_multiple_files=True,
+                    label_visibility="collapsed",
+                    help="Upload one or more transaction files"
+                )
+                
+                if uploaded_files:
+                    source_name = st.text_input(
+                        "Source Name",
+                        value=f"Import_{len(store.get_sources()) + 1}",
+                        help="Name for this import (e.g., 'Broker_A', 'Degiro_2024')"
+                    )
+                    
+                    if st.button("Import Files", type="primary"):
+                        with st.spinner("Importing transactions..."):
+                            total_added = 0
+                            total_skipped = 0
+                            
+                            for uploaded_file in uploaded_files:
+                                file_content = uploaded_file.getvalue().decode('utf-8')
+                                
+                                # Parse and enrich transactions
+                                transactions, _, _ = process_data_pipeline(file_content)
+                                
+                                # Add to store
+                                result = store.append_transactions(
+                                    transactions,
+                                    source_name=f"{source_name}_{uploaded_file.name}",
+                                    dedup_strategy="hash_first"
+                                )
+                                
+                                total_added += result.added
+                                total_skipped += result.skipped
+                            
+                            st.success(f"✅ Added: {total_added} | Skipped: {total_skipped} (duplicates)")
+                            st.rerun()
+                
+                # Show active sources
+                st.markdown("#### Active Sources")
+                sources = store.get_sources()
+                counts = store.get_transaction_count_by_source()
+                
+                if sources:
+                    for source in sources:
+                        col1, col2, col3 = st.columns([3, 1, 1])
+                        with col1:
+                            st.text(source)
+                        with col2:
+                            st.caption(f"{counts.get(source, 0)} tx")
+                        with col3:
+                            if st.button("🗑️", key=f"del_{source}", help="Delete this source"):
+                                store.delete_by_source(source)
+                                st.success(f"Deleted {source}")
+                                st.rerun()
+                else:
+                    st.info("No sources imported yet")
+                
+                # Load all transactions from store for processing
+                file_content = "MULTI_SOURCE_MODE"  # Marker
+                
+            except Exception as e:
+                st.error(f"TransactionStore error: {str(e)}")
+                logger.error(f"Multi-source error: {e}", exc_info=True)
+                return None
         
-        if file_content is None:
-            st.info("Awaiting Data Import")
-            return None
+        # --- SINGLE-FILE MODE (Legacy) ---
+        else:
+            uploaded_file = st.file_uploader(
+                "Import CSV",
+                type=['csv'],
+                label_visibility="collapsed",
+                help="Upload transaction history"
+            )
+            
+            # Cache Loading Logic
+            cache = get_market_cache()
+            cached_data = cache.get_last_transactions_csv()
+            
+            file_content = None
+            filename = None
+            using_cache = False
+
+            if uploaded_file is not None:
+                file_content = uploaded_file.getvalue().decode('utf-8')
+                filename = uploaded_file.name
+                st.caption(f"Loaded: {filename}")
+                try:
+                    cache.save_transactions_csv(file_content, filename)
+                except Exception as e:
+                    logger.error(f"Cache save failed: {e}")
+                    
+            elif cached_data:
+                csv_content, cache_filename, uploaded_at = cached_data
+                file_content = csv_content
+                filename = cache_filename
+                using_cache = True
+                st.caption(f"Cached: {cache_filename} | {uploaded_at.strftime('%H:%M')}")
+            
+            if file_content is None:
+                st.info("Awaiting Data Import")
+                return None
 
         # Session State Init
         if 'enrichment_done' not in st.session_state:

@@ -53,6 +53,8 @@ bugfixing/
 # *.db  <-- Uncomment to ignore DB if not using it for persistence
 # data/ <-- Uncomment to ignore data dir
 
+# Tests
+#tests/
 
 # Configuration tools
 scripts/config_helper.py
