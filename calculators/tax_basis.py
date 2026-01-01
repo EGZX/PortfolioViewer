@@ -177,7 +177,9 @@ class WeightedAverageStrategy(LotMatchingStrategy):
         
         # Calculate proceeds and cost basis
         proceeds = abs(sell_transaction.total)
-        cost_basis = (qty_to_sell / merged_lot.quantity) * merged_lot.cost_basis_base
+        
+        # Cost basis portion for this sale (proportional to shares sold)
+        cost_basis_portion = (qty_to_sell / merged_lot.quantity) * merged_lot.cost_basis_base
         
         # Create single tax event
         event = TaxEvent(
@@ -191,8 +193,8 @@ class WeightedAverageStrategy(LotMatchingStrategy):
             acquisition_date_range=[merged_lot.acquisition_date],  # Could expand this
             quantity_sold=qty_to_sell,
             proceeds_base=Decimal(str(proceeds)),
-            cost_basis_base=Decimal(str(cost_basis)),
-            realized_gain=Decimal(str(proceeds - cost_basis)),
+            cost_basis_base=Decimal(str(cost_basis_portion)),
+            realized_gain=Decimal(str(proceeds - cost_basis_portion)),
             holding_period_days=(sell_transaction.date.date() - merged_lot.acquisition_date).days,
             lot_matching_method=LotMatchingMethod.WEIGHTED_AVERAGE,
             lot_ids_used=[merged_lot.lot_id],
@@ -201,8 +203,15 @@ class WeightedAverageStrategy(LotMatchingStrategy):
             notes="Calculated using weighted average cost basis"
         )
         
-        # Update merged lot
+        # Update merged lot state
         merged_lot.quantity -= qty_to_sell
+        merged_lot.cost_basis_base -= cost_basis_portion # Reduce the pool's total cost basis
+        
+        # CRITICAL FIX: The open lots must be updated to reflect the merged state
+        # Clear existing specific lots and replace with the single merged pool lot
+        open_lots.clear()
+        if merged_lot.quantity > 0:
+            open_lots.append(merged_lot)
         
         return [event]
     
@@ -333,6 +342,31 @@ class TaxBasisEngine:
                 lot for lot in self.open_lots[asset_key]
                 if not lot.is_exhausted()
             ]
+        
+        elif txn.type in [TransactionType.DIVIDEND, TransactionType.INTEREST]:
+            # Handle Income events (Dividends, Interest)
+            # These have 0 quantity sold and 0 cost basis
+            proceeds = abs(txn.total) * txn.fx_rate
+            
+            event = TaxEvent(
+                event_id=f"inc_{txn.date.strftime('%Y%m%d')}_{uuid.uuid4().hex[:8]}",
+                ticker=txn.ticker,
+                isin=txn.isin,
+                asset_name=txn.name,
+                asset_type=txn.asset_type.value,
+                date_sold=txn.date.date(),
+                date_acquired=txn.date.date(),
+                quantity_sold=Decimal(0),
+                proceeds_base=proceeds,
+                cost_basis_base=Decimal(0),
+                realized_gain=proceeds,
+                holding_period_days=0,
+                lot_matching_method=LotMatchingMethod.SPECIFIC_ID,
+                sale_currency=txn.original_currency,
+                sale_fx_rate=txn.fx_rate,
+                notes=txn.type.value # Stores "Dividend" or "Interest"
+            )
+            self.realized_events.append(event)
     
     def get_realized_events(
         self,

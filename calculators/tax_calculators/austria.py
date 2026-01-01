@@ -54,15 +54,18 @@ class AustriaTaxCalculator(TaxCalculator):
         **kwargs
     ) -> TaxLiability:
         """
-        Calculate Austrian capital gains tax liability.
+        Calculate Austrian capital gains tax liability (E1kv compliant).
+        Mappings to E1kv 2018+ Kennzahlen (Kz) for FOREIGN income (standard for self-reporting).
         
-        Args:
-            events: All tax events (will be filtered by year)
-            tax_year: Calendar year for tax calculation
-            **kwargs: Optional parameters (currently unused)
+        Kz Buckets:
+        - 863: Dividends, Interest (Stocks/Bonds)
+        - 898: Fund Distributions (ETFs/Funds)
+        - 994: Realized Gains (Stocks/Funds/Bonds)
+        - 892: Realized Losses (Stocks/Funds/Bonds)
+        - 995: Derivative Gains
+        - 896: Derivative Losses
         
-        Returns:
-            TaxLiability with Austrian KESt calculation
+        FX Gains are inherently calculated day-accurately via the TaxEvent proceeds/cost in EUR.
         """
         # Filter events to tax year
         year_events = self.filter_events_by_year(events, tax_year)
@@ -70,162 +73,121 @@ class AustriaTaxCalculator(TaxCalculator):
         if not year_events:
             return self._create_zero_liability(tax_year)
         
-        # Categorize events by asset type
-        categorized = self._categorize_events(year_events)
+        # Initialize Pots
+        pots = {
+            "kz_863": Decimal(0), # Dividends/Interest
+            "kz_898": Decimal(0), # Fund Distributions
+            "kz_994": Decimal(0), # Realized Gains
+            "kz_892": Decimal(0), # Realized Losses
+            "kz_995": Decimal(0), # Derivative Gains
+            "kz_896": Decimal(0), # Derivative Losses
+        }
         
-        # Calculate gains and losses separately for each asset type
-        breakdown = {}
         total_gains = Decimal(0)
         total_losses = Decimal(0)
         
-        for asset_type, type_events in categorized.items():
-            gains = Decimal(0)
-            losses = Decimal(0)
-            
-            for event in type_events:
-                # CRITICAL: In Austria, fees cannot reduce taxable gains
-                # We use the realized_gain which should already exclude fees
-                gain = event.realized_gain
-                
-                if gain > 0:
-                    gains += gain
-                else:
-                    losses += abs(gain)
-            
-            # Store in breakdown
-            breakdown[f"{asset_type}_gains"] = gains
-            breakdown[f"{asset_type}_losses"] = losses
-            breakdown[f"{asset_type}_net"] = gains - losses
-            
-            total_gains += gains
-            total_losses += losses
+        fund_types = {"ETF", "FUND", "MUTUALFUND"}
+        deriv_types = {"OPTION", "FUTURE", "CFD", "WARRANT"}
         
-        # Calculate net taxable gain
+        for event in year_events:
+            amount = event.realized_gain
+            asset_type_upper = event.asset_type.upper() if event.asset_type else "STOCK"
+            
+            # Check for Income (Dividend/Interest)
+            # Logic: Quantity Sold == 0 implies pure income event
+            is_income = event.quantity_sold == 0
+            
+            if is_income:
+                # Income Event
+                if asset_type_upper in fund_types:
+                    pots["kz_898"] += amount # Fund Distributions
+                else:
+                    pots["kz_863"] += amount # Stock/Bond Dividends/Interest
+                
+                total_gains += amount
+                
+            else:
+                # Sale Event (Realized Gain/Loss)
+                is_deriv = asset_type_upper in deriv_types
+                
+                if is_deriv:
+                    if amount >= 0:
+                        pots["kz_995"] += amount
+                        total_gains += amount
+                    else:
+                        loss = abs(amount)
+                        pots["kz_896"] += loss
+                        total_losses += loss
+                else:
+                    # Stock/Fund/Bond Sale
+                    if amount >= 0:
+                        pots["kz_994"] += amount
+                        total_gains += amount
+                    else:
+                        loss = abs(amount)
+                        pots["kz_892"] += loss
+                        total_losses += loss
+                        
+        # Netting per § 27 Abs 8 EStG
+        # Losses offset gains within the Schedule
         net_taxable_gain = total_gains - total_losses
         
-        # Apply 27.5% tax (only on positive net gains)
+        # Calculate Tax (27.5%)
         tax_owed = Decimal(0)
         if net_taxable_gain > 0:
             tax_owed = net_taxable_gain * self.CAPITAL_GAINS_TAX_RATE
+            
+        # Breakdown for Report
+        breakdown = {
+            "Kz 863 (Dividends/Interest)": pots["kz_863"],
+            "Kz 898 (Fund Distributions)": pots["kz_898"],
+            "Kz 994 (Realized Gains)": pots["kz_994"],
+            "Kz 892 (Realized Losses)": pots["kz_892"],
+            "Kz 995 (Derivative Gains)": pots["kz_995"],
+            "Kz 896 (Derivative Losses)": pots["kz_896"],
+            "total_gains": total_gains,
+            "total_losses": total_losses,
+            "net_taxable_gain": net_taxable_gain,
+            "tax_rate": self.CAPITAL_GAINS_TAX_RATE,
+            "tax_owed": tax_owed
+        }
         
-        # Add summary to breakdown
-        breakdown["total_gains"] = total_gains
-        breakdown["total_losses"] = total_losses
-        breakdown["net_taxable_gain"] = net_taxable_gain
-        breakdown["tax_rate"] = self.CAPITAL_GAINS_TAX_RATE
-        breakdown["tax_owed"] = tax_owed
-        
-        # Build assumptions list
         assumptions = [
             f"Capital gains tax rate (KESt): {self.CAPITAL_GAINS_TAX_RATE * 100}%",
-            "No annual tax-free allowance",
-            "Fees and transaction costs do not reduce taxable gains",
-            "Losses offset gains within the same tax year",
+            "Report maps to Form E1kv (Foreign Income/Auslandsdepot)",
+            "Losses offset gains across all categories (Stock/Fund/Derivative)",
+            "Fees and transaction costs do not reduce taxable gains (Standard AT assumption)",
+            "FX gains calculated day-accurately on transaction dates"
         ]
         
-        # Build notes
         notes = []
         if net_taxable_gain < 0:
-            notes.append(
-                f"Net loss of €{abs(net_taxable_gain):,.2f} - "
-                "losses can be carried forward (not implemented yet)"
-            )
-        
-        asset_counts = {k: len(v) for k, v in categorized.items()}
-        notes.append(
-            f"Events by type: {', '.join(f'{k}={v}' for k, v in asset_counts.items())}"
-        )
-        
+            notes.append(f"Net Loss of €{abs(net_taxable_gain):,.2f} remaining.")
+            
         return TaxLiability(
-            jurisdiction=f"{self.get_jurisdiction_name()} ({self.get_jurisdiction_code()})",
+            jurisdiction=f"{self.get_jurisdiction_name()} ({self.get_jurisdiction_code()}) - E1kv",
             tax_year=tax_year,
-            total_realized_gain=total_gains - total_losses,
-            taxable_gain=net_taxable_gain,
+            total_realized_gain=net_taxable_gain, # Net economic gain
+            taxable_gain=net_taxable_gain, # Taxable base
             tax_owed=tax_owed,
             breakdown=breakdown,
             notes=" | ".join(notes) if notes else None,
             assumptions=assumptions,
             calculation_date=date.today(),
-            calculator_version="1.0-AT"
+            calculator_version="2.0-AT-E1kv"
         )
-    
-    def _categorize_events(self, events: List[TaxEvent]) -> Dict[str, List[TaxEvent]]:
-        """
-        Categorize events by asset type.
-        
-        Args:
-            events: Tax events to categorize
-            
-        Returns:
-            Dictionary mapping asset type to list of events
-        """
-        categorized: Dict[str, List[TaxEvent]] = {}
-        
-        for event in events:
-            # Determine asset type
-            asset_type = self._get_asset_type(event)
-            
-            if asset_type not in categorized:
-                categorized[asset_type] = []
-            
-            categorized[asset_type].append(event)
-        
-        return categorized
-    
-    def _get_asset_type(self, event: TaxEvent) -> str:
-        """
-        Determine the asset type for categorization.
-        
-        Args:
-            event: Tax event
-            
-        Returns:
-            Asset type string (e.g., "Stock", "Crypto", "Bond")
-        """
-        # Use the asset_type field if available
-        if event.asset_type:
-            asset_type = event.asset_type.strip()
-            if asset_type:
-                return asset_type
-        
-        # Check ticker for crypto
-        if event.ticker:
-            crypto_tickers = {"BTC", "ETH", "USDT", "BNB", "XRP", "ADA", "SOL", "DOGE"}
-            if event.ticker.upper() in crypto_tickers:
-                return "Crypto"
-        
-        # Default to Stock
-        return "Stock"
-    
+
     def _create_zero_liability(self, tax_year: int) -> TaxLiability:
-        """
-        Create a zero-liability result when no events exist.
-        
-        Args:
-            tax_year: Tax year
-            
-        Returns:
-            TaxLiability with zero values
-        """
-        assumptions = [
-            f"Capital gains tax rate (KESt): {self.CAPITAL_GAINS_TAX_RATE * 100}%",
-            "No annual tax-free allowance",
-        ]
-        
+        """Create zero liability."""
         return TaxLiability(
             jurisdiction=f"{self.get_jurisdiction_name()} ({self.get_jurisdiction_code()})",
             tax_year=tax_year,
             total_realized_gain=Decimal(0),
             taxable_gain=Decimal(0),
             tax_owed=Decimal(0),
-            breakdown={
-                "total_gains": Decimal(0),
-                "total_losses": Decimal(0),
-                "net_taxable_gain": Decimal(0),
-                "tax_owed": Decimal(0),
-            },
-            notes="No taxable events in this period",
-            assumptions=assumptions,
+            breakdown={k: Decimal(0) for k in ["total_gains", "total_losses", "net_taxable_gain", "tax_owed"]},
+            notes="No taxable events",
+            assumptions=[],
             calculation_date=date.today(),
-            calculator_version="1.0-AT"
+            calculator_version="2.0-AT-E1kv"
         )
