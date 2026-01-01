@@ -111,20 +111,20 @@ class TransactionType(str, Enum):
             "EINLIEFERUNG": cls.TRANSFER_IN,
             "AUSLIEFERUNG": cls.TRANSFER_OUT,
             "AKTIENSPLIT": cls.STOCK_SPLIT,
-            "TILGUNG": cls.SELL,  # Redemption treated as sell (cash in, security out)
+            "TILGUNG": cls.SELL,  # Treated as sell
         }
         
         clean_value = value_upper.replace(" ", "").replace("-", "").replace("_", "")
         result = type_map.get(clean_value)
         
-        # Fallback for subsets (e.g., "Kauf (Sparplan)")
+        # Fallback for subsets
         if result is None:
             # Simple substring matching for common German types if exact match failed
             if "KAUF" in clean_value:
                 return cls.BUY
             if "VERKAUF" in clean_value:
                 return cls.SELL
-            if "DIVIDEND" in clean_value:  # Catch Dividende, StockDividend etc carefully
+            if "DIVIDEND" in clean_value:  # Catch variants
                 if "STOCK" in clean_value or "AKTIE" in clean_value:
                     return cls.STOCK_DIVIDEND
                 return cls.DIVIDEND
@@ -220,7 +220,7 @@ class AssetType(str, Enum):
             "COMMODITY": cls.COMMODITY,
             "COMMODITIES": cls.COMMODITY,
 
-            # General Security - Don't assume it's a stock, let inference handle it
+            # General Security
             # "SECURITY": cls.UNKNOWN,  # Will be inferred from name/ticker
             # "WERTPAPIER": cls.UNKNOWN,
         }
@@ -228,7 +228,7 @@ class AssetType(str, Enum):
         # Clean value for lookup
         clean_value = value_upper.replace("-", " ").replace("_", " ")
         
-        # Special case: "SECURITY" is too generic, return UNKNOWN to trigger inference
+        # "SECURITY" is too generic
         if clean_value in ["SECURITY", "WERTPAPIER"]:
             return cls.UNKNOWN
         
@@ -263,11 +263,8 @@ class AssetType(str, Enum):
         
         ticker_upper = ticker.upper()
         
-        # Check for ISIN format (2 letters, 9 alnum, 1 digit check) - length 12
-        # Simple heuristic: starts with 2 letters, length 12
+        # Check for ISIN format
         if len(ticker) == 12 and ticker[0:2].isalpha() and ticker.isalnum():
-            # It's indistinguishable from a Stock/ETF/Bond just by ISIN
-            # But it is definitely NOT an Option chain symbol usually
             return cls.STOCK
         
         # ETF patterns (common suffixes)
@@ -279,10 +276,9 @@ class AssetType(str, Enum):
         if any(crypto in ticker_upper for crypto in ['BTC', 'ETH', 'USDT', 'USDC']):
             return cls.CRYPTO
         
-        # Option patterns (common formats)
-        # OCC symbols are 21 chars. Some broker symbols are shorter but usually > 15
+        # Option patterns
         if len(ticker) > 15 and any(c.isdigit() for c in ticker):
-            # Likely an option chain symbol
+            # Likely an option
             return cls.OPTION
         
         # Default to stock
@@ -352,7 +348,7 @@ class Transaction(BaseModel):
     def parse_decimal(cls, v):
         """Parse string decimals correctly, handling European comma formatting."""
         if isinstance(v, str):
-            # Strip commas first (handles both '1,234.56' and European '1.234,56' partially)
+            # Strip commas first
             v = v.replace(',', '')
         return Decimal(str(v)) if v else Decimal(0)
     

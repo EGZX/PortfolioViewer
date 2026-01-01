@@ -172,7 +172,7 @@ class Portfolio:
                 if pos.shares > 0:
                     # Pro-rata reduce cost basis
                     cost_per_share = pos.cost_basis / pos.shares
-                    # Safe handling if t.shares > pos.shares (partial sale of everything owned)
+                    # Handle partial vs full sale
                     shares_to_remove = min(t.shares, pos.shares)
                     
                     sold_cost = cost_per_share * shares_to_remove
@@ -226,8 +226,7 @@ class Portfolio:
         for t in self.transactions:
             self.process_transaction(t)
             
-        # Filter out closed positions (0 shares) for cleaner interface
-        # We keep them in history/performance calc, but for "Current Holdings" display they are not needed
+        # Filter out closed positions
         self.holdings = {k: v for k, v in self.holdings.items() if abs(v.shares) > 0.000001}
         
         logger.info(f"Portfolio state rebuilt: {len(self.holdings)} holdings active.")
@@ -283,7 +282,7 @@ class Portfolio:
         # Re-index price history to daily frequency (ffill for weekends/holidays)
         date_range = pd.date_range(start=start_date.date(), end=end_date.date(), freq='D')
         
-        # If price_history is empty, we still need to calculate using cost/cash
+        # Handle empty price history
         if not price_history.empty:
             price_history.index = pd.to_datetime(price_history.index)
             # Reindex to full range and forward fill missing prices
@@ -351,7 +350,7 @@ class Portfolio:
         data = []
         
         for ticker, pos in self.holdings.items():
-            # Skip positions with zero or negative shares
+            # Skip closed positions
             if pos.shares <= 0:
                 continue
             
@@ -364,7 +363,7 @@ class Portfolio:
             if current_price is not None:
                 pos.update_market_value(Decimal(str(current_price)))
             else:
-                # Fallback 1: Try to get last cached price
+                # Fallback: Cached price
                 try:
                     cache = get_market_cache()
                     
@@ -380,7 +379,7 @@ class Portfolio:
                 except Exception as e:
                     logger.error(f"Failed to get cached price for {ticker}: {e}")
                 
-                # Fallback 2: If still no price, use average cost as price
+                # Fallback: Average cost
                 if current_price is None:
                     avg_cost_per_share = pos.cost_basis / pos.shares if pos.shares > 0 else Decimal(0)
                     current_price = float(avg_cost_per_share)

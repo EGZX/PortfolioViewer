@@ -105,7 +105,6 @@ class CSVParser:
     def map_columns(self, df: pd.DataFrame) -> Dict[str, str]:
         """
         Map actual column names to standardized names using a global best-match strategy.
-        Ensures that the best fitting column is chosen for each field, avoiding greedy mismatching.
         """
         column_map = {}
         df_columns = list(df.columns)
@@ -127,7 +126,6 @@ class CSVParser:
             matches[std_name] = col_scores
             
         # Assign columns - prioritize higher scores
-        # We process matches greedily by score, but considering the specific field needs
         for std_name, col_scores in matches.items():
             for score, col in col_scores:
                 if col not in assigned_columns:
@@ -202,7 +200,7 @@ class CSVParser:
             # Sells are positive cash flows
             return shares * price - fees
         else:
-            # Dividends, interest: use amount as-is (positive)
+            # Positive cash flows
             return shares * price
     
     def parse_csv(self, file_content: str) -> List[Transaction]:
@@ -272,7 +270,7 @@ class CSVParser:
                 def get_val(key, default=''):
                     """Get scalar value from row, handling Series properly."""
                     val = row.get(key, default)
-                    # If it's a Series (shouldn't happen but protect anyway), take first value
+                    # Handle Series edge case
                     if isinstance(val, pd.Series):
                         return val.iloc[0] if len(val) > 0 else default
                     return val if val is not None else default
@@ -356,7 +354,7 @@ class CSVParser:
                     error_categories['missing_price'] += 1
                     logger.warning(error)
                 
-                # Get asset type (optional, with broker format normalization)
+                # Get asset type (optional)
                 asset_type_val = get_val('asset_type')
                 if asset_type_val and asset_type_val != '' and not pd.isna(asset_type_val):
                     # Use normalize to handle various broker formats
@@ -381,7 +379,7 @@ class CSVParser:
                 # Get withholding tax (optional)
                 withholding_tax = self.normalize_decimal(get_val('withholding_tax', 0))
                 
-                # Get realized gain (optional, from CSV for SELL transactions)
+                # Get realized gain (optional)
                 realized_gain = self.normalize_decimal(get_val('realized_gain', 0))
                 
                 # Create transaction

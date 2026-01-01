@@ -102,9 +102,8 @@ class CorporateActionService:
                     logger.warning(f"Ignoring BLACKLISTED split for {ticker} on {split_date_str} (ratio: {ratio}x)")
                     continue
                 
-                # CRITICAL: Ignore future-dated splits
-                # These are often incorrect/speculative data from yfinance
-                # and would incorrectly adjust historical transactions
+                # Ignore future-dated splits
+                # Avoid speculative data from yfinance
                 if split_date_obj > today:
                     logger.warning(
                         f"{ticker}: Ignoring future-dated split on {split_date_obj} "
@@ -302,8 +301,8 @@ class CorporateActionService:
         """
         from parsers.enhanced_transaction import AssetType
         
-        # CRITICAL: Never apply splits to Crypto assets
-        # Mismatched ticker symbols (e.g. BTC vs stock ticker) can cause false positives
+        # Do not apply splits to Crypto assets
+        # Prevents false positives from ticker collisions
         if AssetType.infer_from_ticker(ticker) == AssetType.CRYPTO:
             return []
             
@@ -371,9 +370,9 @@ class CorporateActionService:
                 cache.set_splits(ticker, splits_for_cache)
                 return split_history
             else:
-                # NEGATIVE CACHING: Cache the fact that no splits exist (or fetch failed)
+                # Cache negative results
                 # Use a sentinel record: 1900-01-01 with ratio 1.0 (no effect)
-                # This prevents retrying failed lookups on every reload (saving ~40s)
+                # Prevents retrying on reload
                 cache.set_splits(ticker, [(sentinel_date, 1.0)])
                 return []
         
