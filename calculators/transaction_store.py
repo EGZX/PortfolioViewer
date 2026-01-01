@@ -200,6 +200,37 @@ class TransactionStore:
                 )
             """)
             
+            # Duplicate detection tables (near-duplicate tracking)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS duplicate_groups (
+                    group_id TEXT PRIMARY KEY,
+                    group_type TEXT CHECK(group_type IN ('duplicate', 'transfer', 'corporate_action')),
+                    resolution_status TEXT CHECK(resolution_status IN ('pending', 'resolved', 'ignored')) DEFAULT 'pending',
+                    resolution_strategy TEXT,
+                    representative_txn_id TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    resolved_at TIMESTAMP,
+                    notes TEXT
+                )
+            """)
+            
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS duplicate_candidates (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    group_id TEXT NOT NULL,
+                    transaction_id TEXT NOT NULL,
+                    similarity_score REAL NOT NULL,
+                    source_name TEXT,
+                    is_representative BOOLEAN DEFAULT 0,
+                    FOREIGN KEY (group_id) REFERENCES duplicate_groups(group_id),
+                    UNIQUE(group_id, transaction_id)
+                )
+            """)
+            
+            # Indexes for duplicate detection
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_dup_groups_status ON duplicate_groups(resolution_status)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_dup_candidates_group ON duplicate_candidates(group_id)")
+            
             conn.commit()
             logger.info("Database schema initialized")
     
@@ -482,3 +513,194 @@ class TransactionStore:
             """).fetchall()
         
         return {row['source_name']: row['count'] for row in rows}
+    
+    def find_near_duplicates(
+        self,
+        min_score: float = 60.0
+    ) -> List['DuplicateGroup']:
+        """
+        Find near-duplicate transactions using ISIN-based matching.
+        
+        Args:
+            min_score: Minimum similarity score (default 60)
+        
+        Returns:
+            List of DuplicateGroup objects
+        """
+        from calculators.duplicate_detector import DuplicateDetector
+        
+        # Get all transactions
+        transactions = self.get_all_transactions()
+        
+        # Run detection
+        detector = DuplicateDetector()
+        groups = detector.find_duplicate_groups(transactions, min_score)
+        
+        # Store groups in database
+        with self._get_conn() as conn:
+            for group in groups:
+                # Insert group
+                conn.execute("""
+                    INSERT OR IGNORE INTO duplicate_groups 
+                    (group_id, group_type, resolution_status)
+                    VALUES (?, ?, 'pending')
+                """, (group.group_id, group.group_type.value))
+                
+                # Insert candidates
+                for candidate in group.candidates:
+                    # Find transaction ID
+                    txn_hash = self._generate_transaction_hash(candidate.transaction)
+                    txn_row = conn.execute(
+                        "SELECT id FROM transactions WHERE transaction_hash = ? LIMIT 1",
+                        (txn_hash,)
+                    ).fetchone()
+                    
+                    if txn_row:
+                        conn.execute("""
+                            INSERT OR IGNORE INTO duplicate_candidates
+                            (group_id, transaction_id, similarity_score, source_name)
+                            VALUES (?, ?, ?, ?)
+                        """, (
+                            group.group_id,
+                            txn_row['id'],
+                            candidate.similarity_score,
+                            candidate.source_name
+                        ))
+            
+            conn.commit()
+        
+        logger.info(f"Found {len(groups)} duplicate groups")
+        return groups
+    
+    def get_pending_duplicate_count(self) -> int:
+        """Get count of pending duplicate groups."""
+        with self._get_conn() as conn:
+            result = conn.execute("""
+                SELECT COUNT(*) as count 
+                FROM duplicate_groups 
+                WHERE resolution_status = 'pending'
+            """).fetchone()
+            return result['count'] if result else 0
+    
+    def get_pending_duplicate_groups(self) -> List[Dict]:
+        """
+        Get all pending duplicate groups with their candidates.
+        
+        Returns:
+            List of dicts with group info and candidate transactions
+        """
+        groups = []
+        
+        with self._get_conn() as conn:
+            # Get all pending groups
+            group_rows = conn.execute("""
+                SELECT * FROM duplicate_groups 
+                WHERE resolution_status = 'pending'
+                ORDER BY created_at DESC
+            """).fetchall()
+            
+            for group_row in group_rows:
+                # Get candidates for this group
+                candidate_rows = conn.execute("""
+                    SELECT dc.*, t.*
+                    FROM duplicate_candidates dc
+                    JOIN transactions t ON dc.transaction_id = t.id
+                    WHERE dc.group_id = ?
+                    ORDER BY dc.similarity_score DESC
+                """, (group_row['group_id'],)).fetchall()
+                
+                candidates = []
+                for cand_row in candidate_rows:
+                    try:
+                        txn = self._row_to_transaction(cand_row)
+                        candidates.append({
+                            'transaction': txn,
+                            'similarity_score': cand_row['similarity_score'],
+                            'source_name': cand_row['source_name'],
+                            'transaction_id': cand_row['transaction_id']
+                        })
+                    except Exception as e:
+                        logger.error(f"Error loading candidate: {e}")
+                
+                groups.append({
+                    'group_id': group_row['group_id'],
+                    'group_type': group_row['group_type'],
+                    'candidates': candidates,
+                    'created_at': group_row['created_at']
+                })
+        
+        return groups
+    
+    def resolve_duplicate_group(
+        self,
+        group_id: str,
+        strategy: str,
+        keep_transaction_id: Optional[str] = None
+    ) -> bool:
+        """
+        Resolve a duplicate group.
+        
+        Args:
+            group_id: ID of duplicate group
+            strategy: 'keep_first', 'keep_specific', 'keep_all', 'ignore'
+            keep_transaction_id: ID of transaction to keep (if strategy='keep_specific')
+        
+        Returns:
+            True if successful
+        """
+        try:
+            with self._get_conn() as conn:
+                if strategy == 'keep_all':
+                    # Mark as not duplicates
+                    conn.execute("""
+                        UPDATE duplicate_groups 
+                        SET resolution_status = 'ignored',
+                            resolution_strategy = 'keep_all',
+                            resolved_at = ?
+                        WHERE group_id = ?
+                    """, (datetime.now().isoformat(), group_id))
+                    
+                elif strategy in ['keep_first', 'keep_specific']:
+                    # Get candidates
+                    candidates = conn.execute("""
+                        SELECT transaction_id 
+                        FROM duplicate_candidates 
+                        WHERE group_id = ?
+                        ORDER BY similarity_score DESC
+                    """, (group_id,)).fetchall()
+                    
+                    if not candidates:
+                        return False
+                    
+                    # Determine which to keep
+                    if strategy == 'keep_first':
+                        keep_id = candidates[0]['transaction_id']
+                    else:
+                        keep_id = keep_transaction_id
+                    
+                    # Delete other candidates
+                    to_delete = [c['transaction_id'] for c in candidates if c['transaction_id'] != keep_id]
+                    
+                    for txn_id in to_delete:
+                        conn.execute(
+                            "DELETE FROM transactions WHERE id = ?",
+                            (txn_id,)
+                        )
+                    
+                    # Mark group as resolved
+                    conn.execute("""
+                        UPDATE duplicate_groups 
+                        SET resolution_status = 'resolved',
+                            resolution_strategy = ?,
+                            representative_txn_id = ?,
+                            resolved_at = ?
+                        WHERE group_id = ?
+                    """, (strategy, keep_id, datetime.now().isoformat(), group_id))
+                
+                conn.commit()
+                logger.info(f"Resolved duplicate group {group_id} with strategy: {strategy}")
+                return True
+                
+        except Exception as e:
+            logger.error(f"Error resolving duplicate group: {e}")
+            return False
