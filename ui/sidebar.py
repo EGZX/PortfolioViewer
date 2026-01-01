@@ -88,12 +88,12 @@ def render_sidebar_controls():
         col_act1, col_act2 = st.columns(2)
         
         with col_act1:
-            if st.button("REFRESH", use_container_width=True):
+            if st.button("REFRESH"):
                 st.session_state.enrichment_done = False
                 st.rerun()
                 
         with col_act2:
-            if st.button("PURGE CACHE", use_container_width=True):
+            if st.button("PURGE CACHE"):
                 cache.clear_cache()
                 st.rerun()
 
