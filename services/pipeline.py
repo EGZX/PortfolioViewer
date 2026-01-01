@@ -42,8 +42,8 @@ def process_data_pipeline(file_content: str):
         if resolved_count > 0:
             logger.info(f"Resolved ISINs to Tickers for {resolved_count} transactions")
         
-        # Corporate Actions (Splits)
-        transactions, split_log = CorporateActionService.detect_and_apply_splits(
+        # Corporate Actions (Splits, Spin-offs, Mergers)
+        transactions, corporate_log = CorporateActionService.detect_and_apply_all_actions(
             transactions,
             fetch_splits=True
         )
@@ -66,7 +66,7 @@ def process_data_pipeline(file_content: str):
         
         # Validation performed outside to avoid serialization issues
         
-        return transactions, split_log, fx_conversions
+        return transactions, corporate_log, fx_conversions
         
     except Exception as e:
         logger.error(f"Pipeline processing error: {e}", exc_info=True)
