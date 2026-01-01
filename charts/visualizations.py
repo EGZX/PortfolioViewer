@@ -238,7 +238,7 @@ def create_allocation_treemap(
             line=dict(width=1, color='rgba(148, 163, 184, 0.2)'), # Subtle slate border
             cornerradius=0 # Sharp edges for clean grid
         ),
-        textinfo="label+percent root", # Show Ticker and % of total
+        texttemplate='%{label}<br>%{percentRoot:.1%}',  # Format with 1 decimal
         textfont=dict(family="JetBrains Mono", size=14, color="#e2e8f0"), # Light text
         textposition="middle center",
         root_color="rgba(0,0,0,0)" # Transparent root

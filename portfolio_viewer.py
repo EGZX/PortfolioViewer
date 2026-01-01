@@ -76,23 +76,24 @@ def main():
     
     show_logout_button()
     
-    # Mobile detection
-    if 'is_mobile' not in st.session_state:
-        st.markdown("""
-        <script>
-        const width = window.innerWidth;
-        const isMobile = width <= 768;
-        if (isMobile) {
-            window.location.search = 'mobile=true';
-        }
-        </script>
-        """, unsafe_allow_html=True)
-        
-        # Check query params set by JS
-        if st.query_params.get("mobile") == "true":
-            st.session_state.is_mobile = True
-        else:
+    # Mobile detection logic
+    # Priority: Query Param > Session State > User-Agent Detection
+    qp_mobile = st.query_params.get("mobile")
+    
+    if qp_mobile == "true":
+        st.session_state.is_mobile = True
+    elif qp_mobile == "false":
+        st.session_state.is_mobile = False
+    elif 'is_mobile' not in st.session_state:
+        # Auto-detect from request headers (User-Agent)
+        try:
+            # Streamlit doesn't expose headers directly, but we can use streamlit_js
+            # As fallback, default to desktop
             st.session_state.is_mobile = False
+            logger.info("Mobile detection: Defaulting to desktop, use sidebar toggle to override")
+        except Exception:
+            st.session_state.is_mobile = False
+    
     # Force rendering update
     st.markdown('<div id="flush-ghost" style="height:1px; width:1px;"></div>', unsafe_allow_html=True)
     
@@ -297,7 +298,6 @@ def main():
             
             st.plotly_chart(
                 chart_fig, 
-                use_container_width=True, 
                 config={'displayModeBar': 'hover', 'displaylogo': False}
             )
 
@@ -354,7 +354,6 @@ def main():
             
             st.plotly_chart(
                 fig, 
-                use_container_width=True, 
                 config={'displayModeBar': 'hover', 'displaylogo': False}
             )
     

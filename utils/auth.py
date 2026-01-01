@@ -123,7 +123,7 @@ def check_authentication() -> bool:
             
             submit_col1, submit_col2, submit_col3 = st.columns([1, 2, 1])
             with submit_col2:
-                login_button = st.button("AUTHENTICATE", type="primary", use_container_width=True)
+                login_button = st.button("AUTHENTICATE", type="primary")
     
     if login_button:
         # Verify Password
