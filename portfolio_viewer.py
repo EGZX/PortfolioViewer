@@ -140,6 +140,21 @@ def main():
                 val_summary = validator.get_summary()
                 validation_data = (validation_issues, val_summary)
                 
+                # Check if duplicate review is requested
+                if st.session_state.get('show_duplicate_review', False):
+                    from ui.duplicate_resolution import render_duplicate_review
+                    
+                    st.title("🔍 Duplicate Review")
+                    duplicate_groups = store.get_pending_duplicate_groups()
+                    render_duplicate_review(duplicate_groups, store)
+                    
+                    # Close button
+                    if st.button("✓ Close Review", type="primary"):
+                        st.session_state.show_duplicate_review = False
+                        st.rerun()
+                    
+                    return  # Don't show portfolio while reviewing duplicates
+                
         except Exception as e:
             st.error(f"Failed to load from TransactionStore: {str(e)}")
             logger.error(f"TransactionStore load error: {e}", exc_info=True)

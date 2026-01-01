@@ -102,6 +102,85 @@ def render_sidebar_controls():
                 else:
                     st.info("No sources imported yet")
                 
+                # Duplicate Detection Section
+                st.divider()
+                dup_count = store.get_pending_duplicate_count()
+                
+                if dup_count > 0:
+                    st.warning(f"⚠️ **{dup_count} Potential Duplicates**", icon="⚠️")
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.button("🔍 Review", use_container_width=True):
+                            st.session_state.show_duplicate_review = True
+                            st.rerun()
+                    with col2:
+                        if st.button("🔄 Scan Now", use_container_width=True):
+                            with st.spinner("Scanning for duplicates..."):
+                                store.find_near_duplicates(min_score=60)
+                            st.rerun()
+                else:
+                    if st.button("🔍 Scan for Duplicates", use_container_width=True):
+                        with st.spinner("Scanning..."):
+                            groups = store.find_near_duplicates(min_score=60)
+                            if groups:
+                                st.success(f"Found {len(groups)} duplicate groups!")
+                            else:
+                                st.success("✅ No duplicates found")
+                        st.rerun()
+                
+                # Export Merged Dataset
+                st.divider()
+                st.markdown("#### Export")
+                
+                if st.button("📥 Export Merged CSV", use_container_width=True):
+                    import csv
+                    import io
+                    from datetime import datetime
+                    
+                    # Get all transactions
+                    transactions = store.get_all_transactions()
+                    
+                    if transactions:
+                        # Create CSV
+                        output = io.StringIO()
+                        writer = csv.writer(output)
+                        
+                        # Header
+                        writer.writerow([
+                            'Date', 'Type', 'Ticker', 'ISIN', 'Name', 'Asset Type',
+                            'Shares', 'Price', 'Total', 'Fees', 'Currency', 'Source'
+                        ])
+                        
+                        # Data rows
+                        for txn in transactions:
+                            writer.writerow([
+                                txn.date,
+                                txn.type.value,
+                                txn.ticker or '',
+                                txn.isin or '',
+                                txn.name or '',
+                                txn.asset_type.value if txn.asset_type else '',
+                                float(txn.shares),
+                                float(txn.price),
+                                float(txn.total),
+                                float(txn.fees),
+                               txn.currency,
+                                txn.import_source or 'Unknown'
+                            ])
+                        
+                        # Download button
+                        csv_data = output.getvalue()
+                        st.download_button(
+                            label="⬇️ Download CSV",
+                            data=csv_data,
+                            file_name=f"merged_transactions_{datetime.now().strftime('%Y%m%d')}.csv",
+                            mime="text/csv",
+                            use_container_width=True
+                        )
+                    else:
+                        st.warning("No transactions to export")
+                
                 # Load all transactions from store for processing
                 file_content = "MULTI_SOURCE_MODE"  # Marker
                 
