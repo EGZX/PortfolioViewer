@@ -34,14 +34,14 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     logger.info(f"Fetching prices for {len(tickers)} tickers")
     
     with get_perf_logger(logger, f"fetch_prices({len(tickers)} tickers)", threshold_ms=3000):
-        # Step 0: Check cache first
+        # Check cache first
         cache = get_market_cache()
         today = date.today()
         
-        # Try to get all prices from cache
+
         cached_prices = cache.get_prices_batch(tickers, today)
         
-        # Separate tickers into cached and needs-fetch
+        # Identify missing prices
         tickers_to_fetch = [t for t, p in cached_prices.items() if p is None]
         prices = {t: p for t, p in cached_prices.items() if p is not None}
         
@@ -51,15 +51,15 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         
         logger.info(f"Cache: {len(prices)} hits, {len(tickers_to_fetch)} to fetch from API")
         
-        # Step 1: Resolve ISINs to tickers
+        # Resolve ISINs to tickers
         mapped_tickers = []
         ticker_map = {}  # mapped -> original
         
-        # Batch resolve all needed tickers
+
         batch_map = ISINResolver.resolve_batch(tickers_to_fetch)
         
         for original_ticker in tickers_to_fetch:
-            # Use batched result
+
             resolved_ticker = batch_map.get(original_ticker, original_ticker)
             if resolved_ticker != original_ticker:
                 logger.debug(f"Resolved {original_ticker} -> {resolved_ticker}")
@@ -131,7 +131,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
             
         except Exception as e:
             logger.error(f"Batch fetch failed: {e}")
-            # Fallback: fetch individually using ORIGINAL tickers
+            # Fallback: Individual fetch with original tickers
             for original_ticker in tickers_to_fetch:
                 if original_ticker in prices:
                     continue  # Skip if already fetched
@@ -207,7 +207,7 @@ def get_currency_for_ticker(ticker: str) -> str:
         
     ticker = ticker.upper()
     
-    # 1. Crypto explicit
+    # 1. Crypto
     if ticker.endswith("-EUR"):
         return "EUR"
     if ticker.endswith("-USD"):
@@ -290,7 +290,7 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     if from_currency == to_currency:
         return Decimal(1)
 
-    # 0. Define Fallbacks (updated 2024/2025)
+    # 0. Define fallback rates
     fallback_rates = {
         "DKK": {"EUR": 0.1341},
         "USD": {"EUR": 0.95},
@@ -303,7 +303,7 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     }
     
     try:
-        # 1. Try SQLite Cache first
+        # 1. Try Cache
         from services.market_cache import get_market_cache
         cache = get_market_cache()
         cached_val = cache.get_fx_rate(from_currency, to_currency, date.today())
@@ -316,7 +316,7 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
                  logger.info(f"FX Rate {from_currency}/{to_currency}: {cached_val:.4f} (from SQLite)")
                  return Decimal(str(cached_val))
 
-        # 2. Yahoo Finance FX format: USDEUR=X
+        # 2. Yahoo Finance
         fx_ticker = f"{from_currency}{to_currency}=X"
         rate = fetch_single_price(fx_ticker)
         
@@ -334,13 +334,13 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     except Exception as e:
         logger.error(f"Error fetching FX rate {from_currency}/{to_currency}: {e}")
     
-    # 3. Fallback Logic
+    # 3. Fallbacks
     if from_currency in fallback_rates and to_currency in fallback_rates[from_currency]:
         fallback = fallback_rates[from_currency][to_currency]
         logger.warning(f"Using hardcoded fallback FX rate for {from_currency}/{to_currency}: {fallback}")
         return Decimal(str(fallback))
     
-    # 4. Final Fallback (1:1)
+    # 4. Default
     logger.warning(f"Could not fetch FX rate for {from_currency}/{to_currency}. Using 1.0")
     return Decimal(1)
 
@@ -383,7 +383,7 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
     tickers_to_fetch = []
     valid_cached_tickers = []
     
-    # Check staleness/missing. Re-fetch if older than 3 days.
+    # Refetch if older than 3 days
     cutoff_date = pd.Timestamp(end_date) - pd.Timedelta(days=3)
     
     if not cached_df.empty:
@@ -490,7 +490,7 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
             logger.warning(f"Failed to normalize index: {e}")
 
     # Apply Split Adjustments to Price History
-    # Since transactions are back-adjusted, price history must also be back-adjusted.
+    # Adjust price history for splits
     try:
         from services.corporate_actions import CorporateActionService
         

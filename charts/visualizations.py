@@ -2,12 +2,51 @@
 
 from typing import Dict, List, Optional
 import plotly.graph_objects as go
+import plotly.express as px # Needed for treemap utility
 import pandas as pd
 
 from utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 
+# ========================================
+# CHART STYLING CONSTANTS
+# ========================================
+
+# Chart Dimensions
+DESKTOP_HEIGHT = 520
+MOBILE_HEIGHT = 320
+
+# Shared Typography
+CHART_TITLE_FONT = dict(size=18, family="JetBrains Mono", color="#e6e6e6")
+CHART_LEGEND_FONT = dict(color='#E5E7EB', family="Inter")
+
+# Hover Label Styling
+CHART_HOVER_LABEL = dict(
+    bgcolor='rgba(17, 24, 39, 0.95)',
+    bordercolor='#4B7DA3',
+    font_size=13,
+    font_family='JetBrains Mono'
+)
+
+# Shared Moonlit Palette with Higher Transparency and More Diversity
+MOONLIT_COLORS = [
+    'rgba(30, 58, 138, 0.65)',   # Deep Blue
+    'rgba(124, 58, 237, 0.65)',  # Purple
+    'rgba(16, 185, 129, 0.65)',  # Emerald
+    'rgba(245, 158, 11, 0.60)',  # Amber/Orange
+    'rgba(236, 72, 153, 0.65)',  # Pink
+    'rgba(14, 165, 233, 0.65)',  # Sky Blue
+    'rgba(168, 85, 247, 0.65)',  # Violet
+    'rgba(34, 197, 94, 0.65)',   # Green
+    'rgba(251, 146, 60, 0.60)',  # Orange
+    'rgba(20, 184, 166, 0.65)',  # Teal
+    'rgba(139, 92, 246, 0.65)',  # Indigo
+    'rgba(52, 211, 153, 0.65)',  # Emerald Light
+    'rgba(248, 113, 113, 0.60)', # Red
+    'rgba(96, 165, 250, 0.65)',  # Blue Light
+    'rgba(167, 139, 250, 0.65)', # Purple Light
+]
 
 def create_allocation_donut(
     holdings_df: pd.DataFrame, 
@@ -48,7 +87,7 @@ def create_allocation_donut(
     # Sort by value descending
     holdings_df = holdings_df.sort_values(market_value_col, ascending=False)
     
-    # Logic: Take Top 15 (Utilize full space without legend)
+    # Take Top 15
     top_n = 15
     
     if len(holdings_df) > top_n:
@@ -71,24 +110,8 @@ def create_allocation_donut(
     else:
         display_df = holdings_df
         
-    # High Contrast / Neon Palette
-    colors = [
-        '#00e5ff', # Cyan 
-        '#ffffff', # White
-        '#d500f9', # Neon Purple
-        '#ff1744', # Neon Red/Pink
-        '#00e676', # Neon Green
-        '#ffea00', # Neon Yellow
-        '#2979ff', # Blue
-        '#ff9100', # Orange
-        '#76ff03', # Lime
-        '#f50057', # Pink
-        '#3d5afe', # Indigo
-        '#1de9b6', # Teal
-        '#ffc400', # Amber
-        '#90a4ae', # Blue Grey
-        '#546e7a'  # Dark Slate
-    ]
+    # Use Shared Palette
+    colors = MOONLIT_COLORS
 
     # Privacy masking for hover
     val_fmt = "€%{value:,.2f}" if not privacy_mode else "••••••"
@@ -101,7 +124,7 @@ def create_allocation_donut(
                      f'{val_fmt}<br>' +
                      '%{percent}<br>' +
                      '<extra></extra>',
-        hoverlabel=dict(font_size=16, font_family="JetBrains Mono"),
+        hoverlabel=CHART_HOVER_LABEL,
         textinfo='none',
         marker=dict(
             colors=colors,
@@ -112,8 +135,8 @@ def create_allocation_donut(
     # Layout Logic
     title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
     
-    # Universal Layout (Desktop & Mobile)
-    final_height = 450 if compact_mode else 520
+    # Chart Height
+    final_height = MOBILE_HEIGHT if compact_mode else DESKTOP_HEIGHT
     
     # Legend Logic: 
     # Desktop: Hide (Immersive)
@@ -122,12 +145,12 @@ def create_allocation_donut(
 
     if compact_mode:
         margin_t = 0 if not title else 40
-        margin_b = 50 
+        margin_b = 0
         margin_l = 20
         margin_r = 20
-        legend_y = -0.1
+        legend_y = -0.05
     else:
-        # Desktop (Immersive)
+        # Desktop
         margin_t = 0 if not title else 60
         margin_b = 40
         margin_l = 40
@@ -140,15 +163,15 @@ def create_allocation_donut(
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=legend_y,
+            y=-0.05 if compact_mode else legend_y,
             xanchor="center",
             x=0.5,
-            font=dict(color='#E5E7EB', size=11, family="Inter"),
-            itemwidth=70,  
+            font=dict(**CHART_LEGEND_FONT, size=9 if compact_mode else 11),
+            itemwidth=50 if compact_mode else 70,
             bgcolor='rgba(0,0,0,0)',
         ),
         height=final_height, 
-        margin=dict(t=margin_t, b=margin_b, l=margin_l, r=margin_r), 
+        margin=dict(t=margin_t, b=0 if compact_mode else margin_b, l=margin_l, r=margin_r), 
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Inter", color="#9CA3AF"),
@@ -157,6 +180,94 @@ def create_allocation_donut(
     
     fig.update_traces(hole=0.60, hoverinfo="label+percent+value")
     
+    return fig
+
+
+def create_allocation_treemap(
+    holdings_df: pd.DataFrame, 
+    title: str = "Portfolio Allocation",
+    privacy_mode: bool = False,
+    compact_mode: bool = False
+) -> go.Figure:
+    """
+    Create a modern TreeMap chart for asset allocation.
+    Flat structure with Moonlit aesthetic.
+    """
+    if holdings_df.empty:
+        return go.Figure()
+    
+    market_value_col = 'Market Value (EUR)' if 'Market Value (EUR)' in holdings_df.columns else 'Market Value'
+    
+    # Ensure Asset Type exists, default to 'Assets' if missing
+    if 'Asset Type' not in holdings_df.columns:
+        holdings_df['Asset Type'] = 'Assets'
+        
+    # Calculate % for labels
+    total_val = holdings_df[market_value_col].sum()
+    holdings_df['Percentage'] = (holdings_df[market_value_col] / total_val) * 100
+    
+    # Label Logic: Ticker + %
+    holdings_df['Label'] = holdings_df['Ticker']
+    
+    # Use Shared Palette
+    colors = MOONLIT_COLORS
+    
+    # Use plotly.express (px) for easier Treemap generation
+    # Path is simpler now: Just "Portfolio" -> "Label" (Ticker)
+    # We removed "Asset Type" from path to flatten the view
+    fig = px.treemap(
+        holdings_df, 
+        path=['Label'], 
+        values=market_value_col,
+        color='Label', 
+        color_discrete_sequence=colors,
+        hover_data={'Name': True, market_value_col: True, 'Percentage': ':.1f'}
+    )
+    
+    # Custom Hover Template
+    val_fmt = "€%{value:,.0f}" if not privacy_mode else "••••••"
+    
+    # We use customdata to access 'Name' (stored in hover_data)
+    # properly mapping customdata for px figures can be tricky.
+    # px automatically puts hover_data into customdata.
+    # Index 0 = Name (based on hover_data dict order usually, but let's be safe)
+    
+    fig.update_traces(
+        hovertemplate='<b>%{label}</b><br>' +
+                      f'Value: {val_fmt}<br>' +
+                      'Share: %{percentRoot:.1%}<br>' +
+                      '<extra></extra>',
+        marker=dict(
+            line=dict(width=1, color='rgba(148, 163, 184, 0.2)'), # Subtle slate border
+            cornerradius=0 # Sharp edges for clean grid
+        ),
+        textinfo="label+percent root", # Show Ticker and % of total
+        textfont=dict(family="JetBrains Mono", size=14, color="#e2e8f0"), # Light text
+        textposition="middle center",
+        root_color="rgba(0,0,0,0)" # Transparent root
+    )
+    
+    # Chart Height
+    final_height = MOBILE_HEIGHT if compact_mode else DESKTOP_HEIGHT
+    
+    # Margins - Zeroed out to fill container
+    margin_t = 0 if not title else 30
+    margin_b = 0
+    margin_l = 0
+    margin_r = 0
+        
+    title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
+
+    fig.update_layout(
+        title=title_dict,
+        height=final_height,
+        margin=dict(t=margin_t, b=margin_b, l=margin_l, r=margin_r),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(family="Inter", color="#9CA3AF"),
+        uniformtext=dict(minsize=10, mode='hide') # Hide labels if too small
+    )
+
     return fig
 
 
@@ -184,28 +295,30 @@ def create_performance_chart(
     # Privacy masking
     val_fmt = "€%{y:,.0f}" if not privacy_mode else "••••••"
     
-    # 1. Net Deposits (Base Line)
+    # 1. Net Deposits
     fig.add_trace(go.Scatter(
         x=dates,
         y=net_deposits,
         name='Net Deposits',
         mode='lines',
         line=dict(color='#64748b', width=2, dash='dot'),
-        hovertemplate=f'<b>Deposits</b>: {val_fmt}<extra></extra>'
+        hovertemplate=f'<b>Deposits</b>: {val_fmt}<extra></extra>',
+        hoverlabel=CHART_HOVER_LABEL
     ))
     
-    # 2. Cost Basis (Optional)
+    # 2. Cost Basis
     if cost_basis_values:
         fig.add_trace(go.Scatter(
             x=dates,
             y=cost_basis_values,
             name='Cost Basis',
             mode='lines',
-            line=dict(color='#94a3b8', width=1.5), 
-            hovertemplate=f'<b>Cost</b>: {val_fmt}<extra></extra>'
+            line=dict(color='#f59e0b', width=1.5), 
+            hovertemplate=f'<b>Cost</b>: {val_fmt}<extra></extra>',
+            hoverlabel=CHART_HOVER_LABEL
         ))
     
-    # 3. Net Worth (Gradient Area)
+    # 3. Net Worth
     fig.add_trace(go.Scatter(
         x=dates,
         y=portfolio_values,
@@ -214,22 +327,21 @@ def create_performance_chart(
         line=dict(color='#3b82f6', width=2.5),
         fill='tozeroy', 
         fillcolor='rgba(59, 130, 246, 0.12)',
-        hovertemplate=f'<b>Net Worth</b>: {val_fmt}<extra></extra>'
+        hovertemplate=f'<b>Net Worth</b>: {val_fmt}<extra></extra>',
+        hoverlabel=CHART_HOVER_LABEL
     ))
     
     # Layout Configuration
     if compact_mode:
-        # Mobile: compact sizing
         title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=14, family="JetBrains Mono", color="#e6e6e6"))
         margin_t = 0 if not title else 40
-        margin_b = 30
-        chart_height = 420
+        margin_b = 0
+        chart_height = MOBILE_HEIGHT
     else:
-        # Desktop: full sizing
-        title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(size=18, family="JetBrains Mono", color="#e6e6e6"))
+        title_dict = dict(text="") if not title else dict(text=title, x=0, xref="container", font=dict(**CHART_TITLE_FONT))
         margin_t = 0 if not title else 60
         margin_b = 80
-        chart_height = 520
+        chart_height = DESKTOP_HEIGHT
     
     fig.update_layout(
         title=title_dict,
@@ -254,10 +366,11 @@ def create_performance_chart(
                 activecolor='#3b82f6',
                 bordercolor='#30363d',
                 borderwidth=1,
-                font=dict(color='#FFFFFF', size=11, weight=700),
-                y=1.02,
-                x=0,
-                xanchor='left'
+                font=dict(color='#FFFFFF', size=13, weight=700),
+                y=-0.12 if not compact_mode else -0.25,
+                x=1,
+                xanchor='right',
+                yanchor='top'
             )
         ),
         yaxis=dict(
@@ -273,17 +386,20 @@ def create_performance_chart(
         hovermode='x unified',
         legend=dict(
             orientation='h',
-            yanchor='top',
-            y=-0.2,
+            yanchor='bottom',
+            # Move legend further down if we ever show it, to avoid collision
+            y=1.00 if not compact_mode else -0.50,
             xanchor='center',
             x=0.5,
-            font=dict(color='#E5E7EB', size=12),
+            font=dict(**CHART_LEGEND_FONT, size=9 if compact_mode else 12),
             bgcolor='rgba(0,0,0,0)',
             itemsizing='constant',
-            entrywidth=120,
+            entrywidth=80 if compact_mode else 90,
         ),
+        showlegend=not compact_mode,
         height=chart_height,
-        margin=dict(t=margin_t + 30, b=margin_b + 30, l=0, r=20),
+        # Increase bottom margin significantly for mobile to fit selector
+        margin=dict(t=30 if compact_mode else 60, b=110 if compact_mode else 50, l=0, r=20),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         font=dict(family="JetBrains Mono", size=11)
