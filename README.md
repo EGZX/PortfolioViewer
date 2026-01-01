@@ -99,7 +99,7 @@ finnhub_key = "YOUR_KEY_HERE"
 
 ### **System Architecture**
 
-The application follows a modular, micro-services inspired structure within a monolithic codebase to ensure maintainability and testability.
+Follows a Modular Monolith architecture. Components are loosely coupled via service interfaces, allowing for easy testing and potential future separation.
 
 ```mermaid
 graph TD
