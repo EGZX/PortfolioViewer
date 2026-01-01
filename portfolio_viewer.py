@@ -16,11 +16,15 @@ A portfolio analysis tool with:
 """
 
 import streamlit as st
-from datetime import datetime
+from datetime import datetime, date
 from decimal import Decimal
 import pandas as pd
+import json
 from calculators.portfolio import Portfolio
 from calculators.metrics import xirr, calculate_absolute_return, calculate_volatility, calculate_sharpe_ratio, calculate_max_drawdown
+from calculators.tax_basis import TaxBasisEngine
+from calculators.tax_calculators import get_calculator
+from calculators.transaction_store import TransactionStore
 from services.market_data import fetch_prices, get_currency_for_ticker, get_fx_rate
 from services.market_cache import get_market_cache
 from services.corporate_actions import CorporateActionService
@@ -115,41 +119,68 @@ def main():
     if 'prices_updated' not in st.session_state:
         st.session_state.prices_updated = False
 
-    # Determine if tx enrichment is requested or already done
-    enrich_req = False # Triggered by refresh or initial load
-    if not st.session_state.enrichment_done: # If not done, try to enrich
-        enrich_req = True
-    
-    try:
-        # Note: logic preserved from original; virtually always tries to enrich if not done.
-        if enrich_req or st.session_state.enrichment_done:
-            transactions, split_log, fx_conversions = process_data_pipeline(file_content)
-            st.session_state.enrichment_done = True
-            
-            # Run Validation locally (fast, avoids caching pickle issues)
-            validator = DataValidator()
-            validation_issues = validator.validate_all(transactions)
-            val_summary = validator.get_summary()
-            validation_data = (validation_issues, val_summary)
-            
-        else:
-            transactions, validation_data = parse_csv_only(file_content)
-            split_log = []
-            fx_conversions = 0
-        
-        if not transactions:
-            st.error("No valid transactions found.")
+    # Check if using multi-source mode
+    if file_content == "MULTI_SOURCE_MODE":
+        # Load from TransactionStore
+        try:
+            with st.spinner("Loading from TransactionStore..."):
+                store = TransactionStore()
+                transactions = store.get_all_transactions()
+                
+                if not transactions:
+                    st.warning("No transactions in store. Import some files first.")
+                    return
+                
+                # Mark as enriched (already processed when imported)
+                st.session_state.enrichment_done = True
+                
+                # Validation
+                validator = DataValidator()
+                validation_issues = validator.validate_all(transactions)
+                val_summary = validator.get_summary()
+                validation_data = (validation_issues, val_summary)
+                
+        except Exception as e:
+            st.error(f"Failed to load from TransactionStore: {str(e)}")
+            logger.error(f"TransactionStore load error: {e}", exc_info=True)
             return
+    else:
+        # Single-file mode (legacy)
+        # Determine if tx enrichment is requested or already done
+        enrich_req = False # Triggered by refresh or initial load
+        if not st.session_state.enrichment_done: # If not done, try to enrich
+            enrich_req = True
+        
+        try:
+            # Note: logic preserved from original; virtually always tries to enrich if not done.
+            if enrich_req or st.session_state.enrichment_done:
+                transactions, split_log, fx_conversions = process_data_pipeline(file_content)
+                st.session_state.enrichment_done = True
+                
+                # Run Validation locally (fast, avoids caching pickle issues)
+                validator = DataValidator()
+                validation_issues = validator.validate_all(transactions)
+                val_summary = validator.get_summary()
+                validation_data = (validation_issues, val_summary)
+                
+            else:
+                transactions, validation_data = parse_csv_only(file_content)
+                split_log = []
+                fx_conversions = 0
             
-    except Exception as e:
-        st.error(f"Processing Error: {str(e)}")
-        # If cache is corrupted, offer to clear it
-        if "serialize" in str(e) or "pickle" in str(e):
-             st.warning("Cache corruption detected. Clearing cache recommended.")
-             if st.button("Emergency Clear Cache"):
-                 st.cache_data.clear()
-                 st.rerun()
-        return
+            if not transactions:
+                st.error("No valid transactions found.")
+                return
+                
+        except Exception as e:
+            st.error(f"Processing Error: {str(e)}")
+            # If cache is corrupted, offer to clear it
+            if "serialize" in str(e) or "pickle" in str(e):
+                 st.warning("Cache corruption detected. Clearing cache recommended.")
+                 if st.button("Emergency Clear Cache"):
+                     st.cache_data.clear()
+                     st.rerun()
+            return
 
     # Build Portfolio
     try:
@@ -362,7 +393,7 @@ def main():
     st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)
     
     # ==================== DATA TABLES & METRICS (TABS) ====================
-    tab1, tab2, tab3 = st.tabs(["Holdings", "Metrics", "Transactions"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Holdings", "Metrics", "Transactions", "📊 Tax Reporting"])
     
     # ========== TAB 1: HOLDINGS ==========
     with tab1:
@@ -506,6 +537,191 @@ def main():
         except Exception as e:
             st.error(f"Failed to display transaction history: {e}")
             logger.error(f"Transaction history error: {e}", exc_info=True)
+    
+    # ========== TAB 4: TAX REPORTING ==========
+    with tab4:
+        st.markdown("### Tax Reporting (Austrian KESt)")
+        
+        # Tax year selection
+        col1, col2, col3 = st.columns([2, 2, 6])
+        
+        with col1:
+            current_year = datetime.now().year
+            available_years = list(range(current_year, current_year - 10, -1))
+            selected_year = st.selectbox(
+                "Tax Year",
+                options=available_years,
+                index=0
+            )
+        
+        with col2:
+            strategy = st.selectbox(
+                "Lot Matching",
+                options=["FIFO", "WeightedAverage"],
+                index=0
+            )
+        
+        try:
+            # Process transactions through Tax Basis Engine
+            with st.spinner("Calculating tax liability..."):
+                engine = TaxBasisEngine(transactions, matching_strategy=strategy)
+                engine.process_all_transactions()
+                
+                # Get realized events for selected year
+                start_date = date(selected_year, 1, 1)
+                end_date = date(selected_year, 12, 31)
+                events = engine.get_realized_events(start_date, end_date)
+                
+                # Calculate tax liability
+                calculator = get_calculator("AT")  # Austria
+                liability = calculator.calculate_tax_liability(events, selected_year)
+            
+            if not events:
+                st.info(f"No taxable events found for {selected_year}. Import transactions or select a different year.")
+            else:
+                # === SUMMARY KPIs ===
+                tax_kpis = [
+                    {
+                        "label": "Total Realized Gain",
+                        "value": mask_currency(liability.total_realized_gain, st.session_state.privacy_mode),
+                        "delta": None,
+                        "delta_color": "pos" if liability.total_realized_gain > 0 else "neg"
+                    },
+                    {
+                        "label": "Taxable Gain",
+                        "value": mask_currency(liability.taxable_gain, st.session_state.privacy_mode),
+                    },
+                    {
+                        "label": "Tax Owed (27.5%)",
+                        "value": mask_currency(liability.tax_owed, st.session_state.privacy_mode),
+                        "delta": None,
+                        "delta_color": "neg"
+                    },
+                    {
+                        "label": "Taxable Events",
+                        "value": str(len(events))
+                    },
+                ]
+                
+                st.markdown(render_kpi_dashboard(tax_kpis, title=None), unsafe_allow_html=True)
+                
+                # === BREAKDOWN BY ASSET TYPE ===
+                st.markdown("#### Breakdown by Asset Type")
+                
+                breakdown_data = []
+                for key, value in liability.breakdown.items():
+                    if key.endswith("_gains") or key.endswith("_losses") or key.endswith("_net"):
+                        asset_type = key.rsplit("_", 1)[0]
+                        metric_type = key.rsplit("_", 1)[1]
+                        
+                        breakdown_data.append({
+                            "Asset Type": asset_type,
+                            "Metric": metric_type.capitalize(),
+                            "Amount (EUR)": mask_currency_precise(value, st.session_state.privacy_mode)
+                        })
+                
+                if breakdown_data:
+                    breakdown_df = pd.DataFrame(breakdown_data)
+                    
+                    # Pivot for better display
+                    pivot_df = breakdown_df.pivot(index="Asset Type", columns="Metric", values="Amount (EUR)")
+                    pivot_df = pivot_df[["Gains", "Losses", "Net"]]  # Order columns
+                    
+                    st.dataframe(
+                        pivot_df,
+                        width='stretch',
+                        height=200
+                    )
+                
+                # === DETAILED TAX EVENTS ===
+                st.markdown("#### Detailed Tax Events")
+                
+                events_data = []
+                for event in sorted(events, key=lambda e: e.date_sold, reverse=True):
+                    events_data.append({
+                        "Date Sold": event.date_sold.strftime("%Y-%m-%d"),
+                        "Ticker": event.ticker,
+                        "Asset Type": event.asset_type,
+                        "Quantity": float(event.quantity_sold),
+                        "Proceeds (EUR)": mask_currency_precise(float(event.proceeds_base), st.session_state.privacy_mode),
+                        "Cost Basis (EUR)": mask_currency_precise(float(event.cost_basis_base), st.session_state.privacy_mode),
+                        "Realized Gain (EUR)": mask_currency_precise(float(event.realized_gain), st.session_state.privacy_mode),
+                        "Holding Period (days)": event.holding_period_days,
+                        "Date Acquired": event.date_acquired.strftime("%Y-%m-%d"),
+                    })
+                
+                events_df = pd.DataFrame(events_data)
+                
+                st.dataframe(
+                    events_df,
+                    width='stretch',
+                    hide_index=True,
+                    height=400
+                )
+                
+                # === TAX ASSUMPTIONS & NOTES ===
+                with st.expander("📋 Tax Calculation Assumptions"):
+                    st.markdown("**Jurisdiction:** " + liability.jurisdiction)
+                    st.markdown("**Calculator Version:** " + liability.calculator_version)
+                    st.markdown("**Calculation Date:** " + liability.calculation_date.strftime("%Y-%m-%d"))
+                    st.markdown("")
+                    st.markdown("**Assumptions:**")
+                    for assumption in liability.assumptions:
+                        st.markdown(f"- {assumption}")
+                    
+                    if liability.notes:
+                        st.markdown("")
+                        st.markdown("**Notes:**")
+                        st.markdown(f"- {liability.notes}")
+                
+                # === EXPORT OPTIONS ===
+                st.markdown("#### Export")
+                
+                export_col1, export_col2 = st.columns(2)
+                
+                with export_col1:
+                    # CSV Export
+                    csv_data = events_df.to_csv(index=False)
+                    st.download_button(
+                        label="📥 Download Events CSV",
+                        data=csv_data,
+                        file_name=f"tax_events_{selected_year}_AT.csv",
+                        mime="text/csv"
+                    )
+                
+                with export_col2:
+                    # JSON Export (full liability)
+                    json_data = {
+                        "jurisdiction": liability.jurisdiction,
+                        "tax_year": liability.tax_year,
+                        "total_realized_gain": float(liability.total_realized_gain),
+                        "taxable_gain": float(liability.taxable_gain),
+                        "tax_owed": float(liability.tax_owed),
+                        "breakdown": {k: float(v) for k, v in liability.breakdown.items()},
+                        "assumptions": liability.assumptions,
+                        "notes": liability.notes,
+                        "calculator_version": liability.calculator_version,
+                        "calculation_date": liability.calculation_date.strftime("%Y-%m-%d")
+                    }
+                    
+                    st.download_button(
+                        label="📥 Download Full Report JSON",
+                        data=json.dumps(json_data, indent=2),
+                        file_name=f"tax_report_{selected_year}_AT.json",
+                        mime="application/json"
+                    )
+        
+        except Exception as e:
+            st.error(f"Tax calculation error: {str(e)}")
+            logger.error(f"Tax reporting error: {e}", exc_info=True)
+            
+            # Show debug info
+            with st.expander("🔍 Debug Information"):
+                st.code(str(e))
+                st.markdown("**Tips:**")
+                st.markdown("- Ensure transactions have been imported")
+                st.markdown("- Check that ISIN/ticker data is enriched")
+                st.markdown("- Verify transaction types are recognized")
 
 
 if __name__ == "__main__":
