@@ -420,6 +420,17 @@ class MarketDataCache:
             
             return (csv_content, filename, datetime.fromisoformat(uploaded_at_str))
 
+    def clear_cache(self):
+        """Clear all cached market data (prices, splits, FX, ISINs)."""
+        with self._get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM prices")
+            cursor.execute("DELETE FROM splits")
+            cursor.execute("DELETE FROM fx_rates")
+            cursor.execute("DELETE FROM isin_map")
+            conn.commit()
+            logger.info("Cleared market data cache (prices, splits, fx, isin)")
+
 # Global cache instance
 _cache_instance: Optional[MarketDataCache] = None 
 

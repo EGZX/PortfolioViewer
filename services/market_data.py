@@ -17,7 +17,7 @@ logger = setup_logger(__name__)
 _fallback_aggregator = MarketDataAggregator()
 
 
-@st.cache_data(ttl=300)  # Cache for 5 minutes
+# Removed redundant st.cache_data - using SQLite cache instead
 def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     """
     Fetch current prices from yfinance with error handling and retry logic.
@@ -345,7 +345,7 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     return Decimal(1)
 
 
-@st.cache_data(ttl=3600)  # Cache for 1 hour
+# Removed redundant st.cache_data - using SQLite cache instead
 def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date) -> pd.DataFrame:
     """
     Fetch historical closing prices for a list of tickers.

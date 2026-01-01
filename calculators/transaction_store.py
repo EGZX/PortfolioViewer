@@ -284,8 +284,8 @@ class TransactionStore:
             'fx_rate_enc': self.encryption.encrypt_decimal(getattr(txn, 'fx_rate', None)),
             'withholding_tax_enc': self.encryption.encrypt_decimal(getattr(txn, 'withholding_tax', None)),
             
-            'currency': txn.currency,
-            'original_currency': getattr(txn, 'original_currency', txn.currency),
+            'currency': getattr(txn, 'original_currency', 'EUR'),
+            'original_currency': getattr(txn, 'original_currency', 'EUR'),
             'source_name': source_name,
             'source_import_date': datetime.now().isoformat(),
             'transaction_hash': txn_hash,
@@ -310,7 +310,6 @@ class TransactionStore:
             total=self.encryption.decrypt_decimal(row['total_enc']) or Decimal(0),
             fees=self.encryption.decrypt_decimal(row['fees_enc']) or Decimal(0),
             
-            currency=row['currency'] or 'EUR',
             original_currency=row['original_currency'] or row['currency'] or 'EUR',
             broker=row['broker'],
             
@@ -318,7 +317,7 @@ class TransactionStore:
             cost_basis_local=self.encryption.decrypt_decimal(row['cost_basis_local_enc']),
             cost_basis_eur=self.encryption.decrypt_decimal(row['cost_basis_eur_enc']),
             fx_rate=self.encryption.decrypt_decimal(row['fx_rate_enc']) or Decimal(1),
-            withholding_tax=self.encryption.decrypt_decimal(row.get('withholding_tax_enc')) or Decimal(0),
+            withholding_tax=self.encryption.decrypt_decimal(row['withholding_tax_enc']) or Decimal(0),
         )
     
     def append_transactions(

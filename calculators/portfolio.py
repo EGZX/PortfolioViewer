@@ -280,7 +280,9 @@ class Portfolio:
             return [], [], [], []
             
         # Re-index price history to daily frequency (ffill for weekends/holidays)
-        date_range = pd.date_range(start=start_date.date(), end=end_date.date(), freq='D')
+        s_date = start_date.date() if hasattr(start_date, 'date') else start_date
+        e_date = end_date.date() if hasattr(end_date, 'date') else end_date
+        date_range = pd.date_range(start=s_date, end=e_date, freq='D')
         
         # Handle empty price history
         if not price_history.empty:

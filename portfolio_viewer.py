@@ -198,6 +198,12 @@ def main():
             return
 
     # Build Portfolio
+    if not transactions:
+        logger.warning(f"Unexpected empty transactions list at line 202. File content type: {file_content if file_content == 'MULTI_SOURCE_MODE' else 'CSV content'}")
+        st.error("Transaction list is empty.")
+        return
+
+    logger.info(f"Initializing Portfolio with {len(transactions)} transactions")
     try:
         portfolio = Portfolio(transactions)
         tickers = portfolio.get_unique_tickers()
@@ -214,6 +220,17 @@ def main():
     else:
         # Load from cache (latest available prices)
         prices = cache.get_prices_batch(tickers, target_date=None)
+        
+        # Auto-heal: If cache is cold (missing >50% prices), force fetch ONCE
+        if tickers:
+            valid_prices = sum(1 for p in prices.values() if p is not None and p > 0)
+            if valid_prices < len(tickers) * 0.5:
+                 if not st.session_state.get('_price_auto_heal_triggered', False):
+                     st.warning("Market data cache is cold. Auto-fetching missing prices...")
+                     logger.info(f"Triggering price auto-heal: {valid_prices}/{len(tickers)} valid")
+                     st.session_state.prices_updated = True
+                     st.session_state['_price_auto_heal_triggered'] = True
+                     st.rerun()
 
     # ==========================================
     # SIDEBAR STATUS GRID
@@ -283,13 +300,14 @@ def main():
     if st.session_state.enrichment_done and transactions:
         # Determine the full date range needed
         earliest_transaction = min(t.date for t in transactions)
-        latest_date = datetime.now()
+        latest_date = datetime.now().date()
         
         # Get all unique tickers
-        all_tickers = set(t.ticker for t in transactions if t.ticker)
+        all_tickers = list(set(t.ticker for t in transactions if t.ticker))
         
-        # Fetch ALL historical prices once
-        price_history = cache.get_historical_prices(all_tickers, earliest_transaction, latest_date)
+        # Fetch ALL historical prices (Service handles cache + fetching)
+        from services.market_data import fetch_historical_prices
+        price_history = fetch_historical_prices(all_tickers, earliest_transaction, latest_date)
         
         # Calculate daily portfolio values using the history
         dates, net_deposits, portfolio_values, cost_basis_values = get_performance_history_cached(
