@@ -1,20 +1,105 @@
 # Portfolio Viewer
 
-A high-performance implementation of a portfolio tracking system designed for privacy, precision, and speed. Built with Python and Streamlit, it reconstructs portfolio history chronologically to provide institutional-grade metrics (XIRR, Volatility, Sharpe Ratio, Maximum Drawdown) without relying on external cloud aggregators.
+**A self-hosted Portfolio Dashboard built with Python.**
 
-## Overview
+---
 
-This application serves as a personal "blind trust" engine, allowing users to visualize and analyze their multi-asset portfolios (Stocks, ETFs, Crypto) securely on their local machine.
+### **Overview**
+Portfolio Viewer is a local portfolio tracking application designed for users who want full control over their data and calculations. Unlike commercial aggregators or web-based services, this application runs entirely on your local machine or private server, reconstructing portfolio state directly from transaction logs.
 
-**Key Technical Differentiators:**
-*   **Privacy-First Architecture:** No forced data upload. All processing happens locally on the user's machine.
-*   **O(N) State Reconstruction:** Efficient linear-time algorithm to rebuild portfolio state from transaction logs vs standard O(N²) approaches.
-*   **Institutional Metrics:** Implements Newton-Raphson method for precise XIRR (Money-Weighted Return) calculation.
-*   **Hybrid Caching Layer:** Multi-tiered caching (Memory + SQLite) for market data and FX rates to minimize API latency and handle rate limits.
+**Main Features:**
+*   **Extensible Logic**: Users can modify the `calculators/` directory to implement custom risk models or specific tax logic using standard Python, without needing to learn complex frontend frameworks.
+*   **Self-Hosted & Private**: Designed to run on personal hardware (NAS, VPS, or Desktop). Data remains locally stored.
+*   **Deployment Options**: Can be run locally for privacy, or deployed as a private web app (Docker supported) to share with others.
 
-## Technical Architecture
+---
 
-The system follows a modular micro-services architecture pattern within a monolithic application:
+### **For Engineering Leaders & Recruiters**
+
+This project demonstrates a production-grade implementation of a financial data pipeline, featuring:
+
+#### **Technical Stack**
+*   **Core**: Python 3.9+
+*   **Frontend**: Streamlit (Reactive UI), Plotly (Interactive Visualizations)
+*   **Data Processing**: Pandas (Vectorized operations), NumPy/SciPy (Financial Math models)
+*   **Persistence**: SQLite (Local caching of market data), Parquet (High-performance storage)
+*   **APIs**: yfinance, AlphaVantage, Finnhub (with automated failover strategies)
+
+#### **Key Architectural Decisions**
+1.  **O(N) State Reconstruction**: Implements a linear-time algorithm to rebuild portfolio history from an event stream (Buys, Sells, Splits, Dividends). This avoids the standard $O(N^2)$ complexity of re-calculating positions for every historical date.
+2.  **Hybrid Caching Strategy**: Utilizes a multi-layered cache (in-memory L1 + SQLite L2) to handle market data. This significantly reduces API latency and mitigates rate-limiting issues from external providers.
+3.  **Robust Fallback Mechanisms**: The **`MarketDataService`** employs a chain-of-responsibility pattern to fetch prices. If the primary provider (yfinance) fails, it automatically degrades to AlphaVantage or Finnhub without user interruption.
+4.  **Corporate Action Engine**: A dedicated engine standardizes and handles complex corporate events (Stock Splits, Reverse Splits, Spinoffs) to ensure historical prices and share counts remain mathematically consistent over decades of data.
+
+---
+
+### **For Users**
+
+#### **What does it do?**
+Portfolio Viewer transforms your scattered broker export files into a unified, beautiful dashboard. It allows you to track your Net Worth, analyze asset allocation, and monitor performance against benchmarks without sharing your sensitive financial data with third-party cloud services.
+
+#### **Key Features**
+*   **🔒 Privacy First**: Your financial data never leaves your computer. No cloud uploads, no tracking.
+*   **⚡ Professional Analytics**:
+    *   **True Performance**: Uses **XIRR** (Extended Internal Rate of Return) for money-weighted return calculations, the gold standard for active portfolios.
+    *   **Risk Metrics**: Automatically calculates Volatility, Sharpe Ratio, and Maximum Drawdown.
+*   **Modern UI**: Features a responsive design with dark mode and mobile support.
+*   **🤝 Secure Collaboration**: The application is container-ready. You can easily deploy a private instance to the cloud, giving friends, family, or clients their own "personal app" to view their portfolio, protected by **PBKDF2 SHA-256** authentication.
+*   **🌍 Multi-Currency**: Native support for assets in USD, EUR, GBP, CHF, and more, with automatic historical currency conversion.
+
+---
+
+### **Deployment (Docker)**
+
+Turn this script into a persistent application on your NAS or VPS in seconds.
+
+1.  **Build the Image**
+    ```bash
+    docker build -t my-portfolio .
+    ```
+
+2.  **Run the Container**
+    ```bash
+    docker run -d -p 8501:8501 --name portfolio_app my-portfolio
+    ```
+    Access your dashboard at `http://localhost:8501`.
+
+### **Installation (Local)**
+
+#### **Prerequisites**
+*   Python 3.9+
+*   Git
+
+#### **Setup**
+1.  **Clone & Install**
+    ```bash
+    git clone https://github.com/your-repo/portfolio-viewer.git
+    cd portfolio-viewer
+    pip install -r requirements.txt
+    ```
+
+2.  **Run**
+    ```bash
+    streamlit run portfolio_viewer.py
+    ```
+
+#### **Configuration (Optional)**
+To enable robust price fetching fallback, create a `.streamlit/secrets.toml` file:
+
+```toml
+[passwords]
+app_password_hash = "pbkdf2_sha256$..." # Generated via utils/auth.py
+
+[api]
+alpha_vantage_key = "YOUR_KEY_HERE"
+finnhub_key = "YOUR_KEY_HERE"
+```
+
+---
+
+### **System Architecture**
+
+The application follows a modular, micro-services inspired structure within a monolithic codebase to ensure maintainability and testability.
 
 ```mermaid
 graph TD
@@ -22,7 +107,7 @@ graph TD
     Parser -->|Normalize| Stream[Transaction Stream]
     Stream -->|Process| Engine[Portfolio Engine]
     
-    subgraph "Data Services"
+    subgraph "Data Infrastructure"
         Market[Market Data Service]
         FX[FX Rate Service]
         Actions[Corporate Actions]
@@ -37,102 +122,14 @@ graph TD
     Analytics -->|Render| UI[Streamlit Front-end]
 ```
 
-### Core Components
+### **Module Map**
 
-*   **Portfolio Engine (`calculators/portfolio.py`)**: The kernel of the application. Processes the event stream of transactions (Buys, Sells, Dividends, Splits) to deterministic reconstruction of holdings and cash balances at any point in time.
-*   **Market Data Service (`services/market_data.py`)**: A robust data fetcher that abstract multiple providers (yfinance, etc.). Handles fallback logic, rate limiting, and persistent caching.
-*   **Universal Parser (`parsers/`)**: Heuristic-based CSV parser that auto-detects broker formats and normalizes them into a standard transaction model.
-
-## Features
-
-*   **Precision Tracking**: Handles stock splits, reverse splits, and spin-offs automatically via a dedicated Corporate Action Engine.
-*   **Multi-Currency**: Native handling of assets in USD, EUR, GBP, CHF, etc., with historical spot-rate conversion to base currency.
-*   **Performance Attribution**:
-    *   **XIRR**: True money-weighted return.
-    *   **Absolute Return**: Total gain/loss considering all cash flows.
-    *   **Dividend Yield**: Tracking of income streams separate from capital appreciation.
-*   **Secure Access**: Local authentication module with PBKDF2 hashing and anti-brute force delays.
-
-## Installation & Usage
-
-### Prerequisites
-*   Python 3.9+
-*   pip
-
-### Setup
-
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/your-repo/portfolio-viewer.git
-    cd portfolio-viewer
-    ```
-
-2.  **Install Dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Run Application**
-    ```bash
-    streamlit run portfolio_viewer.py
-    ```
-
-### Configuration
-
-Create a `.streamlit/secrets.toml` file for API keys and local security credentials.
-
-```toml
-[passwords]
-app_password_hash = "pbkdf2_sha256$..." # Generated via utils/auth.py
-
-[api]
-# Optional: Fallback API keys for enhanced reliability
-alpha_vantage_key = ""
-finnhub_key = ""
-```
-
-## Data Privacy & Security
-
-*   **Local Execution**: Transaction data is never sent to any server.
-*   **Encryption**: Optional encryption keys can be configured to encrypt the local SQLite cache.
-*   **Operational Security**: The application is designed to run in an air-gapped or local-only environment if necessary (excluding price fetching).
-
-## Development
-
-To run the test suite:
-
-```bash
-python -m unittest discover tests
-```
-
-## Module Map
-
-The architecture is divided into the following key modules:
-
-### Core Services (`services/`)
-*   **`pipeline.py`**: Orchestrates the data ingestion (Parsing → ISIN Resolution → Corp Actions → FX → Validation).
-*   **`market_data.py`** & **`market_cache.py`**: Handles checking redundant prices and caching them locally.
-*   **`corporate_actions.py`**: Auto-detects and applies stock splits/reverse splits.
-*   **`fx_rates.py`**: Fetches and caches historical forex rates for multi-currency portfolios.
-*   **`isin_resolver.py`**: Maps ISINs to actionable tickers.
-*   **`data_validator.py`**: Ensures transaction integrity before processing.
-
-### Calculation Engine (`calculators/`)
-*   **`portfolio.py`**: Reconstructs portfolio creation history and calculates current value.
-*   **`metrics.py`**: Mathematical implementation of XIRR, Sharpe Ratio, Volatility, etc.
-
-### User Interface (`ui/`)
-*   **`styles.py`**: Central repository for CSS classes, design tokens, and aesthetic themes.
-*   **`components.py`**: Reusable UI components (KPI dashboards, charts).
-*   **`sidebar.py`**: Encapsulates sidebar logic, status display, and data controls.
-*   **`utils.py`**: UI helpers (e.g., Privacy Mode masking).
-
-### Utilities (`utils/`)
-*   **`auth.py`**: Application security (Password hashing, Session checks).
-*   **`logging_config.py`**: Standardized logging configuration.
-
-### Charts (`charts/`)
-*   **`visualizations.py`**: Plotly implementation for performance graphs and treemaps.
+*   **`calculators/`**: The math core. Contains `portfolio.py` (State reconstruction) and `metrics.py` (XIRR/Sharpe implementation).
+*   **`services/`**: Integration layer. Handles external APIs (`market_data.py`), caching (`market_cache.py`), and data logic (`corporate_actions.py`).
+*   **`parsers/`**: Ingestion layer. Factory pattern parsers to normalize disparate broker CSV formats into a unified data model.
+*   **`ui/`**: Presentation layer. Contains the Design System (`styles.py`) and specific view components.
+*   **`charts/`**: Visualization layer. specialized Plotly wrappers for consistent, high-performance charting.
 
 ---
-*Built for the discerning investor who demands ownership of their data.*
+
+*Use this software at your own risk. Past performance is no guarantee of future results.*
