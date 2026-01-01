@@ -709,26 +709,46 @@ def main():
                     if asset_type == "Unknown" and event_type == "Interest":
                         asset_type = "Cash"
 
+                    # Prepare values (Float if public, String **** if private)
+                    val_proceeds = float(event.proceeds_base)
+                    val_cost = float(event.cost_basis_base)
+                    val_gain = float(event.realized_gain)
+                    
+                    if st.session_state.privacy_mode:
+                        val_proceeds = "****"
+                        val_cost = "****"
+                        val_gain = "****"
+
                     events_data.append({
                         "Date": event.date_sold.strftime("%Y-%m-%d"),
                         "Type": event_type,
                         "Ticker": ticker_disp,
                         "Asset": asset_type,
-                        "Qty": float(event.quantity_sold) if event.quantity_sold > 0 else "",
-                        "Proceeds (EUR)": mask_currency_precise(float(event.proceeds_base), st.session_state.privacy_mode),
-                        "Cost (EUR)": mask_currency_precise(float(event.cost_basis_base), st.session_state.privacy_mode),
-                        "Gain/Loss (EUR)": mask_currency_precise(float(event.realized_gain), st.session_state.privacy_mode),
-                        "Days": event.holding_period_days if event.holding_period_days > 0 else "",
+                        "Qty": float(event.quantity_sold) if event.quantity_sold > 0 else None,
+                        "Proceeds (EUR)": val_proceeds,
+                        "Cost (EUR)": val_cost,
+                        "Gain/Loss (EUR)": val_gain,
+                        "Days": event.holding_period_days if event.holding_period_days > 0 else None,
                         "Acquired": event.date_acquired.strftime("%Y-%m-%d"),
                     })
                 
                 events_df = pd.DataFrame(events_data)
                 
+                # Configure formatting (Raw numbers for CSV, 2 decimals for Display)
+                number_fmt = st.column_config.NumberColumn(format="%.2f")
+                
                 st.dataframe(
                     events_df,
                     width='stretch',
                     hide_index=True,
-                    height=400
+                    height=400,
+                    column_config={
+                        "Proceeds (EUR)": number_fmt,
+                        "Cost (EUR)": number_fmt,
+                        "Gain/Loss (EUR)": number_fmt,
+                        "Qty": st.column_config.NumberColumn(format="%.4f"),
+                        "Days": st.column_config.NumberColumn(format="%d"),
+                    }
                 )
                 
                 # === TAX ASSUMPTIONS & NOTES ===

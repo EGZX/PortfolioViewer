@@ -346,6 +346,8 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
 
 
 # Removed redundant st.cache_data - using SQLite cache instead
+# UPDATE: Added back st.cache_data with TTL for "Hybrid" speed (fast reload, but expires)
+@st.cache_data(ttl=3600, show_spinner=False)
 def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date) -> pd.DataFrame:
     """
     Fetch historical closing prices for a list of tickers.
