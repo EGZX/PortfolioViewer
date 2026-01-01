@@ -41,12 +41,12 @@ Thumbs.db
 .streamlit/secrets.toml
 
 # Test data (contains sensitive financial information)
-Testdata/
-*.csv
+#Testdata/
+#*.csv
 
 # Logs
-*.log
-logs/
+#*.log
+#logs/
 bugfixing/
 
 # Database and Cache

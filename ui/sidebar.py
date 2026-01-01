@@ -24,7 +24,7 @@ def render_sidebar_controls():
         
         # Initialize multi-source mode state
         if 'use_multi_source' not in st.session_state:
-            st.session_state.use_multi_source = False
+            st.session_state.use_multi_source = True
         
         # Mode toggle
         multi_source_mode = st.toggle(
@@ -42,7 +42,20 @@ def render_sidebar_controls():
             try:
                 store = TransactionStore()
                 
-                # Multi-file upload
+                # Migration: Check for cached data if store is empty
+                cache = get_market_cache()
+                cached_data = cache.get_last_transactions_csv()
+                current_counts = store.get_transaction_count_by_source()
+                
+                if not current_counts and cached_data:
+                    st.info("Found data from Single-File mode.")
+                    if st.button("📥 Import Cached Data to Database", type="primary"):
+                        content, filename, _ = cached_data
+                        with st.spinner("Migrating data to secure database..."):
+                            txs, _, _ = process_data_pipeline(content)
+                            result = store.append_transactions(txs, f"Migrated_{filename}", "hash_first")
+                            st.success(f"Migrated {result.added} transactions!")
+                            st.rerun()
                 uploaded_files = st.file_uploader(
                     "Upload CSV Files",
                     type=['csv'],
@@ -154,6 +167,10 @@ def render_sidebar_controls():
                         
                         # Data rows
                         for txn in transactions:
+                            # Sanitize currency (use ISO code, replace symbols)
+                            raw_curr = getattr(txn, 'original_currency', None) or getattr(txn, 'currency', 'EUR')
+                            curr_clean = raw_curr.replace('€', 'EUR') if raw_curr else 'EUR'
+                            
                             writer.writerow([
                                 txn.date,
                                 txn.type.value,
@@ -164,8 +181,8 @@ def render_sidebar_controls():
                                 float(txn.shares),
                                 float(txn.price),
                                 float(txn.total),
-                                float(txn.fees),
-                               txn.currency,
+                                float(txn.fees) if txn.fees else 0.0,
+                                curr_clean,
                                 txn.import_source or 'Unknown'
                             ])
                         
@@ -240,17 +257,18 @@ def render_sidebar_controls():
         if st.session_state.last_processed_content != file_content:
             st.session_state.enrichment_done = False
             st.session_state.last_processed_content = file_content
-            # Auto-detect enrichment from cache
-            try:
-                quick_transactions, _ = parse_csv_only(file_content)
-                if quick_transactions:
-                    sample_isins = [t.ticker for t in quick_transactions[:10] if t.ticker and len(t.ticker) == 12]
-                    if sample_isins:
-                        cached_mappings = sum(1 for isin in sample_isins if cache.get_isin_mapping(isin))
-                        if cached_mappings >= len(sample_isins) * 0.5:
-                            st.session_state.enrichment_done = True
-            except:
-                pass
+            # Auto-detect enrichment from cache (Single File Mode only)
+            if file_content != "MULTI_SOURCE_MODE":
+                try:
+                    quick_transactions, _ = parse_csv_only(file_content)
+                    if quick_transactions:
+                        sample_isins = [t.ticker for t in quick_transactions[:10] if t.ticker and len(t.ticker) == 12]
+                        if sample_isins:
+                            cached_mappings = sum(1 for isin in sample_isins if cache.get_isin_mapping(isin))
+                            if cached_mappings >= len(sample_isins) * 0.5:
+                                st.session_state.enrichment_done = True
+                except:
+                    pass
 
         st.markdown("### OPERATIONS")
         
@@ -260,6 +278,7 @@ def render_sidebar_controls():
         with col_act1:
             if st.button("REFRESH"):
                 st.session_state.enrichment_done = False
+                st.session_state.prices_updated = True
                 st.rerun()
                 
         with col_act2:
