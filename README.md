@@ -7,7 +7,7 @@ A high-performance implementation of a portfolio tracking system designed for pr
 This application serves as a personal "blind trust" engine, allowing users to visualize and analyze their multi-asset portfolios (Stocks, ETFs, Crypto) securely on their local machine.
 
 **Key Technical Differentiators:**
-*   **Privacy-First Architecture:** No data upload. All processing happens locally on the user's machine.
+*   **Privacy-First Architecture:** No forced data upload. All processing happens locally on the user's machine.
 *   **O(N) State Reconstruction:** Efficient linear-time algorithm to rebuild portfolio state from transaction logs vs standard O(N²) approaches.
 *   **Institutional Metrics:** Implements Newton-Raphson method for precise XIRR (Money-Weighted Return) calculation.
 *   **Hybrid Caching Layer:** Multi-tiered caching (Memory + SQLite) for market data and FX rates to minimize API latency and handle rate limits.
@@ -104,6 +104,35 @@ To run the test suite:
 ```bash
 python -m unittest discover tests
 ```
+
+## Module Map
+
+The architecture is divided into the following key modules:
+
+### Core Services (`services/`)
+*   **`pipeline.py`**: Orchestrates the data ingestion (Parsing → ISIN Resolution → Corp Actions → FX → Validation).
+*   **`market_data.py`** & **`market_cache.py`**: Handles checking redundant prices and caching them locally.
+*   **`corporate_actions.py`**: Auto-detects and applies stock splits/reverse splits.
+*   **`fx_rates.py`**: Fetches and caches historical forex rates for multi-currency portfolios.
+*   **`isin_resolver.py`**: Maps ISINs to actionable tickers.
+*   **`data_validator.py`**: Ensures transaction integrity before processing.
+
+### Calculation Engine (`calculators/`)
+*   **`portfolio.py`**: Reconstructs portfolio creation history and calculates current value.
+*   **`metrics.py`**: Mathematical implementation of XIRR, Sharpe Ratio, Volatility, etc.
+
+### User Interface (`ui/`)
+*   **`styles.py`**: Central repository for CSS classes, design tokens, and aesthetic themes.
+*   **`components.py`**: Reusable UI components (KPI dashboards, charts).
+*   **`sidebar.py`**: Encapsulates sidebar logic, status display, and data controls.
+*   **`utils.py`**: UI helpers (e.g., Privacy Mode masking).
+
+### Utilities (`utils/`)
+*   **`auth.py`**: Application security (Password hashing, Session checks).
+*   **`logging_config.py`**: Standardized logging configuration.
+
+### Charts (`charts/`)
+*   **`visualizations.py`**: Plotly implementation for performance graphs and treemaps.
 
 ---
 *Built for the discerning investor who demands ownership of their data.*

@@ -2,7 +2,7 @@
 
 from typing import Dict, List, Optional
 import plotly.graph_objects as go
-import plotly.express as px # Needed for treemap utility
+import plotly.express as px 
 import pandas as pd
 
 from utils.logging_config import setup_logger
@@ -29,7 +29,7 @@ CHART_HOVER_LABEL = dict(
     font_family='JetBrains Mono'
 )
 
-# Shared Moonlit Palette with Higher Transparency and More Diversity
+# Shared Moonlit Palette
 MOONLIT_COLORS = [
     'rgba(30, 58, 138, 0.65)',   # Deep Blue
     'rgba(124, 58, 237, 0.65)',  # Purple
@@ -212,9 +212,8 @@ def create_allocation_treemap(
     # Use Shared Palette
     colors = MOONLIT_COLORS
     
-    # Use plotly.express (px) for easier Treemap generation
-    # Path is simpler now: Just "Portfolio" -> "Label" (Ticker)
-    # We removed "Asset Type" from path to flatten the view
+    # Use plotly.express (px) for Treemap generation
+    # Path "Portfolio" -> "Label" (Ticker)
     fig = px.treemap(
         holdings_df, 
         path=['Label'], 
@@ -227,11 +226,9 @@ def create_allocation_treemap(
     # Custom Hover Template
     val_fmt = "€%{value:,.0f}" if not privacy_mode else "••••••"
     
-    # We use customdata to access 'Name' (stored in hover_data)
-    # properly mapping customdata for px figures can be tricky.
+    # Use customdata to access 'Name' (stored in hover_data)
     # px automatically puts hover_data into customdata.
-    # Index 0 = Name (based on hover_data dict order usually, but let's be safe)
-    
+    # Index 0 = Name (based on hover_data dict order usually)
     fig.update_traces(
         hovertemplate='<b>%{label}</b><br>' +
                       f'Value: {val_fmt}<br>' +
@@ -281,7 +278,7 @@ def create_performance_chart(
     compact_mode: bool = False
 ) -> go.Figure:
     """
-    Create a modern area chart for portfolio performance.
+    Create chart area for portfolio performance.
     Includes native Range Selector.
     
     Args:
