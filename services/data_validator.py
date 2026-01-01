@@ -137,7 +137,7 @@ class DataValidator:
                     trans
                 ))
     
-    def check_price_anomalies(selfself, transactions: List[Transaction]):
+    def check_price_anomalies(self, transactions: List[Transaction]):
         """Detect unusual price movements (50%+ jumps = likely missed splits)."""
         price_history = defaultdict(list)
         
@@ -157,7 +157,7 @@ class DataValidator:
                 days_diff = (curr_date - prev_date).days
                 
                 # ENHANCED: Detect 50%+ price jumps (more sensitive)
-                if (price_ratio > 1.5 or price_ratio < 0.67) and days_diff < 365:
+                if (price_ratio > Decimal("1.5") or price_ratio < Decimal("0.67")) and days_diff < 365:
                     # Calculate if it matches common split ratios
                     likely_split = None
                     common_splits = [
@@ -167,8 +167,11 @@ class DataValidator:
                     ]
                     
                     for ratio_to, ratio_from, description in common_splits:
-                        expected_ratio = ratio_to / ratio_from
-                        if abs(price_ratio - (1/expected_ratio)) < 0.1:  # Within 10%
+                        # Convert to Decimal for calculation
+                        rt = Decimal(ratio_to)
+                        rf = Decimal(ratio_from)
+                        expected_ratio = rt / rf
+                        if abs(price_ratio - (Decimal(1)/expected_ratio)) < Decimal("0.1"):  # Within 10%
                             likely_split = description
                             break
                     
@@ -370,17 +373,21 @@ class DataValidator:
                     curr_date = prices.index[i]
                     
                     # Calculate price change
-                    price_ratio = curr_price / prev_price
+                    # Convert to Decimal to match comparison literals
+                    try:
+                        price_ratio = Decimal(str(curr_price)) / Decimal(str(prev_price))
+                    except:
+                        continue
                     
                     # Check for 40%+ overnight drop (very likely split)
-                    if price_ratio < 0.71 and price_ratio > 0.45:  # Between 71% and 45%
+                    if price_ratio < Decimal("0.71") and price_ratio > Decimal("0.45"):  # Between 71% and 45%
                         # Match to common split ratios
                         likely_split = None
-                        if abs(price_ratio - 0.5) < 0.05:  # ~50% drop
+                        if abs(price_ratio - Decimal("0.5")) < Decimal("0.05"):  # ~50% drop
                             likely_split = "2-for-1 split"
-                        elif abs(price_ratio - 0.33) < 0.05:  # ~33% drop
+                        elif abs(price_ratio - Decimal("0.33")) < Decimal("0.05"):  # ~33% drop
                             likely_split = "3-for-1 split"
-                        elif abs(price_ratio - 0.25) < 0.05:  # ~25% drop
+                        elif abs(price_ratio - Decimal("0.25")) < Decimal("0.05"):  # ~25% drop
                             likely_split = "4-for-1 split"
                         
                         split_hint = f" (likely {likely_split})" if likely_split else ""
@@ -395,13 +402,13 @@ class DataValidator:
                         ))
                     
                     # Also check for reverse splits (2x+ price jump overnight)
-                    elif price_ratio > 1.8:
+                    elif price_ratio > Decimal("1.8"):
                         likely_split = None
-                        if abs(price_ratio - 2.0) < 0.2:
+                        if abs(price_ratio - Decimal("2.0")) < Decimal("0.2"):
                             likely_split = "1-for-2 reverse split"
-                        elif abs(price_ratio - 5.0) < 0.5:
+                        elif abs(price_ratio - Decimal("5.0")) < Decimal("0.5"):
                             likely_split = "1-for-5 reverse split"
-                        elif abs(price_ratio - 10.0) < 1.0:
+                        elif abs(price_ratio - Decimal("10.0")) < Decimal("1.0"):
                             likely_split = "1-for-10 reverse split"
                         
                         split_hint = f" (likely {likely_split})" if likely_split else ""

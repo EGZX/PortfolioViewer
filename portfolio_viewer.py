@@ -408,7 +408,7 @@ def main():
     st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)
     
     # ==================== DATA TABLES & METRICS (TABS) ====================
-    tab1, tab2, tab3, tab4 = st.tabs(["Holdings", "Metrics", "Transactions", "📊 Tax Reporting"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Holdings", "Metrics", "Transactions", "Tax"])
     
     # ========== TAB 1: HOLDINGS ==========
     with tab1:
@@ -541,7 +541,7 @@ def main():
                 
                 st.dataframe(
                     filtered_df,
-                    width='stretch',
+                    use_container_width=True,
                     hide_index=True
                 )
                 
@@ -553,12 +553,12 @@ def main():
             st.error(f"Failed to display transaction history: {e}")
             logger.error(f"Transaction history error: {e}", exc_info=True)
     
-    # ========== TAB 4: TAX REPORTING ==========
+    # ========== TAB 4: TAX ==========
     with tab4:
-        st.markdown("### Tax Reporting (Austrian KESt)")
+        # st.markdown("### Tax Reporting (Austrian KESt)") # Removed header
         
-        # Tax year selection
-        col1, col2, col3 = st.columns([2, 2, 6])
+        # Tax settings
+        col1, col2, col3 = st.columns([2, 5, 2])
         
         with col1:
             current_year = datetime.now().year
@@ -568,12 +568,22 @@ def main():
                 options=available_years,
                 index=0
             )
-        
+            
         with col2:
+            jurisdiction_options = ["Austria"] # Future: Germany, US
+            selected_jurisdiction = st.selectbox(
+                 "Tax Jurisdiction",
+                 options=jurisdiction_options,
+                 index=0,
+                 help="Select the country for tax rules application"
+            )
+        
+        with col3:
+            strategy_index = 1 # Default to WeightedAverage (1) as it's standard for Austria
             strategy = st.selectbox(
                 "Lot Matching",
                 options=["FIFO", "WeightedAverage"],
-                index=0
+                index=strategy_index
             )
         
         try:
@@ -588,7 +598,9 @@ def main():
                 events = engine.get_realized_events(start_date, end_date)
                 
                 # Calculate tax liability
-                calculator = get_calculator("AT")  # Austria
+                jurisdiction_map = {"Austria": "AT"}
+                country_code = jurisdiction_map.get(selected_jurisdiction, "AT")
+                calculator = get_calculator(country_code)
                 liability = calculator.calculate_tax_liability(events, selected_year)
             
             if not events:
@@ -620,32 +632,28 @@ def main():
                 
                 st.markdown(render_kpi_dashboard(tax_kpis, title=None), unsafe_allow_html=True)
                 
-                # === BREAKDOWN BY ASSET TYPE ===
-                st.markdown("#### Breakdown by Asset Type")
+                # === BREAKDOWN ===
+                st.markdown("#### Tax Report Breakdown")
                 
                 breakdown_data = []
+                # Identify special summary keys to exclude from list (as they are in KPIs)
+                summary_keys = {"total_gains", "total_losses", "net_taxable_gain", "tax_owed", "tax_rate"}
+                
                 for key, value in liability.breakdown.items():
-                    if key.endswith("_gains") or key.endswith("_losses") or key.endswith("_net"):
-                        asset_type = key.rsplit("_", 1)[0]
-                        metric_type = key.rsplit("_", 1)[1]
-                        
+                    if key not in summary_keys:
                         breakdown_data.append({
-                            "Asset Type": asset_type,
-                            "Metric": metric_type.capitalize(),
+                            "Category": key,
                             "Amount (EUR)": mask_currency_precise(value, st.session_state.privacy_mode)
                         })
                 
                 if breakdown_data:
-                    breakdown_df = pd.DataFrame(breakdown_data)
-                    
-                    # Pivot for better display
-                    pivot_df = breakdown_df.pivot(index="Asset Type", columns="Metric", values="Amount (EUR)")
-                    pivot_df = pivot_df[["Gains", "Losses", "Net"]]  # Order columns
+                    # Sort to keep Kz in order if possible or just alpha
+                    breakdown_data.sort(key=lambda x: x["Category"])
                     
                     st.dataframe(
-                        pivot_df,
-                        width='stretch',
-                        height=200
+                        pd.DataFrame(breakdown_data),
+                        use_container_width=True,
+                        hide_index=True
                     )
                 
                 # === DETAILED TAX EVENTS ===
@@ -669,7 +677,7 @@ def main():
                 
                 st.dataframe(
                     events_df,
-                    width='stretch',
+                    use_container_width=True,
                     hide_index=True,
                     height=400
                 )

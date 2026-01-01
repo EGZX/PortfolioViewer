@@ -44,21 +44,21 @@ def xirr(dates: List[datetime], amounts: List[float], guess: float = 0.1) -> Opt
         logger.warning("XIRR requires both positive and negative cash flows")
         return None
     
-    # Convert to numpy arrays
+    # Convert to numpy arrays with explicit float dtype
     dates_np = np.array(dates)
-    amounts_np = np.array(amounts, dtype=float)
+    amounts_np = np.array(amounts, dtype=np.float64)
     
-    # Calculate days from first transaction
+    # Calculate days from first transaction (explicit float)
     base_date = dates_np[0]
-    days = np.array([(d - base_date).days / 365.0 for d in dates_np])
+    days = np.array([(d - base_date).days / 365.0 for d in dates_np], dtype=np.float64)
     
     def npv(rate: float) -> float:
         """Net Present Value at given rate."""
-        return np.sum(amounts_np / ((1.0 + rate) ** days))
+        return float(np.sum(amounts_np / ((1.0 + rate) ** days)))
     
     def npv_derivative(rate: float) -> float:
         """Derivative of NPV with respect to rate."""
-        return np.sum(-days * amounts_np / ((1.0 + rate) ** (days + 1)))
+        return float(np.sum(-days * amounts_np / ((1.0 + rate) ** (days + 1))))
     
     try:
         # Use Newton-Raphson method to find rate where NPV = 0

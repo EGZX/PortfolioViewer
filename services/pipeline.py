@@ -53,7 +53,7 @@ def process_data_pipeline(file_content: str):
         for trans in transactions:
             if trans.original_currency != 'EUR':
                 # Fetch historical FX rate for this transaction date
-                historical_rate = FXRateService.get_rate(
+                historical_rate, rate_source = FXRateService.get_rate(
                     trans.original_currency,
                     'EUR',
                     trans.date.date()
