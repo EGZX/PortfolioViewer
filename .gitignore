@@ -51,10 +51,13 @@ bugfixing/
 
 # Database and Cache
 # *.db  <-- Uncomment to ignore DB if not using it for persistence
-# data/ <-- Uncomment to ignore data dir
+data/  # Git ignored - persistence layer (SQLite + Parquet)
 
 # Tests
 #tests/
+
+# Hypothesis test cache
+.hypothesis/
 
 # Configuration tools
 scripts/config_helper.py

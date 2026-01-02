@@ -442,3 +442,646 @@
 [2026-01-02 00:01:00.878] [INFO    ] [tax_basis:process_all_transactions:317] Processing 2072 transactions with WeightedAverage
 [2026-01-02 00:01:00.890] [WARNING ] [tax_basis:match_sell:171] No open lots for RKLB
 [2026-01-02 00:01:00.890] [INFO    ] [tax_basis:process_all_transactions:322] Generated 558 tax events
+[2026-01-02 08:18:06.893] [INFO    ] [market_cache:_init_db:132] Initialized market data cache at data/market_cache.db
+[2026-01-02 08:18:06.893] [WARNING ] [market_cache:__init__:56] Failed to initialize encryption: No secrets found. Valid paths for a secrets.toml file or secret directories are: /home/runner/.streamlit/secrets.toml, /home/runner/work/PortfolioViewer/PortfolioViewer/.streamlit/secrets.toml
+[2026-01-02 08:18:36.636] [INFO    ] [multi_provider:__init__:238] No fallback providers configured (all require API keys)
+[2026-01-02 08:18:38.383] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.383] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.504] [INFO    ] [market_cache:_init_db:132] Initialized market data cache at data/market_cache.db
+[2026-01-02 08:18:38.504] [INFO    ] [market_cache:__init__:54] Cache encryption disabled (no key found)
+[2026-01-02 08:18:38.515] [WARNING ] [market_data:fetch_single_price:197] Error fetching SINGLE price for USDEUR=X: Failed to perform, curl: (6) Could not resolve host: guce.yahoo.com. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+[2026-01-02 08:18:38.515] [WARNING ] [market_data:get_fx_rate:340] Using hardcoded fallback FX rate for USD/EUR: 0.95
+[2026-01-02 08:18:38.527] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 4 transactions
+[2026-01-02 08:18:38.528] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 4 holdings active.
+[2026-01-02 08:18:38.541] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.541] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.548] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.548] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.555] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.555] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.563] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.563] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.570] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:38.570] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:38.578] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:38.578] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:38.586] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:38.587] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:38.597] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.597] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.604] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.604] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.613] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:38.613] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:38.621] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 7 transactions
+[2026-01-02 08:18:38.622] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 7 holdings active.
+[2026-01-02 08:18:38.631] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:38.632] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:38.642] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:38.643] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:38.654] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:38.654] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:38.664] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 5 transactions
+[2026-01-02 08:18:38.665] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 5 holdings active.
+[2026-01-02 08:18:38.674] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:38.674] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:38.684] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 4 transactions
+[2026-01-02 08:18:38.684] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 4 holdings active.
+[2026-01-02 08:18:38.858] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:38.859] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 2 holdings active.
+[2026-01-02 08:18:38.868] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.869] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.876] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.876] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.883] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.883] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.890] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.890] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.897] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.897] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.904] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.904] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.912] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.912] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.919] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.919] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.926] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.926] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.933] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.933] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.940] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.940] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.947] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.947] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.954] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.955] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.961] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.962] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.969] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.969] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.976] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.976] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.983] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.983] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.990] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.990] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:38.997] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:38.997] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.004] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.005] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.012] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.012] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.020] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.020] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.027] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.027] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.034] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.034] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.041] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.041] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.048] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.048] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.055] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.056] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.063] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.063] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.070] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.070] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.077] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.077] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.084] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.085] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.091] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.092] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.099] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.099] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.107] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.107] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.114] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.114] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.121] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.121] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.128] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.129] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.135] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.136] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.142] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.143] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.151] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.151] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.159] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.159] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.166] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.167] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.174] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.174] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.181] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.181] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.188] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.188] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.195] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.195] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.202] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.203] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.209] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.210] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.281] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.281] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.289] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.289] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.296] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.296] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.303] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.304] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.311] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.311] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.318] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.319] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.326] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.326] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.333] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.333] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.340] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.341] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.348] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.348] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.355] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.355] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.362] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.362] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.369] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.369] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.376] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.377] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.383] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.384] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.391] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.391] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.398] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.398] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.405] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.405] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.412] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.413] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.419] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.420] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.426] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.427] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.434] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.434] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.441] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.441] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.448] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.448] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.455] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.456] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.462] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.463] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.470] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.470] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.477] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.477] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.484] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.484] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.491] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.491] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.498] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.499] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.506] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.506] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.513] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.513] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.520] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.520] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.527] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.528] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.535] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.535] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.542] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.542] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.549] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.549] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.556] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.556] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.563] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.564] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.570] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.571] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.578] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.578] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.585] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.585] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.592] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.592] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.599] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.599] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.606] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.607] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.613] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.614] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.620] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.621] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.628] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:39.628] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:39.635] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:39.636] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:39.646] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:39.647] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:39.658] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:39.658] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:39.667] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:39.667] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:39.677] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:39.677] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 2 holdings active.
+[2026-01-02 08:18:39.685] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:39.686] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:39.696] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 7 transactions
+[2026-01-02 08:18:39.697] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 7 holdings active.
+[2026-01-02 08:18:39.706] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:39.707] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:39.718] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 4 transactions
+[2026-01-02 08:18:39.718] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 4 holdings active.
+[2026-01-02 08:18:39.726] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:39.726] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:39.736] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:39.736] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:39.747] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:39.748] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:39.757] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 4 transactions
+[2026-01-02 08:18:39.757] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 4 holdings active.
+[2026-01-02 08:18:39.765] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:39.765] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 2 holdings active.
+[2026-01-02 08:18:39.773] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:39.773] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:39.784] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 7 transactions
+[2026-01-02 08:18:39.784] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 7 holdings active.
+[2026-01-02 08:18:39.794] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:39.794] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:39.804] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:39.804] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:39.813] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:39.814] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 2 holdings active.
+[2026-01-02 08:18:39.821] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:39.821] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:39.829] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:39.830] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:39.837] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:39.838] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:39.846] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:39.846] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:39.857] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:39.857] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:39.867] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:39.867] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:39.877] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:39.878] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:39.886] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:39.886] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:39.894] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:39.895] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:39.905] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:39.905] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:39.915] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 7 transactions
+[2026-01-02 08:18:39.915] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 7 holdings active.
+[2026-01-02 08:18:39.925] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:39.925] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:39.935] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:39.935] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:39.944] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:39.945] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 2 holdings active.
+[2026-01-02 08:18:39.952] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:39.953] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:39.963] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 5 transactions
+[2026-01-02 08:18:39.963] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 5 holdings active.
+[2026-01-02 08:18:39.972] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:39.972] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 2 holdings active.
+[2026-01-02 08:18:39.980] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:39.980] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:39.991] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:39.991] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.002] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.003] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.013] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.014] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.021] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.022] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.030] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 7 transactions
+[2026-01-02 08:18:40.030] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 7 holdings active.
+[2026-01-02 08:18:40.040] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 5 transactions
+[2026-01-02 08:18:40.040] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 5 holdings active.
+[2026-01-02 08:18:40.049] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.049] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.060] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:40.061] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:40.070] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 5 transactions
+[2026-01-02 08:18:40.071] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 5 holdings active.
+[2026-01-02 08:18:40.080] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.080] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.091] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.091] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.099] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.099] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.110] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.110] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.118] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.118] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.126] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.127] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 2 holdings active.
+[2026-01-02 08:18:40.134] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 7 transactions
+[2026-01-02 08:18:40.135] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 7 holdings active.
+[2026-01-02 08:18:40.145] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.145] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.156] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.156] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.167] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 5 transactions
+[2026-01-02 08:18:40.167] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 5 holdings active.
+[2026-01-02 08:18:40.176] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:40.177] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:40.186] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.187] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.195] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:40.195] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:40.205] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 5 transactions
+[2026-01-02 08:18:40.206] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 5 holdings active.
+[2026-01-02 08:18:40.215] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:40.215] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:40.225] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.225] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.233] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:40.233] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:40.242] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:40.243] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:40.252] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.252] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.263] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 5 transactions
+[2026-01-02 08:18:40.263] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 5 holdings active.
+[2026-01-02 08:18:40.272] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 5 transactions
+[2026-01-02 08:18:40.272] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 5 holdings active.
+[2026-01-02 08:18:40.281] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.281] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.289] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.290] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.298] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 4 transactions
+[2026-01-02 08:18:40.298] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 4 holdings active.
+[2026-01-02 08:18:40.306] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.307] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.318] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:40.318] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:40.328] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 4 transactions
+[2026-01-02 08:18:40.328] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 4 holdings active.
+[2026-01-02 08:18:40.337] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:40.337] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:40.347] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 3 transactions
+[2026-01-02 08:18:40.348] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 3 holdings active.
+[2026-01-02 08:18:40.356] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:40.356] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:40.367] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.367] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.378] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:40.378] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:40.388] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:40.389] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:40.398] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 7 transactions
+[2026-01-02 08:18:40.398] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 7 holdings active.
+[2026-01-02 08:18:40.408] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 6 transactions
+[2026-01-02 08:18:40.408] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 6 holdings active.
+[2026-01-02 08:18:40.417] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 9 transactions
+[2026-01-02 08:18:40.418] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 9 holdings active.
+[2026-01-02 08:18:40.428] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 10 transactions
+[2026-01-02 08:18:40.428] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 10 holdings active.
+[2026-01-02 08:18:40.439] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 8 transactions
+[2026-01-02 08:18:40.440] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 8 holdings active.
+[2026-01-02 08:18:40.463] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:40.464] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:40.490] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.490] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.494] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.494] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.502] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.502] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.509] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.509] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.516] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.517] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.519] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.519] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.526] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.526] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.528] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.528] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.536] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.536] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.538] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.538] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.540] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.540] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.550] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.551] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.559] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.559] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.567] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.567] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.575] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.575] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.577] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.578] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.587] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.587] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.594] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.594] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.597] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.598] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.607] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.607] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.615] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.615] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.622] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.622] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.629] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.629] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.636] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.636] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.643] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.643] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.650] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.650] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.657] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.658] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.664] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.665] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.672] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.672] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.679] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.679] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.686] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.686] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.693] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.693] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.700] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.701] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.707] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.707] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.714] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.715] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.721] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.722] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.729] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.729] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.736] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.736] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.743] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.743] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.750] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.750] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.757] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.758] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.764] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.765] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.772] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.772] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.779] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.779] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.786] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.786] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.793] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.793] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.800] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.800] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.807] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.808] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.814] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.815] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.821] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.822] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.828] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.829] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.835] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.836] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.843] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.843] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.850] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.850] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.857] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.857] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.864] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.864] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.871] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.872] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.878] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.879] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.885] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.886] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.892] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.893] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.900] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.900] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.907] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.907] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.914] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.914] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.921] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.921] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.928] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.928] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.935] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.935] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.942] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.943] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.949] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.950] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.957] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.957] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.964] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.964] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.971] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.971] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.978] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.979] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.985] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.986] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:40.991] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:40.991] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:41.008] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.008] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.009] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.009] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.015] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.015] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.022] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.023] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.158] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.158] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.166] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.166] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.173] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.173] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.180] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.180] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.187] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.187] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.194] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.194] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.201] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.201] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.208] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.208] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.217] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.217] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.224] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.224] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.231] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.231] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.238] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.239] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.246] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.247] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.254] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.254] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.261] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.261] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.269] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.270] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.274] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.274] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.280] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.281] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.287] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.287] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.294] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.294] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.301] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.301] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.307] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.307] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.314] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.314] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.320] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.321] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.327] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.328] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.334] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.334] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.341] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.341] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.348] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.348] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.355] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.355] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.361] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.362] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.368] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.369] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.375] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.375] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.382] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.382] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.389] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.389] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.397] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.397] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.407] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 1 transactions
+[2026-01-02 08:18:41.407] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 08:18:41.421] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 0 transactions
+[2026-01-02 08:18:41.421] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 08:18:41.422] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
+[2026-01-02 08:18:41.422] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
