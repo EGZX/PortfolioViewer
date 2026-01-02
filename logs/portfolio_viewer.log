@@ -1121,3 +1121,363 @@ AttributeError: 'MarketDataCache' object has no attribute 'get_last_transactions
 [2026-01-02 10:24:15.673] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
 [2026-01-02 10:24:15.673] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
 [2026-01-02 10:24:15.673] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 0 transactions
+[2026-01-02 10:27:26.171] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 10:27:26.171] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 10:27:26.172] [WARNING ] [market_cache:get_last_transactions_csv:204] get_last_transactions_csv called - deprecated, use TransactionStore
+[2026-01-02 10:27:26.174] [INFO    ] [sidebar:render_sidebar_controls:80] Processing file: Deine Gesamtansicht-20251229-055109.csv, size: 357445 bytes
+[2026-01-02 10:27:26.174] [INFO    ] [sidebar:render_sidebar_controls:82] Decoded content length: 357364 chars
+[2026-01-02 10:27:26.174] [INFO    ] [sidebar:render_sidebar_controls:85] Starting pipeline processing...
+[2026-01-02 10:27:26.177] [INFO    ] [csv_parser:parse_csv:219] ============================================================
+[2026-01-02 10:27:26.177] [INFO    ] [csv_parser:parse_csv:220] Starting CSV parsing
+[2026-01-02 10:27:26.177] [INFO    ] [csv_parser:parse_csv:221] ============================================================
+[2026-01-02 10:27:26.177] [INFO    ] [csv_parser:parse_csv:227] Detected delimiter: ';', decimal: ','
+[2026-01-02 10:27:26.188] [INFO    ] [csv_parser:parse_csv:239] Read 2083 rows, 22 columns: ['datetime', 'date', 'time', 'price', 'shares', 'amount', 'tax', 'fee', 'realizedgains', 'type', 'broker', 'assettype', 'identifier', 'wkn', 'originalcurrency', 'currency', 'fxrate', 'holding', 'holdingname', 'holdingnickname', 'exchange', 'avgholdingperiod']
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'datetime' to 'date' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'type' to 'type' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'identifier' to 'isin' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'holdingname' to 'name' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'assettype' to 'asset_type' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'shares' to 'shares' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'price' to 'price' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'fee' to 'fees' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'amount' to 'total' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'originalcurrency' to 'original_currency' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'fxrate' to 'fx_rate' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'broker' to 'broker' (score: 1.00)
+[2026-01-02 10:27:26.191] [INFO    ] [csv_parser:map_columns:134] Mapped 'tax' to 'withholding_tax' (score: 1.00)
+[2026-01-02 10:27:26.193] [INFO    ] [csv_parser:map_columns:134] Mapped 'realizedgains' to 'realized_gain' (score: 1.00)
+[2026-01-02 10:27:26.193] [INFO    ] [csv_parser:map_columns:141] Forced mapping 'identifier' to 'ticker' as fallback
+[2026-01-02 10:27:26.193] [INFO    ] [csv_parser:map_columns:143] Final Column mapping: {'datetime': 'date', 'type': 'type', 'identifier': 'ticker', 'holdingname': 'name', 'assettype': 'asset_type', 'shares': 'shares', 'price': 'price', 'fee': 'fees', 'amount': 'total', 'originalcurrency': 'original_currency', 'fxrate': 'fx_rate', 'broker': 'broker', 'tax': 'withholding_tax', 'realizedgains': 'realized_gain'}
+[2026-01-02 10:27:26.443] [INFO    ] [csv_parser:parse_csv:413] ============================================================
+[2026-01-02 10:27:26.443] [INFO    ] [csv_parser:parse_csv:414] CSV Parsing Complete: 2083 successful, 0 errors
+[2026-01-02 10:27:26.443] [INFO    ] [csv_parser:parse_csv:415] Error breakdown:
+[2026-01-02 10:27:26.443] [INFO    ] [csv_parser:parse_csv:419] ============================================================
+[2026-01-02 10:27:26.447] [ERROR   ] [isin_resolver:resolve_batch:149] Batch resolution failed: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 35488 and this is thread id 20428.
+[2026-01-02 10:27:26.447] [INFO    ] [pipeline:process_data_pipeline:43] Resolved ISINs to Tickers for 112 transactions
+[2026-01-02 10:27:26.447] [INFO    ] [corporate_actions:detect_and_apply_all_actions:574] ============================================================
+[2026-01-02 10:27:26.447] [INFO    ] [corporate_actions:detect_and_apply_all_actions:575] CORPORATE ACTIONS: Step 1 - Stock Splits
+[2026-01-02 10:27:26.447] [INFO    ] [corporate_actions:detect_and_apply_splits:276] ============================================================
+[2026-01-02 10:27:26.447] [INFO    ] [corporate_actions:detect_and_apply_splits:277] Starting split detection and adjustment
+[2026-01-02 10:27:26.451] [INFO    ] [corporate_actions:detect_and_apply_splits:286] Checking splits for 235 unique tickers
+[2026-01-02 10:27:26.453] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US88642R1095: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000RENK730: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NL0012969182: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US60937P1066: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US86800U1043: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NL0000687663: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GMAB.CO: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US78392B1070: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DK0061412772: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0304201033: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.454] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US7731211089: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.455] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for CA11271J1075: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.455] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US22788C1053: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.455] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0090661010: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.455] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US4781601046: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.455] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JP3571400005: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.455] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US00724F1012: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.455] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000HS3XCH7: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for KYG851581069: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000SW19FA0: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NFLX: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US4435731009: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for KYG8208B1014: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for KYG6683N1034: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US45337C1027: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US81141R1005: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US8636671013: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00B8HGT870: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JP3475350009: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.456] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for CH0311864901: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.457] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for SE0007692850: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.457] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US98978V1035: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.457] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE000GOJO2A3: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.457] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GG00BMGYLN96: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US6304021057: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for PLDINPL00011: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US2441991054: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US83417M1045: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for FR0000121972: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for AT0000730007: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for KYG040111059: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for ARKK: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NL0006294274: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for LU1778762911: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US09290D1019: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US7391281067: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for FR0010342592: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for PLPKN0000018: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US29786A1060: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US5010441013: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US5165441032: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00BYX2JD69: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US7427181091: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE0007030009: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0394831020: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US46120E6023: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB0002875804: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US7170811035: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for TSM: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NO0010209331: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US83406F1021: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.458] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for CA00288U1066: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.460] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US5949181045: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.460] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0126531013: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.460] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for ASML.AS: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.460] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for MX01TR0H0006: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US90384S3031: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00B53L3W79: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US19260Q1076: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US48581R2058: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US09260D1072: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US4385161066: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB00BZ3CNK81: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US23804L1035: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US5132721045: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GRS469003024: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for FR0000121014: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GOOGL: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.461] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000A0LAUP1: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US81762P1021: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US50202M1027: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB00BL9YR756: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000A0WMPJ6: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US61174X1090: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for CLIQ.DE: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US90353T1007: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US5949724083: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US22266T1097: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US79466L3024: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00B579F325: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0404132054: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.462] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for KYG177661090: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.463] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0079031078: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.463] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US8036071004: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.463] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for KYG9830T1067: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.463] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US78409V1044: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.463] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JP3409800004: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.463] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for SOL-EUR: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.463] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00B4NCWG09: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.463] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for CH0012221716: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.464] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for SE0000695876: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.464] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US26856L1035: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.464] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US9224751084: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.464] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE0003XJA0J9: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.464] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US00108J1097: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.464] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US45784P1012: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.464] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US45781V1017: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.465] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JE00B588CD74: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.465] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NL0000235190: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.465] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00B7Y34M31: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.465] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NL0013654783: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.466] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for BRPETRACNPR6: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.466] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for SPIW.DE: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.466] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for ES0105046009: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.466] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US15118V2079: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US4448591028: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US49714P1084: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0595781040: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB00BLDYK618: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DK0010287663: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US5657881067: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US92826C8394: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for CA13321L1085: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US17275R1023: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.467] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US03027X1000: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US55354G1004: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US78435P1057: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US2270461096: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US46625H1005: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US4330001060: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0091581068: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB00B1XZS820: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000A1TNUT7: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00BDZZTM54: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0846707026: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US20441A1025: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JP3814800003: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for CA21037X1006: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000A35JS40: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE000S9YS762: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB0007188757: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US86800U3023: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JP3932000007: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US89377M1099: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000A1K0235: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DK0062498333: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US29355A1079: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000HS3X9G9: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US8808901081: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US1491231015: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB00B10RZP78: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB00BVFCZV34: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for AU000000BHP4: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US2358511028: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IL0011595993: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for KYG017191142: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US5398301094: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US45826J1051: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.468] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US63253R2013: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.470] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JP3633400001: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.470] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US88160R1014: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.470] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US1630861011: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.470] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for CH0038863350: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.470] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NL00150001Q9: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.470] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US56585A1025: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.471] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB0009390070: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.471] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00BLRPRL42: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.471] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US5500211090: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.471] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US70450Y1038: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.471] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NO0011082075: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.471] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DK0061539921: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.471] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000A14KRD3: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.471] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for FWRA.MI: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.471] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US58733R1023: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NL0011540547: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for AU0000185993: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US98956A1051: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB0007980591: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US91913Y1001: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US7731221062: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JP3481800005: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB0002634946: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00B3YLTY66: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JP3304200003: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US18915M1071: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US34959E1091: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0010841023: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NL0012817175: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.472] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for 1211.HK: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for LU1598757687: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US88322Q1085: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US7707001027: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US8835561023: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00BFY0GT14: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for FR0000035164: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US58933Y1055: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE000SW19FB8: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US4571871023: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for CA1363751027: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NO0010096985: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NO0010208051: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.474] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for NO0010073489: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.475] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for LU3176111881: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.475] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US85859N1028: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.475] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for KYG4124C1096: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.475] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00BK5BQT80: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.475] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00BKT09032: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.475] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GB00BP6MXD84: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.475] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for JP3236200006: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.476] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IBKR: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.476] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00BKM4GZ66: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.476] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for DE0006219934: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.476] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GA0000121459: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.476] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US92343V1044: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.476] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00BFMXXD54: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.476] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for ZAE000259701: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US67066G1040: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US0231351067: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US30303M1027: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for GRS282183003: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for IE00B4ND3602: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for XS2330514899: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US98419M1009: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US6837121036: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for LU1437018838: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US47215P1066: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US1101221083: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US2298991090: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US69608A1088: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for SE0012673267: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for LU2290522684: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US35671D8570: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [ERROR   ] [corporate_actions:detect_and_apply_splits:308] Error checking splits for US98423F1093: 'MarketDataCache' object has no attribute 'get_splits'
+[2026-01-02 10:27:26.477] [INFO    ] [corporate_actions:detect_and_apply_splits:310] Split check complete. Found splits for 0 tickers.
+[2026-01-02 10:27:26.477] [INFO    ] [corporate_actions:detect_and_apply_splits:313] No actionable splits found.
+[2026-01-02 10:27:26.477] [INFO    ] [corporate_actions:detect_and_apply_splits:314] ============================================================
+[2026-01-02 10:27:26.477] [INFO    ] [corporate_actions:detect_and_apply_all_actions:583] CORPORATE ACTIONS: Step 2 - Spin-offs & Mergers
+[2026-01-02 10:27:26.480] [INFO    ] [corporate_actions:load_configured_actions:470] Loaded 2 tickers with configured corporate actions
+[2026-01-02 10:27:26.480] [INFO    ] [corporate_actions:detect_and_apply_all_actions:600] CORPORATE ACTIONS: Complete - 0 adjustments
+[2026-01-02 10:27:26.480] [INFO    ] [corporate_actions:detect_and_apply_all_actions:601] ============================================================
+[2026-01-02 10:27:26.482] [ERROR   ] [pipeline:process_data_pipeline:72] Pipeline processing error: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 35488 and this is thread id 20428.
+Traceback (most recent call last):
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\lib\pipeline.py", line 56, in process_data_pipeline
+    historical_rate, rate_source = FXRateService.get_rate(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 184, in __call__
+    return self._cached_func(self._instance, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 228, in __call__
+    return self._get_or_create_cached_value(args, kwargs, spinner_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 270, in _get_or_create_cached_value
+    return self._handle_cache_miss(cache, value_key, func_args, func_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 329, in _handle_cache_miss
+    computed_value = self._info.func(*func_args, **func_kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\lib\fx_rates.py", line 212, in get_rate
+    cached_rate = cache.get_fx_rate(from_currency, to_currency, target_date)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\lib\market_cache.py", line 186, in get_fx_rate
+    return get_fx_rate(from_curr, to_curr, target_date)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\lib\market_cache.py", line 96, in get_fx_rate
+    rows = db.query_sqlite(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\core\db.py", line 114, in query_sqlite
+    cursor = self.sqlite.execute(sql, params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 35488 and this is thread id 20428.
+[2026-01-02 10:27:26.493] [ERROR   ] [sidebar:render_sidebar_controls:218] Multi-source error: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 35488 and this is thread id 20428.
+Traceback (most recent call last):
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\app\ui\sidebar.py", line 86, in render_sidebar_controls
+    transactions, _, _ = process_data_pipeline(file_content)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 228, in __call__
+    return self._get_or_create_cached_value(args, kwargs, spinner_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 270, in _get_or_create_cached_value
+    return self._handle_cache_miss(cache, value_key, func_args, func_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 329, in _handle_cache_miss
+    computed_value = self._info.func(*func_args, **func_kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\lib\pipeline.py", line 73, in process_data_pipeline
+    raise e
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\lib\pipeline.py", line 56, in process_data_pipeline
+    historical_rate, rate_source = FXRateService.get_rate(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 184, in __call__
+    return self._cached_func(self._instance, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 228, in __call__
+    return self._get_or_create_cached_value(args, kwargs, spinner_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 270, in _get_or_create_cached_value
+    return self._handle_cache_miss(cache, value_key, func_args, func_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\AppData\Local\Programs\Python\Python312\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 329, in _handle_cache_miss
+    computed_value = self._info.func(*func_args, **func_kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\lib\fx_rates.py", line 212, in get_rate
+    cached_rate = cache.get_fx_rate(from_currency, to_currency, target_date)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\lib\market_cache.py", line 186, in get_fx_rate
+    return get_fx_rate(from_curr, to_curr, target_date)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\lib\market_cache.py", line 96, in get_fx_rate
+    rows = db.query_sqlite(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\core\db.py", line 114, in query_sqlite
+    cursor = self.sqlite.execute(sql, params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 35488 and this is thread id 20428.
+[2026-01-02 10:28:12.557] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 10:28:17.722] [INFO    ] [portfolio_viewer:main:105] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-02 10:28:17.724] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 10:28:17.724] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 10:28:17.726] [WARNING ] [market_cache:get_last_transactions_csv:204] get_last_transactions_csv called - deprecated, use TransactionStore
+[2026-01-02 10:28:17.733] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 10:28:17.733] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 10:28:17.734] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 0 transactions
