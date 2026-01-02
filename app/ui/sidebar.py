@@ -297,6 +297,11 @@ def render_sidebar_controls():
             if st.button("PURGE CACHE"):
                 cache.clear_cache()
                 st.rerun()
+        
+        # Historical Data Button (below action buttons)
+        if st.button("📈 Fetch Historical Data", help="Load full price history for performance chart (may take 2-5 min)", type="secondary"):
+            st.session_state.fetch_historical_data = True
+            st.rerun()
 
         st.markdown("---")
         

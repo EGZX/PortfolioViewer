@@ -302,10 +302,13 @@ def main():
     gain_color = "pos" if total_absolute_gain >= 0 else "neg"
     gain_txt = f"+{total_return_pct:.1f}%" if total_absolute_gain >= 0 else f"{total_return_pct:.1f}%"
 
-    # Fetch historical data
+    # Fetch historical data (opt-in to avoid blocking UI on first load)
     dates, net_deposits, portfolio_values, cost_basis_values = [], [], [], []
     
-    if st.session_state.enrichment_done and transactions:
+    # Only fetch if user has explicitly requested price update or if enrichment is done AND we don't have a "skip history" flag
+    fetch_history = st.session_state.get('fetch_historical_data', False)
+    
+    if fetch_history and st.session_state.enrichment_done and transactions:
         # Determine the full date range needed
         earliest_transaction = min(t.date for t in transactions)
         latest_date = datetime.now().date()
@@ -315,12 +318,16 @@ def main():
         
         # Fetch ALL historical prices (Service handles cache + fetching)
         from lib.market_data import fetch_historical_prices
-        price_history = fetch_historical_prices(all_tickers, earliest_transaction, latest_date)
+        with st.spinner(f"Fetching historical data for {len(all_tickers)} assets... This may take a few minutes."):
+            price_history = fetch_historical_prices(all_tickers, earliest_transaction, latest_date)
         
         # Calculate daily portfolio values using the history
         dates, net_deposits, portfolio_values, cost_basis_values = get_performance_history_cached(
             transactions, price_history, earliest_transaction, latest_date
         )
+        
+        # Reset flag so we don't fetch again on every rerun
+        st.session_state.fetch_historical_data = False
 
     # Calculate advanced metrics (Vola, Sharpe, Max Drawdown)
     volatility = None
