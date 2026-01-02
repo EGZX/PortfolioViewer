@@ -341,11 +341,11 @@ def main():
 
     # Prepare KPI Data with Privacy Masking
     kpi_data = [
-        {"label": "NET WORTH", "value": formatEuro(current_value), "delta": gain_txt, "delta_color": gain_color},
-        {"label": "ABS GAIN", "value": formatEuro(total_absolute_gain), "delta": f"+{return_pct:.2f}%", "delta_color": "pos"},
+        {"label": "NET WORTH", "value": mask_currency(current_value, st.session_state.privacy_mode), "delta": gain_txt, "delta_color": gain_color},
+        {"label": "ABS GAIN", "value": mask_currency(total_absolute_gain, st.session_state.privacy_mode), "delta": f"+{return_pct:.2f}%", "delta_color": "pos"},
         {"label": "XIRR", "value": f"{xirr_value * 100:.1f}%" if xirr_value is not None else "N/A", "delta": None, "delta_color": "pos" if xirr_value and xirr_value > 0 else "neu"},
-        {"label": "REALIZED P/L", "value": formatEuro(portfolio.realized_gains) if portfolio else "€0", "delta": None, "delta_color": None},
-        {"label": "UNREALIZED P/L", "value": formatEuro(unrealized_gain), "delta": None, "delta_color": None},
+        {"label": "REALIZED P/L", "value": mask_currency(portfolio.realized_gains, st.session_state.privacy_mode) if portfolio else "€0", "delta": None, "delta_color": None},
+        {"label": "UNREALIZED P/L", "value": mask_currency(unrealized_gain, st.session_state.privacy_mode), "delta": None, "delta_color": None},
         {"label": "HOLDINGS", "value": str(len(portfolio.holdings)) if portfolio else "0", "delta": None, "delta_color": None},
     ]
 
