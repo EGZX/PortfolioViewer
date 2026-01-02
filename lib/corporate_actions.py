@@ -267,7 +267,7 @@ class CorporateActionService:
         Returns:
             Tuple of (adjusted_transactions, adjustment_log)
         """
-        from lib.market_data import get_market_cache
+        from lib.market_cache import get_market_cache
         from concurrent.futures import ThreadPoolExecutor, as_completed
         
         if not fetch_splits:
@@ -339,7 +339,7 @@ class CorporateActionService:
         if AssetType.infer_from_ticker(ticker) == AssetType.CRYPTO:
             return []
             
-        from lib.market_data import get_market_cache
+        from lib.market_cache import get_market_cache
         cache = get_market_cache()
         
         cached_splits = cache.get_splits(ticker)

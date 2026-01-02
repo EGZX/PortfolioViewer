@@ -26,7 +26,7 @@ from modules.tax.engine import TaxBasisEngine
 from modules.tax.calculators import get_calculator
 from modules.viewer.transaction_store import TransactionStore
 from lib.market_data import fetch_prices, get_currency_for_ticker, get_fx_rate
-from lib.market_data import get_market_cache
+from lib.market_cache import get_market_cache
 from lib.corporate_actions import CorporateActionService
 from lib.validators import DataValidator
 from lib.pipeline import process_data_pipeline, parse_csv_only

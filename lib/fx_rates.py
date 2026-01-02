@@ -23,7 +23,7 @@ from typing import Optional, Dict, Tuple
 import streamlit as st
 
 from lib.utils.logging_config import setup_logger
-from lib.market_data import get_market_cache
+from lib.market_cache import get_market_cache
 
 logger = setup_logger(__name__)
 
