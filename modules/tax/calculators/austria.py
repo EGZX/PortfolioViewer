@@ -19,8 +19,8 @@ from typing import List, Dict
 from decimal import Decimal
 from datetime import date
 
-from calculators.tax_events import TaxEvent, TaxLiability
-from calculators.tax_calculators.base import TaxCalculator, register_calculator
+from modules.tax.tax_events import TaxEvent, TaxLiability
+from modules.tax.calculators.base import TaxCalculator, register_calculator
 
 
 @register_calculator("AT")

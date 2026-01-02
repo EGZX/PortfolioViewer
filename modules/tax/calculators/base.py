@@ -11,7 +11,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Type
 from decimal import Decimal
 
-from calculators.tax_events import TaxEvent, TaxLiability
+from modules.tax.tax_events import TaxEvent, TaxLiability
 
 
 class TaxCalculator(ABC):

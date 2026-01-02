@@ -13,8 +13,8 @@ from decimal import Decimal
 from typing import List, Dict, Optional, Tuple
 import pandas as pd
 
-from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
-from utils.logging_config import setup_logger
+from lib.parsers.enhanced_transaction import Transaction, TransactionType, AssetType
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -267,7 +267,7 @@ class CorporateActionService:
         Returns:
             Tuple of (adjusted_transactions, adjustment_log)
         """
-        from services.market_cache import get_market_cache
+        from lib.market_data import get_market_cache
         from concurrent.futures import ThreadPoolExecutor, as_completed
         
         if not fetch_splits:
@@ -332,14 +332,14 @@ class CorporateActionService:
         Get splits for a ticker, checking cache first then API.
         Applies blacklist and future date filtering.
         """
-        from parsers.enhanced_transaction import AssetType
+        from lib.parsers.enhanced_transaction import AssetType
         
         # Do not apply splits to Crypto assets
         # Prevents false positives from ticker collisions
         if AssetType.infer_from_ticker(ticker) == AssetType.CRYPTO:
             return []
             
-        from services.market_cache import get_market_cache
+        from lib.market_data import get_market_cache
         cache = get_market_cache()
         
         cached_splits = cache.get_splits(ticker)
@@ -420,7 +420,7 @@ class CorporateActionService:
             Dict mapping ticker -> list of CorporateAction objects
         """
         try:
-            from services.corporate_actions_config import CORPORATE_ACTIONS, MERGERS
+            from lib.corporate_actions_config import CORPORATE_ACTIONS, MERGERS
             
             actions_by_ticker = {}
             

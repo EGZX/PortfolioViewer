@@ -6,8 +6,8 @@ Copyright (c) 2026 Andre. All rights reserved.
 
 from datetime import datetime, timedelta
 from decimal import Decimal
-from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
-from services.data_validator import DataValidator
+from lib.parsers.enhanced_transaction import Transaction, TransactionType, AssetType
+from lib.validators import DataValidator
 
 # Test scenario: Growth stock held for years
 validator = DataValidator()

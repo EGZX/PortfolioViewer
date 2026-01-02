@@ -7,12 +7,12 @@
 # -----------------------------------------------------------------------------
 
 import streamlit as st
-from parsers.csv_parser import CSVParser
-from services.isin_resolver import ISINResolver
-from services.corporate_actions import CorporateActionService
-from services.fx_rates import FXRateService
-from services.data_validator import DataValidator
-from utils.logging_config import setup_logger
+from lib.parsers.csv_parser import CSVParser
+from lib.isin_resolver import ISINResolver
+from lib.corporate_actions import CorporateActionService
+from lib.fx_rates import FXRateService
+from lib.validators import DataValidator
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 

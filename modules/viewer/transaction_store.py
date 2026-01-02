@@ -29,9 +29,9 @@ import streamlit as st
 from cryptography.fernet import Fernet
 import base64
 
-from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
-from calculators.tax_events import ImportResult, DuplicateWarning
-from utils.logging_config import setup_logger
+from lib.parsers.enhanced_transaction import Transaction, TransactionType, AssetType
+from modules.tax.tax_events import ImportResult, DuplicateWarning
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -529,7 +529,7 @@ class TransactionStore:
         Returns:
             List of DuplicateGroup objects
         """
-        from calculators.duplicate_detector import DuplicateDetector
+        from modules.viewer.duplicate_detector import DuplicateDetector
         
         # Get all transactions
         transactions = self.get_all_transactions()

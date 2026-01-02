@@ -11,8 +11,8 @@ import pytest
 from datetime import date
 from decimal import Decimal
 
-from services.corporate_actions import CorporateAction, CorporateActionService
-from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
+from lib.corporate_actions import CorporateAction, CorporateActionService
+from lib.parsers.enhanced_transaction import Transaction, TransactionType, AssetType
 
 
 class TestSpinOffHandling:

@@ -10,7 +10,7 @@ import streamlit as st
 from typing import List, Dict
 from decimal import Decimal
 
-from utils.logging_config import setup_logger
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 

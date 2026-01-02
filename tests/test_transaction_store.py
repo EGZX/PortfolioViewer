@@ -13,8 +13,8 @@ from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
 
-from calculators.transaction_store import TransactionStore, EncryptionManager
-from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
+from modules.viewer.transaction_store import TransactionStore, EncryptionManager
+from lib.parsers.enhanced_transaction import Transaction, TransactionType, AssetType
 
 
 class TestEncryptionManager:

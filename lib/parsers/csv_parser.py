@@ -9,8 +9,8 @@ from typing import List, Dict, Optional, Any
 import pandas as pd
 
 # Import enhanced transaction model
-from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
-from utils.logging_config import setup_logger
+from lib.parsers.enhanced_transaction import Transaction, TransactionType, AssetType
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 
