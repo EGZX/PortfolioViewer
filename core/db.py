@@ -331,21 +331,23 @@ class DatabaseManager:
         return False
 
 
-# Global instance (lazy initialized)
-_db_instance: Optional[DatabaseManager] = None
+# Thread-local storage for database connections
+import threading
+_thread_local = threading.local()
 
 
 def get_db(data_dir: Path = None) -> DatabaseManager:
     """
-    Get global DatabaseManager instance.
+    Get thread-local DatabaseManager instance.
+    
+    Each thread gets its own database connection to avoid SQLite threading issues.
     
     Args:
         data_dir: Data directory path (optional)
     
     Returns:
-        DatabaseManager singleton
+        DatabaseManager instance for current thread
     """
-    global _db_instance
-    if _db_instance is None:
-        _db_instance = DatabaseManager(data_dir)
-    return _db_instance
+    if not hasattr(_thread_local, 'db_instance'):
+        _thread_local.db_instance = DatabaseManager(data_dir)
+    return _thread_local.db_instance

@@ -212,6 +212,28 @@ class MarketDataCache:
         logger.warning("save_transactions_csv called - deprecated, use TransactionStore")
         pass
     
+    def get_splits(self, ticker: str, start_date: date = None, end_date: date = None) -> List[Tuple[date, float]]:
+        """
+        Get split history for ticker.
+        Returns list of (split_date, ratio) tuples.
+        """
+        db = get_db()
+        if start_date and end_date:
+            rows = db.query_sqlite(
+                "SELECT split_date, ratio FROM splits WHERE ticker = ? AND split_date BETWEEN ? AND ? ORDER BY split_date",
+                (ticker, start_date, end_date)
+            )
+        else:
+            rows = db.query_sqlite(
+                "SELECT split_date, ratio FROM splits WHERE ticker = ? ORDER BY split_date",
+                (ticker,)
+            )
+        return [(row['split_date'], row['ratio']) for row in rows]
+    
+    def set_split(self, ticker: str, split_date: date, ratio: float):
+        """Store split."""
+        return set_split(ticker, split_date, ratio)
+    
     def clear_cache(self):
         """Clear all market data cache (prices, fx_rates, but not trades)."""
         db = get_db()
