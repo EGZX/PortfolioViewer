@@ -56,6 +56,9 @@ data/  # Git ignored - persistence layer (SQLite + Parquet)
 # Tests
 #tests/
 
+# Hypothesis test cache
+.hypothesis/
+
 # Configuration tools
 scripts/config_helper.py
 scripts/generate_cache_key.py
