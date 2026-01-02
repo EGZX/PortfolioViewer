@@ -77,10 +77,19 @@ def render_sidebar_controls():
                             total_skipped = 0
                             
                             for uploaded_file in uploaded_files:
+                                logger.info(f"Processing file: {uploaded_file.name}, size: {uploaded_file.size} bytes")
                                 file_content = uploaded_file.getvalue().decode('utf-8')
+                                logger.info(f"Decoded content length: {len(file_content)} chars")
                                 
                                 # Parse and enrich transactions
+                                logger.info("Starting pipeline processing...")
                                 transactions, _, _ = process_data_pipeline(file_content)
+                                logger.info(f"Pipeline returned {len(transactions) if transactions else 0} transactions")
+                                
+                                if not transactions:
+                                    st.error(f"Failed to parse {uploaded_file.name} - no valid transactions found")
+                                    logger.error(f"Parser returned empty list for {uploaded_file.name}")
+                                    continue
                                 
                                 # Add to store
                                 result = store.append_transactions(
@@ -92,7 +101,10 @@ def render_sidebar_controls():
                                 total_added += result.added
                                 total_skipped += result.skipped
                             
-                            st.success(f"✅ Added: {total_added} | Skipped: {total_skipped} (duplicates)")
+                            if total_added > 0:
+                                st.success(f"✅ Added: {total_added} | Skipped: {total_skipped} (duplicates)")
+                            else:
+                                st.warning("No transactions were imported. Check the CSV format.")
                             st.rerun()
                 
                 # Show active sources

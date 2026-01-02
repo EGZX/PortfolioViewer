@@ -1107,3 +1107,17 @@ Traceback (most recent call last):
     cached_data = cache.get_last_transactions_csv()
                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'MarketDataCache' object has no attribute 'get_last_transactions_csv'
+[2026-01-02 10:24:03.441] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 10:24:08.557] [INFO    ] [portfolio_viewer:main:105] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-02 10:24:08.654] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 10:24:08.654] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 10:24:08.656] [WARNING ] [market_cache:get_last_transactions_csv:204] get_last_transactions_csv called - deprecated, use TransactionStore
+[2026-01-02 10:24:08.664] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 10:24:08.664] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 10:24:08.665] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 0 transactions
+[2026-01-02 10:24:15.665] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 10:24:15.665] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 10:24:15.665] [WARNING ] [market_cache:get_last_transactions_csv:204] get_last_transactions_csv called - deprecated, use TransactionStore
+[2026-01-02 10:24:15.673] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 10:24:15.673] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 10:24:15.673] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 0 transactions
