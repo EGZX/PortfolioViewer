@@ -74,13 +74,30 @@ class DatabaseManager:
     
     @property
     def duckdb(self) -> Any:
-        """Get DuckDB connection (creates if needed)."""
+        """
+        Get DuckDB connection (creates if needed).
+        
+        Automatically ATTACHes the SQLite database for cleaner queries.
+        
+        Example:
+            # Instead of: SELECT * FROM sqlite_scan('/path/to/portfolio.db', 'trades')
+            # You can use: SELECT * FROM portfolio.trades
+        """
         if not DUCKDB_AVAILABLE:
             raise RuntimeError("DuckDB not installed. Run: pip install duckdb")
         
         if self._duckdb_conn is None:
             self._duckdb_conn = duckdb.connect(":memory:")
-            logger.info("DuckDB in-memory connection opened")
+            
+            # ATTACH SQLite database for cleaner queries
+            try:
+                attach_sql = f"ATTACH '{self.sqlite_path}' AS portfolio (TYPE SQLITE);"
+                self._duckdb_conn.execute(attach_sql)
+                logger.info(f"DuckDB in-memory connection opened, attached SQLite: {self.sqlite_path}")
+            except Exception as e:
+                logger.warning(f"Could not ATTACH SQLite to DuckDB: {e}")
+                logger.info("DuckDB in-memory connection opened (no ATTACH)")
+        
         return self._duckdb_conn
     
     def query_sqlite(self, sql: str, params: tuple = ()) -> List[Dict[str, Any]]:
@@ -117,9 +134,11 @@ class DatabaseManager:
         """
         Execute analytical query with DuckDB.
         
+        The SQLite database is automatically ATTACHed as 'portfolio'.
+        
         Can query:
-        - SQLite tables via sqlite_scan()
-        - Parquet files via read_parquet()
+        - SQLite tables: SELECT * FROM portfolio.trades
+        - Parquet files: SELECT * FROM read_parquet('data/market_cache/*.parquet')
         - Join both sources
         
         Args:
@@ -130,8 +149,10 @@ class DatabaseManager:
         
         Example:
             >>> db.query_duckdb(\"\"\"
-            ...     SELECT * FROM sqlite_scan('portfolio.db', 'trades')
-            ...     WHERE date > '2024-01-01'
+            ...     SELECT t.ticker, COUNT(*) as num_trades
+            ...     FROM portfolio.trades t
+            ...     WHERE t.date > '2024-01-01'
+            ...     GROUP BY t.ticker
             ... \"\"\")
         
         Note:
