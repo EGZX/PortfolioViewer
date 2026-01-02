@@ -234,6 +234,11 @@ class MarketDataCache:
             )
         return [(row['split_date'], row['ratio']) for row in rows]
     
+    def set_splits(self, ticker: str, splits: List[Tuple[date, float]]):
+        """Store multiple splits for a ticker."""
+        for split_date, ratio in splits:
+            set_split(ticker, split_date, ratio)
+    
     def set_split(self, ticker: str, split_date: date, ratio: float):
         """Store split."""
         return set_split(ticker, split_date, ratio)
