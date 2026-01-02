@@ -1091,3 +1091,7 @@
 [2026-01-02 09:48:21.466] [INFO    ] [engine:process_all_transactions:317] Processing 3 transactions with WeightedAverage
 [2026-01-02 09:48:21.467] [INFO    ] [engine:process_all_transactions:322] Generated 1 tax events
 [2026-01-02 09:49:28.984] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 10:14:14.479] [INFO    ] [engine:process_all_transactions:317] Processing 3 transactions with FIFO
+[2026-01-02 10:14:14.480] [INFO    ] [engine:process_all_transactions:322] Generated 2 tax events
+[2026-01-02 10:14:14.486] [INFO    ] [engine:process_all_transactions:317] Processing 3 transactions with WeightedAverage
+[2026-01-02 10:14:14.486] [INFO    ] [engine:process_all_transactions:322] Generated 1 tax events

@@ -10,7 +10,6 @@ import pandas as pd
 from lib.parsers.enhanced_transaction import Transaction, TransactionType, AssetType
 from lib.utils.logging_config import setup_logger
 from lib.market_data import get_fx_rate, get_currency_for_ticker
-from lib.market_data import get_market_cache
 
 logger = setup_logger(__name__)
 

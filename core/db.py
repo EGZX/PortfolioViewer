@@ -133,7 +133,13 @@ class DatabaseManager:
             ...     SELECT * FROM sqlite_scan('portfolio.db', 'trades')
             ...     WHERE date > '2024-01-01'
             ... \"\"\")
+        
+        Note:
+            Automatically runs WAL checkpoint to ensure DuckDB sees latest data.
         """
+        # CRITICAL: Checkpoint WAL before DuckDB reads SQLite
+        self.checkpoint()
+        
         result = self.duckdb.execute(sql).fetchall()
         columns = [desc[0] for desc in self.duckdb.description]
         return [dict(zip(columns, row)) for row in result]
@@ -160,9 +166,16 @@ class DatabaseManager:
         - trades: Transaction history
         - settings: Application settings
         - tax_audit_log: Immutable tax calculation audit trail
+        - prices: Market data cache (current and historical prices)
+        - splits: Stock split events
+        - fx_rates: Historical exchange rates
+        - isin_map: ISIN to Ticker resolution
         """
         schema_sql = """
         -- Trades table (replaces transactions.db logic)
+        -- NOTE: Using REAL for shares/price/total - acceptable for this use case
+        -- but aware of floating point precision limits. For strict financial
+        -- accuracy, consider INTEGER (cents) or Decimal in Python validation.
         CREATE TABLE IF NOT EXISTS trades (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             date TEXT NOT NULL,
@@ -198,6 +211,7 @@ class DatabaseManager:
             event_id TEXT UNIQUE NOT NULL,
             timestamp TEXT NOT NULL,
             calculation_hash TEXT NOT NULL,
+            strategy_version TEXT NOT NULL,  -- e.g., 'v2.0-AT-E1kv'
             inputs TEXT NOT NULL,  -- JSON
             outputs TEXT NOT NULL, -- JSON
             created_at TEXT DEFAULT CURRENT_TIMESTAMP
@@ -205,11 +219,74 @@ class DatabaseManager:
         
         CREATE INDEX IF NOT EXISTS idx_tax_audit_timestamp ON tax_audit_log(timestamp);
         CREATE INDEX IF NOT EXISTS idx_tax_audit_event ON tax_audit_log(event_id);
+        
+        -- Market Data: Prices table
+        CREATE TABLE IF NOT EXISTS prices (
+            ticker TEXT NOT NULL,
+            date DATE NOT NULL,
+            price REAL NOT NULL,
+            source TEXT DEFAULT 'yfinance',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (ticker, date)
+        );
+        
+        CREATE INDEX IF NOT EXISTS idx_prices_ticker ON prices(ticker);
+        CREATE INDEX IF NOT EXISTS idx_prices_date ON prices(date);
+        
+        -- Market Data: Splits table
+        CREATE TABLE IF NOT EXISTS splits (
+            ticker TEXT NOT NULL,
+            split_date DATE NOT NULL,
+            ratio REAL NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (ticker, split_date)
+        );
+        
+        CREATE INDEX IF NOT EXISTS idx_splits_ticker ON splits(ticker);
+        
+        -- Market Data: FX Rates table
+        CREATE TABLE IF NOT EXISTS fx_rates (
+            from_curr TEXT NOT NULL,
+            to_curr TEXT NOT NULL,
+            date DATE NOT NULL,
+            rate REAL NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (from_curr, to_curr, date)
+        );
+        
+        CREATE INDEX IF NOT EXISTS idx_fx_rates_pair ON fx_rates(from_curr, to_curr);
+        
+        -- Market Data: ISIN Mapping table
+        CREATE TABLE IF NOT EXISTS isin_map (
+            isin TEXT PRIMARY KEY,
+            ticker TEXT NOT NULL,
+            name TEXT,
+            exchange TEXT,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        CREATE INDEX IF NOT EXISTS idx_isin_map_ticker ON isin_map(ticker);
         """
         
+        # Enable WAL mode for better concurrency
+        self.sqlite.execute("PRAGMA journal_mode=WAL;")
         self.sqlite.executescript(schema_sql)
         self.sqlite.commit()
-        logger.info("Database schema initialized")
+        logger.info("Database schema initialized (trades + market data)")
+    
+    def checkpoint(self):
+        """
+        Force WAL checkpoint to ensure DuckDB can read latest data.
+        
+        CRITICAL: DuckDB may not see uncommitted WAL changes without this.
+        Call before running analytical DuckDB queries.
+        """
+        try:
+            self.sqlite.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+            self.sqlite.commit()
+            logger.debug("WAL checkpoint completed")
+        except Exception as e:
+            logger.warning(f"WAL checkpoint failed: {e}")
     
     def close(self):
         """Close all database connections."""
