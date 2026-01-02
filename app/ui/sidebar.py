@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 import streamlit as st
-from lib.market_data import get_market_cache
+from lib.market_cache import get_market_cache
 from lib.pipeline import parse_csv_only, process_data_pipeline
 from modules.viewer.transaction_store import TransactionStore
 from lib.utils.logging_config import setup_logger

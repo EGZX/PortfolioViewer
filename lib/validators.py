@@ -336,7 +336,7 @@ class DataValidator:
         Detects splits even if you didn't trade around the split date.
         """
         try:
-            from lib.market_data import get_market_cache
+            from lib.market_cache import get_market_cache
             from datetime import timedelta
             
             cache = get_market_cache()

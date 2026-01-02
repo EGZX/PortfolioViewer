@@ -29,7 +29,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     Returns:
         Dictionary mapping ticker to current price (EUR) or None if failed
     """
-    from lib.market_data import get_market_cache
+    from lib.market_cache import get_market_cache
     
     logger.info(f"Fetching prices for {len(tickers)} tickers")
     
@@ -304,7 +304,7 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     
     try:
         # 1. Try Cache
-        from lib.market_data import get_market_cache
+        from lib.market_cache import get_market_cache
         cache = get_market_cache()
         cached_val = cache.get_fx_rate(from_currency, to_currency, date.today())
         
@@ -362,7 +362,7 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
     logger.info(f"Fetching historical prices for {len(tickers)} tickers from {start_date} to {end_date}")
     
     # Resolve ISINs
-    from lib.market_data import get_market_cache
+    from lib.market_cache import get_market_cache
     from lib.isin_resolver import ISINResolver
     
     # Batch resolve all tickers

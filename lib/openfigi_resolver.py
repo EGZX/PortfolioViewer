@@ -28,7 +28,7 @@ class OpenFIGIResolver:
     def __init__(self):
         self.last_request_time: Optional[datetime] = None
         # Use MarketDataCache for persistent storage
-        from lib.market_data import get_market_cache
+        from lib.market_cache import get_market_cache
         self.cache_store = get_market_cache()
     
     def _rate_limit(self):
