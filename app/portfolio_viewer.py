@@ -15,6 +15,14 @@ A portfolio analysis tool with:
 - Interactive visualizations
 """
 
+import sys
+from pathlib import Path
+
+# Fix module imports - add project root to path
+_root = Path(__file__).parent.parent
+if str(_root) not in sys.path:
+    sys.path.insert(0, str(_root))
+
 import streamlit as st
 from datetime import datetime, date
 from decimal import Decimal
