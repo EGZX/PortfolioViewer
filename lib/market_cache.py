@@ -160,8 +160,21 @@ class MarketDataCache:
     def set_price(self, ticker: str, price: float, price_date: date, source: str = 'yfinance'):
         return set_price(ticker, price, price_date, source)
     
-    def get_prices_batch(self, tickers: List[str], target_date: date) -> Dict[str, Optional[float]]:
-        return get_prices_batch(tickers, target_date)
+    def get_prices_batch(self, tickers: List[str], target_date: date = None) -> Dict[str, Optional[float]]:
+        """Get batch of prices. If target_date is None, gets latest available."""
+        if target_date is None:
+            # Get latest price for each ticker (most recent date)
+            db = get_db()
+            result = {}
+            for ticker in tickers:
+                rows = db.query_sqlite(
+                    "SELECT price FROM prices WHERE ticker = ? ORDER BY date DESC LIMIT 1",
+                    (ticker,)
+                )
+                result[ticker] = rows[0]['price'] if rows else None
+            return result
+        else:
+            return get_prices_batch(tickers, target_date)
     
     def set_prices_batch(self, prices: List[Tuple[str, date, float, str]]):
         return set_prices_batch(prices)
@@ -169,11 +182,42 @@ class MarketDataCache:
     def get_historical_prices(self, tickers: List[str], start_date: date, end_date: date) -> pd.DataFrame:
         return get_historical_prices(tickers, start_date, end_date)
     
-    def get_fx_rate(self, from_curr: str, to_curr: str, target_date: date) -> Optional[float]:
+    def get_fx_rate(self, from_curr: str, to_curr: str,  target_date: date) -> Optional[float]:
         return get_fx_rate(from_curr, to_curr, target_date)
     
     def set_fx_rate(self, from_curr: str, to_curr: str, target_date: date, rate: float):
         return set_fx_rate(from_curr, to_curr, target_date, rate)
+    
+    def get_isin_mapping(self, isin: str) -> Optional[str]:
+        """Get ticker for ISIN (for cache detection logic)."""
+        return resolve_isin(isin)
+    
+    def save_isin_mapping(self, isin: str, ticker: str, name: str = None, exchange: str = None):
+        """Store ISIN mapping."""
+        return store_isin_mapping(isin, ticker, name, exchange)
+    
+    def get_last_transactions_csv(self) -> Optional[Tuple[str, str, date]]:
+        """
+        Legacy method for single-file mode cache.
+        Returns None - single-file mode deprecated, use TransactionStore instead.
+        """
+        logger.warning("get_last_transactions_csv called - deprecated, use TransactionStore")
+        return None
+    
+    def save_transactions_csv(self, content: str, filename: str):
+        """
+        Legacy method for single-file mode cache.
+        Does nothing - single-file mode deprecated, use TransactionStore instead.
+        """
+        logger.warning("save_transactions_csv called - deprecated, use TransactionStore")
+        pass
+    
+    def clear_cache(self):
+        """Clear all market data cache (prices, fx_rates, but not trades)."""
+        db = get_db()
+        db.execute_sqlite("DELETE FROM prices")
+        db.execute_sqlite("DELETE FROM fx_rates")
+        logger.info("Market data cache cleared (prices + fx_rates)")
 
 
 # Singleton for compatibility

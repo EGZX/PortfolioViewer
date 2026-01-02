@@ -1097,3 +1097,13 @@
 [2026-01-02 10:14:14.486] [INFO    ] [engine:process_all_transactions:322] Generated 1 tax events
 [2026-01-02 10:14:49.268] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
 [2026-01-02 10:15:29.891] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 10:18:21.406] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 10:18:28.338] [INFO    ] [portfolio_viewer:main:105] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-02 10:18:28.341] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 10:18:28.341] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 10:18:28.343] [ERROR   ] [sidebar:render_sidebar_controls:206] Multi-source error: 'MarketDataCache' object has no attribute 'get_last_transactions_csv'
+Traceback (most recent call last):
+  File "C:\Users\Andre\PycharmProjects\PortfolioViewer\app\ui\sidebar.py", line 47, in render_sidebar_controls
+    cached_data = cache.get_last_transactions_csv()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MarketDataCache' object has no attribute 'get_last_transactions_csv'
