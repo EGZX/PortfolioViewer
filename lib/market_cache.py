@@ -192,8 +192,12 @@ class MarketDataCache:
         """Get ticker for ISIN (for cache detection logic)."""
         return resolve_isin(isin)
     
+    def set_isin_mapping(self, isin: str, ticker: str, name: str = None, exchange: str = None):
+        """Store ISIN to ticker mapping."""
+        return store_isin_mapping(isin, ticker, name, exchange)
+    
     def save_isin_mapping(self, isin: str, ticker: str, name: str = None, exchange: str = None):
-        """Store ISIN mapping."""
+        """Alias for set_isin_mapping (backward compatibility)."""
         return store_isin_mapping(isin, ticker, name, exchange)
     
     def get_last_transactions_csv(self) -> Optional[Tuple[str, str, date]]:
