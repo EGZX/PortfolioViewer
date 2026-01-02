@@ -412,56 +412,76 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
             mapped = batch_map.get(t, t)
             fetch_mapped.append(mapped)
             fetch_map[mapped] = t
+        
+        logger.info(f"Downloading historical data for {len(fetch_mapped)} tickers in chunks...")
+        
+        # Download in chunks to show progress and prevent timeout
+        chunk_size = 50
+        fetched_data = {}
+        cache_updates = []
+        
+        for i in range(0, len(fetch_mapped), chunk_size):
+            chunk = fetch_mapped[i:i+chunk_size]
+            chunk_num = (i // chunk_size) + 1
+            total_chunks = (len(fetch_mapped) + chunk_size - 1) // chunk_size
             
-        try:
-            data = yf.download(
-                fetch_mapped,
-                start=start_date,
-                end=end_date,
-                interval="1d",
-                group_by='ticker',
-                auto_adjust=False,
-                threads=True,
-                progress=False
-            )
+            logger.info(f"⏳ Downloading chunk {chunk_num}/{total_chunks} ({len(chunk)} tickers)...")
             
-            fetched_data = {}
-            cache_updates = []
-            
-            if len(fetch_mapped) == 1:
-                mapped = fetch_mapped[0]
-                original = fetch_map[mapped]
-                if 'Close' in data.columns:
-                    series = data['Close']
-                    fetched_data[original] = series
-                    
-                    for dt, price in series.items():
-                        if pd.notna(price):
-                            cache_updates.append((original, dt.date(), float(price), 'yfinance'))
-            else:
-                for mapped in fetch_mapped:
-                    original = fetch_map.get(mapped)
-                    if not original: continue
-                    
-                    if mapped in data.columns.levels[0]:
-                        series = data[mapped]['Close']
+            try:
+                data = yf.download(
+                    chunk,
+                    start=start_date,
+                    end=end_date,
+                    interval="1d",
+                    group_by='ticker',
+                    auto_adjust=False,
+                    threads=True,
+                    progress=False
+                )
+                
+                if len(chunk) == 1 and not data.empty:
+                    mapped = chunk[0]
+                    original = fetch_map[mapped]
+                    if 'Close' in data.columns:
+                        series = data['Close']
                         fetched_data[original] = series
                         
                         for dt, price in series.items():
                             if pd.notna(price):
                                 cache_updates.append((original, dt.date(), float(price), 'yfinance'))
-            
-            if fetched_data:
-                fetched_df = pd.DataFrame(fetched_data, index=data.index)
-            else:
-                fetched_df = pd.DataFrame(index=data.index)
-
-            # Bulk save to cache
-            if cache_updates:
-                cache.set_prices_batch(cache_updates)
+                elif len(chunk) > 1 and not data.empty:
+                    for mapped in chunk:
+                        original = fetch_map.get(mapped)
+                        if not original: continue
+                        
+                        try:
+                            if mapped in data.columns.levels[0]:
+                                series = data[mapped]['Close']
+                                fetched_data[original] = series
+                                
+                                for dt, price in series.items():
+                                    if pd.notna(price):
+                                        cache_updates.append((original, dt.date(), float(price), 'yfinance'))
+                        except (KeyError, AttributeError):
+                            continue
                 
-        except Exception as e:
-            logger.error(f"Failed to fetch historical prices: {e}")
+                logger.info(f"✓ Chunk {chunk_num}/{total_chunks} complete ({len(cache_updates)} price points)")
+                
+            except Exception as e:
+                logger.error(f"Failed chunk {chunk_num}: {e}")
+                continue
+        
+        if fetched_data:
+            fetched_df = pd.DataFrame(fetched_data)
+        else:
+            fetched_df = pd.DataFrame()
+
+        # Bulk save to cache
+        if cache_updates:
+            logger.info(f"Saving {len(cache_updates)} price points to cache...")
+            cache.set_prices_batch(cache_updates)
+            logger.info("✓ Cache updated successfully")
+
             
     # Combine Cached and Fetched
     final_df = pd.DataFrame()
