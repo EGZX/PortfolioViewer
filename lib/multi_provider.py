@@ -17,7 +17,7 @@ from datetime import date
 import os
 import streamlit as st
 
-from utils.logging_config import setup_logger
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 

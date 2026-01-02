@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import plotly.express as px 
 import pandas as pd
 
-from utils.logging_config import setup_logger
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 

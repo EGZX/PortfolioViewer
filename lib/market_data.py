@@ -7,9 +7,9 @@ import pandas as pd
 import yfinance as yf
 import streamlit as st
 
-from utils.logging_config import setup_logger, get_perf_logger
-from services.isin_resolver import ISINResolver
-from services.multi_provider import MarketDataAggregator
+from lib.utils.logging_config import setup_logger, get_perf_logger
+from lib.isin_resolver import ISINResolver
+from lib.multi_provider import MarketDataAggregator
 
 logger = setup_logger(__name__)
 
@@ -29,7 +29,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     Returns:
         Dictionary mapping ticker to current price (EUR) or None if failed
     """
-    from services.market_cache import get_market_cache
+    from lib.market_data import get_market_cache
     
     logger.info(f"Fetching prices for {len(tickers)} tickers")
     
@@ -304,7 +304,7 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
     
     try:
         # 1. Try Cache
-        from services.market_cache import get_market_cache
+        from lib.market_data import get_market_cache
         cache = get_market_cache()
         cached_val = cache.get_fx_rate(from_currency, to_currency, date.today())
         
@@ -362,8 +362,8 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
     logger.info(f"Fetching historical prices for {len(tickers)} tickers from {start_date} to {end_date}")
     
     # Resolve ISINs
-    from services.market_cache import get_market_cache
-    from services.isin_resolver import ISINResolver
+    from lib.market_data import get_market_cache
+    from lib.isin_resolver import ISINResolver
     
     # Batch resolve all tickers
     batch_map = ISINResolver.resolve_batch(tickers)
@@ -494,7 +494,7 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
     # Apply Split Adjustments to Price History
     # Adjust price history for splits
     try:
-        from services.corporate_actions import CorporateActionService
+        from lib.corporate_actions import CorporateActionService
         
         for ticker in final_df.columns:
             splits = CorporateActionService.get_cached_splits(ticker)

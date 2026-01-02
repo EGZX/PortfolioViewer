@@ -18,13 +18,13 @@ from decimal import Decimal
 from pathlib import Path
 
 # Import components to test
-from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
-from calculators.portfolio import Portfolio
-from calculators.tax_basis import TaxBasisEngine
-from calculators.tax_calculators import get_calculator
-from calculators.transaction_store import TransactionStore
-from services.corporate_actions import CorporateActionService
-from services.pipeline import parse_csv_only
+from lib.parsers.enhanced_transaction import Transaction, TransactionType, AssetType
+from modules.viewer.portfolio import Portfolio
+from modules.tax.engine import TaxBasisEngine
+from modules.tax.calculators import get_calculator
+from modules.viewer.transaction_store import TransactionStore
+from lib.corporate_actions import CorporateActionService
+from lib.pipeline import parse_csv_only
 
 
 class TestEndToEndWorkflows:

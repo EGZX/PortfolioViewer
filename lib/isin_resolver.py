@@ -6,7 +6,7 @@ Provides intelligent ISIN-to-ticker mapping for European and US securities.
 
 import re
 from typing import Optional, Dict
-from utils.logging_config import setup_logger
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -92,7 +92,7 @@ class ISINResolver:
         
         # Try OpenFIGI automatic resolution
         try:
-            from services.openfigi_resolver import get_openfigi_resolver
+            from lib.openfigi_resolver import get_openfigi_resolver
             resolver = get_openfigi_resolver()
             ticker = resolver.resolve_isin(isin)
             
@@ -133,7 +133,7 @@ class ISINResolver:
         # 2. Batch resolve ISINs
         if isins_to_resolve:
             try:
-                from services.openfigi_resolver import get_openfigi_resolver
+                from lib.openfigi_resolver import get_openfigi_resolver
                 resolver = get_openfigi_resolver()
                 
                 # This uses the optimized batch method we just added

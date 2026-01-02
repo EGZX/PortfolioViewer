@@ -20,23 +20,23 @@ from datetime import datetime, date
 from decimal import Decimal
 import pandas as pd
 import json
-from calculators.portfolio import Portfolio
-from calculators.metrics import xirr, calculate_absolute_return, calculate_volatility, calculate_sharpe_ratio, calculate_max_drawdown
-from calculators.tax_basis import TaxBasisEngine
-from calculators.tax_calculators import get_calculator
-from calculators.transaction_store import TransactionStore
-from services.market_data import fetch_prices, get_currency_for_ticker, get_fx_rate
-from services.market_cache import get_market_cache
-from services.corporate_actions import CorporateActionService
-from services.data_validator import DataValidator
-from services.pipeline import process_data_pipeline, parse_csv_only
-from charts.visualizations import create_allocation_donut, create_performance_chart, create_allocation_treemap
-from utils.logging_config import setup_logger
-from utils.auth import check_authentication, show_logout_button
-from ui.styles import APP_STYLE
-from ui.components import render_kpi_dashboard
-from ui.sidebar import render_sidebar_controls, render_sidebar_status
-from ui.utils import mask_currency, mask_currency_precise
+from modules.viewer.portfolio import Portfolio
+from modules.viewer.metrics import xirr, calculate_absolute_return, calculate_volatility, calculate_sharpe_ratio, calculate_max_drawdown
+from modules.tax.engine import TaxBasisEngine
+from modules.tax.calculators import get_calculator
+from modules.viewer.transaction_store import TransactionStore
+from lib.market_data import fetch_prices, get_currency_for_ticker, get_fx_rate
+from lib.market_data import get_market_cache
+from lib.corporate_actions import CorporateActionService
+from lib.validators import DataValidator
+from lib.pipeline import process_data_pipeline, parse_csv_only
+from app.charts.visualizations import create_allocation_donut, create_performance_chart, create_allocation_treemap
+from lib.utils.logging_config import setup_logger
+from lib.utils.auth import check_authentication, show_logout_button
+from app.ui.styles import APP_STYLE
+from app.ui.components import render_kpi_dashboard
+from app.ui.sidebar import render_sidebar_controls, render_sidebar_status
+from app.ui.utils import mask_currency, mask_currency_precise
 
 logger = setup_logger(__name__)
 
@@ -142,7 +142,7 @@ def main():
                 
                 # Check if duplicate review is requested
                 if st.session_state.get('show_duplicate_review', False):
-                    from ui.duplicate_resolution import render_duplicate_review
+                    from app.ui.duplicate_resolution import render_duplicate_review
                     
                     st.title("🔍 Duplicate Review")
                     duplicate_groups = store.get_pending_duplicate_groups()
@@ -306,7 +306,7 @@ def main():
         all_tickers = list(set(t.ticker for t in transactions if t.ticker))
         
         # Fetch ALL historical prices (Service handles cache + fetching)
-        from services.market_data import fetch_historical_prices
+        from lib.market_data import fetch_historical_prices
         price_history = fetch_historical_prices(all_tickers, earliest_transaction, latest_date)
         
         # Calculate daily portfolio values using the history

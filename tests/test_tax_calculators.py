@@ -10,13 +10,13 @@ import pytest
 from datetime import date
 from decimal import Decimal
 
-from calculators.tax_events import TaxEvent, LotMatchingMethod
-from calculators.tax_calculators.base import (
+from modules.tax.tax_events import TaxEvent, LotMatchingMethod
+from modules.tax.calculators.base import (
     TaxCalculator,
     get_calculator,
     list_available_jurisdictions
 )
-from calculators.tax_calculators.germany import GermanyTaxCalculator
+from modules.tax.calculators.germany import GermanyTaxCalculator
 
 
 class TestTaxCalculatorFactory:

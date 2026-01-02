@@ -13,8 +13,8 @@ from typing import List, Tuple, Optional, Dict
 from dataclasses import dataclass
 from enum import Enum
 
-from parsers.enhanced_transaction import Transaction, TransactionType
-from utils.logging_config import setup_logger
+from lib.parsers.enhanced_transaction import Transaction, TransactionType
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 

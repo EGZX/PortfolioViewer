@@ -10,9 +10,9 @@ import pytest
 from datetime import date
 from decimal import Decimal
 
-from calculators.tax_events import TaxEvent, LotMatchingMethod
-from calculators.tax_calculators.base import get_calculator
-from calculators.tax_calculators.austria import AustriaTaxCalculator
+from modules.tax.tax_events import TaxEvent, LotMatchingMethod
+from modules.tax.calculators.base import get_calculator
+from modules.tax.calculators.austria import AustriaTaxCalculator
 
 
 class TestAustrianTaxCalculator:

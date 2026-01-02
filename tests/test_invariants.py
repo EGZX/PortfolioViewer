@@ -15,9 +15,9 @@ import pytest
 from hypothesis import given, strategies as st, assume, settings
 from decimal import Decimal
 from datetime import date, timedelta
-from calculators.portfolio import Portfolio
-from calculators.metrics import calculate_absolute_return
-from parsers.enhanced_transaction import Transaction, TransactionType, AssetType
+from modules.viewer.portfolio import Portfolio
+from modules.viewer.metrics import calculate_absolute_return
+from lib.parsers.enhanced_transaction import Transaction, TransactionType, AssetType
 
 
 # Strategy for generating valid decimal prices/amounts

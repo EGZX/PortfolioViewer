@@ -1085,3 +1085,9 @@
 [2026-01-02 08:18:41.421] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 0 holdings active.
 [2026-01-02 08:18:41.422] [INFO    ] [portfolio:_reconstruct_state:226] Reconstructing portfolio from 2 transactions
 [2026-01-02 08:18:41.422] [INFO    ] [portfolio:_reconstruct_state:243] Portfolio state rebuilt: 1 holdings active.
+[2026-01-02 09:44:14.030] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 09:48:21.465] [INFO    ] [engine:process_all_transactions:317] Processing 3 transactions with FIFO
+[2026-01-02 09:48:21.465] [INFO    ] [engine:process_all_transactions:322] Generated 2 tax events
+[2026-01-02 09:48:21.466] [INFO    ] [engine:process_all_transactions:317] Processing 3 transactions with WeightedAverage
+[2026-01-02 09:48:21.467] [INFO    ] [engine:process_all_transactions:322] Generated 1 tax events
+[2026-01-02 09:49:28.984] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']

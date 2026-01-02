@@ -10,8 +10,8 @@ from decimal import Decimal
 from typing import List, Dict, Tuple
 from collections import defaultdict
 
-from parsers.enhanced_transaction import Transaction, TransactionType
-from utils.logging_config import setup_logger
+from lib.parsers.enhanced_transaction import Transaction, TransactionType
+from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -336,7 +336,7 @@ class DataValidator:
         Detects splits even if you didn't trade around the split date.
         """
         try:
-            from services.market_cache import get_market_cache
+            from lib.market_data import get_market_cache
             from datetime import timedelta
             
             cache = get_market_cache()
