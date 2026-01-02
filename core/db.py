@@ -1,0 +1,253 @@
+"""
+Database Connection Manager - "The Glue"
+
+Provides unified access to both SQLite (for trades/settings) and DuckDB 
+(for analytical queries across SQLite + Parquet files).
+
+Architecture:
+- SQLite: Transactional data (trades, settings, audit logs)
+- Parquet: Time-series market data (OHLCV)
+- DuckDB: Query engine that can join both
+
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
+"""
+
+import sqlite3
+from pathlib import Path
+from typing import Optional, List, Dict, Any
+from contextlib import contextmanager
+import logging
+
+try:
+    import duckdb
+    DUCKDB_AVAILABLE = True
+except ImportError:
+    DUCKDB_AVAILABLE = False
+    logging.warning("DuckDB not available. Install with: pip install duckdb")
+
+logger = logging.getLogger(__name__)
+
+
+class DatabaseManager:
+    """
+    Manages database connections for the portfolio platform.
+    
+    Provides:
+    - SQLite connection for transactional data
+    - DuckDB connection for analytical queries
+    - Unified query interface
+    """
+    
+    def __init__(self, data_dir: Path = None):
+        """
+        Initialize database manager.
+        
+        Args:
+            data_dir: Path to data directory (defaults to ./data)
+        """
+        if data_dir is None:
+            data_dir = Path(__file__).parent.parent / "data"
+        
+        self.data_dir = Path(data_dir)
+        self.data_dir.mkdir(exist_ok=True)
+        
+        # Database paths
+        self.sqlite_path = self.data_dir / "portfolio.db"
+        self.market_cache_dir = self.data_dir / "market_cache"
+        self.market_cache_dir.mkdir(exist_ok=True)
+        
+        # Connections (lazy loaded)
+        self._sqlite_conn: Optional[sqlite3.Connection] = None
+        self._duckdb_conn: Optional[Any] = None  # duckdb.DuckDBPyConnection
+    
+    @property
+    def sqlite(self) -> sqlite3.Connection:
+        """Get SQLite connection (creates if needed)."""
+        if self._sqlite_conn is None:
+            self._sqlite_conn = sqlite3.connect(
+                str(self.sqlite_path),
+                detect_types=sqlite3.PARSE_DECLTYPES
+            )
+            self._sqlite_conn.row_factory = sqlite3.Row
+            logger.info(f"SQLite connection opened: {self.sqlite_path}")
+        return self._sqlite_conn
+    
+    @property
+    def duckdb(self) -> Any:
+        """Get DuckDB connection (creates if needed)."""
+        if not DUCKDB_AVAILABLE:
+            raise RuntimeError("DuckDB not installed. Run: pip install duckdb")
+        
+        if self._duckdb_conn is None:
+            self._duckdb_conn = duckdb.connect(":memory:")
+            logger.info("DuckDB in-memory connection opened")
+        return self._duckdb_conn
+    
+    def query_sqlite(self, sql: str, params: tuple = ()) -> List[Dict[str, Any]]:
+        """
+        Execute SQL query on SQLite database.
+        
+        Args:
+            sql: SQL query string
+            params: Query parameters (for parameterized queries)
+        
+        Returns:
+            List of rows as dictionaries
+        """
+        cursor = self.sqlite.execute(sql, params)
+        columns = [desc[0] for desc in cursor.description] if cursor.description else []
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+    
+    def execute_sqlite(self, sql: str, params: tuple = ()) -> int:
+        """
+        Execute SQL statement on SQLite (INSERT, UPDATE, DELETE).
+        
+        Args:
+            sql: SQL statement
+            params: Statement parameters
+        
+        Returns:
+            Number of affected rows
+        """
+        cursor = self.sqlite.execute(sql, params)
+        self.sqlite.commit()
+        return cursor.rowcount
+    
+    def query_duckdb(self, sql: str) -> List[Dict[str, Any]]:
+        """
+        Execute analytical query with DuckDB.
+        
+        Can query:
+        - SQLite tables via sqlite_scan()
+        - Parquet files via read_parquet()
+        - Join both sources
+        
+        Args:
+            sql: DuckDB SQL query
+        
+        Returns:
+            List of rows as dictionaries
+        
+        Example:
+            >>> db.query_duckdb(\"\"\"
+            ...     SELECT * FROM sqlite_scan('portfolio.db', 'trades')
+            ...     WHERE date > '2024-01-01'
+            ... \"\"\")
+        """
+        result = self.duckdb.execute(sql).fetchall()
+        columns = [desc[0] for desc in self.duckdb.description]
+        return [dict(zip(columns, row)) for row in result]
+    
+    def get_parquet_path(self, ticker: str) -> Path:
+        """
+        Get path for ticker's Parquet file.
+        
+        Args:
+            ticker: Ticker symbol
+        
+        Returns:
+            Path to parquet file (may not exist yet)
+        """
+        # Sanitize ticker for filename
+        safe_ticker = ticker.replace('/', '_').replace('\\', '_')
+        return self.market_cache_dir / f"{safe_ticker}.parquet"
+    
+    def init_schema(self):
+        """
+        Initialize database schema.
+        
+        Creates tables:
+        - trades: Transaction history
+        - settings: Application settings
+        - tax_audit_log: Immutable tax calculation audit trail
+        """
+        schema_sql = """
+        -- Trades table (replaces transactions.db logic)
+        CREATE TABLE IF NOT EXISTS trades (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT NOT NULL,
+            type TEXT NOT NULL,
+            ticker TEXT,
+            isin TEXT,
+            name TEXT,
+            shares REAL NOT NULL,
+            price REAL NOT NULL,
+            fees REAL DEFAULT 0,
+            total REAL NOT NULL,
+            currency TEXT NOT NULL,
+            fx_rate REAL DEFAULT 1.0,
+            broker TEXT,
+            asset_type TEXT,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        CREATE INDEX IF NOT EXISTS idx_trades_date ON trades(date);
+        CREATE INDEX IF NOT EXISTS idx_trades_ticker ON trades(ticker);
+        CREATE INDEX IF NOT EXISTS idx_trades_type ON trades(type);
+        
+        -- Settings table
+        CREATE TABLE IF NOT EXISTS settings (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL,
+            updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        -- Tax audit log (append-only, immutable)
+        CREATE TABLE IF NOT EXISTS tax_audit_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id TEXT UNIQUE NOT NULL,
+            timestamp TEXT NOT NULL,
+            calculation_hash TEXT NOT NULL,
+            inputs TEXT NOT NULL,  -- JSON
+            outputs TEXT NOT NULL, -- JSON
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        CREATE INDEX IF NOT EXISTS idx_tax_audit_timestamp ON tax_audit_log(timestamp);
+        CREATE INDEX IF NOT EXISTS idx_tax_audit_event ON tax_audit_log(event_id);
+        """
+        
+        self.sqlite.executescript(schema_sql)
+        self.sqlite.commit()
+        logger.info("Database schema initialized")
+    
+    def close(self):
+        """Close all database connections."""
+        if self._sqlite_conn:
+            self._sqlite_conn.close()
+            self._sqlite_conn = None
+            logger.info("SQLite connection closed")
+        
+        if self._duckdb_conn:
+            self._duckdb_conn.close()
+            self._duckdb_conn = None
+            logger.info("DuckDB connection closed")
+    
+    def __enter__(self):
+        """Context manager entry."""
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit."""
+        self.close()
+        return False
+
+
+# Global instance (lazy initialized)
+_db_instance: Optional[DatabaseManager] = None
+
+
+def get_db(data_dir: Path = None) -> DatabaseManager:
+    """
+    Get global DatabaseManager instance.
+    
+    Args:
+        data_dir: Data directory path (optional)
+    
+    Returns:
+        DatabaseManager singleton
+    """
+    global _db_instance
+    if _db_instance is None:
+        _db_instance = DatabaseManager(data_dir)
+    return _db_instance

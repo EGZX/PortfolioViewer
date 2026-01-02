@@ -99,7 +99,70 @@ finnhub_key = "YOUR_KEY_HERE"
 
 ### **System Architecture**
 
-Follows a Modular Monolith architecture. Components are loosely coupled via service interfaces, allowing for easy testing and potential future separation.
+**Modular Monolith - "Library-First" Design**
+
+The application runs as a single Docker container but maintains strict internal separation between layers. This architecture provides the simplicity of a monolith with the maintainability of modular code.
+
+#### **Architecture Layers**
+
+```
+/portfolio-platform
+├── data/                   # [GIT IGNORED] Persistence Layer
+│   ├── portfolio.db        # SQLite: Trades, Settings, Audit Logs
+│   └── market_cache/       # Parquet: OHLCV Data (One file per ticker)
+│
+├── core/                   # The "Kernel"
+│   ├── db.py               # DuckDB + SQLite connection manager
+│   ├── market.py           # Data fetcher -> Parquet
+│   └── hashing.py          # SHA256 audit logic
+│
+├── modules/
+│   ├── tax/                # The Compliance Engine ("The Fortress")
+│   ├── viewer/             # Dashboard Logic
+│   └── quant/              # Research Sandbox (Read-Only)
+│
+├── ui/                     # Streamlit Frontend
+├── tests/                  # Hypothesis & Invariant Tests
+├── Dockerfile
+└── docker-compose.yml
+```
+
+#### **The Data Kernel**
+
+**Hybrid Storage Strategy:**
+- **Trades (SQLite)**: Transactional data stored in `data/portfolio.db` with strict types and foreign keys
+- **Prices (Parquet)**: Time-series market data stored in `data/market_cache/` for efficient columnar storage
+- **The Glue (DuckDB)**: Python wrapper that can query both SQLite and Parquet files seamlessly
+
+**Core Components:**
+- `core/db.py`: Unified database connection manager
+- `core/market.py`: Market data fetcher with Parquet storage
+- `core/hashing.py`: SHA256 hasher for audit trails and calculation verification
+
+#### **The Tax Engine ("The Fortress")**
+
+Immutable, verifiable tax calculation system:
+- **Event Loop**: Replays transaction history chronologically
+- **Audit Trail**: Append-only log in `tax_audit_log` table
+- **Sealed Calculations**: Each tax calculation is SHA256-sealed with inputs/outputs
+
+Example audit entry:
+```json
+{
+  "event_id": "TAX_2024_uuid",
+  "timestamp": "2024-03-15T10:30:00Z",
+  "calculation_hash": "sha256:abc123...",
+  "inputs": { "shares": 100, "cost_basis": 5000 },
+  "outputs": { "tax_due": 123.80 }
+}
+```
+
+#### **Property-Based Testing**
+
+Uses `hypothesis` library to verify mathematical invariants:
+- **Invariant 1**: `Shares * Cost >= 0` (cost basis non-negative)
+- **Invariant 2**: `Realized + Unrealized = Total Value - Net Invested`
+- **Invariant 3**: `Total Value = Sum(Holdings) + Cash`
 
 ```mermaid
 graph TD
@@ -107,28 +170,63 @@ graph TD
     Parser -->|Normalize| Stream[Transaction Stream]
     Stream -->|Process| Engine[Portfolio Engine]
     
-    subgraph "Data Infrastructure"
-        Market[Market Data Service]
-        FX[FX Rate Service]
-        Actions[Corporate Actions]
-        Cache[(SQLite / Encrypted)]
+    subgraph "Data Kernel"
+        DB[DuckDB Query Engine]
+        SQLite[(SQLite: Trades)]
+        Parquet[(Parquet: Prices)]
+        DB --> SQLite
+        DB --> Parquet
     end
     
-    Market <--> Cache
-    Engine <--> Market
-    Engine <--> FX
+    subgraph "Modules"
+        Tax[Tax Engine]
+        Viewer[Dashboard]
+        Quant[Quant Lab]
+    end
     
-    Engine -->|State| Analytics[Analytics Layer]
-    Analytics -->|Render| UI[Streamlit Front-end]
+    Engine --> DB
+    Engine --> Tax
+    Engine --> Viewer
+    Quant -.Read-Only.-> DB
+    
+    Viewer -->|Render| UI[Streamlit Frontend]
 ```
 
 ### **Module Map**
 
-*   **`calculators/`**: The math core. Contains `portfolio.py` (State reconstruction) and `metrics.py` (XIRR/Sharpe implementation).
-*   **`services/`**: Integration layer. Handles external APIs (`market_data.py`), caching (`market_cache.py`), and data logic (`corporate_actions.py`).
-*   **`parsers/`**: Ingestion layer. Factory pattern parsers to normalize disparate broker CSV formats into a unified data model.
-*   **`ui/`**: Presentation layer. Contains the Design System (`styles.py`) and specific view components.
-*   **`charts/`**: Visualization layer. specialized Plotly wrappers for consistent, high-performance charting.
+**Legacy Structure (Being Refactored):**
+*   **`calculators/`**: The math core. Contains `portfolio.py` (State reconstruction) and `metrics.py` (XIRR/Sharpe implementation). *(Moving to `modules/viewer/`)*
+*   **`services/`**: Integration layer. Handles external APIs and caching. *(Moving to `core/`)*
+*   **`parsers/`**: Ingestion layer. CSV parsers for broker formats.
+*   **`ui/`**: Presentation layer. Design system and view components.
+*   **`charts/`**: Visualization layer. Plotly wrappers for charting.
+
+**New Modular Structure:**
+*   **`core/`**: The Kernel - Database management, market data, and hashing
+*   **`modules/tax/`**: Tax calculation engine with audit logging
+*   **`modules/viewer/`**: Portfolio dashboard and metrics
+*   **`modules/quant/`**: Quantitative analysis tools (read-only access)
+
+---
+
+### **Deployment**
+
+**Zero-Config "Self-Sovereign" Launch**
+
+Using Docker Compose for single-command deployment:
+
+```bash
+# Build and run
+docker-compose up -d
+
+# Access at http://localhost:8501
+```
+
+**Security:**
+- Container binds to `127.0.0.1:8501` (localhost only)
+- Not exposed to internet by default
+- Use reverse proxy (nginx) or Tailscale for remote access
+- Read-only root filesystem with exception of mounted volumes
 
 ---
 
