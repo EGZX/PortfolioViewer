@@ -45,8 +45,8 @@ Thumbs.db
 #*.csv
 
 # Logs
-#*.log
-#logs/
+*.log
+logs/
 bugfixing/
 
 # Database and Cache
