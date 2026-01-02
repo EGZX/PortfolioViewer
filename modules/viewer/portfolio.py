@@ -60,9 +60,10 @@ class Portfolio:
         self.total_dividends = Decimal(0)
         self.total_fees = Decimal(0)
         self.total_interest = Decimal(0)
+        self.total_realized_pl = Decimal(0)  # Track realized gains/losses
         self.invested_capital = Decimal(0)
         self.realized_gains = Decimal(0)
-        self.cash_flows = []  # List of (date, amount) for XIRR
+        self.cash_flows: List[Tuple[datetime, Decimal]] = []  # List of (date, amount) for XIRR
         
         self._reconstruct_state()
     
@@ -184,26 +185,38 @@ class Portfolio:
                     # Pro-rata reduce cost basis
                     cost_per_share = pos.cost_basis / pos.shares
                     # Handle partial vs full sale
-                    shares_to_remove = min(t.shares, pos.shares)
-                    
-                    sold_cost = cost_per_share * shares_to_remove
-                    pos.cost_basis -= sold_cost
-                    
-                    # Track realized gain from CSV (for SELL transactions)
-                    if t.type == TransactionType.SELL and t.realized_gain != 0:
-                        self.realized_gains += t.realized_gain
+                key = self._get_holding_key(t.ticker, t.isin)
+                ticker = t.ticker or t.isin
                 
-                pos.shares -= t.shares
-                
-                # Prevent negative holdings
-                if pos.shares < 0:
-                    logger.warning(
-                        f"{t.ticker}: Selling/Transferring more shares than owned! "
-                        f"Type: {t.type.value}, "
-                        f"Capping to zero. (Check source data)"
-                    )
-                    pos.shares = Decimal(0)
-                    pos.cost_basis = Decimal(0)
+                if key in self.holdings:
+                    pos = self.holdings[key]
+                    
+                    # Check if selling more than owned
+                    if t.shares > pos.shares:
+                        logger.warning(
+                            f"{ticker}: Selling/Transferring more shares than owned! "
+                            f"Type: {t.type.value}, Capping to zero. (Check source data)"
+                        )
+                        t.shares = pos.shares
+                    
+                    # Update shares
+                    pos.shares -= t.shares
+                    
+                    # Calculate cost basis reduction (proportional)
+                    if pos.shares > 0:
+                        # Proportional cost basis reduction
+                        cost_per_share = pos.cost_basis / (pos.shares + t.shares)
+                        sold_cost = cost_per_share * t.shares
+                        pos.cost_basis -= sold_cost
+                    else:
+                        # Sold all shares
+                        pos.cost_basis = Decimal(0)
+                    
+                    # Track realized P/L if provided in transaction
+                    if hasattr(t, 'realized_gain') and t.realized_gain:
+                        self.total_realized_pl += t.realized_gain
+                else:
+                    logger.warning(f"{ticker}: Sell transaction but no position found. Ignoring.")
             
             elif t.type == TransactionType.DIVIDEND:
                 self.total_dividends += abs(amount_eur)
