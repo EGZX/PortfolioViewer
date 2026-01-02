@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  portfolio-platform:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portfolio-viewer
+    ports:
+      # Bind to localhost only for security (not exposed to internet)
+      - "127.0.0.1:8501:8501"
+    volumes:
+      # Persist data outside container
+      - ./data:/app/data
+      # Optional: persist logs
+      - ./logs:/app/logs
+    environment:
+      # Application settings
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      # Security: Enable file watcher for development (disable in production)
+      - STREAMLIT_SERVER_FILE_WATCHER_TYPE=none
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Security: Read-only root filesystem (except mounted volumes)
+    read_only: true
+    tmpfs:
+      - /tmp
+    # Resource limits (optional, adjust based on needs)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+# Named volumes (alternative to bind mounts)
+volumes:
+  portfolio_data:
+    driver: local
+  portfolio_logs:
+    driver: local

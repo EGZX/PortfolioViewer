@@ -27,4 +27,5 @@ EXPOSE 8501
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 
 # Run the application
+# Note: docker-compose binds this to 127.0.0.1 for security
 ENTRYPOINT ["streamlit", "run", "portfolio_viewer.py", "--server.port=8501", "--server.address=0.0.0.0"]
