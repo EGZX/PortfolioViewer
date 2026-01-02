@@ -181,15 +181,10 @@ class Portfolio:
                 
             # Decrease Position
             elif t.type in [TransactionType.SELL, TransactionType.TRANSFER_OUT]:
-                if pos.shares > 0:
-                    # Pro-rata reduce cost basis
-                    cost_per_share = pos.cost_basis / pos.shares
-                    # Handle partial vs full sale
-                key = self._get_holding_key(t.ticker, t.isin)
                 ticker = t.ticker or t.isin
                 
-                if key in self.holdings:
-                    pos = self.holdings[key]
+                if ticker in self.holdings:
+                    pos = self.holdings[ticker]
                     
                     # Check if selling more than owned
                     if t.shares > pos.shares:
@@ -204,7 +199,7 @@ class Portfolio:
                     
                     # Calculate cost basis reduction (proportional)
                     if pos.shares > 0:
-                        # Proportional cost basis reduction
+                        # Proportional cost basis reduction  
                         cost_per_share = pos.cost_basis / (pos.shares + t.shares)
                         sold_cost = cost_per_share * t.shares
                         pos.cost_basis -= sold_cost
@@ -215,6 +210,7 @@ class Portfolio:
                     # Track realized P/L if provided in transaction
                     if hasattr(t, 'realized_gain') and t.realized_gain:
                         self.total_realized_pl += t.realized_gain
+                        self.realized_gains += t.realized_gain
                 else:
                     logger.warning(f"{ticker}: Sell transaction but no position found. Ignoring.")
             
