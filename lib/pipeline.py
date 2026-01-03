@@ -28,17 +28,48 @@ def process_data_pipeline(file_content: str):
         
         if not transactions:
             return None, [], 0, None
-            
-        tickers_to_check = {t.ticker for t in transactions if t.ticker}
-        resolved_map = ISINResolver.resolve_batch(list(tickers_to_check))
         
+        # Collect all identifiers that need resolution (ISINs)
+        isins_to_resolve = []
+        for t in transactions:
+            # If transaction has ISIN but no ticker, we need to resolve it
+            if not t.ticker and t.isin:
+                isins_to_resolve.append(t.isin)
+            # If ticker looks like an ISIN, resolve it too
+            elif t.ticker and len(t.ticker) == 12 and t.ticker[:2].isalpha():
+                isins_to_resolve.append(t.ticker)
+        
+        # Resolve ISINs to tickers
+        resolved_map = {}
+        if isins_to_resolve:
+            resolved_map = ISINResolver.resolve_batch(list(set(isins_to_resolve)))
+            
         # Update transactions with resolved tickers
         resolved_count = 0
         for t in transactions:
-            if t.ticker in resolved_map and resolved_map[t.ticker] != t.ticker:
-                t.ticker = resolved_map[t.ticker]
-                resolved_count += 1
-                
+            # Case 1: Has ISIN but no ticker - resolve ISIN and set ticker
+            if not t.ticker and t.isin:
+                if t.isin in resolved_map:
+                    resolved_ticker = resolved_map[t.isin]
+                    # Only use resolved ticker if it's different from ISIN (i.e., actually resolved)
+                    if resolved_ticker != t.isin:
+                        t.ticker = resolved_ticker
+                        resolved_count += 1
+                        logger.debug(f"Resolved ISIN {t.isin} → {t.ticker}")
+                    else:
+                        # Resolution failed - skip this transaction or log warning
+                        logger.warning(f"Could not resolve ISIN {t.isin} to ticker - transaction may be skipped")
+            
+            # Case 2: Ticker looks like an ISIN - try to resolve it
+            elif t.ticker and len(t.ticker) == 12 and t.ticker[:2].isalpha():
+                if t.ticker in resolved_map:
+                    resolved_ticker = resolved_map[t.ticker]
+                    if resolved_ticker != t.ticker:
+                        old_ticker = t.ticker
+                        t.ticker = resolved_ticker
+                        resolved_count += 1
+                        logger.debug(f"Resolved ISIN-like ticker {old_ticker} → {t.ticker}")
+                        
         if resolved_count > 0:
             logger.info(f"Resolved ISINs to Tickers for {resolved_count} transactions")
         

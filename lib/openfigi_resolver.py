@@ -7,12 +7,34 @@ Free tier: 25 requests/min, 250 requests/hour (no API key required).
 
 import requests
 import time
+import re
 from typing import Optional, Dict, List
 from datetime import datetime, timedelta
 
 from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
+
+
+def normalize_ticker(ticker: str) -> str:
+    """
+    Normalize ticker format for Yahoo Finance compatibility.
+    
+    Imported from market_data to ensure consistency.
+    Converts 'BRK/B' -> 'BRK-B', 'BRK.B' -> 'BRK-B', etc.
+    """
+    if not ticker:
+        return ticker
+    
+    ticker = ticker.strip().upper()
+    
+    # Convert slash or period before single letter to hyphen (class shares)
+    ticker = re.sub(r'[/\.]([A-Z])$', r'-\1', ticker)
+    
+    # Handle multi-letter suffixes
+    ticker = re.sub(r'/([A-Z]+)$', r'-\1', ticker)
+    
+    return ticker
 
 
 class OpenFIGIResolver:
@@ -87,9 +109,9 @@ class OpenFIGIResolver:
             
             if not data or 'error' in data[0]:
                 logger.warning(f"OpenFIGI: No mapping found for {isin}")
-                # We could cache "not found" (e.g. empty string or special value) 
-                # but MarketDataCache logic for None is tricky. For now, don't cache failures.
-                return None
+                # Cache identity to prevent future lookups
+                self.cache_store.set_isin_mapping(isin, isin)
+                return isin
             
             # Extract ticker from response
             result = data[0].get('data', [])
@@ -101,12 +123,16 @@ class OpenFIGIResolver:
             ticker = self._extract_best_ticker(result, isin)
             
             if ticker:
+                # Normalize ticker before caching
+                ticker = normalize_ticker(ticker)
                 logger.info(f"✓ Resolved {isin} -> {ticker}")
                 self.cache_store.set_isin_mapping(isin, ticker)
                 return ticker
             else:
                 logger.warning(f"OpenFIGI: Could not extract ticker from response for {isin}")
-                return None
+                # Cache identity
+                self.cache_store.set_isin_mapping(isin, isin)
+                return isin
                 
         except requests.RequestException as e:
             logger.error(f"OpenFIGI API error for {isin}: {e}")
@@ -115,68 +141,101 @@ class OpenFIGIResolver:
     
     def _extract_best_ticker(self, figi_data: List[Dict], isin: str) -> Optional[str]:
         """
-        Extract the best Yahoo Finance compatible ticker from OpenFIGI response.
-        
-        Prioritizes:
-        1. Composite tickers (most liquid)
-        2. Primary exchange listings
-        3. US exchanges (best Yahoo Finance coverage)
+        Extract the best Yahoo Finance ticker, prioritizing Home Markets.
         """
         if not figi_data:
             return None
         
-        # Get country code from ISIN
-        country_code = isin[:2]
-        
-        # Mapping of common exchanges to Yahoo Finance suffixes
-        EXCHANGE_SUFFIXES = {
-            'US': '',          # US stocks have no suffix
-            'XNYS': '',        # NYSE
-            'XNAS': '',        # NASDAQ
-            'XLON': '.L',      # London
-            'XPAR': '.PA',     # Paris
-            'XFRA': '.DE',     # Frankfurt
-            'XETRA': '.DE',    # XETRA (German)
-            'XSWX': '.SW',     # Swiss
-            'XTSE': '.TO',     # Toronto
-            'XHKG': '.HK',     # Hong Kong
-            'XTKS': '.T',      # Tokyo
-            'XASX': '.AX',     # Australia
+        # 1. robust Exchange Map (MIC Codes -> Yahoo Suffix)
+        EXCHANGE_MAP = {
+            # US (No suffix)
+            'XNYS': '', 'XNAS': '', 'XASE': '', 'ARCX': '', 'BATS': '',
+            'US': '',
+            
+            # DACH Region
+            'XETR': '.DE',  # Xetra (Germany)
+            'XFRA': '.F',   # Frankfurt
+            'XWBO': '.VI',  # Vienna (Austria)
+            'XSWX': '.SW',  # SIX Swiss Exchange
+            'XVTX': '.SW',  # SIX Swiss (Virt-x)
+            
+            # Rest of Europe
+            'XPAR': '.PA', 'XLON': '.L',  'XAMS': '.AS', 'XBRU': '.BR',
+            'XMAD': '.MC', 'XMIL': '.MI', 'XDUB': '.IR', 'XLIS': '.LS',
+            'XOSL': '.OL', 'XSTO': '.ST', 'XCSE': '.CO', 'XHEL': '.HE',
+            
+            # Asia / Pacific
+            'XTKS': '.T',  'XHKG': '.HK', 'XASX': '.AX', 'XSES': '.SI',
+            
+            # Americas
+            'XTSE': '.TO', 'XTSX': '.TO', 'XBSP': '.SA',
         }
-        
+
+        # 2. Define "Home Market" map (ISIN Prefix -> Preferred Suffixes)
+        HOME_MARKET = {
+            'AT': ['.VI'],          # Austria -> Vienna
+            'DE': ['.DE', '.F'],    # Germany -> Xetra, Frankfurt
+            'FR': ['.PA'],          # France -> Paris
+            'GB': ['.L'],           # UK -> London
+            'CH': ['.SW'],          # Switzerland -> SIX
+            'NL': ['.AS'],          # Netherlands -> Amsterdam
+            'IT': ['.MI'],          # Italy -> Milan
+            'ES': ['.MC'],          # Spain -> Madrid
+            'CA': ['.TO'],          # Canada -> Toronto
+            'AU': ['.AX'],          # Australia -> ASX
+            'JP': ['.T'],           # Japan -> Tokyo
+        }
+
+        country_code = isin[:2]
+        preferred_suffixes = HOME_MARKET.get(country_code, [])
+
         best_ticker = None
         best_score = -1
         
         for item in figi_data:
             ticker = item.get('ticker')
-            exchange = item.get('exchCode', '')
+            mic = item.get('exchCode', '') # FIGI uses 'exchCode' which is often the MIC
             security_type = item.get('securityType', '')
             
-            if not ticker:
-                continue
+            if not ticker: continue
             
-            # Score this result
             score = 0
             
-            # Prefer composite tickers (most liquid)
+            # Factor 1: Is it a Common Stock?
+            if security_type in ['Common Stock', 'Equity']:
+                score += 50
+            elif security_type == 'ADR':
+                score += 10  # ADRs are acceptable but less preferred than primary
+            
+            # Factor 2: Is it a recognized Yahoo exchange?
+            suffix = EXCHANGE_MAP.get(mic)
+            if suffix is not None:
+                score += 20
+                
+                # Factor 3: Is it the HOME MARKET? (Crucial for liquidity)
+                if suffix in preferred_suffixes:
+                    score += 100  # Massive boost for home market listing
+                
+                # Factor 4: Prefer XETRA over Frankfurt for Germany
+                if mic == 'XETR':
+                    score += 5
+            
+            # Factor 5: Composite tickers are usually reliable
             if item.get('compositeFIGI'):
                 score += 10
-            
-            # Prefer common shares
-            if security_type in ['Common Stock', 'Equity', 'ADR']:
-                score += 5
-            
-            # Prefer recognized exchanges
-            if exchange in EXCHANGE_SUFFIXES:
-                score += 3
-            
-            # Check if this is better than what we have
+
+            # Selection
             if score > best_score:
                 best_score = score
-                
-                # Format ticker for Yahoo Finance
-                suffix = EXCHANGE_SUFFIXES.get(exchange, '')
-                best_ticker = f"{ticker}{suffix}"
+                if suffix is not None:
+                    best_ticker = f"{ticker}{suffix}"
+                else:
+                    # Fallback for US or unknown exchanges
+                    best_ticker = ticker
+        
+        # Normalize before returning
+        if best_ticker:
+            best_ticker = normalize_ticker(best_ticker)
         
         return best_ticker
     
@@ -212,7 +271,7 @@ class OpenFIGIResolver:
             self._rate_limit()
             
             # Prepare payload
-            payload = [{"idType": "ID_ISIN", "idValue": isin, "exchCode": "US"} for isin in chunk]
+            payload = [{"idType": "ID_ISIN", "idValue": isin} for isin in chunk]
             
             try:
                 logger.info(f"Fetching OpenFIGI batch {i//CHUNK_SIZE + 1} ({len(chunk)} items)...")
@@ -235,6 +294,8 @@ class OpenFIGIResolver:
                             # Extract best ticker
                             ticker = self._extract_best_ticker(item_result['data'], original_isin)
                             if ticker:
+                                # Normalize before caching and returning
+                                ticker = normalize_ticker(ticker)
                                 results[original_isin] = ticker
                                 self.cache_store.set_isin_mapping(original_isin, ticker)
                                 logger.debug(f"Resolved {original_isin} -> {ticker}")
@@ -242,9 +303,11 @@ class OpenFIGIResolver:
                                 results[original_isin] = None
                                 logger.warning(f"No suitable ticker parsing for {original_isin}")
                         else:
-                            # Error or not found
-                            results[original_isin] = None
-                            logger.debug(f"No match for {original_isin}")
+                            # Error or not found - Cache as identity to prevent retry
+                            results[original_isin] = original_isin
+                            # Store in DB so we don't ask OpenFIGI again for this ISIN
+                            self.cache_store.set_isin_mapping(original_isin, original_isin)
+                            logger.info(f"OpenFIGI: No match for {original_isin}, cached as identity.")
                             
                 else:
                     logger.error(f"OpenFIGI batch failed: {response.status_code} - {response.text}")

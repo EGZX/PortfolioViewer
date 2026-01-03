@@ -8,6 +8,11 @@ This is the UNIVERSAL engine that works across all jurisdictions. It:
 
 Country-specific tax calculation happens in separate Tax Calculator plugins.
 
+TAX COMPLIANCE:
+- Uses official ECB exchange rates (legal requirement)
+- Broker FX rates from CSVs are NOT used for tax calculations
+- Historical rates cached permanently (immutable)
+
 Copyright (c) 2026 Andre. All rights reserved.
 """
 
@@ -21,6 +26,7 @@ from abc import ABC, abstractmethod
 from lib.parsers.enhanced_transaction import Transaction, TransactionType
 from modules.tax.tax_events import TaxLot, TaxEvent, LotMatchingMethod
 from lib.utils.logging_config import setup_logger
+from lib.ecb_rates import get_ecb_rate
 
 logger = setup_logger(__name__)
 
@@ -136,6 +142,14 @@ class FIFOStrategy(LotMatchingStrategy):
         open_lots: List[TaxLot]
     ) -> List[TaxLot]:
         # FIFO: Just add new lot
+        
+        # TAX COMPLIANCE: Use ECB official rates, not broker rates
+        ecb_fx_rate = get_ecb_rate(
+            buy_transaction.date.date(),
+            buy_transaction.original_currency,
+            "EUR"
+        )
+        
         new_lot = TaxLot(
             lot_id=str(uuid.uuid4()),
             ticker=buy_transaction.ticker,
@@ -146,10 +160,10 @@ class FIFOStrategy(LotMatchingStrategy):
             quantity=buy_transaction.shares,
             original_quantity=buy_transaction.shares,
             cost_basis_local=abs(buy_transaction.total),
-            cost_basis_base=abs(buy_transaction.total) * buy_transaction.fx_rate,
+            cost_basis_base=abs(buy_transaction.total) * ecb_fx_rate,
             currency_original=buy_transaction.original_currency,
-            fees_base=buy_transaction.fees * buy_transaction.fx_rate,
-            fx_rate_used=buy_transaction.fx_rate
+            fees_base=buy_transaction.fees * ecb_fx_rate,
+            fx_rate_used=ecb_fx_rate
         )
         
         open_lots.append(new_lot)
@@ -222,6 +236,14 @@ class WeightedAverageStrategy(LotMatchingStrategy):
         open_lots: List[TaxLot]
     ) -> List[TaxLot]:
         # Weighted Average: Merge new purchase with existing lots
+        
+        # TAX COMPLIANCE: Use ECB official rates, not broker rates
+        ecb_fx_rate = get_ecb_rate(
+            buy_transaction.date.date(),
+            buy_transaction.original_currency,
+            "EUR"
+        )
+        
         new_lot = TaxLot(
             lot_id=str(uuid.uuid4()),
             ticker=buy_transaction.ticker,
@@ -232,10 +254,10 @@ class WeightedAverageStrategy(LotMatchingStrategy):
             quantity=buy_transaction.shares,
             original_quantity=buy_transaction.shares,
             cost_basis_local=abs(buy_transaction.total),
-            cost_basis_base=abs(buy_transaction.total) * buy_transaction.fx_rate,
+            cost_basis_base=abs(buy_transaction.total) * ecb_fx_rate,
             currency_original=buy_transaction.original_currency,
-            fees_base=buy_transaction.fees * buy_transaction.fx_rate,
-            fx_rate_used=buy_transaction.fx_rate
+            fees_base=buy_transaction.fees * ecb_fx_rate,
+            fx_rate_used=ecb_fx_rate
         )
         
         if not open_lots:
@@ -305,8 +327,11 @@ class TaxBasisEngine:
         """
         Get unique identifier for asset.
         
-        Prefers ISIN (globally unique) with ticker fallback.
+        Prefers ISIN (globally unique and stable) with ticker fallback.
         Format: "ISIN:{code}" or "TICKER:{symbol}"
+        
+        ISINs are used for tax lot tracking because they never change,
+        while tickers can change due to corporate actions or exchange moves.
         """
         if txn.isin:
             return f"ISIN:{txn.isin}"

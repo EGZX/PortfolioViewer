@@ -1,156 +1,566 @@
-[2026-01-02 10:38:46.471] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
-[2026-01-02 10:39:18.374] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
-[2026-01-02 10:39:27.282] [INFO    ] [portfolio_viewer:main:105] Mobile detection: Defaulting to desktop, use sidebar toggle to override
-[2026-01-02 10:39:27.285] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
-[2026-01-02 10:39:27.286] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
-[2026-01-02 10:39:27.288] [WARNING ] [market_cache:get_last_transactions_csv:208] get_last_transactions_csv called - deprecated, use TransactionStore
-[2026-01-02 10:39:27.298] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
-[2026-01-02 10:39:27.298] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
-[2026-01-02 10:39:27.440] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
-[2026-01-02 10:39:27.941] [INFO    ] [portfolio_viewer:main:214] Initializing Portfolio with 2072 transactions
-[2026-01-02 10:39:27.942] [INFO    ] [portfolio:_reconstruct_state:225] Reconstructing portfolio from 2072 transactions
-[2026-01-02 10:39:27.943] [WARNING ] [portfolio:process_transaction:199] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:39:27.944] [WARNING ] [portfolio:process_transaction:199] US78435P1057: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:39:27.944] [WARNING ] [portfolio:process_transaction:199] 1211.HK: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:39:27.944] [WARNING ] [portfolio:process_transaction:199] CA11271J1075: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:39:27.944] [WARNING ] [portfolio:process_transaction:199] CA11271J1075: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:39:27.945] [INFO    ] [portfolio:_reconstruct_state:242] Portfolio state rebuilt: 44 holdings active.
-[2026-01-02 10:39:27.949] [INFO    ] [market_data:get_fx_rate:316] FX Rate USD/EUR: 0.8522 (from SQLite)
-[2026-01-02 10:39:27.952] [INFO    ] [market_data:get_fx_rate:316] FX Rate DKK/EUR: 0.1338 (from SQLite)
-[2026-01-02 10:39:27.953] [INFO    ] [market_data:get_fx_rate:316] FX Rate PLN/EUR: 0.2371 (from SQLite)
-[2026-01-02 10:39:27.954] [INFO    ] [market_data:get_fx_rate:316] FX Rate CAD/EUR: 0.6211 (from SQLite)
-[2026-01-02 10:39:27.957] [INFO    ] [metrics:xirr:75] XIRR calculated: 13.78%
-[2026-01-02 10:39:27.958] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 10.24%
-[2026-01-02 10:39:27.959] [INFO    ] [market_data:fetch_historical_prices:362] Fetching historical prices for 235 tickers from 2023-06-05 00:00:00 to 2026-01-02
-[2026-01-02 10:39:27.963] [INFO    ] [openfigi_resolver:resolve_batch:204] OpenFIGI Batch: 0 cached, 221 to resolve
-[2026-01-02 10:39:27.963] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 1 (10 items)...
-[2026-01-02 10:39:30.464] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 2 (10 items)...
-[2026-01-02 10:39:32.965] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 3 (10 items)...
-[2026-01-02 10:39:35.466] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 4 (10 items)...
-[2026-01-02 10:39:37.966] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 5 (10 items)...
-[2026-01-02 10:39:40.467] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 6 (10 items)...
-[2026-01-02 10:39:42.968] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 7 (10 items)...
-[2026-01-02 10:39:45.469] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 8 (10 items)...
-[2026-01-02 10:39:47.969] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 9 (10 items)...
-[2026-01-02 10:39:50.470] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 10 (10 items)...
-[2026-01-02 10:39:52.971] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 11 (10 items)...
-[2026-01-02 10:39:55.474] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 12 (10 items)...
-[2026-01-02 10:39:57.976] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 13 (10 items)...
-[2026-01-02 10:40:00.476] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 14 (10 items)...
-[2026-01-02 10:40:02.978] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 15 (10 items)...
-[2026-01-02 10:40:05.478] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 16 (10 items)...
-[2026-01-02 10:40:07.980] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 17 (10 items)...
-[2026-01-02 10:40:10.480] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 18 (10 items)...
-[2026-01-02 10:40:12.980] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 19 (10 items)...
-[2026-01-02 10:40:15.482] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 20 (10 items)...
-[2026-01-02 10:40:17.984] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 21 (10 items)...
-[2026-01-02 10:40:20.486] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 22 (10 items)...
-[2026-01-02 10:40:22.986] [INFO    ] [openfigi_resolver:resolve_batch:218] Fetching OpenFIGI batch 23 (1 items)...
-[2026-01-02 10:40:23.866] [INFO    ] [market_data:fetch_historical_prices:404] Historical Data: 88 cached, 147 to fetch
-[2026-01-02 10:43:23.692] [WARNING ] [corporate_actions:fetch_split_history:135] Ignoring BLACKLISTED split for 1211.HK on 2025-07-30 (ratio: 6.0x)
-[2026-01-02 10:43:23.692] [ERROR   ] [market_data:fetch_historical_prices:526] Failed to apply split adjustments: 'MarketDataCache' object has no attribute 'set_splits'
-[2026-01-02 10:43:23.736] [INFO    ] [portfolio:_reconstruct_state:225] Reconstructing portfolio from 2072 transactions
-[2026-01-02 10:43:23.736] [WARNING ] [portfolio:process_transaction:199] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:23.738] [WARNING ] [portfolio:process_transaction:199] US78435P1057: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:23.738] [WARNING ] [portfolio:process_transaction:199] 1211.HK: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:23.738] [WARNING ] [portfolio:process_transaction:199] CA11271J1075: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:23.738] [WARNING ] [portfolio:process_transaction:199] CA11271J1075: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:23.738] [INFO    ] [portfolio:_reconstruct_state:242] Portfolio state rebuilt: 44 holdings active.
-[2026-01-02 10:43:23.762] [INFO    ] [portfolio:_reconstruct_state:225] Reconstructing portfolio from 0 transactions
-[2026-01-02 10:43:23.762] [INFO    ] [portfolio:_reconstruct_state:242] Portfolio state rebuilt: 0 holdings active.
-[2026-01-02 10:43:24.405] [INFO    ] [market_data:fetch_single_price:183] GBPEUR=X: 1.15 (from regularMarketPrice)
-[2026-01-02 10:43:24.405] [INFO    ] [market_data:get_fx_rate:329] FX Rate GBP/EUR: 1.1473
-[2026-01-02 10:43:24.953] [INFO    ] [market_data:fetch_single_price:183] AUDEUR=X: 0.57 (from regularMarketPrice)
-[2026-01-02 10:43:24.953] [INFO    ] [market_data:get_fx_rate:329] FX Rate AUD/EUR: 0.5711
-[2026-01-02 10:43:25.524] [INFO    ] [market_data:fetch_single_price:183] ZAREUR=X: 0.05 (from regularMarketPrice)
-[2026-01-02 10:43:25.525] [INFO    ] [market_data:get_fx_rate:329] FX Rate ZAR/EUR: 0.0511
-[2026-01-02 10:43:26.155] [INFO    ] [market_data:fetch_single_price:183] NOKEUR=X: 0.08 (from regularMarketPrice)
-[2026-01-02 10:43:26.155] [INFO    ] [market_data:get_fx_rate:329] FX Rate NOK/EUR: 0.0846
-[2026-01-02 10:43:26.805] [INFO    ] [market_data:fetch_single_price:183] BRLEUR=X: 0.15 (from regularMarketPrice)
-[2026-01-02 10:43:26.805] [INFO    ] [market_data:get_fx_rate:329] FX Rate BRL/EUR: 0.1549
-[2026-01-02 10:43:27.363] [INFO    ] [market_data:fetch_single_price:183] ILSEUR=X: 0.27 (from regularMarketPrice)
-[2026-01-02 10:43:27.363] [INFO    ] [market_data:get_fx_rate:329] FX Rate ILS/EUR: 0.2676
-[2026-01-02 10:43:27.466] [WARNING ] [portfolio:process_transaction:199] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:28.061] [INFO    ] [market_data:fetch_single_price:183] JPYEUR=X: 0.01 (from regularMarketPrice)
-[2026-01-02 10:43:28.061] [INFO    ] [market_data:get_fx_rate:329] FX Rate JPY/EUR: 0.0054
-[2026-01-02 10:43:28.793] [INFO    ] [market_data:fetch_single_price:183] HKDEUR=X: 0.11 (from regularMarketPrice)
-[2026-01-02 10:43:28.793] [INFO    ] [market_data:get_fx_rate:329] FX Rate HKD/EUR: 0.1094
-[2026-01-02 10:43:30.217] [INFO    ] [market_data:fetch_single_price:183] SEKEUR=X: 0.09 (from regularMarketPrice)
-[2026-01-02 10:43:30.217] [INFO    ] [market_data:get_fx_rate:329] FX Rate SEK/EUR: 0.0919
-[2026-01-02 10:43:31.277] [INFO    ] [market_data:fetch_single_price:183] CHFEUR=X: 1.07 (from regularMarketPrice)
-[2026-01-02 10:43:31.277] [INFO    ] [market_data:get_fx_rate:329] FX Rate CHF/EUR: 1.0749
-[2026-01-02 10:43:31.362] [WARNING ] [portfolio:process_transaction:199] US78435P1057: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:32.333] [WARNING ] [portfolio:process_transaction:199] 1211.HK: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:32.333] [WARNING ] [portfolio:process_transaction:199] CA11271J1075: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:32.334] [WARNING ] [portfolio:process_transaction:199] CA11271J1075: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:43:32.691] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US4330001060: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.691] [WARNING ] [portfolio:get_holdings_summary:400] US4330001060: No price found, using average cost basis (14.26 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US88160R1014: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US88160R1014: No price found, using average cost basis (186.18 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for TSM: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] TSM: No price found, using average cost basis (152.33 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US48581R2058: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US48581R2058: No price found, using average cost basis (63.88 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US89377M1099: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US89377M1099: No price found, using average cost basis (75.50 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US81141R1005: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US81141R1005: No price found, using average cost basis (60.78 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for KYG6683N1034: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] KYG6683N1034: No price found, using average cost basis (11.36 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US67066G1040: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US67066G1040: No price found, using average cost basis (170.31 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US58733R1023: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US58733R1023: No price found, using average cost basis (1769.70 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US0231351067: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US0231351067: No price found, using average cost basis (185.26 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US30303M1027: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US30303M1027: No price found, using average cost basis (495.59 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US7707001027: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US7707001027: No price found, using average cost basis (17.66 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for KYG4124C1096: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] KYG4124C1096: No price found, using average cost basis (4.38 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for SPIW.DE: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] SPIW.DE: No price found, using average cost basis (17.86 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for CA11271J1075: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] CA11271J1075: No price found, using average cost basis (39.67 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US0304201033: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] US0304201033: No price found, using average cost basis (111.13 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for IE000S9YS762: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] IE000S9YS762: No price found, using average cost basis (339.29 EUR)
-[2026-01-02 10:43:32.693] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for NL0000687663: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.693] [WARNING ] [portfolio:get_holdings_summary:400] NL0000687663: No price found, using average cost basis (103.25 EUR)
-[2026-01-02 10:43:32.697] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for LU3176111881: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.697] [WARNING ] [portfolio:get_holdings_summary:400] LU3176111881: No price found, using average cost basis (100.00 EUR)
-[2026-01-02 10:43:32.697] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for US15118V2079: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.697] [WARNING ] [portfolio:get_holdings_summary:400] US15118V2079: No price found, using average cost basis (37.58 EUR)
-[2026-01-02 10:43:32.697] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for NFLX: name 'get_market_cache' is not defined
-[2026-01-02 10:43:32.697] [WARNING ] [portfolio:get_holdings_summary:400] NFLX: No price found, using average cost basis (82.93 EUR)
-[2026-01-02 10:43:32.777] [INFO    ] [engine:process_all_transactions:317] Processing 2072 transactions with WeightedAverage
-[2026-01-02 10:43:32.786] [WARNING ] [engine:match_sell:171] No open lots for CA11271J1075
-[2026-01-02 10:43:32.786] [WARNING ] [engine:match_sell:171] No open lots for US7731211089
-[2026-01-02 10:43:32.787] [INFO    ] [engine:process_all_transactions:322] Generated 557 tax events
-[2026-01-02 10:43:58.534] [INFO    ] [portfolio_viewer:main:105] Mobile detection: Defaulting to desktop, use sidebar toggle to override
-[2026-01-02 10:43:58.538] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
-[2026-01-02 10:43:58.538] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
-[2026-01-02 10:43:58.538] [WARNING ] [market_cache:get_last_transactions_csv:208] get_last_transactions_csv called - deprecated, use TransactionStore
-[2026-01-02 10:43:58.548] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
-[2026-01-02 10:43:58.548] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
-[2026-01-02 10:43:58.687] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
-[2026-01-02 10:44:00.072] [INFO    ] [portfolio_viewer:main:214] Initializing Portfolio with 2072 transactions
-[2026-01-02 10:44:00.072] [INFO    ] [portfolio:_reconstruct_state:225] Reconstructing portfolio from 2072 transactions
-[2026-01-02 10:44:00.073] [WARNING ] [portfolio:process_transaction:199] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:44:00.074] [WARNING ] [portfolio:process_transaction:199] US78435P1057: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:44:00.075] [WARNING ] [portfolio:process_transaction:199] 1211.HK: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:44:00.075] [WARNING ] [portfolio:process_transaction:199] CA11271J1075: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:44:00.075] [WARNING ] [portfolio:process_transaction:199] CA11271J1075: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
-[2026-01-02 10:44:00.076] [INFO    ] [portfolio:_reconstruct_state:242] Portfolio state rebuilt: 44 holdings active.
-[2026-01-02 10:44:00.083] [INFO    ] [metrics:xirr:75] XIRR calculated: 49.60%
-[2026-01-02 10:44:00.083] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 45.93%
-[2026-01-02 10:44:00.118] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for SPIW.DE: name 'get_market_cache' is not defined
-[2026-01-02 10:44:00.118] [WARNING ] [portfolio:get_holdings_summary:400] SPIW.DE: No price found, using average cost basis (17.86 EUR)
-[2026-01-02 10:44:00.119] [ERROR   ] [portfolio:get_holdings_summary:392] Failed to get cached price for LU3176111881: name 'get_market_cache' is not defined
-[2026-01-02 10:44:00.119] [WARNING ] [portfolio:get_holdings_summary:400] LU3176111881: No price found, using average cost basis (100.00 EUR)
-[2026-01-02 10:44:00.145] [INFO    ] [engine:process_all_transactions:317] Processing 2072 transactions with WeightedAverage
-[2026-01-02 10:44:00.155] [WARNING ] [engine:match_sell:171] No open lots for CA11271J1075
-[2026-01-02 10:44:00.155] [WARNING ] [engine:match_sell:171] No open lots for US7731211089
-[2026-01-02 10:44:00.156] [INFO    ] [engine:process_all_transactions:322] Generated 557 tax events
+[2026-01-02 21:51:41.581] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 21:51:57.063] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 21:51:58.172] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: AAPL -> USD
+[2026-01-02 21:51:58.325] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: BRK-B -> USD
+[2026-01-02 22:10:16.401] [INFO    ] [ecb_rates:get_rate:117] ECB rate fetched: USD/EUR on 2024-01-15 = 1.0945
+[2026-01-02 22:10:16.635] [INFO    ] [ecb_rates:get_rate:117] ECB rate fetched: GBP/EUR on 2024-03-01 = 0.85588
+[2026-01-02 23:36:11.024] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 23:36:16.127] [INFO    ] [portfolio_viewer:main:132] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-02 23:36:16.130] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 23:36:16.130] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 23:36:16.141] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 23:36:16.141] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 23:36:16.296] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-02 23:36:17.616] [INFO    ] [portfolio_viewer:main:241] Initializing Portfolio with 2072 transactions
+[2026-01-02 23:36:17.616] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-02 23:36:17.617] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-02 23:36:17.619] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-02 23:36:17.619] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-02 23:36:17.660] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-02 23:36:17.671] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-02 23:36:18.389] [INFO    ] [ecb_rates:get_rate:117] ECB rate fetched: USD/EUR on 2025-12-09 = 1.1637
+[2026-01-02 23:36:18.634] [INFO    ] [ecb_rates:get_rate:117] ECB rate fetched: DKK/EUR on 2025-12-10 = 7.4691
+[2026-01-02 23:36:18.821] [INFO    ] [ecb_rates:get_rate:117] ECB rate fetched: USD/EUR on 2025-12-24 = 1.1787
+[2026-01-02 23:36:18.821] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-02 23:36:18.824] [INFO    ] [market_data:get_fx_rate:504] FX Rate USD/EUR: 0.8529 (from SQLite)
+[2026-01-02 23:36:18.829] [INFO    ] [market_data:get_fx_rate:504] FX Rate DKK/EUR: 0.1338 (from SQLite)
+[2026-01-02 23:36:18.836] [INFO    ] [market_data:get_fx_rate:504] FX Rate PLN/EUR: 0.2372 (from SQLite)
+[2026-01-02 23:36:18.850] [INFO    ] [metrics:xirr:75] XIRR calculated: 43.90%
+[2026-01-02 23:36:18.850] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 39.71%
+[2026-01-02 23:36:18.852] [INFO    ] [market_data:fetch_historical_prices:550] Fetching historical prices for 235 tickers from 2023-06-05 00:00:00 to 2026-01-02
+[2026-01-02 23:36:19.186] [INFO    ] [market_data:fetch_historical_prices:601] Historical Data: 201 cached, 5 to fetch (29 blacklisted)
+[2026-01-02 23:36:19.186] [INFO    ] [market_data:fetch_historical_prices:631] Downloading historical data for 5 tickers in chunks...
+[2026-01-02 23:36:19.186] [INFO    ] [market_data:fetch_historical_prices:643] ⏳ Downloading chunk 1/1 (5 tickers)...
+[2026-01-02 23:36:22.896] [INFO    ] [market_data:fetch_historical_prices:689] ✓ Chunk 1/1 complete (178 price points)
+[2026-01-02 23:36:22.896] [INFO    ] [market_data:fetch_historical_prices:702] Saving 178 price points to cache...
+[2026-01-02 23:36:23.283] [INFO    ] [market_data:fetch_historical_prices:704] ✓ Cache updated successfully
+[2026-01-02 23:36:23.357] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-02 23:36:23.359] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-02 23:36:23.383] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 0 transactions
+[2026-01-02 23:36:23.383] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 23:36:26.587] [INFO    ] [market_data:get_fx_rate:504] FX Rate GBP/EUR: 1.1465 (from SQLite)
+[2026-01-02 23:37:19.619] [INFO    ] [market_data:get_fx_rate:504] FX Rate BRL/EUR: 0.1559 (from SQLite)
+[2026-01-02 23:38:09.599] [INFO    ] [market_data:get_fx_rate:504] FX Rate HKD/EUR: 0.1094 (from SQLite)
+[2026-01-02 23:38:40.550] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: AIXXF -> USD
+[2026-01-02 23:38:40.740] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: FCX -> USD
+[2026-01-02 23:38:44.871] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: BX -> USD
+[2026-01-02 23:38:45.067] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: MPC -> USD
+[2026-01-02 23:38:45.270] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: PG -> USD
+[2026-01-02 23:38:46.980] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: PFE -> USD
+[2026-01-02 23:38:47.088] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: PHYMF -> USD
+[2026-01-02 23:39:01.710] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: TOYOF -> USD
+[2026-01-02 23:39:02.682] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: MNST -> USD
+[2026-01-02 23:39:03.605] [INFO    ] [market_data:get_currency_for_ticker:445] API currency lookup: JUMSF -> USD
+[2026-01-02 23:39:16.952] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 23:39:21.799] [INFO    ] [portfolio_viewer:main:132] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-02 23:39:21.800] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 23:39:21.800] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 23:39:21.811] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 23:39:21.811] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 23:39:21.959] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-02 23:39:23.358] [INFO    ] [portfolio_viewer:main:241] Initializing Portfolio with 2072 transactions
+[2026-01-02 23:39:23.358] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-02 23:39:23.359] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-02 23:39:23.361] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-02 23:39:23.362] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-02 23:39:23.398] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-02 23:39:23.407] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-02 23:39:23.408] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-02 23:39:23.411] [INFO    ] [market_data:get_fx_rate:509] FX Rate USD/EUR: 0.8529 (from SQLite)
+[2026-01-02 23:39:23.413] [INFO    ] [market_data:get_fx_rate:509] FX Rate DKK/EUR: 0.1338 (from SQLite)
+[2026-01-02 23:39:23.415] [INFO    ] [market_data:get_fx_rate:509] FX Rate PLN/EUR: 0.2372 (from SQLite)
+[2026-01-02 23:39:23.422] [INFO    ] [metrics:xirr:75] XIRR calculated: 43.90%
+[2026-01-02 23:39:23.422] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 39.71%
+[2026-01-02 23:39:23.425] [INFO    ] [market_data:fetch_historical_prices:555] Fetching historical prices for 235 tickers from 2023-06-05 00:00:00 to 2026-01-02
+[2026-01-02 23:39:23.769] [INFO    ] [market_data:fetch_historical_prices:606] Historical Data: 201 cached, 5 to fetch (29 blacklisted)
+[2026-01-02 23:39:23.769] [INFO    ] [market_data:fetch_historical_prices:636] Downloading historical data for 5 tickers in chunks...
+[2026-01-02 23:39:23.769] [INFO    ] [market_data:fetch_historical_prices:648] ⏳ Downloading chunk 1/1 (5 tickers)...
+[2026-01-02 23:39:28.123] [INFO    ] [market_data:fetch_historical_prices:694] ✓ Chunk 1/1 complete (178 price points)
+[2026-01-02 23:39:28.123] [INFO    ] [market_data:fetch_historical_prices:707] Saving 178 price points to cache...
+[2026-01-02 23:39:28.499] [INFO    ] [market_data:fetch_historical_prices:709] ✓ Cache updated successfully
+[2026-01-02 23:39:28.571] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-02 23:39:28.574] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-02 23:39:28.600] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 0 transactions
+[2026-01-02 23:39:28.600] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 23:39:31.544] [INFO    ] [market_data:get_fx_rate:509] FX Rate GBP/EUR: 1.1465 (from SQLite)
+[2026-01-02 23:40:24.693] [INFO    ] [market_data:get_fx_rate:509] FX Rate BRL/EUR: 0.1559 (from SQLite)
+[2026-01-02 23:41:13.212] [INFO    ] [market_data:get_fx_rate:509] FX Rate HKD/EUR: 0.1094 (from SQLite)
+[2026-01-02 23:42:11.991] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SYK -> USD
+[2026-01-02 23:42:19.983] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: DKILF -> USD
+[2026-01-02 23:42:20.167] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: ULTA -> USD
+[2026-01-02 23:42:20.662] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: LULU -> USD
+[2026-01-02 23:42:20.862] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: ETSY -> USD
+[2026-01-02 23:42:21.485] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: PLTR -> USD
+[2026-01-02 23:42:21.974] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: VWSYF -> USD
+[2026-01-02 23:42:22.177] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: NTLA -> USD
+[2026-01-02 23:42:24.372] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: POWL -> USD
+[2026-01-02 23:42:25.262] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: ACMR -> USD
+[2026-01-02 23:42:39.100] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SMCI -> USD
+[2026-01-02 23:42:39.287] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: IREN -> USD
+[2026-01-02 23:42:41.043] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: VFAWF -> USD
+[2026-01-02 23:43:02.963] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: LI -> USD
+[2026-01-02 23:43:05.466] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: TDW -> USD
+[2026-01-02 23:43:12.660] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-02 23:43:19.633] [INFO    ] [portfolio_viewer:main:132] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-02 23:43:19.635] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 23:43:19.636] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 23:43:19.646] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-02 23:43:19.646] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-02 23:43:19.806] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-02 23:43:21.202] [INFO    ] [portfolio_viewer:main:241] Initializing Portfolio with 2072 transactions
+[2026-01-02 23:43:21.203] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-02 23:43:21.204] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-02 23:43:21.206] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-02 23:43:21.207] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-02 23:43:21.256] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-02 23:43:21.268] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-02 23:43:21.269] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-02 23:43:21.273] [INFO    ] [market_data:get_fx_rate:509] FX Rate USD/EUR: 0.8529 (from SQLite)
+[2026-01-02 23:43:21.275] [INFO    ] [market_data:get_fx_rate:509] FX Rate DKK/EUR: 0.1338 (from SQLite)
+[2026-01-02 23:43:21.277] [INFO    ] [market_data:get_fx_rate:509] FX Rate PLN/EUR: 0.2372 (from SQLite)
+[2026-01-02 23:43:21.284] [INFO    ] [metrics:xirr:75] XIRR calculated: 43.90%
+[2026-01-02 23:43:21.285] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 39.71%
+[2026-01-02 23:43:21.287] [INFO    ] [market_data:fetch_historical_prices:560] Fetching historical prices for 235 tickers from 2023-06-05 00:00:00 to 2026-01-02
+[2026-01-02 23:43:21.657] [INFO    ] [market_data:fetch_historical_prices:611] Historical Data: 201 cached, 5 to fetch (29 blacklisted)
+[2026-01-02 23:43:21.657] [INFO    ] [market_data:fetch_historical_prices:641] Downloading historical data for 5 tickers in chunks...
+[2026-01-02 23:43:21.657] [INFO    ] [market_data:fetch_historical_prices:653] ⏳ Downloading chunk 1/1 (5 tickers)...
+[2026-01-02 23:43:25.149] [INFO    ] [market_data:fetch_historical_prices:699] ✓ Chunk 1/1 complete (178 price points)
+[2026-01-02 23:43:25.150] [INFO    ] [market_data:fetch_historical_prices:712] Saving 178 price points to cache...
+[2026-01-02 23:43:25.527] [INFO    ] [market_data:fetch_historical_prices:714] ✓ Cache updated successfully
+[2026-01-02 23:43:25.610] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-02 23:43:25.612] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-02 23:43:25.636] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 0 transactions
+[2026-01-02 23:43:25.637] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 0 holdings active.
+[2026-01-02 23:43:28.673] [INFO    ] [market_data:get_fx_rate:509] FX Rate GBP/EUR: 1.1465 (from SQLite)
+[2026-01-02 23:44:20.615] [INFO    ] [market_data:get_fx_rate:509] FX Rate BRL/EUR: 0.1559 (from SQLite)
+[2026-01-02 23:45:08.658] [INFO    ] [market_data:get_fx_rate:509] FX Rate HKD/EUR: 0.1094 (from SQLite)
+[2026-01-02 23:46:59.612] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: RNKGF -> USD
+[2026-01-02 23:46:59.723] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SESMF -> USD
+[2026-01-02 23:47:06.351] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: WPLCF -> USD
+[2026-01-02 23:47:06.460] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: EVGGF -> USD
+[2026-01-02 23:47:06.687] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: AMD -> USD
+[2026-01-02 23:47:06.889] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: TRMD -> USD
+[2026-01-02 23:47:06.997] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: HXSCL -> USD
+[2026-01-02 23:47:08.708] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: JGHAF -> USD
+[2026-01-02 23:47:11.095] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: NSSC -> USD
+[2026-01-02 23:47:11.199] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: PSKRF -> USD
+[2026-01-02 23:47:11.300] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: RTPPF -> USD
+[2026-01-02 23:47:11.499] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: VEEV -> USD
+[2026-01-02 23:47:11.718] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: MARA -> USD
+[2026-01-02 23:47:14.924] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: NRKBF -> USD
+[2026-01-02 23:47:25.884] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: HON -> USD
+[2026-01-02 23:47:27.290] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: CROX -> USD
+[2026-01-02 23:47:30.293] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SMFRF -> USD
+[2026-01-02 23:47:41.887] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SEZL -> USD
+[2026-01-02 23:47:42.076] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: ZETA -> USD
+[2026-01-02 23:48:00.661] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: KNSL -> USD
+[2026-01-02 23:48:00.783] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: DDOG -> USD
+[2026-01-02 23:48:00.973] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: APD -> USD
+[2026-01-02 23:48:01.099] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: YASKF -> USD
+[2026-01-02 23:48:01.221] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: TOELF -> USD
+[2026-01-02 23:48:02.877] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: ALFVF -> USD
+[2026-01-02 23:48:07.035] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: VTTGF -> USD
+[2026-01-02 23:48:07.140] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: KYCCF -> USD
+[2026-01-02 23:48:07.325] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: CNSWF -> USD
+[2026-01-02 23:48:07.446] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SPGI -> USD
+[2026-01-02 23:48:07.637] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: CPNG -> USD
+[2026-01-02 23:48:07.742] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: ADYYF -> USD
+[2026-01-02 23:48:07.845] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: ANPDF -> USD
+[2026-01-02 23:48:08.043] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: HUBS -> USD
+[2026-01-02 23:48:08.144] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: ABLZF -> USD
+[2026-01-02 23:48:08.250] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: RNMBF -> USD
+[2026-01-02 23:48:08.371] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SPOT -> USD
+[2026-01-02 23:48:08.493] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: ISRG -> USD
+[2026-01-02 23:48:08.679] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: NET -> USD
+[2026-01-02 23:48:08.803] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: BLK -> USD
+[2026-01-02 23:48:09.064] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: MRK -> USD
+[2026-01-02 23:48:09.255] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: TGTX -> USD
+[2026-01-02 23:48:12.082] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: STOHF -> USD
+[2026-01-02 23:48:13.708] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: RKLB -> USD
+[2026-01-02 23:48:14.563] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: CAMRF -> USD
+[2026-01-02 23:48:14.668] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: CADLF -> USD
+[2026-01-02 23:48:16.452] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: CCJ -> USD
+[2026-01-02 23:48:16.553] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: RYDAF -> USD
+[2026-01-02 23:48:16.719] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: JNJ -> USD
+[2026-01-02 23:48:16.840] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: NSRGF -> USD
+[2026-01-02 23:48:16.986] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: UBER -> USD
+[2026-01-02 23:48:17.947] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SBS -> USD
+[2026-01-02 23:48:18.820] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: GRPOF -> USD
+[2026-01-02 23:48:20.062] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: LVMHF -> USD
+[2026-01-02 23:48:22.992] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SBGSF -> USD
+[2026-01-02 23:48:24.759] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: CRM -> USD
+[2026-01-02 23:48:29.735] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: TMO -> USD
+[2026-01-02 23:48:29.841] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: STMZF -> USD
+[2026-01-02 23:48:30.031] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: NOW -> USD
+[2026-01-02 23:48:30.156] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: V -> USD
+[2026-01-02 23:48:30.665] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: DSKYF -> USD
+[2026-01-02 23:48:31.170] [INFO    ] [market_data:get_currency_for_ticker:450] API currency lookup: SRPT -> USD
+[2026-01-02 23:49:43.756] [WARNING ] [portfolio:get_holdings_summary:430] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-02 23:49:43.758] [WARNING ] [portfolio:get_holdings_summary:430] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-02 23:49:43.800] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-02 23:49:43.809] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-02 23:49:43.812] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:16:14.073] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:16:14.073] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:16:14.082] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:16:14.083] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:16:14.226] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 00:16:15.627] [INFO    ] [portfolio_viewer:main:241] Initializing Portfolio with 2072 transactions
+[2026-01-03 00:16:15.628] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 00:16:15.630] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:16:15.631] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:16:15.633] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 00:16:15.676] [INFO    ] [metrics:xirr:75] XIRR calculated: 43.90%
+[2026-01-03 00:16:15.677] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 39.71%
+[2026-01-03 00:16:15.742] [WARNING ] [portfolio:get_holdings_summary:430] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 00:16:15.744] [WARNING ] [portfolio:get_holdings_summary:430] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 00:16:15.777] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:16:15.788] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:16:15.790] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:17:17.910] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:17:17.910] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:17:17.920] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:17:17.920] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:17:18.089] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 00:17:19.487] [INFO    ] [portfolio_viewer:main:241] Initializing Portfolio with 2072 transactions
+[2026-01-03 00:17:19.487] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 00:17:19.488] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:17:19.490] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:17:19.491] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 00:17:19.537] [INFO    ] [metrics:xirr:75] XIRR calculated: 43.90%
+[2026-01-03 00:17:19.537] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 39.71%
+[2026-01-03 00:17:19.594] [WARNING ] [portfolio:get_holdings_summary:430] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 00:17:19.596] [WARNING ] [portfolio:get_holdings_summary:430] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 00:17:19.625] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:17:19.633] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:17:19.637] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:29:46.835] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:29:46.835] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:29:46.844] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:29:46.845] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:29:47.015] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 00:29:48.453] [INFO    ] [portfolio_viewer:main:245] Initializing Portfolio with 2072 transactions
+[2026-01-03 00:29:48.453] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 00:29:48.455] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:29:48.459] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:29:48.459] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 00:29:48.509] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:29:48.520] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:29:48.522] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:29:48.531] [INFO    ] [metrics:xirr:75] XIRR calculated: 43.90%
+[2026-01-03 00:29:48.531] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 39.71%
+[2026-01-03 00:29:48.595] [WARNING ] [portfolio:get_holdings_summary:430] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 00:29:48.597] [WARNING ] [portfolio:get_holdings_summary:430] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 00:29:48.641] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:29:48.650] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:29:48.652] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:31:26.682] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 00:31:29.251] [INFO    ] [portfolio_viewer:main:136] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-03 00:31:29.255] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:31:29.255] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:31:29.274] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:31:29.274] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:31:29.467] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 00:31:31.016] [INFO    ] [portfolio_viewer:main:245] Initializing Portfolio with 2072 transactions
+[2026-01-03 00:31:31.017] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 00:31:31.018] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:31:31.022] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:31:31.022] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 00:31:31.083] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:31:31.100] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:31:31.100] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:31:31.982] [INFO    ] [market_data:get_fx_rate:525] FX Rate USD/EUR: 0.8530
+[2026-01-03 00:31:32.232] [INFO    ] [market_data:get_fx_rate:525] FX Rate DKK/EUR: 0.1337
+[2026-01-03 00:31:32.450] [INFO    ] [market_data:get_fx_rate:525] FX Rate PLN/EUR: 0.2365
+[2026-01-03 00:31:32.460] [INFO    ] [metrics:xirr:75] XIRR calculated: 43.91%
+[2026-01-03 00:31:32.461] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 39.71%
+[2026-01-03 00:31:32.464] [INFO    ] [market_data:fetch_historical_prices:560] Fetching historical prices for 235 tickers from 2023-06-05 00:00:00 to 2026-01-03
+[2026-01-03 00:31:32.877] [INFO    ] [market_data:fetch_historical_prices:611] Historical Data: 197 cached, 9 to fetch (29 blacklisted)
+[2026-01-03 00:31:32.878] [INFO    ] [market_data:fetch_historical_prices:641] Downloading historical data for 9 tickers in chunks...
+[2026-01-03 00:31:32.878] [INFO    ] [market_data:fetch_historical_prices:653] ⏳ Downloading chunk 1/1 (9 tickers)...
+[2026-01-03 00:31:37.029] [INFO    ] [market_data:fetch_historical_prices:699] ✓ Chunk 1/1 complete (1430 price points)
+[2026-01-03 00:31:37.030] [INFO    ] [market_data:fetch_historical_prices:712] Saving 1430 price points to cache...
+[2026-01-03 00:31:40.179] [INFO    ] [market_data:fetch_historical_prices:714] ✓ Cache updated successfully
+[2026-01-03 00:31:40.275] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 00:31:40.280] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 00:31:40.306] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 0 transactions
+[2026-01-03 00:31:40.308] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 0 holdings active.
+[2026-01-03 00:31:43.657] [INFO    ] [market_data:get_fx_rate:525] FX Rate GBP/EUR: 1.1478
+[2026-01-03 00:32:36.595] [INFO    ] [market_data:get_fx_rate:525] FX Rate BRL/EUR: 0.1571
+[2026-01-03 00:33:23.710] [INFO    ] [market_data:get_fx_rate:525] FX Rate HKD/EUR: 0.1094
+[2026-01-03 00:38:16.233] [WARNING ] [portfolio:get_holdings_summary:430] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 00:38:16.235] [WARNING ] [portfolio:get_holdings_summary:430] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 00:38:16.270] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:38:16.281] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:38:16.283] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:52:38.782] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:52:38.782] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:52:38.790] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:52:38.790] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:52:38.963] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 00:52:40.394] [INFO    ] [portfolio_viewer:main:245] Initializing Portfolio with 2072 transactions
+[2026-01-03 00:52:40.395] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 00:52:40.396] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:52:40.399] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:52:40.399] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 00:52:40.459] [INFO    ] [metrics:xirr:75] XIRR calculated: 43.91%
+[2026-01-03 00:52:40.459] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 39.71%
+[2026-01-03 00:52:40.527] [WARNING ] [portfolio:get_holdings_summary:430] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 00:52:40.529] [WARNING ] [portfolio:get_holdings_summary:430] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 00:52:40.563] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:52:40.575] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:52:40.576] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:52:49.553] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:52:49.553] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:52:49.638] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:52:49.638] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:52:49.646] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:52:49.647] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:52:49.806] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 00:52:51.234] [INFO    ] [portfolio_viewer:main:245] Initializing Portfolio with 2072 transactions
+[2026-01-03 00:52:51.236] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 00:52:51.236] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:52:51.238] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:52:51.239] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 00:52:51.289] [INFO    ] [metrics:xirr:75] XIRR calculated: 43.91%
+[2026-01-03 00:52:51.289] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 39.71%
+[2026-01-03 00:52:51.407] [WARNING ] [portfolio:get_holdings_summary:430] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 00:52:51.409] [WARNING ] [portfolio:get_holdings_summary:430] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 00:52:51.440] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:52:51.450] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:52:51.451] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:53:01.398] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:53:01.398] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:53:01.467] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:53:01.467] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:53:01.475] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:53:01.475] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:53:01.633] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 00:53:02.996] [INFO    ] [portfolio_viewer:main:245] Initializing Portfolio with 2072 transactions
+[2026-01-03 00:53:02.996] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 00:53:02.998] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:53:03.001] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:53:03.002] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 00:53:03.005] [INFO    ] [market_data:fetch_prices:88] Fetching prices for 44 tickers
+[2026-01-03 00:53:03.006] [INFO    ] [market_data:fetch_prices:105] Cache: 0 hits, 44 to fetch from API
+[2026-01-03 00:53:08.894] [INFO    ] [market_data:fetch_prices:180] SE: 131.49
+[2026-01-03 00:53:08.898] [INFO    ] [market_data:fetch_prices:180] BTC: 76671.77
+[2026-01-03 00:53:08.899] [WARNING ] [market_data:fetch_prices:183] NATKY: No current price
+[2026-01-03 00:53:08.900] [INFO    ] [market_data:fetch_prices:180] LIN: 429.11
+[2026-01-03 00:53:08.904] [INFO    ] [market_data:fetch_prices:180] MELI: 1973.70
+[2026-01-03 00:53:08.906] [INFO    ] [market_data:fetch_prices:180] HOOD: 115.21
+[2026-01-03 00:53:08.906] [WARNING ] [market_data:fetch_prices:183] INPOF: No current price
+[2026-01-03 00:53:08.910] [INFO    ] [market_data:fetch_prices:180] NU: 17.02
+[2026-01-03 00:53:08.913] [INFO    ] [market_data:fetch_prices:180] GMAB.CO: 2007.00
+[2026-01-03 00:53:08.915] [INFO    ] [market_data:fetch_prices:180] AWK: 130.32
+[2026-01-03 00:53:08.918] [INFO    ] [market_data:fetch_prices:180] TSLA: 438.07
+[2026-01-03 00:53:08.922] [INFO    ] [market_data:fetch_prices:180] ANET: 133.60
+[2026-01-03 00:53:08.924] [INFO    ] [market_data:fetch_prices:180] NVDA: 188.85
+[2026-01-03 00:53:08.928] [INFO    ] [market_data:fetch_prices:180] KSPI: 77.54
+[2026-01-03 00:53:08.930] [INFO    ] [market_data:fetch_prices:180] DNP.WA: 41.00
+[2026-01-03 00:53:08.934] [INFO    ] [market_data:fetch_prices:180] FWRA.MI: 7.15
+[2026-01-03 00:53:08.937] [INFO    ] [market_data:fetch_prices:180] ETH: 2662.21
+[2026-01-03 00:53:08.937] [WARNING ] [market_data:fetch_prices:183] EUXTF: No current price
+[2026-01-03 00:53:08.940] [INFO    ] [market_data:fetch_prices:180] MSCI: 565.25
+[2026-01-03 00:53:08.943] [INFO    ] [market_data:fetch_prices:180] TMDX: 122.69
+[2026-01-03 00:53:08.946] [INFO    ] [market_data:fetch_prices:180] XYL: 137.11
+[2026-01-03 00:53:08.949] [INFO    ] [market_data:fetch_prices:180] IBKR: 67.23
+[2026-01-03 00:53:08.952] [INFO    ] [market_data:fetch_prices:180] ELF: 77.81
+[2026-01-03 00:53:08.955] [INFO    ] [market_data:fetch_prices:180] CNI: 100.30
+[2026-01-03 00:53:08.958] [INFO    ] [market_data:fetch_prices:180] NFLX: 90.99
+[2026-01-03 00:53:08.961] [INFO    ] [market_data:fetch_prices:180] HIMS: 33.41
+[2026-01-03 00:53:08.964] [INFO    ] [market_data:fetch_prices:180] AMZN: 226.50
+[2026-01-03 00:53:08.967] [INFO    ] [market_data:fetch_prices:180] GOOGL: 315.15
+[2026-01-03 00:53:08.970] [INFO    ] [market_data:fetch_prices:180] AER: 144.63
+[2026-01-03 00:53:08.973] [INFO    ] [market_data:fetch_prices:180] XIACF: 5.27
+[2026-01-03 00:53:08.975] [INFO    ] [market_data:fetch_prices:180] TSM: 319.61
+[2026-01-03 00:53:08.979] [INFO    ] [market_data:fetch_prices:180] MSFT: 472.94
+[2026-01-03 00:53:08.981] [INFO    ] [market_data:fetch_prices:180] GRAB: 5.08
+[2026-01-03 00:53:08.985] [INFO    ] [market_data:fetch_prices:180] ASML.AS: 986.30
+[2026-01-03 00:53:08.988] [INFO    ] [market_data:fetch_prices:180] META: 650.41
+[2026-01-03 00:53:08.991] [INFO    ] [market_data:fetch_prices:180] SOFI: 27.46
+[2026-01-03 00:53:08.994] [INFO    ] [market_data:fetch_prices:180] GRS469003024: 20.10
+[2026-01-03 00:53:08.996] [INFO    ] [market_data:fetch_prices:180] BN: 46.63
+[2026-01-03 00:53:09.000] [INFO    ] [market_data:fetch_prices:180] CELH: 47.75
+[2026-01-03 00:53:09.003] [INFO    ] [market_data:fetch_prices:180] SOL: 112.67
+[2026-01-03 00:53:09.006] [INFO    ] [market_data:fetch_prices:180] ZTS: 125.92
+[2026-01-03 00:53:09.007] [WARNING ] [market_data:fetch_prices:183] SPIW.DE: No current price
+[2026-01-03 00:53:09.009] [INFO    ] [market_data:fetch_prices:180] NOVO-B.CO: 330.25
+[2026-01-03 00:53:09.009] [WARNING ] [market_data:fetch_prices:219] Price fetch complete: 39/44 succeeded, 5 failed
+[2026-01-03 00:53:09.009] [WARNING ] [logging_config:__exit__:69] SLOW: fetch_prices(44 tickers) took 6003.2ms
+[2026-01-03 00:53:09.062] [INFO    ] [metrics:xirr:75] XIRR calculated: 41.74%
+[2026-01-03 00:53:09.062] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 37.39%
+[2026-01-03 00:53:09.121] [WARNING ] [portfolio:get_holdings_summary:419] EUXTF: Using cached price from 2025-12-31 (147.35 USD)
+[2026-01-03 00:53:09.121] [WARNING ] [portfolio:get_holdings_summary:419] NATKY: Using cached price from 2025-12-31 (51.00 USD)
+[2026-01-03 00:53:09.124] [WARNING ] [portfolio:get_holdings_summary:419] INPOF: Using cached price from 2026-01-01 (12.15 USD)
+[2026-01-03 00:53:09.125] [WARNING ] [portfolio:get_holdings_summary:430] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 00:53:09.127] [WARNING ] [portfolio:get_holdings_summary:430] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 00:53:09.160] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:53:09.170] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:53:09.171] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 00:53:24.558] [INFO    ] [portfolio_viewer:main:136] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-03 00:53:24.561] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:53:24.561] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:53:24.570] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 00:53:24.570] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 00:53:24.733] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 00:53:26.140] [INFO    ] [portfolio_viewer:main:245] Initializing Portfolio with 2072 transactions
+[2026-01-03 00:53:26.141] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 00:53:26.141] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:53:26.144] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 00:53:26.145] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 00:53:26.194] [INFO    ] [metrics:xirr:75] XIRR calculated: 44.63%
+[2026-01-03 00:53:26.196] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 40.49%
+[2026-01-03 00:53:26.309] [WARNING ] [portfolio:get_holdings_summary:430] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 00:53:26.311] [WARNING ] [portfolio:get_holdings_summary:430] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 00:53:26.341] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 00:53:26.352] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 00:53:26.353] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 01:47:18.604] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 01:47:18.605] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 01:47:18.750] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 01:47:19.235] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 01:47:19.258] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 01:47:19.259] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:47:19.261] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:47:19.261] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 01:47:46.304] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 01:47:46.304] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 01:47:46.472] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 01:47:46.967] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 01:47:46.989] [INFO    ] [portfolio:_reconstruct_state:250] Reconstructing portfolio from 2072 transactions
+[2026-01-03 01:47:46.990] [WARNING ] [portfolio:process_transaction:198] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:47:46.992] [WARNING ] [portfolio:process_transaction:198] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:47:46.993] [INFO    ] [portfolio:_reconstruct_state:267] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 01:51:21.639] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 01:51:21.639] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 01:51:21.758] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 01:51:22.183] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 01:51:22.203] [INFO    ] [portfolio:_reconstruct_state:252] Reconstructing portfolio from 2072 transactions
+[2026-01-03 01:51:22.204] [WARNING ] [portfolio:process_transaction:200] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:51:22.207] [WARNING ] [portfolio:process_transaction:200] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:51:22.207] [INFO    ] [portfolio:_reconstruct_state:269] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 01:55:28.922] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 01:55:28.923] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 01:55:29.043] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 01:55:29.995] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 01:55:30.049] [INFO    ] [portfolio:_reconstruct_state:269] Reconstructing portfolio from 2072 transactions
+[2026-01-03 01:55:30.049] [WARNING ] [portfolio:process_transaction:217] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:55:30.052] [WARNING ] [portfolio:process_transaction:217] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:55:30.052] [INFO    ] [portfolio:_reconstruct_state:286] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 01:55:59.108] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 01:55:59.108] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 01:55:59.233] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 01:58:17.407] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 01:58:17.407] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 01:58:17.545] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 01:58:17.994] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 01:58:18.015] [INFO    ] [portfolio:_reconstruct_state:261] Reconstructing portfolio from 2072 transactions
+[2026-01-03 01:58:18.016] [WARNING ] [portfolio:process_transaction:209] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:58:18.019] [WARNING ] [portfolio:process_transaction:209] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:58:18.019] [INFO    ] [portfolio:_reconstruct_state:278] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 01:58:39.467] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 01:58:39.467] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 01:58:39.610] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 01:59:15.096] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 01:59:15.097] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 01:59:15.227] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 01:59:15.680] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 01:59:15.706] [INFO    ] [portfolio:_reconstruct_state:264] Reconstructing portfolio from 2072 transactions
+[2026-01-03 01:59:15.707] [WARNING ] [portfolio:process_transaction:212] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:59:15.709] [WARNING ] [portfolio:process_transaction:212] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 01:59:15.709] [INFO    ] [portfolio:_reconstruct_state:281] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 02:26:34.159] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 02:26:34.159] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 02:26:34.288] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 02:26:34.715] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 02:26:34.738] [INFO    ] [portfolio:_reconstruct_state:271] Reconstructing portfolio from 2072 transactions
+[2026-01-03 02:26:34.739] [WARNING ] [portfolio:process_transaction:219] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 02:26:34.741] [WARNING ] [portfolio:process_transaction:219] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 02:26:34.743] [INFO    ] [portfolio:_reconstruct_state:288] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 02:27:02.853] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 02:27:02.883] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 02:27:02.883] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 02:27:03.048] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 02:27:47.188] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 02:27:47.188] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 02:27:47.337] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 02:28:12.993] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 02:28:13.017] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 02:28:13.017] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 02:28:13.164] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 02:28:34.863] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 02:28:34.864] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 02:28:35.007] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 02:59:07.087] [INFO    ] [crypto_prices:get_crypto_price:72] Crypto price: BTC = €76,901.00
+[2026-01-03 02:59:07.607] [INFO    ] [crypto_prices:get_crypto_price:72] Crypto price: ETH = €2,668.31
+[2026-01-03 02:59:08.151] [INFO    ] [crypto_prices:get_crypto_price:72] Crypto price: SOL = €113.04
+[2026-01-03 02:59:08.716] [INFO    ] [crypto_prices:get_crypto_prices_batch:136] Crypto price: BTC = €76,907.00
+[2026-01-03 02:59:08.718] [INFO    ] [crypto_prices:get_crypto_prices_batch:136] Crypto price: ETH = €2,668.03
+[2026-01-03 02:59:08.718] [INFO    ] [crypto_prices:get_crypto_prices_batch:136] Crypto price: SOL = €113.04
+[2026-01-03 03:00:09.705] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 03:00:09.705] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 03:00:09.837] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 03:29:55.821] [INFO    ] [crypto_prices:get_crypto_price:72] Crypto price: BTC = €76,931.00
+[2026-01-03 03:29:56.372] [INFO    ] [crypto_prices:get_crypto_price:72] Crypto price: ETH = €2,664.59
+[2026-01-03 03:29:56.799] [INFO    ] [crypto_prices:get_crypto_price:72] Crypto price: SOL = €113.12
+[2026-01-03 03:29:57.494] [INFO    ] [crypto_prices:get_crypto_prices_batch:136] Crypto price: BTC = €76,936.00
+[2026-01-03 03:29:57.494] [INFO    ] [crypto_prices:get_crypto_prices_batch:136] Crypto price: ETH = €2,664.59
+[2026-01-03 03:29:57.494] [INFO    ] [crypto_prices:get_crypto_prices_batch:136] Crypto price: SOL = €113.12
+[2026-01-03 03:45:45.905] [INFO    ] [multi_provider:__init__:236] Initialized 2 fallback providers: ['Alpha Vantage', 'Finnhub']
+[2026-01-03 03:45:53.550] [INFO    ] [portfolio_viewer:main:136] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-03 03:45:53.553] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 03:45:53.554] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 03:45:53.564] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 03:45:53.564] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 03:45:53.723] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 03:45:55.130] [INFO    ] [portfolio_viewer:main:245] Initializing Portfolio with 2072 transactions
+[2026-01-03 03:45:55.131] [INFO    ] [portfolio:_reconstruct_state:271] Reconstructing portfolio from 2072 transactions
+[2026-01-03 03:45:55.131] [WARNING ] [portfolio:process_transaction:219] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 03:45:55.136] [WARNING ] [portfolio:process_transaction:219] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 03:45:55.137] [INFO    ] [portfolio:_reconstruct_state:288] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 03:45:55.178] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 03:45:55.187] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 03:45:55.188] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 03:45:55.191] [INFO    ] [market_data:get_fx_rate:515] FX Rate USD/EUR: 0.8530 (from SQLite)
+[2026-01-03 03:45:55.194] [INFO    ] [market_data:get_fx_rate:515] FX Rate DKK/EUR: 0.1337 (from SQLite)
+[2026-01-03 03:45:55.196] [INFO    ] [market_data:get_fx_rate:515] FX Rate PLN/EUR: 0.2365 (from SQLite)
+[2026-01-03 03:45:55.203] [INFO    ] [metrics:xirr:75] XIRR calculated: 32.15%
+[2026-01-03 03:45:55.204] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 27.59%
+[2026-01-03 03:45:55.207] [INFO    ] [market_data:fetch_historical_prices:574] Fetching historical prices for 235 tickers from 2023-06-05 00:00:00 to 2026-01-03
+[2026-01-03 03:45:55.584] [INFO    ] [market_data:fetch_historical_prices:625] Historical Data: 198 cached, 8 to fetch (29 blacklisted)
+[2026-01-03 03:45:55.585] [INFO    ] [market_data:fetch_historical_prices:655] Downloading historical data for 8 tickers in chunks...
+[2026-01-03 03:45:55.585] [INFO    ] [market_data:fetch_historical_prices:667] ⏳ Downloading chunk 1/1 (8 tickers)...
+[2026-01-03 03:45:59.493] [INFO    ] [market_data:fetch_historical_prices:713] ✓ Chunk 1/1 complete (774 price points)
+[2026-01-03 03:45:59.493] [INFO    ] [market_data:fetch_historical_prices:726] Saving 774 price points to cache...
+[2026-01-03 03:46:01.145] [INFO    ] [market_data:fetch_historical_prices:728] ✓ Cache updated successfully
+[2026-01-03 03:46:01.225] [INFO    ] [portfolio:_reconstruct_state:271] Reconstructing portfolio from 2072 transactions
+[2026-01-03 03:46:01.230] [INFO    ] [portfolio:_reconstruct_state:288] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 03:46:01.255] [INFO    ] [portfolio:_reconstruct_state:271] Reconstructing portfolio from 0 transactions
+[2026-01-03 03:46:01.255] [INFO    ] [portfolio:_reconstruct_state:288] Portfolio state rebuilt: 0 holdings active.
+[2026-01-03 03:46:04.274] [INFO    ] [market_data:get_fx_rate:515] FX Rate GBP/EUR: 1.1478 (from SQLite)
+[2026-01-03 03:46:54.583] [INFO    ] [market_data:get_fx_rate:515] FX Rate BRL/EUR: 0.1571 (from SQLite)
+[2026-01-03 03:47:40.828] [INFO    ] [market_data:get_fx_rate:515] FX Rate HKD/EUR: 0.1094 (from SQLite)
+[2026-01-03 03:51:54.807] [WARNING ] [portfolio:get_holdings_summary:451] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 03:51:54.809] [WARNING ] [portfolio:get_holdings_summary:451] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 03:51:54.856] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 03:51:54.868] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 03:51:54.869] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events
+[2026-01-03 04:03:52.020] [INFO    ] [portfolio_viewer:main:136] Mobile detection: Defaulting to desktop, use sidebar toggle to override
+[2026-01-03 04:03:52.023] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 04:03:52.023] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 04:03:52.034] [INFO    ] [transaction_store:_init_database:236] Database schema initialized
+[2026-01-03 04:03:52.034] [INFO    ] [transaction_store:__init__:128] TransactionStore initialized (encrypted): data/transactions.db
+[2026-01-03 04:03:52.186] [INFO    ] [transaction_store:get_all_transactions:457] Retrieved 2072 transactions
+[2026-01-03 04:03:53.538] [INFO    ] [portfolio_viewer:main:245] Initializing Portfolio with 2072 transactions
+[2026-01-03 04:03:53.540] [INFO    ] [portfolio:_reconstruct_state:271] Reconstructing portfolio from 2072 transactions
+[2026-01-03 04:03:53.540] [WARNING ] [portfolio:process_transaction:219] XS2330514899: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 04:03:53.544] [WARNING ] [portfolio:process_transaction:219] BN: Selling/Transferring more shares than owned! Type: Sell, Capping to zero. (Check source data)
+[2026-01-03 04:03:53.544] [INFO    ] [portfolio:_reconstruct_state:288] Portfolio state rebuilt: 44 holdings active.
+[2026-01-03 04:03:53.589] [INFO    ] [metrics:xirr:75] XIRR calculated: 32.15%
+[2026-01-03 04:03:53.589] [INFO    ] [metrics:calculate_absolute_return:113] Absolute return calculated: 27.59%
+[2026-01-03 04:03:53.690] [WARNING ] [portfolio:get_holdings_summary:451] SPIW.DE: No price found, using average cost basis (17.86 EUR)
+[2026-01-03 04:03:53.693] [WARNING ] [portfolio:get_holdings_summary:451] LU3176111881: No price found, using average cost basis (100.00 EUR)
+[2026-01-03 04:03:53.723] [INFO    ] [engine:process_all_transactions:342] Processing 2072 transactions with WeightedAverage
+[2026-01-03 04:03:53.733] [WARNING ] [engine:match_sell:185] No open lots for RKLB
+[2026-01-03 04:03:53.735] [INFO    ] [engine:process_all_transactions:347] Generated 558 tax events

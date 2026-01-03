@@ -46,7 +46,7 @@ class ISINResolver:
         
         # Previously failing stocks (from user screenshot)
         # Previously failing stocks
-        'PLDNPLU00011': 'DNP.WA',    # Dino Polska (Warsaw - PLN)
+        'PLDINPL00011': 'DNP.WA',    # Dino Polska (Warsaw - PLN)
         'NL0010273215': 'ASML.AS',   # ASML Holding (Amsterdam - EUR)
         'LU1176118681': 'EQT.ST',    # EQT AB (Stockholm - SEK)
         'DK0010272202': 'GMAB.CO',   # Genmab (Copenhagen - DKK)
@@ -58,6 +58,7 @@ class ISINResolver:
         'BTC': 'BTC-EUR',
         'ETH': 'ETH-EUR',
         'SOL': 'SOL-EUR',
+        'DK0062498333': 'NOVO-B.CO', # Novo Nordisk B (Copenhagen)
     }
     
     @classmethod
