@@ -78,6 +78,37 @@ def apply_corporate_actions_cached(transactions):
     corp_actions = CorporateActionService()
     return corp_actions.detect_and_apply_splits(transactions)
 
+@st.cache_data(show_spinner=False, ttl=3600)
+def get_realized_pnl_cached(transactions):
+    """
+    Calculate total realized P/L from tax events.
+    
+    Args:
+        transactions: List of Transaction objects
+        
+    Returns:
+        Decimal: Total realized gain/loss from all sales
+    """
+    from decimal import Decimal
+    
+    # Process transactions through tax engine
+    engine = TaxBasisEngine(transactions, matching_strategy="WeightedAverage")
+    engine.process_all_transactions()
+    
+    # Get all realized events (all time)
+    events = engine.get_realized_events()
+    
+    # Sum up realized CAPITAL gains (excludes dividends/interest income)
+    # Only count actual sales (quantity_sold > 0)
+    total_realized = Decimal(0)
+    for event in events:
+        # Dividends and interest have quantity_sold = 0
+        # Only count actual sales for "Realized P/L" metric
+        if event.quantity_sold > 0:
+            total_realized += event.realized_gain
+    
+    return total_realized
+
 
 def main():
     """Main application entry point."""
@@ -245,6 +276,9 @@ def main():
     # ==========================================
     render_sidebar_status(transactions, tickers, prices, validation_data)
     
+    # Calculate realized P/L from Tax Engine (authoritative source)
+    realized_pnl = get_realized_pnl_cached(transactions)
+    
     # Calculate metrics
     with st.spinner("Calculating performance metrics..."):
         try:
@@ -291,7 +325,7 @@ def main():
     unrealized_gain = current_value - portfolio.cash_balance - holdings_cost_basis
     
     # Absolute Gain = Realized + Dividends + Interest + Unrealized - Fees
-    total_absolute_gain = (portfolio.realized_gains + 
+    total_absolute_gain = (realized_pnl + 
                           portfolio.total_dividends + 
                           portfolio.total_interest + 
                           unrealized_gain - 
@@ -305,9 +339,17 @@ def main():
     # Fetch historical data (opt-in to avoid blocking UI on first load)
     dates, net_deposits, portfolio_values, cost_basis_values = [], [], [], []
     
-    # Only fetch if user has explicitly requested price update or if enrichment is done AND we don't have a "skip history" flag
+    # Auto-trigger historical data fetch on first load if enrichment is done
     fetch_history = st.session_state.get('fetch_historical_data', False)
     
+    # First-time auto-trigger
+    if not fetch_history and st.session_state.enrichment_done and transactions:
+        if not st.session_state.get('_history_auto_triggered', False):
+            fetch_history = True
+            st.session_state['_history_auto_triggered'] = True
+    
+    cached_perf = st.session_state.get('cached_performance_data')
+
     if fetch_history and st.session_state.enrichment_done and transactions:
         # Determine the full date range needed
         earliest_transaction = min(t.date for t in transactions)
@@ -326,8 +368,14 @@ def main():
             transactions, price_history, earliest_transaction, latest_date
         )
         
+        # Cache results in session state to survive reruns
+        st.session_state['cached_performance_data'] = (dates, net_deposits, portfolio_values, cost_basis_values)
+        
         # Reset flag so we don't fetch again on every rerun
         st.session_state.fetch_historical_data = False
+    elif cached_perf:
+        # Restore from session cache
+        dates, net_deposits, portfolio_values, cost_basis_values = cached_perf
 
     # Calculate advanced metrics (Vola, Sharpe, Max Drawdown)
     volatility = None
@@ -344,7 +392,7 @@ def main():
         {"label": "NET WORTH", "value": mask_currency(current_value, st.session_state.privacy_mode), "delta": gain_txt, "delta_color": gain_color},
         {"label": "ABS GAIN", "value": mask_currency(total_absolute_gain, st.session_state.privacy_mode), "delta": f"+{return_pct:.2f}%", "delta_color": "pos"},
         {"label": "XIRR", "value": f"{xirr_value * 100:.1f}%" if xirr_value is not None else "N/A", "delta": None, "delta_color": "pos" if xirr_value and xirr_value > 0 else "neu"},
-        {"label": "REALIZED P/L", "value": mask_currency(portfolio.realized_gains, st.session_state.privacy_mode) if portfolio else "€0", "delta": None, "delta_color": None},
+        {"label": "REALIZED P/L", "value": mask_currency(realized_pnl, st.session_state.privacy_mode), "delta": None, "delta_color": None},
         {"label": "UNREALIZED P/L", "value": mask_currency(unrealized_gain, st.session_state.privacy_mode), "delta": None, "delta_color": None},
         {"label": "HOLDINGS", "value": str(len(portfolio.holdings)) if portfolio else "0", "delta": None, "delta_color": None},
     ]
@@ -402,6 +450,7 @@ def main():
                     allocation_data.append({
                         'Ticker': h.ticker, 
                         'Name': h.name, 
+                        'Label': f"{h.name} ({h.ticker})",  # For Hover info 
                         'Asset Type': h.asset_type.value.capitalize(),
                         'Market Value (EUR)': float(val_eur), 
                         'Quantity': h.shares

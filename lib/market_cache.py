@@ -146,6 +146,76 @@ def store_isin_mapping(isin: str, ticker: str, name: str = None, exchange: str =
         (isin, ticker, name, exchange)
     )
 
+def create_currency_table():
+    """Initialize currency table."""
+    db = get_db()
+    db.execute_sqlite("""
+        CREATE TABLE IF NOT EXISTS ticker_currencies (
+            ticker TEXT PRIMARY KEY,
+            currency TEXT
+        )
+    """)
+
+def get_ticker_currency(ticker: str) -> Optional[str]:
+    """Get cached trading currency for ticker."""
+    db = get_db()
+    try:
+        rows = db.query_sqlite("SELECT currency FROM ticker_currencies WHERE ticker = ?", (ticker,))
+        return rows[0]['currency'] if rows else None
+    except Exception:
+        return None
+
+def set_ticker_currency(ticker: str, currency: str):
+    """Cache trading currency for ticker."""
+    if not currency:
+        return
+    db = get_db()
+    try:
+        db.execute_sqlite(
+            "INSERT OR REPLACE INTO ticker_currencies (ticker, currency) VALUES (?, ?)",
+            (ticker, currency)
+        )
+    except Exception:
+        create_currency_table()
+        db.execute_sqlite(
+            "INSERT OR REPLACE INTO ticker_currencies (ticker, currency) VALUES (?, ?)",
+            (ticker, currency)
+        )
+
+def create_blacklist_table():
+    """Initialize blacklist table."""
+    db = get_db()
+    db.execute_sqlite("""
+        CREATE TABLE IF NOT EXISTS ticker_blacklist (
+            ticker TEXT PRIMARY KEY,
+            ignored_since DATE
+        )
+    """)
+
+def is_blacklisted(ticker: str) -> bool:
+    """Check if ticker is blacklisted."""
+    db = get_db()
+    try:
+        rows = db.query_sqlite("SELECT 1 FROM ticker_blacklist WHERE ticker = ?", (ticker,))
+        return bool(rows)
+    except Exception:
+        return False
+
+def set_blacklisted_ticker(ticker: str):
+    """Add ticker to blacklist."""
+    db = get_db()
+    try:
+        db.execute_sqlite(
+            "INSERT OR REPLACE INTO ticker_blacklist (ticker, ignored_since) VALUES (?, ?)",
+            (ticker, date.today())
+        )
+    except Exception:
+        create_blacklist_table()
+        db.execute_sqlite(
+            "INSERT OR REPLACE INTO ticker_blacklist (ticker, ignored_since) VALUES (?, ?)",
+            (ticker, date.today())
+        )
+
 
 # Legacy compatibility class (for gradual migration)
 class MarketDataCache:
@@ -199,6 +269,18 @@ class MarketDataCache:
     def save_isin_mapping(self, isin: str, ticker: str, name: str = None, exchange: str = None):
         """Alias for set_isin_mapping (backward compatibility)."""
         return store_isin_mapping(isin, ticker, name, exchange)
+    
+    def get_ticker_currency(self, ticker: str) -> Optional[str]:
+        return get_ticker_currency(ticker)
+    
+    def set_ticker_currency(self, ticker: str, currency: str):
+        return set_ticker_currency(ticker, currency)
+
+    def is_blacklisted(self, ticker: str) -> bool:
+        return is_blacklisted(ticker)
+        
+    def blacklist_ticker(self, ticker: str):
+        set_blacklisted_ticker(ticker)
     
     def get_last_transactions_csv(self) -> Optional[Tuple[str, str, date]]:
         """
@@ -261,4 +343,7 @@ def get_market_cache() -> MarketDataCache:
         _cache_instance = MarketDataCache()
         # Ensure schema is initialized
         get_db().init_schema()
+        get_db().init_schema()
+        create_currency_table() # Ensure new table exists
+        create_blacklist_table() # Ensure blacklist table exists
     return _cache_instance

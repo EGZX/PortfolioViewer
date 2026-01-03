@@ -14,16 +14,19 @@ from lib.market_cache import get_market_cache
 
 logger = setup_logger(__name__)
 
-# Brokers that track cash balances in their export
+# Brokers that track cash balances in their export  
 CASH_TRACKING_BROKERS = frozenset([
-    'Scalable Capital',
-    'Trade Republic'
+    'scalable_capital',
+    'trade_republic',
+    'interactive_brokers',
+    'flatex'
 ])
 
 @dataclass
 class Position:
     """Represents a current holding position."""
     ticker: str
+    isin: Optional[str] = None
     name: Optional[str] = None
     shares: Decimal = Decimal(0)
     cost_basis: Decimal = Decimal(0)
@@ -105,11 +108,30 @@ class Portfolio:
         )
 
         if should_update_cash and tracks_cash:
-            # Transfer Out generally represents money leaving the portfolio
+            # Uninvested cash balance calculation
+            # Track ALL cash movements: deposits, withdrawals, buys, sells, dividends, fees
+            
             if t.type == TransactionType.TRANSFER_OUT and (not t.ticker or t.ticker.strip() == ''):
+                # Cash withdrawal - amount is positive but reduces cash
                 self.cash_balance -= abs(amount_eur)
-            else:
+            elif t.type == TransactionType.BUY:
+                # Buying stock - amount is negative, reduces cash
+                self.cash_balance += amount_eur  # negative + negative = more negative
+            elif t.type == TransactionType.SELL:
+                # Selling stock - amount is positive, increases cash
                 self.cash_balance += amount_eur
+            elif t.type == TransactionType.TRANSFER_IN and (not t.ticker or t.ticker.strip() == ''):
+                # Cash deposit - amount is positive, increases cash
+                self.cash_balance += amount_eur
+            elif t.type == TransactionType.DIVIDEND:
+                # Dividend - amount is positive, increases cash
+                self.cash_balance += amount_eur
+            elif t.type == TransactionType.INTEREST:
+                # Interest - amount is positive, increases cash
+                self.cash_balance += amount_eur
+            elif t.type in [TransactionType.COST, TransactionType.FEE]:
+                # Fees - reduce cash
+                self.cash_balance -= abs(amount_eur)
         
         # Track cash flows for XIRR
         # Inflows (Buys) are negative for wallet.
@@ -145,15 +167,20 @@ class Portfolio:
         
         # Update holdings for transactions with tickers
         if t.ticker and t.ticker.strip():
-            if t.ticker not in self.holdings:
-                self.holdings[t.ticker] = Position(
+            # Use ISIN as primary key ("Asset ID") if available (stable), else fallback to ticker
+            # This ensures we track positions stably even if tickers change
+            key = t.isin if t.isin else t.ticker
+            
+            if key not in self.holdings:
+                self.holdings[key] = Position(
                     ticker=t.ticker, 
+                    isin=t.isin, 
                     name=t.name,
                     asset_type=t.asset_type,
                     currency=t.original_currency
                 )
             
-            pos = self.holdings[t.ticker]
+            pos = self.holdings[key]
             # Use transaction name if position name is missing
             if not pos.name and t.name:
                 pos.name = t.name
@@ -181,38 +208,47 @@ class Portfolio:
                 
             # Decrease Position
             elif t.type in [TransactionType.SELL, TransactionType.TRANSFER_OUT]:
-                ticker = t.ticker or t.isin
+                # Use strict key lookup (ISIN preferred)
+                key = t.isin if t.isin else t.ticker
                 
-                if ticker in self.holdings:
-                    pos = self.holdings[ticker]
+                if key in self.holdings:
+                    pos = self.holdings[key]
                     
                     # Check if selling more than owned
                     if t.shares > pos.shares:
                         logger.warning(
-                            f"{ticker}: Selling/Transferring more shares than owned! "
+                            f"{t.ticker}: Selling/Transferring more shares than owned! "
                             f"Type: {t.type.value}, Capping to zero. (Check source data)"
                         )
                         t.shares = pos.shares
                     
+                    # Calculate cost basis for sold shares (proportional)
+                    if pos.shares > 0:
+                        cost_per_share = pos.cost_basis / (pos.shares + t.shares)
+                        sold_cost_basis = cost_per_share * t.shares
+                    else:
+                        sold_cost_basis = Decimal(0)
+                    
+                    # Calculate realized gain/loss (only for SELL, not transfers)
+                    if t.type == TransactionType.SELL:
+                        # Proceeds from sale (in EUR)
+                        proceeds_eur = abs(amount_eur)
+                        # Realized gain = proceeds - cost basis
+                        realized_gain_loss = proceeds_eur - sold_cost_basis
+                        self.realized_gains += realized_gain_loss
+                        self.total_realized_pl += realized_gain_loss
+                    
                     # Update shares
                     pos.shares -= t.shares
                     
-                    # Calculate cost basis reduction (proportional)
+                    # Update cost basis (proportional reduction)
                     if pos.shares > 0:
-                        # Proportional cost basis reduction  
-                        cost_per_share = pos.cost_basis / (pos.shares + t.shares)
-                        sold_cost = cost_per_share * t.shares
-                        pos.cost_basis -= sold_cost
+                        pos.cost_basis -= sold_cost_basis
                     else:
                         # Sold all shares
                         pos.cost_basis = Decimal(0)
-                    
-                    # Track realized P/L if provided in transaction
-                    if hasattr(t, 'realized_gain') and t.realized_gain:
-                        self.total_realized_pl += t.realized_gain
-                        self.realized_gains += t.realized_gain
                 else:
-                    logger.warning(f"{ticker}: Sell transaction but no position found. Ignoring.")
+                    logger.warning(f"{t.ticker}: Sell transaction but no position found. Ignoring.")
             
             elif t.type == TransactionType.DIVIDEND:
                 self.total_dividends += abs(amount_eur)
@@ -253,13 +289,16 @@ class Portfolio:
                    
     def get_unique_tickers(self) -> List[str]:
         """Get list of all unique tickers with current holdings."""
-        return list(self.holdings.keys())
+        # Return tickers from positions (handle ISIN-keyed map)
+        return list(set(pos.ticker for pos in self.holdings.values() if pos.ticker))
     
     def calculate_total_value(self, prices: Dict[str, Optional[float]]) -> Decimal:
         """Calculate total portfolio value (holdings + cash) in EUR."""
         holdings_value = Decimal(0)
         
-        for ticker, pos in self.holdings.items():
+        for key, pos in self.holdings.items():
+            # Position tracks the ticker regardless of what the key is (ISIN/Ticker)
+            ticker = pos.ticker
             price = prices.get(ticker)
             if price is not None:
                 pos.update_market_value(Decimal(str(price)))
@@ -371,7 +410,9 @@ class Portfolio:
         """Get summary of all holdings as DataFrame (excludes zero-share positions)."""
         data = []
         
-        for ticker, pos in self.holdings.items():
+        for key, pos in self.holdings.items():
+            # Use ticker from position for display/lookup
+            ticker = pos.ticker
             # Skip closed positions
             if pos.shares <= 0:
                 continue

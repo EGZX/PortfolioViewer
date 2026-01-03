@@ -332,12 +332,11 @@ class CSVParser:
                 isin_val = get_val('isin')
                 isin = isin_val if isin_val and isin_val != '' and not pd.isna(isin_val) else None
                 
-                # Use ticker or ISIN (prefer ISIN if both present)
-                if not ticker and isin:
-                    ticker = isin
+                # Keep ticker and ISIN separate - do NOT merge them here
+                # ISIN resolution happens in the pipeline, not in the parser
                 
                 # Log warning if ticker is missing for buy/sell transactions
-                if not ticker and trans_type in [TransactionType.BUY, TransactionType.SELL]:
+                if not ticker and not isin and trans_type in [TransactionType.BUY, TransactionType.SELL]:
                     error = f"Row {idx}: Missing ticker/ISIN for {trans_type.value} transaction"
                     errors.append(error)
                     error_categories['missing_ticker'] += 1

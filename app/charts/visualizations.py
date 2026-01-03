@@ -76,7 +76,9 @@ def create_allocation_donut(
     holdings_df['Percentage'] = (holdings_df[market_value_col] / total_value) * 100
     
     # Use Name for display
-    if 'Name' in holdings_df.columns:
+    if 'Label' in holdings_df.columns:
+        holdings_df['Display_Label'] = holdings_df['Label']
+    elif 'Name' in holdings_df.columns:
         holdings_df['Display_Label'] = holdings_df.apply(
             lambda row: row['Name'] if row['Name'] and row['Name'] != row['Ticker'] else row['Ticker'],
             axis=1
@@ -207,7 +209,8 @@ def create_allocation_treemap(
     holdings_df['Percentage'] = (holdings_df[market_value_col] / total_val) * 100
     
     # Label Logic: Ticker + %
-    holdings_df['Label'] = holdings_df['Ticker']
+    if 'Label' not in holdings_df.columns:
+        holdings_df['Label'] = holdings_df['Ticker']
     
     # Use Shared Palette
     colors = MOONLIT_COLORS

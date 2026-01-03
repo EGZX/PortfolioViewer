@@ -41,21 +41,7 @@ def render_sidebar_controls():
         if st.session_state.use_multi_source:
             try:
                 store = TransactionStore()
-                
-                # Migration: Check for cached data if store is empty
-                cache = get_market_cache()
-                cached_data = cache.get_last_transactions_csv()
                 current_counts = store.get_transaction_count_by_source()
-                
-                if not current_counts and cached_data:
-                    st.info("Found data from Single-File mode.")
-                    if st.button("📥 Import Cached Data to Database", type="primary"):
-                        content, filename, _ = cached_data
-                        with st.spinner("Migrating data to secure database..."):
-                            txs, _, _ = process_data_pipeline(content)
-                            result = store.append_transactions(txs, f"Migrated_{filename}", "hash_first")
-                            st.success(f"Migrated {result.added} transactions!")
-                            st.rerun()
                 uploaded_files = st.file_uploader(
                     "Upload CSV Files",
                     type=['csv'],
@@ -227,10 +213,6 @@ def render_sidebar_controls():
                 help="Upload transaction history"
             )
             
-            # Cache Loading Logic
-            cache = get_market_cache()
-            cached_data = cache.get_last_transactions_csv()
-            
             file_content = None
             filename = None
             using_cache = False
@@ -244,13 +226,6 @@ def render_sidebar_controls():
                 except Exception as e:
                     logger.error(f"Cache save failed: {e}")
                     
-            elif cached_data:
-                csv_content, cache_filename, uploaded_at = cached_data
-                file_content = csv_content
-                filename = cache_filename
-                using_cache = True
-                st.caption(f"Cached: {cache_filename} | {uploaded_at.strftime('%H:%M')}")
-            
             if file_content is None:
                 st.info("Awaiting Data Import")
                 return None

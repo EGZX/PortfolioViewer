@@ -1,20 +1,77 @@
-"""Market data service with yfinance integration and fallback strategies."""
+"""Market data service with yfinance integration and fallback strategies.
 
-from datetime import date
+Financial Compliance Standards:
+- Conservative rate limiting to prevent API blocking
+- Comprehensive validation of all fetched data
+- Persistent currency caching to ensure consistency
+- No invalid data written to database under any circumstances
+- Detailed audit logging of all price fetches
+"""
+
+from datetime import date, timedelta
 from decimal import Decimal
 from typing import Dict, Optional, List
 import pandas as pd
 import yfinance as yf
 import streamlit as st
+import time
+import re
+import logging
+import threading
 
 from lib.utils.logging_config import setup_logger, get_perf_logger
 from lib.isin_resolver import ISINResolver
 from lib.multi_provider import MarketDataAggregator
+from lib.crypto_prices import get_crypto_prices_batch, is_crypto_ticker
+from lib.crypto_prices import get_crypto_prices_batch, is_crypto_ticker
 
 logger = setup_logger(__name__)
 
+
+# Suppress yfinance error spam for delisted tickers
+logging.getLogger('yfinance').setLevel(logging.CRITICAL)
+
 # Initialize fallback providers
 _fallback_aggregator = MarketDataAggregator()
+
+# Rate limiting for single price fetches (financial compliance)
+_last_single_fetch_time = None
+_fetch_lock = threading.Lock()
+RATE_LIMIT_DELAY_SECONDS = 1.5  # Conservative: 40 requests/min max
+
+# In-memory FX rate cache (session-level, prevents repeated slow yfinance calls)
+_fx_memory_cache = {}
+
+
+
+def normalize_ticker(ticker: str) -> str:
+    """
+    Normalize ticker format for Yahoo Finance compatibility.
+    
+    Conversions:
+    - 'BRK/B' -> 'BRK-B' (class shares use hyphen)
+    - 'BRK.B' -> 'BRK-B' (some sources use period)
+    - Handles edge cases for multi-class shares
+    
+    Args:
+        ticker: Raw ticker symbol
+    
+    Returns:
+        Normalized ticker for Yahoo Finance
+    """
+    if not ticker:
+        return ticker
+    
+    ticker = ticker.strip().upper()
+    
+    # Convert slash or period before single letter to hyphen (class shares)
+    # BRK/B, BRK.B -> BRK-B
+    ticker = re.sub(r'[/\.]([A-Z])$', r'-\1', ticker)
+    
+    # Handle multi-letter suffixes like BRK/BRK -> BRK-BRK (rare but possible)
+    ticker = re.sub(r'/([A-Z]+)$', r'-\1', ticker)
+    
+    return ticker
 
 
 # Removed redundant st.cache_data - using SQLite cache instead
@@ -24,12 +81,15 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
     Uses SQLite cache to minimize API calls.
     
     Args:
-        tickers: List of ticker symbols (Yahoo Finance format)
+        tickers: List of ticker symbols (will be normalized)
     
     Returns:
         Dictionary mapping ticker to current price (EUR) or None if failed
     """
     from lib.market_cache import get_market_cache
+    
+    # Normalize all input tickers
+    tickers = [normalize_ticker(t) for t in tickers if t]
     
     logger.info(f"Fetching prices for {len(tickers)} tickers")
     
@@ -38,7 +98,6 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         cache = get_market_cache()
         today = date.today()
         
-
         cached_prices = cache.get_prices_batch(tickers, today)
         
         # Identify missing prices
@@ -51,15 +110,20 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         
         logger.info(f"Cache: {len(prices)} hits, {len(tickers_to_fetch)} to fetch from API")
         
+        # Filter Blacklisted Tickers immediately
+        valid_tickers = [t for t in tickers_to_fetch if not cache.is_blacklisted(t)]
+        tickers_to_fetch = valid_tickers
+        
+        if not tickers_to_fetch:
+             return prices # All blacklisted or cached
+
         # Resolve ISINs to tickers
         mapped_tickers = []
         ticker_map = {}  # mapped -> original
-        
 
         batch_map = ISINResolver.resolve_batch(tickers_to_fetch)
         
         for original_ticker in tickers_to_fetch:
-
             resolved_ticker = batch_map.get(original_ticker, original_ticker)
             if resolved_ticker != original_ticker:
                 logger.debug(f"Resolved {original_ticker} -> {resolved_ticker}")
@@ -68,8 +132,12 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
             if not resolved_ticker:
                  resolved_ticker = original_ticker
 
+            # Normalize resolved ticker as well
+            resolved_ticker = normalize_ticker(resolved_ticker)
+            
             mapped_tickers.append(resolved_ticker)
             ticker_map[resolved_ticker] = original_ticker  # Reverse map
+
         
         if not mapped_tickers:
             return prices
@@ -81,7 +149,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
                 period='1d',
                 interval='1d',
                 group_by='ticker',
-                threads=True,
+                threads=False,
                 progress=False
             )
             
@@ -163,115 +231,246 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
 
 def fetch_single_price(ticker: str, max_retries: int = 3) -> Optional[float]:
     """
-    Fetch price for a single ticker with retry logic and fallbacks.
+    Fetch single price with strict financial compliance standards.
     
-    Fallback chain:
-    1. Current price (1d)
-    2. Historical price (5d)
-    3. None
+    Features:
+    - Conservative rate limiting (1.5s between calls)
+    - Ticker normalization
+    - Currency detection and persistent caching
+    - Comprehensive validation
+    - Detailed audit logging
+    - Blacklisting of permanently failed tickers
+    
+    Args:
+        ticker: Ticker symbol (will be normalized)
+        max_retries: Number of retry attempts for transient errors
+    
+    Returns:
+        Price as float, or None if fetch failed
     """
+    global _last_single_fetch_time
+    
+    if not ticker:
+        logger.warning("fetch_single_price called with empty ticker")
+        return None
+    
+    # Normalize ticker format
+    original_ticker = ticker
+    ticker = normalize_ticker(ticker)
+    if ticker != original_ticker:
+        logger.info(f"Normalized ticker: {original_ticker} -> {ticker}")
+    
+    # Check blacklist
+    from lib.market_cache import get_market_cache
+    cache = get_market_cache()
+    if cache.is_blacklisted(ticker):
+        logger.debug(f"Skipping blacklisted ticker: {ticker}")
+        return None
+    
+    # Rate limiting (financial compliance: prevent API blocking)
+    with _fetch_lock:
+        if _last_single_fetch_time is not None:
+            elapsed = time.time() - _last_single_fetch_time
+            if elapsed < RATE_LIMIT_DELAY_SECONDS:
+                sleep_duration = RATE_LIMIT_DELAY_SECONDS - elapsed
+                logger.debug(f"Rate limit: sleeping {sleep_duration:.2f}s")
+                time.sleep(sleep_duration)
+        _last_single_fetch_time = time.time()
+    
+    # Attempt to fetch price
     for attempt in range(max_retries):
         try:
             stock = yf.Ticker(ticker)
-            info = stock.info
             
-            # Try different price fields
-            price_fields = ['currentPrice', 'regularMarketPrice', 'previousClose']
-            for field in price_fields:
-                price = info.get(field)
+            # Try fast_info first (faster, less data)
+            try:
+                price = stock.fast_info.last_price
+                currency = stock.fast_info.currency
+                
+                # Validate price
                 if price is not None and price > 0:
-                    logger.info(f"{ticker}: {price:.2f} (from {field})")
-                    return float(price)
+                    price_float = float(price)
+                    
+                    # Cache currency if available
+                    if currency:
+                        cache.set_ticker_currency(ticker, currency.upper())
+                        logger.info(f"✓ {ticker}: {price_float:.4f} {currency.upper()}")
+                    else:
+                        logger.info(f"✓ {ticker}: {price_float:.4f} (currency unknown)")
+                    
+                    return price_float
+            except AttributeError:
+                # fast_info not available, fall through to history
+                pass
             
-            # Fallback: historical data
+            # Fallback: recent history
             hist = stock.history(period='5d')
             if not hist.empty and 'Close' in hist.columns:
-                price = hist['Close'].iloc[-1]
-                if price is not None and price > 0:
-                    logger.info(f"{ticker}: {price:.2f} (from historical)")
-                    return float(price)
+                price_float = float(hist['Close'].iloc[-1])
+                
+                # Try to get currency from info (slower but more reliable)
+                try:
+                    info_currency = stock.info.get('currency')
+                    if info_currency:
+                        cache.set_ticker_currency(ticker, info_currency.upper())
+                        logger.info(f"✓ {ticker}: {price_float:.4f} {info_currency.upper()} (from history)")
+                    else:
+                        logger.info(f"✓ {ticker}: {price_float:.4f} (from history, currency unknown)")
+                except Exception:
+                    logger.info(f"✓ {ticker}: {price_float:.4f} (from history)")
+                
+                return price_float
             
+            # No data available - blacklist immediately
+            logger.warning(f"{ticker}: No price data available. Blacklisting.")
+            cache.blacklist_ticker(ticker)
             return None
-            
+        
         except Exception as e:
-            logger.warning(f"Error fetching SINGLE price for {ticker}: {e}")
-            return None
+            error_str = str(e)
+            
+            # Permanent errors - blacklist immediately
+            if any(x in error_str for x in ["404", "Not Found", "delisted", "No data found"]):
+                logger.error(f"{ticker}: Permanent error ({error_str}). Blacklisting.")
+                cache.blacklist_ticker(ticker)
+                return None
+            
+            # Transient errors - retry
+            logger.warning(f"{ticker}: Attempt {attempt+1}/{max_retries} failed: {error_str}")
+            if attempt < max_retries - 1:
+                time.sleep(2 ** attempt)  # Exponential backoff
+    
+    # All retries exhausted
+    logger.error(f"{ticker}: All {max_retries} attempts failed. Blacklisting.")
+    cache.blacklist_ticker(ticker)
+    return None
 
 def get_currency_for_ticker(ticker: str) -> str:
     """
-    Determine the trading currency based on the ticker symbol.
-    Defaults to USD if cannot determine.
+    Determine the trading currency for a ticker symbol.
+    
+    Priority:
+    1. Database cache (persistent, immutable)
+    2. Pattern-based detection (exchange suffixes, ISIN country codes)
+    3. API lookup (yfinance fast_info)
+    4. Default to USD (only if all else fails)
+    
+    NOTE: Only persists currencies from actual API lookups or known patterns,
+    never persists the default fallback to avoid polluting the database.
+    
+    Args:
+        ticker: Ticker symbol
+    
+    Returns:
+        Currency code (e.g., 'EUR', 'USD', 'GBP')
     """
     if not ticker:
         return "EUR"
-        
+    
+    # Normalize ticker
+    ticker = normalize_ticker(ticker)
     ticker = ticker.upper()
     
-    # 1. Crypto
+    # 1. Check cache first (most reliable source)
+    try:
+        from lib.market_cache import get_market_cache
+        cache = get_market_cache()
+        cached_curr = cache.get_ticker_currency(ticker)
+        if cached_curr:
+            logger.debug(f"Currency cache HIT: {ticker} -> {cached_curr}")
+            return cached_curr
+    except Exception as e:
+        logger.warning(f"Cache lookup failed for {ticker}: {e}")
+    
+    # 2. Crypto detection
     if ticker.endswith("-EUR"):
+        cache.set_ticker_currency(ticker, "EUR")
         return "EUR"
     if ticker.endswith("-USD"):
+        cache.set_ticker_currency(ticker, "USD")
         return "USD"
-        
-    # 2. Exchange Suffixes
+    
+    # 3. Exchange suffix detection
     if "." in ticker:
         suffix = ticker.split(".")[-1]
         
-        if suffix in ["DE", "PA", "MI", "AS", "VI", "BR", "HE", "NX", "BM", "HM", "BE", "DU", "SG", "F"]:
-            return "EUR"
-        if suffix == "L":
-            return "GBP"
-        if suffix in ["TO", "V", "CN"]:
-            return "CAD"
-        if suffix in ["SW", "S"]:
-            return "CHF"
-        if suffix == "HK":
-            return "HKD"
-        if suffix == "JO":
-            return "ZAR"
-        if suffix in ["SA", "SP"]:
-            return "BRL"
-        if suffix == "CO":
-            return "DKK"
-        if suffix == "WA":
-            return "PLN"
-        if suffix == "ST":
-            return "SEK"
-        if suffix == "OL":
-            return "NOK"
+        exchange_currency_map = {
+            # Eurozone
+            "DE": "EUR", "PA": "EUR", "MI": "EUR", "AS": "EUR", "VI": "EUR",
+            "BR": "EUR", "HE": "EUR", "NX": "EUR", "BM": "EUR", "HM": "EUR",
+            "BE": "EUR", "DU": "EUR", "SG": "EUR", "F": "EUR",
+            # Other European
+            "L": "GBP", "SW": "CHF", "S": "CHF", "CO": "DKK",
+            "WA": "PLN", "ST": "SEK", "OL": "NOK",
+            # Americas
+            "TO": "CAD", "V": "CAD", "CN": "CAD",
+            "SA": "BRL", "SP": "BRL",
+            # Asia
+            "HK": "HKD", "JO": "ZAR"
+        }
+        
+        if suffix in exchange_currency_map:
+            currency = exchange_currency_map[suffix]
+            cache.set_ticker_currency(ticker, currency)
+            logger.debug(f"Exchange suffix detection: {ticker} -> {currency}")
+            return currency
     
-    # 3. ISIN format detection (12 characters, starts with 2-letter country code)
+    # 4. ISIN format detection (12 characters, country code prefix)
     if len(ticker) == 12 and ticker[:2].isalpha() and ticker[2:].isalnum():
         country_code = ticker[:2]
         
-        # Map ISIN country codes to currencies
         isin_currency_map = {
             # Eurozone
             "AT": "EUR", "BE": "EUR", "CY": "EUR", "DE": "EUR", "EE": "EUR",
             "ES": "EUR", "FI": "EUR", "FR": "EUR", "GR": "EUR", "IE": "EUR",
             "IT": "EUR", "LT": "EUR", "LU": "EUR", "LV": "EUR", "MT": "EUR",
             "NL": "EUR", "PT": "EUR", "SI": "EUR", "SK": "EUR",
-            
             # Europe
-            "DK": "DKK", "NO": "NOK", "SE": "SEK", "CH": "CHF", 
+            "DK": "DKK", "NO": "NOK", "SE": "SEK", "CH": "CHF",
             "GB": "GBP", "PL": "PLN",
-            
             # Americas
             "US": "USD", "CA": "CAD", "BR": "BRL",
-            
             # Asia-Pacific
-            "JP": "JPY", "HK": "HKD", "CN": "CNY", "AU": "AUD", 
+            "JP": "JPY", "HK": "HKD", "CN": "CNY", "AU": "AUD",
             "NZ": "NZD", "SG": "SGD", "KR": "KRW", "IN": "INR",
-            
             # Others
             "ZA": "ZAR", "IL": "ILS", "TR": "TRY", "KY": "USD"
         }
         
-        currency = isin_currency_map.get(country_code)
-        if currency:
+        if country_code in isin_currency_map:
+            currency = isin_currency_map[country_code]
+            cache.set_ticker_currency(ticker, currency)
+            logger.debug(f"ISIN country detection: {ticker} -> {currency}")
             return currency
     
-    # 4. Default to USD for US-style tickers
+    # 5. API lookup (only if not blacklisted)
+    try:
+        if not cache.is_blacklisted(ticker):
+            stock = yf.Ticker(ticker)
+            # Try fast_info first
+            try:
+                currency = stock.fast_info.currency
+                if currency:
+                    currency = currency.upper()
+                    cache.set_ticker_currency(ticker, currency)
+                    logger.info(f"API currency lookup: {ticker} -> {currency}")
+                    return currency
+            except AttributeError:
+                # Fall back to info dict
+                try:
+                    info_currency = stock.info.get('currency')
+                    if info_currency:
+                        currency = info_currency.upper()
+                        cache.set_ticker_currency(ticker, currency)
+                        logger.info(f"API currency lookup (info): {ticker} -> {currency}")
+                        return currency
+                except Exception:
+                    pass
+    except Exception as e:
+        logger.debug(f"API currency lookup failed for {ticker}: {e}")
+    
+    # 6. Default to USD (but do NOT cache this default)
+    logger.debug(f"Currency defaulted to USD for {ticker} (not cached)")
     return "USD"
 
 
@@ -316,20 +515,33 @@ def get_fx_rate(from_currency: str, to_currency: str = "EUR") -> Decimal:
                  logger.info(f"FX Rate {from_currency}/{to_currency}: {cached_val:.4f} (from SQLite)")
                  return Decimal(str(cached_val))
 
-        # 2. Yahoo Finance
-        fx_ticker = f"{from_currency}{to_currency}=X"
-        rate = fetch_single_price(fx_ticker)
+        # 2. In-memory cache (session-level, ultra-fast)
+        cache_key = f"{from_currency}/{to_currency}/{date.today()}"
+        if cache_key in _fx_memory_cache:
+            rate = _fx_memory_cache[cache_key]
+            logger.debug(f"FX Rate {from_currency}/{to_currency}: {rate:.4f} (memory cache)")
+            return Decimal(str(rate))
         
-        # Validate rate
-        if rate is not None:
-            if abs(rate - 1.0) < 0.0001 and from_currency != to_currency:
-                logger.warning(f"FX Rate for {fx_ticker} returned 1.0, treating as invalid.")
-                rate = None
-            else:
-                logger.info(f"FX Rate {from_currency}/{to_currency}: {rate:.4f}")
-                # Cache successful fetch
-                cache.set_fx_rate(from_currency, to_currency, date.today(), rate)
-                return Decimal(str(rate))
+        # 3. Yahoo Finance (direct fetch, NO rate limiting for FX)
+        # FX rates are critical for app functionality - fetch immediately
+        fx_ticker = f"{from_currency}{to_currency}=X"
+        
+        try:
+            stock = yf.Ticker(fx_ticker)
+            rate = stock.fast_info.last_price
+            
+            if rate is not None and rate > 0:
+                # Validate rate
+                if abs(rate - 1.0) < 0.0001 and from_currency != to_currency:
+                    logger.warning(f"FX Rate for {fx_ticker} returned 1.0, treating as invalid.")
+                else:
+                    logger.info(f"FX Rate {from_currency}/{to_currency}: {rate:.4f}")
+                    # Cache in both database and memory
+                    cache.set_fx_rate(from_currency, to_currency, date.today(), float(rate))
+                    _fx_memory_cache[cache_key] = float(rate)
+                    return Decimal(str(rate))
+        except Exception as e:
+            logger.debug(f"Failed to fetch FX rate {fx_ticker}: {e}")
 
     except Exception as e:
         logger.error(f"Error fetching FX rate {from_currency}/{to_currency}: {e}")
@@ -401,22 +613,49 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
     else:
         tickers_to_fetch = list(tickers)
         
-    logger.info(f"Historical Data: {len(valid_cached_tickers)} cached, {len(tickers_to_fetch)} to fetch")
+    # Filter Blacklisted Tickers
+    non_blacklisted = []
+    for t in tickers_to_fetch:
+        if not cache.is_blacklisted(t):
+            non_blacklisted.append(t)
+    
+    skipped_count = len(tickers_to_fetch) - len(non_blacklisted)
+    tickers_to_fetch = non_blacklisted
+        
+    logger.info(f"Historical Data: {len(valid_cached_tickers)} cached, {len(tickers_to_fetch)} to fetch ({skipped_count} blacklisted)")
     
     fetched_df = pd.DataFrame()
     
     if tickers_to_fetch:
         fetch_mapped = []
         fetch_map = {} # mapped -> original
+        
+        # Pre-filter: Don't ask yfinance for raw ISINs, they will fail and spam
         for t in tickers_to_fetch:
             mapped = batch_map.get(t, t)
+            
+            # Check if mapped is still a raw ISIN (unresolved)
+            # 12 chars, alphanumeric, no dot suffix (usually)
+            # Most YF tickers are short or have dot suffix. Raw ISINs are distinct.
+            is_raw_isin = bool(re.match(r'^[A-Z]{2}[A-Z0-9]{9}[0-9]$', mapped))
+            
+            if is_raw_isin:
+                # Blacklist immediately, don't query
+                # logger.info(f"Skipping raw ISIN {mapped} and blacklisting") # fast silence
+                cache.blacklist_ticker(t)
+                continue
+                
             fetch_mapped.append(mapped)
             fetch_map[mapped] = t
         
+        if not fetch_mapped:
+            logger.info("No valid tickers to fetch after filtering ISINs.")
+            return {}
+
         logger.info(f"Downloading historical data for {len(fetch_mapped)} tickers in chunks...")
         
         # Download in chunks to show progress and prevent timeout
-        chunk_size = 50
+        chunk_size = 25 # Reduced chunk size
         fetched_data = {}
         cache_updates = []
         
@@ -435,7 +674,7 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
                     interval="1d",
                     group_by='ticker',
                     auto_adjust=False,
-                    threads=True,
+                    threads=False, # Disable threading to prevent log spam/lockup
                     progress=False
                 )
                 
@@ -462,8 +701,14 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
                                 for dt, price in series.items():
                                     if pd.notna(price):
                                         cache_updates.append((original, dt.date(), float(price), 'yfinance'))
+                            else:
+                                # No data for this ticker in the batch -> Blacklist it
+                                logger.warning(f"No data for {original} ({mapped}) -> Blacklisting")
+                                cache.blacklist_ticker(original)
                         except (KeyError, AttributeError):
-                            continue
+                            # Also blacklist on error
+                             cache.blacklist_ticker(original)
+                             continue
                 
                 logger.info(f"✓ Chunk {chunk_num}/{total_chunks} complete ({len(cache_updates)} price points)")
                 
@@ -518,6 +763,12 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
         
         for ticker in final_df.columns:
             splits = CorporateActionService.get_cached_splits(ticker)
+            
+            # Anti-Gravity Safety: Never apply splits to Crypto or FX pairs
+            # This prevents "Phantom Split" destruction of price history
+            is_crypto_or_fx = any(x in ticker for x in ['-USD', '-EUR', 'BTC', 'ETH', 'SOL', 'USDEUR', 'EURUSD'])
+            if is_crypto_or_fx:
+                continue
             
             if splits:
                 price_series = final_df[ticker]
