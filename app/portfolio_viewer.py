@@ -279,30 +279,16 @@ def main():
     # Calculate realized P/L from Tax Engine (authoritative source)
     realized_pnl = get_realized_pnl_cached(transactions)
     
-    # Calculate metrics
+    #Calculate metrics
     with st.spinner("Calculating performance metrics..."):
         try:
+            logger.info("[PERF] Starting metrics calculation")
+            
+            # Calculate Net Worth (FX conversion handled internally)
+            logger.debug(f"[PERF] Calculating net worth for {len(portfolio.holdings)} holdings")
             current_value = portfolio.calculate_total_value(prices)
-            
-            # Calculate Net Worth with FX adjustments
-            corrected_net_worth = Decimal(0)
-            for h in portfolio.holdings.values():
-                if h.shares > 0:
-                    val = h.market_value
-                    curr = get_currency_for_ticker(h.ticker)
-                    if curr != "EUR":
-                        try:
-                            rate = get_fx_rate(curr, "EUR")
-                            val = val * Decimal(str(rate))
-                        except Exception:
-                            pass
-                    corrected_net_worth += val
-            
-            # Add cash balance
-            corrected_net_worth += portfolio.cash_balance
-            
-            # Update current value
-            current_value = corrected_net_worth
+            logger.debug(f"[PERF] Net worth calculation complete: €{current_value:,.2f}")
+            logger.info(f"[PERF] Cash balance: €{portfolio.cash_balance:,.2f}")
             
             # XIRR calculation
             dates, amounts = portfolio.get_cash_flows_for_xirr(current_value)
@@ -360,7 +346,7 @@ def main():
         
         # Fetch ALL historical prices (Service handles cache + fetching)
         from lib.market_data import fetch_historical_prices
-        with st.spinner(f"Fetching historical data for {len(all_tickers)} assets... This may take a few minutes."):
+        with st.spinner(f"Loading historical data for {len(all_tickers)} assets... (Checking cache)"):
             price_history = fetch_historical_prices(all_tickers, earliest_transaction, latest_date)
         
         # Calculate daily portfolio values using the history
@@ -435,17 +421,31 @@ def main():
             
             # Prepare asset allocation data
             allocation_data = []
-            for h in portfolio.holdings.values():
+            logger.info("[PERF] Starting asset allocation data preparation")
+            for idx, h in enumerate(portfolio.holdings.values()):
                 if h.market_value > 0 and h.asset_type.value != 'Cash':
+                    logger.info(f"[PERF] Processing allocation {idx+1}: {h.ticker}")
                     # Convert to EUR using current FX rate
                     val_eur = h.market_value
                     currency = get_currency_for_ticker(h.ticker)
+                    logger.info(f"[PERF] Currency for {h.ticker}: {currency}")
                     if currency != "EUR":
+
                          try:
-                             rate = get_fx_rate(currency, "EUR")
-                             val_eur = val_eur * Decimal(str(rate))
-                         except Exception:
-                             pass  # Keep original if fails
+
+                              logger.info(f"[PERF] Getting FX rate for {currency}/EUR")
+
+                              rate = get_fx_rate(currency, "EUR")
+
+                              logger.info(f"[PERF] FX rate {currency}/EUR retrieved: {rate}")
+
+                              val_eur = val_eur * Decimal(str(rate))
+
+                         except Exception as e:
+
+                              logger.warning(f"[PERF] FX rate fetch failed for {currency}: {e}")
+
+                              pass  # Keep original if fails
                     
                     allocation_data.append({
                         'Ticker': h.ticker, 
@@ -455,6 +455,7 @@ def main():
                         'Market Value (EUR)': float(val_eur), 
                         'Quantity': h.shares
                     })
+            logger.info("[PERF] Asset allocation data preparation complete")
             
             holdings_df = pd.DataFrame(allocation_data)
             
@@ -538,6 +539,16 @@ def main():
                         height=400
                     )
                     
+                    # Export Holdings
+                    csv_data = holdings_display.to_csv(index=False)
+                    st.download_button(
+                        label="📥 Download Holdings CSV",
+                        data=csv_data,
+                        file_name=f"holdings_{datetime.now().date()}.csv",
+                        mime="text/csv",
+                        key="export_holdings"
+                    )
+                    
                     # Show filtered count
                     if asset_filter != "All":
                         st.caption(f"Showing {len(filtered_df)} of {len(holdings_df)} holdings")
@@ -552,7 +563,6 @@ def main():
     # ========== TAB 2: DETAILED METRICS ==========
     with tab2:
         detailed_metrics = [
-            {"label": "Cash Balance", "value": mask_currency_precise(portfolio.cash_balance, st.session_state.privacy_mode)},
             {"label": "Cost Basis", "value": mask_currency(holdings_cost_basis, st.session_state.privacy_mode)},
             {"label": "Total Dividends", "value": mask_currency_precise(portfolio.total_dividends, st.session_state.privacy_mode)},
             {"label": "Total Interest", "value": mask_currency_precise(portfolio.total_interest, st.session_state.privacy_mode)},
@@ -565,6 +575,17 @@ def main():
         
         # Render using the same KPI dashboard style
         st.markdown(render_kpi_dashboard(detailed_metrics, title=None), unsafe_allow_html=True)
+        
+        # Export Metrics
+        metrics_df = pd.DataFrame(detailed_metrics)
+        csv_data = metrics_df.to_csv(index=False)
+        st.download_button(
+            label="📥 Download Metrics CSV",
+            data=csv_data,
+            file_name=f"metrics_{datetime.now().date()}.csv",
+            mime="text/csv",
+            key="export_metrics"
+        )
     
     # ========== TAB 3: TRANSACTION HISTORY ==========
     with tab3:
@@ -634,6 +655,16 @@ def main():
                     filtered_df,
                     width='stretch',
                     hide_index=True
+                )
+                
+                # Export Transactions
+                csv_data = filtered_df.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Transactions CSV",
+                    data=csv_data,
+                    file_name=f"transactions_{datetime.now().date()}.csv",
+                    mime="text/csv",
+                    key="export_transactions"
                 )
                 
                 st.caption(f"Showing {len(filtered_df)} of {len(trans_df)} transactions")
@@ -745,6 +776,17 @@ def main():
                         pd.DataFrame(breakdown_data),
                         width='stretch',
                         hide_index=True
+                    )
+                    
+                    # Export Tax Breakdown
+                    breakdown_df = pd.DataFrame(breakdown_data)
+                    csv_data = breakdown_df.to_csv(index=False)
+                    st.download_button(
+                        label="📥 Download Breakdown CSV",
+                        data=csv_data,
+                        file_name=f"tax_breakdown_{selected_year}_{datetime.now().date()}.csv",
+                        mime="text/csv",
+                        key="export_tax_breakdown"
                     )
                 
                 # === DETAILED TAX EVENTS ===

@@ -146,7 +146,7 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
         try:
             data = yf.download(
                 mapped_tickers,
-                period='1d',
+                period='5d',
                 interval='1d',
                 group_by='ticker',
                 threads=False,
@@ -157,16 +157,31 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
             if len(mapped_tickers) == 1:
                 mapped_ticker = mapped_tickers[0]
                 original_ticker = ticker_map.get(mapped_ticker, mapped_ticker)
-                if not data.empty and 'Close' in data.columns:
-                    price = data['Close'].iloc[-1]
-                    if price is not None and not pd.isna(price):
-                        price_val = float(price)
-                        prices[original_ticker] = price_val
-                        cache.set_price(original_ticker, price_val, today)
-                        logger.info(f"{original_ticker}: {price_val:.2f}")
+                
+                # Check directly in data (single level columns for single ticker usually, but yf changed recently)
+                # yfinance 0.2+ returns MultiIndex even for single ticker if group_by='ticker'
+                
+                # Let's inspect data structure safely
+                target_data = data
+                if mapped_ticker in data.columns.levels[0]:
+                    target_data = data[mapped_ticker]
+                
+                if not target_data.empty and 'Close' in target_data.columns:
+                    # Use ffill to get last valid price (handles weekends/holidays with NaN rows)
+                    price_series = target_data['Close'].ffill()
+                    if not price_series.empty:
+                        price = price_series.iloc[-1]
+                        
+                        if price is not None and not pd.isna(price):
+                            price_val = float(price)
+                            prices[original_ticker] = price_val
+                            cache.set_price(original_ticker, price_val, today)
+                            logger.info(f"{original_ticker}: {price_val:.2f}")
+                        else:
+                            prices[original_ticker] = None
+                            logger.warning(f"{original_ticker}: No valid price found in last 5 days")
                     else:
-                        prices[original_ticker] = None
-                        logger.warning(f"{original_ticker}: No current price available")
+                         prices[original_ticker] = None
                 else:
                     prices[original_ticker] = None
                     logger.warning(f"{original_ticker}: Download failed")
@@ -178,15 +193,21 @@ def fetch_prices(tickers: List[str]) -> Dict[str, Optional[float]]:
                         if mapped_ticker in data.columns.levels[0]:
                             ticker_data = data[mapped_ticker]
                             if not ticker_data.empty and 'Close' in ticker_data.columns:
-                                price = ticker_data['Close'].iloc[-1]
-                                if price is not None and not pd.isna(price):
-                                    price_val = float(price)
-                                    prices[original_ticker] = price_val
-                                    cache.set_price(original_ticker, price_val, today)
-                                    logger.info(f"{original_ticker}: {price_val:.2f}")
+                                # Use ffill to get last valid price
+                                price_series = ticker_data['Close'].ffill()
+                                if not price_series.empty:
+                                    price = price_series.iloc[-1]
+                                    
+                                    if price is not None and not pd.isna(price):
+                                        price_val = float(price)
+                                        prices[original_ticker] = price_val
+                                        cache.set_price(original_ticker, price_val, today)
+                                        logger.info(f"{original_ticker}: {price_val:.2f}")
+                                    else:
+                                        prices[original_ticker] = None
+                                        logger.warning(f"{original_ticker}: No current price")
                                 else:
                                     prices[original_ticker] = None
-                                    logger.warning(f"{original_ticker}: No current price")
                             else:
                                 prices[original_ticker] = None
                                 logger.warning(f"{original_ticker}: No data in response")
@@ -444,11 +465,14 @@ def get_currency_for_ticker(ticker: str) -> str:
             return currency
     
     # 5. API lookup (only if not blacklisted)
+    logger.warning(f"[PERF] Currency for {ticker} not in cache - attempting API lookup (THIS IS SLOW!)")
     try:
         if not cache.is_blacklisted(ticker):
+            logger.info(f"[PERF] Calling yf.Ticker({ticker}) for currency lookup...")
             stock = yf.Ticker(ticker)
             # Try fast_info first
             try:
+                logger.info(f"[PERF] Accessing fast_info.currency for {ticker}...")
                 currency = stock.fast_info.currency
                 if currency:
                     currency = currency.upper()
@@ -469,9 +493,11 @@ def get_currency_for_ticker(ticker: str) -> str:
     except Exception as e:
         logger.debug(f"API currency lookup failed for {ticker}: {e}")
     
-    # 6. Default to USD (but do NOT cache this default)
-    logger.debug(f"Currency defaulted to USD for {ticker} (not cached)")
+    # 6. Default to USD and cache it to prevent repeated lookups
+    logger.debug(f"Currency defaulted to USD for {ticker} (caching default)")
+    cache.set_ticker_currency(ticker, "USD")
     return "USD"
+
 
 
 @st.cache_data(ttl=3600)  # Cache for 1 hour

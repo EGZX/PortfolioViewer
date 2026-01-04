@@ -182,7 +182,7 @@ class WeightedAverageStrategy(LotMatchingStrategy):
         open_lots: List[TaxLot]
     ) -> List[TaxEvent]:
         if not open_lots:
-            logger.warning(f"No open lots for {sell_transaction.ticker}")
+            logger.debug(f"No open lots for {sell_transaction.ticker}")
             return []
         
         # Weighted average: Single merged lot
@@ -190,7 +190,7 @@ class WeightedAverageStrategy(LotMatchingStrategy):
         
         qty_to_sell = min(sell_transaction.shares, merged_lot.quantity)
         
-        # Calculate proceeds and cost basis
+        # Calculate proceeds and Cost basis
         proceeds = abs(sell_transaction.total)
         
         # Cost basis portion for this sale (proportional to shares sold)
@@ -339,12 +339,12 @@ class TaxBasisEngine:
     
     def process_all_transactions(self):
         """Process all transactions and generate tax events."""
-        logger.info(f"Processing {len(self.transactions)} transactions with {self.strategy.get_method_name().value}")
+        logger.debug(f"Processing {len(self.transactions)} transactions with {self.strategy.get_method_name().value}")
         
         for txn in self.transactions:
             self.process_transaction(txn)
         
-        logger.info(f"Generated {len(self.realized_events)} tax events")
+        logger.debug(f"Generated {len(self.realized_events)} tax events")
     
     def process_transaction(self, txn: Transaction):
         """Process a single transaction."""

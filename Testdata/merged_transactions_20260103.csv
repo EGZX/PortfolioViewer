@@ -1,0 +1,2154 @@
+Date,Type,Ticker,ISIN,Name,Asset Type,Shares,Price,Total,Fees,Currency,Source
+2023-06-05 00:00:00,TransferIn,,,,Unknown,400.0,1.0,400.0,0.0,EUR,Unknown
+2023-06-06 00:00:00,TransferIn,,,,Unknown,555.37,1.0,555.37,0.0,EUR,Unknown
+2023-06-06 00:00:00,Buy,COIN,,Coinbase,Stock,6.0,44.3,-265.8,0.0,EUR,Unknown
+2023-06-06 00:00:00,Sell,COIN,,Coinbase,Stock,6.0,45.13,270.78,0.0,EUR,Unknown
+2023-06-07 00:00:00,TransferIn,,,,Unknown,1.0,1.0,1.0,0.0,EUR,Unknown
+2023-06-07 00:00:00,Buy,SRXIF,,iShares MSCI World SRI UCITS ETF - USD DIS,Stock,35.0,7.32,-256.03,0.0,EUR,Unknown
+2023-06-08 00:00:00,TransferIn,,,,Unknown,663.7,1.0,663.7,0.0,EUR,Unknown
+2023-06-09 00:00:00,Buy,DE000A14KRD3,,Deutsche Konsum REIT,Stock,40.0,6.8,-272.0,0.0,EUR,Unknown
+2023-06-09 00:00:00,Buy,LU1437018838,,Amundi Index FTSE EPRA NAREIT Global UCITS ETF - DR EUR ACC,Stock,5.0,58.0,-290.0,0.0,EUR,Unknown
+2023-06-09 00:00:00,Buy,AMT,,American Tower,Stock,2.0,174.9,-349.8,0.0,EUR,Unknown
+2023-06-12 00:00:00,TransferIn,,,,Unknown,697.55,1.0,697.55,0.0,EUR,Unknown
+2023-06-12 00:00:00,TransferIn,,,,Unknown,80.0,1.0,80.0,0.0,EUR,Unknown
+2023-06-12 00:00:00,Buy,IPHSF,,Invesco Physical Gold ETC,Stock,0.284,175.96,-49.97,0.0,EUR,Unknown
+2023-06-12 00:00:00,Buy,CHEF,,Chefs Warehouse,Stock,9.0,30.2,-271.8,0.0,EUR,Unknown
+2023-06-12 00:00:00,Buy,EUXTF,,Euronext,Stock,4.0,64.35,-257.4,0.0,EUR,Unknown
+2023-06-12 00:00:00,Sell,SRXIF,,iShares MSCI World SRI UCITS ETF - USD DIS,Stock,35.0,7.32,256.06,0.0,EUR,Unknown
+2023-06-12 00:00:00,Buy,TX,,Ternium (ADR),Stock,7.0,38.2,-267.4,0.0,EUR,Unknown
+2023-06-13 00:00:00,TransferIn,,,,Unknown,350.0,1.0,350.0,0.0,EUR,Unknown
+2023-06-13 00:00:00,Buy,IVVPF,,iShares Core EURO STOXX 50 UCITS ETF - ACC,Stock,0.515,155.1,-79.88,0.0,EUR,Unknown
+2023-06-13 00:00:00,Buy,IE00BYX2JD69,,iShares MSCI World SRI UCITS ETF - EUR ACC,Stock,26.329,9.49,-249.99,0.0,EUR,Unknown
+2023-06-13 00:00:00,Buy,IE000GOJO2A3,,Vanguard ESG Developed Asia Pacific All Cap UCITS ETF (USD) Accumulating,Stock,3.454,5.79,-20.0,0.0,EUR,Unknown
+2023-06-13 00:00:00,Buy,VGFPF,,Vanguard S&P 500 UCITS ETF - USD ACC,Stock,1.33,75.16,-99.97,0.0,EUR,Unknown
+2023-06-13 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,30.0,8.46,-253.8,0.0,EUR,Unknown
+2023-06-13 00:00:00,Buy,IIPR,,Innovative Industrial Properties,Stock,4.0,66.8,-267.2,0.0,EUR,Unknown
+2023-06-14 00:00:00,Sell,HIMS,,Hims & Hers Health,Stock,30.0,8.14,244.2,0.99,EUR,Unknown
+2023-06-15 00:00:00,TransferIn,,,,Unknown,250.0,1.0,250.0,0.0,EUR,Unknown
+2023-06-15 00:00:00,Buy,NATKY,,NAC Kazatomprom GDR,Stock,10.0,25.5,-255.0,0.0,EUR,Unknown
+2023-06-19 00:00:00,Sell,AMT,,American Tower,Stock,2.0,176.3,352.6,0.0,EUR,Unknown
+2023-06-19 00:00:00,Sell,VGFPF,,Vanguard S&P 500 UCITS ETF - USD ACC,Stock,1.33,75.51,100.43,0.99,EUR,Unknown
+2023-06-19 00:00:00,Sell,IVVPF,,iShares Core EURO STOXX 50 UCITS ETF - ACC,Stock,0.515,156.68,80.69,0.99,EUR,Unknown
+2023-06-19 00:00:00,Sell,IE000GOJO2A3,,Vanguard ESG Developed Asia Pacific All Cap UCITS ETF (USD) Accumulating,Stock,3.454,5.71,19.71,0.99,EUR,Unknown
+2023-06-19 00:00:00,Buy,US85859N1028,,Stem Inc. A,Stock,50.0,5.49,-274.5,0.0,EUR,Unknown
+2023-06-19 00:00:00,Sell,IPHSF,,Invesco Physical Gold ETC,Stock,0.284,172.35,48.95,0.99,EUR,Unknown
+2023-06-19 00:00:00,Buy,GB00B1XZS820,,Anglo American,Stock,8.807339449541285,33.40395833333333,-294.2,0.0,EUR,Unknown
+2023-06-19 00:00:00,Buy,BHPLF,,BHP,Stock,9.0,28.96,-260.64,0.0,EUR,Unknown
+2023-06-19 00:00:00,Sell,IE00BYX2JD69,,iShares MSCI World SRI UCITS ETF - EUR ACC,Stock,26.329,9.51,250.26,0.0,EUR,Unknown
+2023-06-20 00:00:00,Buy,SSWRF,,SPDR MSCI World UCITS ETF - USD ACC,Stock,10.0,27.92,-279.17,0.0,EUR,Unknown
+2023-06-21 00:00:00,TransferIn,,,,Unknown,300.0,1.0,300.0,0.0,EUR,Unknown
+2023-06-21 00:00:00,Buy,BTAFF,,British American Tobacco,Stock,10.0,30.0,-300.0,0.0,EUR,Unknown
+2023-06-26 00:00:00,TransferIn,,,,Unknown,700.0,1.0,700.0,0.0,EUR,Unknown
+2023-06-26 00:00:00,Buy,STLA,,Stellantis N.V.,Stock,20.0,15.29,-305.8,0.0,EUR,Unknown
+2023-06-26 00:00:00,Buy,DE000A0LAUP1,,CropEnergies AG,Stock,30.0,9.89,-296.7,0.0,EUR,Unknown
+2023-06-28 00:00:00,TransferIn,,,,Unknown,1050.0,1.0,1050.0,0.0,EUR,Unknown
+2023-06-28 00:00:00,Buy,KR,,Kroger,Stock,6.0,42.86,-257.16,0.0,EUR,Unknown
+2023-06-28 00:00:00,Buy,SBYSF,,Sibanye Stillwater,Stock,200.0,1.39,-278.0,0.0,EUR,Unknown
+2023-06-28 00:00:00,Buy,ENPH,,Enphase Energy,Stock,2.0,149.94,-299.88,0.0,EUR,Unknown
+2023-06-28 00:00:00,Buy,ABCL,,AbCellera,Stock,45.0,5.99,-269.73,0.0,EUR,Unknown
+2023-06-28 00:00:00,Sell,IIPR,,Innovative Industrial Properties,Stock,4.0,68.35,273.4,0.0,EUR,Unknown
+2023-06-29 00:00:00,Buy,HOEGF,,Höegh Autoliners,Stock,55.0,4.98,-273.79,0.0,EUR,Unknown
+2023-07-03 00:00:00,TransferIn,,,,Unknown,608.0,1.0,608.0,0.0,EUR,Unknown
+2023-07-03 00:00:00,Interest,,,,Unknown,1.23,1.0,1.23,0.0,EUR,Unknown
+2023-07-03 00:00:00,Buy,DE000A1TNUT7,,Deutsche Beteiligung,Stock,9.0,28.95,-260.55,0.0,EUR,Unknown
+2023-07-03 00:00:00,Buy,ASTVF,,Austevoll Seafood,Stock,45.0,6.38,-286.88,0.0,EUR,Unknown
+2023-07-04 00:00:00,TransferIn,,,,Unknown,434.56,1.0,434.56,0.0,EUR,Unknown
+2023-07-04 00:00:00,Sell,LU1437018838,,Amundi Index FTSE EPRA NAREIT Global UCITS ETF - DR EUR ACC,Stock,5.0,58.01,290.05,0.0,EUR,Unknown
+2023-07-04 00:00:00,Buy,CLIQ.DE,,CLIQ Digital,Stock,11.0,24.55,-270.05,0.0,EUR,Unknown
+2023-07-05 00:00:00,Buy,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,4.925,-295.5,0.0,EUR,Unknown
+2023-07-06 00:00:00,TransferIn,,,,Unknown,40.0,1.0,40.0,0.0,EUR,Unknown
+2023-07-07 00:00:00,TransferIn,,,,Unknown,150.0,1.0,150.0,0.0,EUR,Unknown
+2023-07-10 00:00:00,Dividend,AMT,,American Tower,Stock,2.0,1.43,2.85,0.0,EUR,Unknown
+2023-07-10 00:00:00,Buy,SSWRF,,SPDR MSCI World UCITS ETF - USD ACC,Stock,5.431,27.61,-149.98,0.0,EUR,Unknown
+2023-07-10 00:00:00,Buy,ISAPF,,iShares Core MSCI EM IMI UCITS ETF - USD ACC,Stock,5.465,27.44,-149.98,0.0,EUR,Unknown
+2023-07-12 00:00:00,TransferIn,,,,Unknown,160.0,1.0,160.0,0.0,EUR,Unknown
+2023-07-12 00:00:00,Buy,ALFNF,,Alfen,Stock,5.0,55.4,-277.0,0.0,EUR,Unknown
+2023-07-12 00:00:00,Sell,DE000A14KRD3,,Deutsche Konsum REIT,Stock,40.0,6.22,248.8,0.99,EUR,Unknown
+2023-07-12 00:00:00,Buy,YRAIF,,Yara International,Stock,8.0,35.0,-280.0,0.0,EUR,Unknown
+2023-07-14 00:00:00,Dividend,DE000A0LAUP1,,CropEnergies AG,Stock,30.0,0.6,18.0,0.0,EUR,Unknown
+2023-07-27 00:00:00,Dividend,NATKY,,NAC Kazatomprom GDR,Stock,10.0,1.58,15.79,0.0,EUR,Unknown
+2023-08-10 00:00:00,TransferIn,,,,Unknown,500.0,1.0,500.0,0.0,EUR,Unknown
+2023-08-11 00:00:00,Buy,VZ,,Verizon,Stock,9.0,30.14,-271.22,0.0,EUR,Unknown
+2023-08-11 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,40.0,6.58,-263.2,0.0,EUR,Unknown
+2023-08-14 00:00:00,Sell,SSWRF,,SPDR MSCI World UCITS ETF - USD ACC,Stock,15.431,28.15,434.38,0.0,EUR,Unknown
+2023-08-14 00:00:00,Sell,ISAPF,,iShares Core MSCI EM IMI UCITS ETF - USD ACC,Stock,5.465,27.78,151.83,0.99,EUR,Unknown
+2023-08-14 00:00:00,Buy,STNE,,StoneCo,Stock,21.0,12.56,-263.76,0.0,EUR,Unknown
+2023-08-14 00:00:00,Buy,ADRZF,,Andritz,Stock,6.0,46.0,-276.0,0.0,EUR,Unknown
+2023-08-16 00:00:00,Interest,,,,Unknown,1.23,-1.0,-1.23,0.0,EUR,Unknown
+2023-08-16 00:00:00,Interest,,,,Unknown,1.23,1.0,1.23,0.0,EUR,Unknown
+2023-08-18 00:00:00,Dividend,BTAFF,,British American Tobacco,Stock,10.0,0.67,6.73,0.0,EUR,Unknown
+2023-08-31 00:00:00,Dividend,HOEGF,,Höegh Autoliners,Stock,55.0,0.32,17.56,0.0,EUR,Unknown
+2023-09-01 00:00:00,Dividend,KR,,Kroger,Stock,6.0,0.27,1.61,0.0,EUR,Unknown
+2023-09-11 00:00:00,Dividend,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,0.001335,0.08,0.0,EUR,Unknown
+2023-09-11 00:00:00,Dividend,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,0.06,3.74,0.0,EUR,Unknown
+2023-09-11 00:00:00,Dividend,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,0.0003335,0.02,0.0,EUR,Unknown
+2023-09-11 00:00:00,Dividend,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,0.01365,0.82,0.0,EUR,Unknown
+2023-09-19 00:00:00,TransferIn,,,,Unknown,500.0,1.0,500.0,0.0,EUR,Unknown
+2023-09-20 00:00:00,Buy,OPEN,,Opendoor,Stock,82.0,3.11,-255.1,0.0,EUR,Unknown
+2023-09-21 00:00:00,TransferIn,,,,Unknown,305.75,1.0,305.75,0.0,EUR,Unknown
+2023-09-21 00:00:00,TransferIn,DE000A35JS40,,Cliq Digital,Stock,11.0,24.55,270.05,0.0,EUR,Unknown
+2023-09-21 00:00:00,TransferOut,CLIQ.DE,,CLIQ Digital,Stock,11.0,0.0,0.0,0.0,EUR,Unknown
+2023-09-21 00:00:00,Buy,SEDG,,SolarEdge Technologies,Stock,2.0,129.66,-259.32,0.0,EUR,Unknown
+2023-09-21 00:00:00,Buy,VLXGF,,VOLEX,Stock,70.0,3.78,-264.6,0.0,EUR,Unknown
+2023-09-26 00:00:00,Dividend,GB00B1XZS820,,Anglo American,Stock,8.807339449541285,0.5677083333333333,5.02,0.0,EUR,Unknown
+2023-09-26 00:00:00,Dividend,SBYSF,,Sibanye Stillwater,Stock,200.0,0.0262,5.24,0.0,EUR,Unknown
+2023-09-28 00:00:00,Dividend,BHPLF,,BHP,Stock,9.0,0.76,6.83,0.0,EUR,Unknown
+2023-09-29 00:00:00,TransferIn,,,,Unknown,571.63,1.0,571.63,0.0,EUR,Unknown
+2023-09-29 00:00:00,Buy,TSLA,,Tesla,Stock,2.0,238.45,-476.9,0.0,EUR,Unknown
+2023-10-05 00:00:00,TransferIn,,,,Unknown,317.89,1.0,317.89,0.0,EUR,Unknown
+2023-10-10 00:00:00,Dividend,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,0.03085,1.85,0.0,EUR,Unknown
+2023-10-10 00:00:00,Buy,STNE,,StoneCo,Stock,27.0,9.5,-256.5,0.0,EUR,Unknown
+2023-10-10 00:00:00,Buy,BTEAF,,Beneteau,Stock,22.0,11.88,-261.36,0.0,EUR,Unknown
+2023-10-12 00:00:00,Sell,HOEGF,,Höegh Autoliners,Stock,55.0,7.16,393.8,0.0,EUR,Unknown
+2023-10-12 00:00:00,Buy,CMBM,,Cambium Networks,Stock,52.0,5.0,-260.0,0.0,EUR,Unknown
+2023-10-16 00:00:00,Sell,ASTVF,,Austevoll Seafood,Stock,45.0,6.48,291.38,0.0,EUR,Unknown
+2023-10-16 00:00:00,Buy,ENPH,,Enphase Energy,Stock,3.0,114.82,-344.46,0.0,EUR,Unknown
+2023-10-23 00:00:00,TransferIn,,,,Unknown,473.92,1.0,473.92,0.0,EUR,Unknown
+2023-10-23 00:00:00,Buy,ALB,,Albemarle Corporation,Stock,2.0,128.98,-257.96,0.0,EUR,Unknown
+2023-10-23 00:00:00,Buy,TSM,,TSMC (ADR),Stock,3.0,85.7,-257.1,0.0,EUR,Unknown
+2023-11-01 00:00:00,TransferIn,,,,Unknown,1640.28,1.0,1640.28,0.0,EUR,Unknown
+2023-11-01 00:00:00,Dividend,VZ,,Verizon,Stock,9.0,0.63,5.63,0.0,EUR,Unknown
+2023-11-02 00:00:00,Buy,SGACF,,SPDR MSCI ACWI IMI UCITS ETF - USD ACC,Stock,8.0,172.74,-1381.92,0.0,EUR,Unknown
+2023-11-02 00:00:00,Buy,BRPETRACNPR6,,Petrobras (Vz),Stock,40.0,6.92,-276.76,0.0,EUR,Unknown
+2023-11-03 00:00:00,TransferIn,,,,Unknown,480.93,1.0,480.93,0.0,EUR,Unknown
+2023-11-03 00:00:00,Dividend,BTAFF,,British American Tobacco,Stock,10.0,0.66,6.63,0.0,EUR,Unknown
+2023-11-03 00:00:00,Buy,PROSF,,Prosus,Stock,9.0,28.37,-255.33,0.0,EUR,Unknown
+2023-11-03 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,3.0,86.0,-258.0,0.0,EUR,Unknown
+2023-11-08 00:00:00,TransferIn,,,,Unknown,1762.97,1.0,1762.97,0.0,EUR,Unknown
+2023-11-08 00:00:00,Buy,TMDX,,TRANSMEDICS GROUP,Stock,5.0,57.6,-288.0,0.0,EUR,Unknown
+2023-11-08 00:00:00,Buy,DE000A35JS40,,Cliq Digital,Stock,17.0,15.48,-263.16,0.0,EUR,Unknown
+2023-11-08 00:00:00,Buy,ABNB,,Airbnb,Stock,3.0,108.96,-326.88,0.0,EUR,Unknown
+2023-11-08 00:00:00,Buy,RWSPF,,RWS Holdings,Stock,98.0,2.62,-256.76,0.0,EUR,Unknown
+2023-11-08 00:00:00,Buy,SGACF,,SPDR MSCI ACWI IMI UCITS ETF - USD ACC,Stock,3.0,174.12,-522.36,0.0,EUR,Unknown
+2023-11-13 00:00:00,TransferIn,,,,Unknown,982.89,1.0,982.89,0.0,EUR,Unknown
+2023-11-13 00:00:00,Buy,INMD,,InMode,Stock,14.0,18.85,-263.9,0.0,EUR,Unknown
+2023-11-13 00:00:00,Buy,AMSYF,,ArcelorMittal,Stock,13.0,20.46,-265.98,0.0,EUR,Unknown
+2023-11-13 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,40.0,6.54,-261.6,0.0,EUR,Unknown
+2023-11-13 00:00:00,Buy,BMY,,Bristol Myers Squibb,Stock,6.0,47.1,-282.6,0.0,EUR,Unknown
+2023-11-14 00:00:00,TransferIn,,,,Unknown,989.88,1.0,989.88,0.0,EUR,Unknown
+2023-11-15 00:00:00,Buy,INCY,,Incyte Co.,Stock,6.0,50.54,-303.24,0.0,EUR,Unknown
+2023-11-15 00:00:00,Buy,SE,,Sea (ADR),Stock,8.0,33.7,-269.6,0.0,EUR,Unknown
+2023-11-15 00:00:00,Buy,ENPH,,Enphase Energy,Stock,3.0,88.84,-266.52,0.0,EUR,Unknown
+2023-11-21 00:00:00,TransferIn,,,,Unknown,951.59,1.0,951.59,0.0,EUR,Unknown
+2023-11-21 00:00:00,Dividend,TX,,Ternium (ADR),Stock,7.0,1.01,7.04,0.0,EUR,Unknown
+2023-11-22 00:00:00,Buy,BUR,,Burford Capital,Stock,20.0,13.1,-262.0,0.0,EUR,Unknown
+2023-11-22 00:00:00,Buy,CFR,,Cullen/Frost Bankers,Stock,3.0,91.0,-273.0,0.0,EUR,Unknown
+2023-11-22 00:00:00,Buy,NU,,Nubank,Stock,40.0,7.49,-299.44,0.0,EUR,Unknown
+2023-11-22 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,37.0,7.4,-273.8,0.0,EUR,Unknown
+2023-11-24 00:00:00,Sell,ADRZF,,Andritz,Stock,6.0,48.96,293.76,0.0,EUR,Unknown
+2023-11-24 00:00:00,Buy,STNE,,StoneCo,Stock,23.0,13.29,-305.67,0.0,EUR,Unknown
+2023-11-28 00:00:00,TransferIn,,,,Unknown,2823.5,1.0,2823.5,0.0,EUR,Unknown
+2023-11-28 00:00:00,Buy,STLA,,Stellantis N.V.,Stock,14.0,18.73,-262.22,0.0,EUR,Unknown
+2023-11-28 00:00:00,Buy,CAT,,Caterpillar,Stock,2.0,225.0,-450.0,0.0,EUR,Unknown
+2023-11-28 00:00:00,Buy,PYPL,,PayPal Holdings,Stock,5.0,53.12,-265.6,0.0,EUR,Unknown
+2023-11-28 00:00:00,Buy,FTNT,,Fortinet,Stock,6.0,48.48,-290.85,0.0,EUR,Unknown
+2023-11-28 00:00:00,Buy,AGCO,,AGCO Corporation,Stock,3.0,103.5,-310.5,0.0,EUR,Unknown
+2023-11-28 00:00:00,Buy,VLO,,Valero Energy,Stock,3.0,114.8,-344.4,0.0,EUR,Unknown
+2023-11-28 00:00:00,Buy,CSCO,,Cisco Systems,Stock,6.0,43.65,-261.9,0.0,EUR,Unknown
+2023-11-28 00:00:00,Buy,TSLA,,Tesla,Stock,2.0,220.9,-441.8,0.0,EUR,Unknown
+2023-11-30 00:00:00,TransferIn,,,,Unknown,1951.04,1.0,1951.04,0.0,EUR,Unknown
+2023-11-30 00:00:00,Dividend,KSPI,,Kaspi.kz,Stock,3.0,1.71,5.13,0.0,EUR,Unknown
+2023-11-30 00:00:00,Buy,CRWD,,Crowdstrike A,Stock,2.0,216.9,-433.8,0.0,EUR,Unknown
+2023-11-30 00:00:00,Buy,TSLA,,Tesla,Stock,2.0,219.95,-439.9,0.0,EUR,Unknown
+2023-11-30 00:00:00,Buy,STNE,,StoneCo,Stock,18.0,14.32,-257.76,0.0,EUR,Unknown
+2023-11-30 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,32.0,8.14,-260.48,0.0,EUR,Unknown
+2023-11-30 00:00:00,Buy,SGACF,,SPDR MSCI ACWI IMI UCITS ETF - USD ACC,Stock,4.0,178.82,-715.28,0.0,EUR,Unknown
+2023-12-01 00:00:00,Dividend,KR,,Kroger,Stock,6.0,0.27,1.6,0.0,EUR,Unknown
+2023-12-11 00:00:00,Dividend,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,0.00965,0.58,0.0,EUR,Unknown
+2023-12-11 00:00:00,Dividend,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,0.065,3.89,0.0,EUR,Unknown
+2023-12-13 00:00:00,Sell,OPEN,,Opendoor,Stock,82.0,3.65,299.3,0.0,EUR,Unknown
+2023-12-13 00:00:00,Buy,ENPH,,Enphase Energy,Stock,3.0,97.89,-293.67,0.0,EUR,Unknown
+2023-12-15 00:00:00,Dividend,CFR,,Cullen/Frost Bankers,Stock,3.0,0.84,2.52,0.0,EUR,Unknown
+2023-12-15 00:00:00,Sell,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,4.9,294.0,0.0,EUR,Unknown
+2023-12-15 00:00:00,Buy,BTAFF,,British American Tobacco,Stock,13.0,27.17,-353.21,0.0,EUR,Unknown
+2023-12-19 00:00:00,TransferIn,,,,Unknown,1215.59,1.0,1215.59,0.0,EUR,Unknown
+2023-12-19 00:00:00,Buy,JPM,,JPMorgan Chase & Co.,Stock,2.0,152.0,-304.0,0.0,EUR,Unknown
+2023-12-19 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,4.0,124.3,-497.2,0.0,EUR,Unknown
+2023-12-19 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,1.0,330.2,-330.2,0.0,EUR,Unknown
+2023-12-19 00:00:00,Sell,ABNB,,Airbnb,Stock,3.0,134.34,403.02,0.0,EUR,Unknown
+2023-12-19 00:00:00,Buy,DHR,,Danaher,Stock,2.0,207.2,-414.4,0.0,EUR,Unknown
+2023-12-20 00:00:00,Sell,RWSPF,,RWS Holdings,Stock,98.0,2.8,274.4,0.0,EUR,Unknown
+2023-12-20 00:00:00,Buy,GA0000121459,,Total Gabon,Stock,2.0,157.4,-314.8,0.0,EUR,Unknown
+2023-12-22 00:00:00,Sell,DE000A0LAUP1,,CropEnergies AG,Stock,30.0,11.5,345.0,0.0,EUR,Unknown
+2023-12-22 00:00:00,Sell,VZ,,Verizon,Stock,9.0,33.84,304.56,0.0,EUR,Unknown
+2023-12-22 00:00:00,Buy,INMD,,InMode,Stock,13.0,20.88,-271.44,0.0,EUR,Unknown
+2023-12-22 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,3.0,127.54,-382.62,0.0,EUR,Unknown
+2023-12-27 00:00:00,TransferIn,,,,Unknown,4144.67,1.0,4144.67,0.0,EUR,Unknown
+2023-12-27 00:00:00,TransferOut,,,,Unknown,4.99,1.0,4.99,0.0,EUR,Unknown
+2023-12-27 00:00:00,TransferOut,,,,Unknown,20.93,1.0,20.93,0.0,EUR,Unknown
+2023-12-27 00:00:00,Sell,CMBM,,Cambium Networks,Stock,52.0,5.25,273.0,0.0,EUR,Unknown
+2023-12-27 00:00:00,Sell,GOOGL,,Alphabet 'A',Stock,7.0,127.94,895.58,0.0,EUR,Unknown
+2023-12-27 00:00:00,Sell,YRAIF,,Yara International,Stock,8.0,32.1,256.8,0.0,EUR,Unknown
+2023-12-28 00:00:00,TransferIn,,,,Unknown,250.0,1.0,250.0,0.0,EUR,Unknown
+2023-12-28 00:00:00,Buy,XS2330514899,,"2,75% Rumänien Anleihe (2041)",Stock,1.0755,67.76,-72.88,1.0,EUR,Unknown
+2023-12-28 00:00:00,Dividend,XS2330514899,,"2,75% Rumänien Anleihe (2041)",Stock,1.0755,-1.98,-2.13,0.0,EUR,Unknown
+2023-12-28 00:00:00,TransferIn,TSLA,,Tesla,Stock,0.0435,233.79,10.17,0.0,EUR,Unknown
+2023-12-29 00:00:00,Interest,,,,Unknown,1.43,1.0,1.43,0.0,EUR,Unknown
+2023-12-29 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,3.0,141.24,-423.72,0.0,EUR,Unknown
+2023-12-29 00:00:00,Sell,BTEAF,,Beneteau,Stock,22.0,12.5,275.0,0.0,EUR,Unknown
+2024-01-02 00:00:00,Dividend,ALB,,Albemarle Corporation,Stock,2.0,0.37,0.73,0.0,EUR,Unknown
+2024-01-02 00:00:00,Sell,DE000A1TNUT7,,Deutsche Beteiligung,Stock,9.0,29.6,266.4,0.0,EUR,Unknown
+2024-01-02 00:00:00,Sell,DE000A35JS40,,Cliq Digital,Stock,28.0,20.0,560.0,0.0,EUR,Unknown
+2024-01-02 00:00:00,Buy,HOEGF,,Höegh Autoliners,Stock,60.0,8.38,-502.5,0.0,EUR,Unknown
+2024-01-02 00:00:00,Buy,INGR,,Ingredion,Stock,5.0,98.8,-494.0,0.0,EUR,Unknown
+2024-01-03 00:00:00,TransferOut,,,,Unknown,5200.0,1.0,5200.0,0.0,EUR,Unknown
+2024-01-04 00:00:00,Sell,CFR,,Cullen/Frost Bankers,Stock,3.0,96.5,289.5,0.0,EUR,Unknown
+2024-01-04 00:00:00,Sell,CAT,,Caterpillar,Stock,2.0,262.0,524.0,0.0,EUR,Unknown
+2024-01-04 00:00:00,Buy,BPAQF,,BP,Stock,92.0,5.52,-507.38,0.0,EUR,Unknown
+2024-01-04 00:00:00,Buy,ABMRF,,ABN AMRO Bank,Stock,29.0,13.7,-397.16,0.0,EUR,Unknown
+2024-01-08 00:00:00,Dividend,BDORY,,BANCO DO BRASIL ADR,Stock,60.0,0.03185,1.91,0.0,EUR,Unknown
+2024-01-10 00:00:00,Dividend,VLXGF,,VOLEX,Stock,70.0,0.0161,1.13,0.0,EUR,Unknown
+2024-01-10 00:00:00,Sell,INCY,,Incyte Co.,Stock,6.0,58.96,353.76,0.0,EUR,Unknown
+2024-01-11 00:00:00,Dividend,TSM,,TSMC (ADR),Stock,3.0,0.44,1.32,0.0,EUR,Unknown
+2024-01-12 00:00:00,Sell,BHPLF,,BHP,Stock,9.0,28.83,259.43,0.0,EUR,Unknown
+2024-01-15 00:00:00,Buy,MSTR,,Strategy,Stock,10.0,43.56,-435.6,0.0,EUR,Unknown
+2024-01-16 00:00:00,Dividend,XS2330514899,,"2,75% Rumänien Anleihe (2041)",Stock,3.2265,2.1,6.76,0.0,EUR,Unknown
+2024-01-16 00:00:00,Sell,TSLA,,Tesla,Stock,0.0435,201.84,8.78,1.0,EUR,Unknown
+2024-01-16 00:00:00,Sell,XS2330514899,,"2,75% Rumänien Anleihe (2041)",Stock,3.2265,65.62,211.72,1.0,EUR,Unknown
+2024-01-17 00:00:00,TransferOut,,,,Unknown,247.23,1.0,247.23,0.0,EUR,Unknown
+2024-01-18 00:00:00,Sell,NATKY,,NAC Kazatomprom GDR,Stock,10.0,42.1,421.0,0.0,EUR,Unknown
+2024-01-18 00:00:00,Buy,BAESF,,BAE Systems,Stock,40.0,13.97,-558.8,0.0,EUR,Unknown
+2024-01-23 00:00:00,TransferOut,,,,Unknown,4.99,1.0,4.99,0.0,EUR,Unknown
+2024-01-24 00:00:00,Dividend,CSCO,,Cisco Systems,Stock,6.0,0.36,2.15,0.0,EUR,Unknown
+2024-01-26 00:00:00,Dividend,DHR,,Danaher,Stock,2.0,0.22,0.44,0.0,EUR,Unknown
+2024-01-31 00:00:00,Interest,,,,Unknown,0.13,1.0,0.13,0.0,EUR,Unknown
+2024-01-31 00:00:00,Dividend,JPM,,JPMorgan Chase & Co.,Stock,2.0,0.97,1.94,0.0,EUR,Unknown
+2024-02-01 00:00:00,TransferIn,,,,Unknown,2900.0,1.0,2900.0,0.0,EUR,Unknown
+2024-02-01 00:00:00,Dividend,BTAFF,,British American Tobacco,Stock,23.0,0.67,15.5,0.0,EUR,Unknown
+2024-02-01 00:00:00,Dividend,BMY,,Bristol Myers Squibb,Stock,6.0,0.56,3.35,0.0,EUR,Unknown
+2024-02-02 00:00:00,Buy,ADM,,Archer Daniels Mid,Stock,6.0,52.4,-314.4,0.0,EUR,Unknown
+2024-02-02 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,8.0,69.01,-552.08,0.0,EUR,Unknown
+2024-02-02 00:00:00,Sell,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,3.0,153.81,461.43,0.0,EUR,Unknown
+2024-02-02 00:00:00,Buy,FR0010342592,,Amundi Nasdaq-100 Daily (2x) Leveraged UCITS ETF (Acc),Stock,1.0,906.3,-906.3,0.0,EUR,Unknown
+2024-02-02 00:00:00,Buy,SGACF,,SPDR MSCI ACWI IMI UCITS ETF - USD ACC,Stock,5.0,191.68,-958.4,0.0,EUR,Unknown
+2024-02-02 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,2.0,127.8,-255.6,0.0,EUR,Unknown
+2024-02-02 00:00:00,Buy,GB00B10RZP78,,Unilever,Stock,8.0,51.075,-408.6,0.0,EUR,Unknown
+2024-02-02 00:00:00,Sell,FR0010342592,,Amundi Nasdaq-100 Daily (2x) Leveraged UCITS ETF (Acc),Stock,1.0,910.4,910.4,0.0,EUR,Unknown
+2024-02-02 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,5.0,156.31,-781.55,0.0,EUR,Unknown
+2024-02-04 00:00:00,TransferOut,,,,Unknown,0.13,1.0,0.13,0.0,EUR,Unknown
+2024-02-05 00:00:00,Sell,CHEF,,Chefs Warehouse,Stock,9.0,30.8,277.2,0.0,EUR,Unknown
+2024-02-05 00:00:00,Buy,JD,,JD.com (ADR),Stock,13.0,20.95,-272.35,0.0,EUR,Unknown
+2024-02-06 00:00:00,TransferIn,,,,Unknown,269.97,1.0,269.97,0.0,EUR,Unknown
+2024-02-06 00:00:00,Buy,KMTUF,,Komatsu,Stock,15.0,27.09,-406.35,0.0,EUR,Unknown
+2024-02-07 00:00:00,Sell,SEDG,,SolarEdge Technologies,Stock,2.0,70.67,141.34,0.99,EUR,Unknown
+2024-02-07 00:00:00,Sell,ABCL,,AbCellera,Stock,45.0,4.6,207.09,0.99,EUR,Unknown
+2024-02-07 00:00:00,Sell,JD,,JD.com (ADR),Stock,13.0,21.4,278.2,0.0,EUR,Unknown
+2024-02-07 00:00:00,Buy,JDCMF,,JD.com A,Stock,27.0,10.77,-290.79,0.0,EUR,Unknown
+2024-02-07 00:00:00,Buy,BABAF,,Alibaba Group Holding Ltd.,Stock,40.0,8.64,-345.44,0.0,EUR,Unknown
+2024-02-12 00:00:00,Sell,KR,,Kroger,Stock,6.0,42.5,255.0,0.0,EUR,Unknown
+2024-02-12 00:00:00,Buy,PSKOF,,ORLEN,Stock,17.0,15.74,-267.51,0.0,EUR,Unknown
+2024-02-16 00:00:00,Sell,BUR,,Burford Capital,Stock,20.0,14.0,280.0,0.0,EUR,Unknown
+2024-02-16 00:00:00,Buy,LNTH,,Lantheus Hldg.,Stock,5.0,53.16,-265.8,0.0,EUR,Unknown
+2024-02-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,40.0,0.001,0.04,0.0,EUR,Unknown
+2024-02-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,40.0,0.0453,1.81,0.0,EUR,Unknown
+2024-02-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,40.0,0.0005,0.02,0.0,EUR,Unknown
+2024-02-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,40.0,0.08,3.2,0.0,EUR,Unknown
+2024-02-23 00:00:00,TransferOut,,,,Unknown,4.99,1.0,4.99,0.0,EUR,Unknown
+2024-02-29 00:00:00,Dividend,ADM,,Archer Daniels Mid,Stock,6.0,0.46,2.75,0.0,EUR,Unknown
+2024-02-29 00:00:00,Sell,HIMS,,Hims & Hers Health,Stock,65.0,12.0,780.0,0.0,EUR,Unknown
+2024-03-01 00:00:00,TransferIn,,,,Unknown,2500.0,1.0,2500.0,0.0,EUR,Unknown
+2024-03-04 00:00:00,Dividend,VLO,,Valero Energy,Stock,3.0,0.98,2.94,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,NVDA,,NVIDIA,Stock,10.0,77.15,-771.5,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,DE000HS3XCH7,,HSBC Trinkaus & Burkhardt GmbH Call 20.12.24 Crowdstr 400,Stock,100.0,3.06,-306.0,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,2.0,175.21,-350.42,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,STNE,,StoneCo,Stock,19.0,15.4,-292.6,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,1211.HK,,BYD,Stock,39.0,7.403333333333333,-288.66,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,4.0,78.14,-312.56,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,LNTH,,Lantheus Hldg.,Stock,5.0,60.72,-303.6,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,TMDX,,TRANSMEDICS GROUP,Stock,4.0,79.5,-318.0,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,ARKK,,Arista Networks,Stock,1.0,267.3,-267.3,0.0,EUR,Unknown
+2024-03-04 00:00:00,Sell,BMY,,Bristol Myers Squibb,Stock,6.0,46.95,281.7,0.0,EUR,Unknown
+2024-03-04 00:00:00,Sell,AGCO,,AGCO Corporation,Stock,3.0,101.25,303.75,0.0,EUR,Unknown
+2024-03-04 00:00:00,Sell,ADM,,Archer Daniels Mid,Stock,6.0,48.9,293.4,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,DE,,Deere & Co.,Stock,1.0,335.8,-335.8,0.0,EUR,Unknown
+2024-03-04 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,37.0,13.5,-499.5,0.0,EUR,Unknown
+2024-03-05 00:00:00,Dividend,HOEGF,,Höegh Autoliners,Stock,60.0,1.74,104.65,0.0,EUR,Unknown
+2024-03-06 00:00:00,TransferIn,,,,Unknown,413.85,1.0,413.85,0.0,EUR,Unknown
+2024-03-06 00:00:00,Sell,JDCMF,,JD.com A,Stock,27.0,11.43,308.48,0.0,EUR,Unknown
+2024-03-06 00:00:00,Sell,BABAF,,Alibaba Group Holding Ltd.,Stock,40.0,8.46,338.32,0.0,EUR,Unknown
+2024-03-06 00:00:00,Buy,MDB,,MongoDB,Stock,1.0,376.4,-376.4,0.0,EUR,Unknown
+2024-03-06 00:00:00,Buy,PODD,,Insulet Corp.,Stock,2.0,152.5,-305.0,0.0,EUR,Unknown
+2024-03-07 00:00:00,Buy,STNE,,StoneCo,Stock,17.0,15.17,-257.89,0.0,EUR,Unknown
+2024-03-08 00:00:00,Buy,XYL,,XYLEM,Stock,3.0,116.2,-348.6,0.0,EUR,Unknown
+2024-03-11 00:00:00,Sell,SGACF,,SPDR MSCI ACWI IMI UCITS ETF - USD ACC,Stock,20.0,197.3,3946.0,0.0,EUR,Unknown
+2024-03-11 00:00:00,Buy,GMAB.CO,,Genmab,Stock,2.0,289.8,-579.6,0.0,EUR,Unknown
+2024-03-11 00:00:00,Buy,LMT,,Lockheed Martin,Stock,2.0,397.2,-794.4,0.0,EUR,Unknown
+2024-03-11 00:00:00,Buy,ALFNF,,Alfen,Stock,6.0,47.79,-286.74,0.0,EUR,Unknown
+2024-03-11 00:00:00,Buy,PYPL,,PayPal Holdings,Stock,5.0,54.93,-274.65,0.0,EUR,Unknown
+2024-03-11 00:00:00,Buy,MSFT,,Microsoft,Stock,2.0,369.75,-739.5,0.0,EUR,Unknown
+2024-03-11 00:00:00,Buy,XMTR,,Xometry,Stock,20.0,16.95,-339.0,0.0,EUR,Unknown
+2024-03-11 00:00:00,Buy,STNE,,StoneCo,Stock,25.0,15.43,-385.75,0.0,EUR,Unknown
+2024-03-11 00:00:00,Buy,HUM,,Humana,Stock,1.0,318.9,-318.9,0.0,EUR,Unknown
+2024-03-12 00:00:00,Sell,DE000HS3XCH7,,HSBC Trinkaus & Burkhardt GmbH Call 20.12.24 Crowdstr 400,Stock,100.0,3.5,350.0,0.0,EUR,Unknown
+2024-03-12 00:00:00,Buy,PSKOF,,ORLEN,Stock,18.0,14.78,-265.97,0.0,EUR,Unknown
+2024-03-13 00:00:00,Sell,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,12.0,78.31,939.66,0.0,EUR,Unknown
+2024-03-13 00:00:00,Sell,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,7.0,165.91,1161.37,0.0,EUR,Unknown
+2024-03-13 00:00:00,Buy,ADBE,,Adobe Systems,Stock,2.0,525.8,-1051.6,0.0,EUR,Unknown
+2024-03-13 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,140.0,6.8,-952.0,0.0,EUR,Unknown
+2024-03-14 00:00:00,Sell,AMSYF,,ArcelorMittal,Stock,13.0,24.68,320.84,0.0,EUR,Unknown
+2024-03-14 00:00:00,Buy,TSLA,,Tesla,Stock,2.0,148.94,-297.88,0.0,EUR,Unknown
+2024-03-14 00:00:00,Sell,BPAQF,,BP,Stock,92.0,5.7,524.31,0.0,EUR,Unknown
+2024-03-14 00:00:00,Buy,BRPETRACNPR6,,Petrobras (Vz),Stock,42.0,7.0,-294.0,0.0,EUR,Unknown
+2024-03-14 00:00:00,Buy,DE000HS3X9G9,,HSBC Trinkaus & Burkhardt GmbH Call 20.09.24 Adobe 800,Stock,520.0,0.96,-499.2,0.0,EUR,Unknown
+2024-03-15 00:00:00,Dividend,AGCO,,AGCO Corporation,Stock,3.0,0.27,0.8,0.0,EUR,Unknown
+2024-03-15 00:00:00,Sell,GA0000121459,,Total Gabon,Stock,2.0,156.6,313.2,0.0,EUR,Unknown
+2024-03-18 00:00:00,Sell,BRK/B,,Berkshire Hathaway ‘B’,Stock,1.0,375.2,375.2,0.0,EUR,Unknown
+2024-03-18 00:00:00,Sell,US85859N1028,,Stem Inc. A,Stock,50.0,1.64,81.9,0.99,EUR,Unknown
+2024-03-18 00:00:00,Sell,TX,,Ternium (ADR),Stock,7.0,36.6,256.2,0.0,EUR,Unknown
+2024-03-18 00:00:00,Buy,STNE,,StoneCo,Stock,41.0,14.29,-585.89,0.0,EUR,Unknown
+2024-03-18 00:00:00,Sell,STNE,,StoneCo,Stock,41.0,14.7,602.7,0.0,EUR,Unknown
+2024-03-18 00:00:00,Sell,GB00B1XZS820,,Anglo American,Stock,8.807339449541285,24.00270833333333,211.4,0.99,EUR,Unknown
+2024-03-19 00:00:00,Sell,MSTR,,Strategy,Stock,10.0,124.0,1240.0,0.0,EUR,Unknown
+2024-03-19 00:00:00,Buy,MSTR,,Strategy,Stock,10.0,131.65,-1316.5,0.0,EUR,Unknown
+2024-03-19 00:00:00,Buy,TSLA,,Tesla,Stock,2.0,157.7,-315.4,0.0,EUR,Unknown
+2024-03-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,40.0,0.12,4.93,0.0,EUR,Unknown
+2024-03-20 00:00:00,Buy,HOEGF,,Höegh Autoliners,Stock,40.0,8.06,-322.4,0.0,EUR,Unknown
+2024-03-20 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,45.0,6.5,-292.5,0.0,EUR,Unknown
+2024-03-21 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,40.0,0.003,0.12,0.0,EUR,Unknown
+2024-03-22 00:00:00,TransferOut,,,,Unknown,400.0,1.0,400.0,0.0,EUR,Unknown
+2024-03-25 00:00:00,TransferOut,,,,Unknown,4.99,1.0,4.99,0.0,EUR,Unknown
+2024-03-25 00:00:00,Sell,MSTR,,Strategy,Stock,10.0,163.55,1635.5,0.0,EUR,Unknown
+2024-03-25 00:00:00,Buy,MELI,,Mercado Libre,Stock,1.0,1428.2,-1428.2,0.0,EUR,Unknown
+2024-03-28 00:00:00,TransferIn,,,,Unknown,2000.0,1.0,2000.0,0.0,EUR,Unknown
+2024-03-28 00:00:00,Interest,,,,Unknown,5.33,1.0,5.33,0.0,EUR,Unknown
+2024-03-28 00:00:00,Buy,TSLA,,Tesla,Stock,2.0,163.4,-326.8,0.0,EUR,Unknown
+2024-03-28 00:00:00,Buy,XMTR,,Xometry,Stock,17.0,15.7,-266.9,0.0,EUR,Unknown
+2024-03-28 00:00:00,Buy,ARKK,,Arista Networks,Stock,1.0,269.3,-269.3,0.0,EUR,Unknown
+2024-03-28 00:00:00,Buy,1211.HK,,BYD,Stock,33.0,7.87,-259.66,0.0,EUR,Unknown
+2024-03-28 00:00:00,Buy,XYL,,XYLEM,Stock,3.0,120.35,-361.05,0.0,EUR,Unknown
+2024-03-28 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,18.0,14.5,-261.0,0.0,EUR,Unknown
+2024-03-28 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,2.0,174.56,-349.12,0.0,EUR,Unknown
+2024-04-01 00:00:00,Dividend,ALB,,Albemarle Corporation,Stock,2.0,0.37,0.74,0.0,EUR,Unknown
+2024-04-04 00:00:00,TransferIn,,,,Unknown,1198.23,1.0,1198.23,0.0,EUR,Unknown
+2024-04-05 00:00:00,TransferIn,,,,Unknown,2500.0,1.0,2500.0,0.0,EUR,Unknown
+2024-04-05 00:00:00,Buy,HUM,,Humana,Stock,1.0,289.5,-289.5,0.0,EUR,Unknown
+2024-04-05 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,19.0,13.58,-258.02,0.0,EUR,Unknown
+2024-04-05 00:00:00,Buy,TSLA,,Tesla,Stock,2.0,153.8,-307.6,0.0,EUR,Unknown
+2024-04-05 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,3.0,141.3,-423.9,0.0,EUR,Unknown
+2024-04-08 00:00:00,Buy,ALB,,Albemarle Corporation,Stock,3.0,114.22,-342.66,0.0,EUR,Unknown
+2024-04-08 00:00:00,Buy,TSLA,,Tesla,Stock,2.0,157.66,-315.32,0.0,EUR,Unknown
+2024-04-08 00:00:00,Buy,LW,,Lamb Weston,Stock,4.0,73.96,-295.84,0.0,EUR,Unknown
+2024-04-08 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,2.0,167.53,-335.06,0.0,EUR,Unknown
+2024-04-08 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,42.0,6.98,-293.24,0.0,EUR,Unknown
+2024-04-08 00:00:00,Buy,ENPH,,Enphase Energy,Stock,3.0,105.66,-316.98,0.0,EUR,Unknown
+2024-04-08 00:00:00,Buy,KMTUF,,Komatsu,Stock,10.0,27.88,-278.8,0.0,EUR,Unknown
+2024-04-08 00:00:00,Buy,FUJHF,,Subaru Corp,Stock,17.0,21.6,-367.2,0.0,EUR,Unknown
+2024-04-11 00:00:00,Dividend,TSM,,TSMC (ADR),Stock,3.0,0.51,1.54,0.0,EUR,Unknown
+2024-04-19 00:00:00,Dividend,KSPI,,Kaspi.kz,Stock,3.0,1.78,5.34,0.0,EUR,Unknown
+2024-04-19 00:00:00,Sell,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,4.0,139.69,558.76,0.0,EUR,Unknown
+2024-04-22 00:00:00,TransferOut,,,,Unknown,4.99,1.0,4.99,0.0,EUR,Unknown
+2024-04-22 00:00:00,Buy,ALB,,Albemarle Corporation,Stock,3.0,106.0,-318.0,0.0,EUR,Unknown
+2024-04-23 00:00:00,Dividend,INGR,,Ingredion,Stock,5.0,0.73,3.64,0.0,EUR,Unknown
+2024-04-23 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,23.0,11.17,-256.91,0.0,EUR,Unknown
+2024-04-23 00:00:00,TransferIn,,,,Unknown,72.2,1.0,72.2,0.0,EUR,Unknown
+2024-04-23 00:00:00,TransferOut,,,,Unknown,5.0,1.0,5.0,0.0,EUR,Unknown
+2024-04-24 00:00:00,Dividend,CSCO,,Cisco Systems,Stock,6.0,0.37,2.24,0.0,EUR,Unknown
+2024-04-24 00:00:00,TransferOut,,,,Unknown,5.32,1.0,5.32,0.0,EUR,Unknown
+2024-04-25 00:00:00,TransferOut,,,,Unknown,18.21,1.0,18.21,0.0,EUR,Unknown
+2024-04-26 00:00:00,Dividend,HUM,,Humana,Stock,1.0,0.83,0.83,0.0,EUR,Unknown
+2024-04-26 00:00:00,Dividend,DHR,,Danaher,Stock,2.0,0.25,0.5,0.0,EUR,Unknown
+2024-04-27 00:00:00,TransferOut,,,,Unknown,23.14,1.0,23.14,0.0,EUR,Unknown
+2024-04-28 00:00:00,TransferOut,,,,Unknown,14.03,1.0,14.03,0.0,EUR,Unknown
+2024-04-29 00:00:00,TransferIn,,,,Unknown,1300.0,1.0,1300.0,0.0,EUR,Unknown
+2024-04-29 00:00:00,TransferOut,,,,Unknown,22.49,1.0,22.49,0.0,EUR,Unknown
+2024-04-30 00:00:00,TransferIn,,,,Unknown,1675.96,1.0,1675.96,0.0,EUR,Unknown
+2024-04-30 00:00:00,TransferOut,,,,Unknown,29.14,1.0,29.14,0.0,EUR,Unknown
+2024-04-30 00:00:00,Dividend,JPM,,JPMorgan Chase & Co.,Stock,2.0,1.08,2.15,0.0,EUR,Unknown
+2024-04-30 00:00:00,Interest,,,,Unknown,0.32,1.0,0.32,0.0,EUR,Unknown
+2024-04-30 00:00:00,TransferOut,,,,Unknown,104.62,1.0,104.62,0.0,EUR,Unknown
+2024-04-30 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,22.0,11.77,-258.83,0.0,EUR,Unknown
+2024-04-30 00:00:00,Buy,ARKK,,Arista Networks,Stock,2.0,243.95,-487.9,0.0,EUR,Unknown
+2024-04-30 00:00:00,Buy,GMAB.CO,,Genmab,Stock,1.0,261.7,-261.7,0.0,EUR,Unknown
+2024-04-30 00:00:00,Buy,ENPH,,Enphase Energy,Stock,3.0,103.08,-309.24,0.0,EUR,Unknown
+2024-04-30 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,2.0,154.04,-308.08,0.0,EUR,Unknown
+2024-04-30 00:00:00,TransferOut,,,,Unknown,19.08,1.0,19.08,0.0,EUR,Unknown
+2024-05-02 00:00:00,TransferIn,,,,Unknown,2.42,1.0,2.42,0.0,EUR,Unknown
+2024-05-02 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.016317,148.31,-2.42,0.0,EUR,Unknown
+2024-05-02 00:00:00,Dividend,BTAFF,,British American Tobacco,Stock,23.0,0.69,15.78,0.0,EUR,Unknown
+2024-05-02 00:00:00,TransferOut,,,,Unknown,12.73,1.0,12.73,0.0,EUR,Unknown
+2024-05-02 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-05-03 00:00:00,Dividend,STLA,,Stellantis N.V.,Stock,34.0,1.53,52.01,0.0,EUR,Unknown
+2024-05-03 00:00:00,Dividend,GB00B1XZS820,,Anglo American,Stock,8.807339449541285,0.4314583333333333,3.83,0.0,EUR,Unknown
+2024-05-03 00:00:00,TransferIn,,,,Unknown,178.1,1.0,178.1,0.0,EUR,Unknown
+2024-05-05 00:00:00,TransferOut,,,,Unknown,23.18,1.0,23.18,0.0,EUR,Unknown
+2024-05-07 00:00:00,TransferIn,,,,Unknown,370.0,1.0,370.0,0.0,EUR,Unknown
+2024-05-07 00:00:00,TransferOut,,,,Unknown,10.11,1.0,10.11,0.0,EUR,Unknown
+2024-05-08 00:00:00,Dividend,DE,,Deere & Co.,Stock,1.0,1.36,1.36,0.0,EUR,Unknown
+2024-05-08 00:00:00,Dividend,HOEGF,,Höegh Autoliners,Stock,100.0,0.54,53.51,0.0,EUR,Unknown
+2024-05-08 00:00:00,Buy,EADSF,,Airbus,Stock,3.0,162.04,-486.12,0.0,EUR,Unknown
+2024-05-09 00:00:00,Sell,INMD,,InMode,Stock,27.0,17.01,459.27,0.0,EUR,Unknown
+2024-05-09 00:00:00,Buy,BTAFF,,British American Tobacco,Stock,16.0,28.2,-451.2,0.0,EUR,Unknown
+2024-05-09 00:00:00,TransferOut,,,,Unknown,69.99,1.0,69.99,0.0,EUR,Unknown
+2024-05-13 00:00:00,TransferIn,,,,Unknown,130.0,1.0,130.0,0.0,EUR,Unknown
+2024-05-13 00:00:00,Sell,INGR,,Ingredion,Stock,5.0,111.5,557.5,0.0,EUR,Unknown
+2024-05-13 00:00:00,Buy,MSFT,,Microsoft,Stock,1.0,388.45,-388.45,0.0,EUR,Unknown
+2024-05-15 00:00:00,TransferOut,,,,Unknown,4.9,1.0,4.9,0.0,EUR,Unknown
+2024-05-16 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,4.157016,84.2,-350.0,0.0,EUR,Unknown
+2024-05-16 00:00:00,Buy,IE00BKT09032,,WisdomTree Multi Ass.Iss.PLC ETP 05.12.62 INDEX,Stock,2.235702,67.09,-150.0,0.0,EUR,Unknown
+2024-05-16 00:00:00,Buy,IE00B8HGT870,,WisdomTree Multi Ass.Iss.PLC Gold 3xLev. ETP Secs12(12/62),Stock,3.103148,48.34,-150.0,0.0,EUR,Unknown
+2024-05-16 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,1.975169,177.2,-350.0,0.0,EUR,Unknown
+2024-05-16 00:00:00,TransferOut,,,,Unknown,1.19,1.0,1.19,0.0,EUR,Unknown
+2024-05-17 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2024-05-17 00:00:00,TransferOut,,,,Unknown,8.76,1.0,8.76,0.0,EUR,Unknown
+2024-05-18 00:00:00,TransferOut,,,,Unknown,11.07,1.0,11.07,0.0,EUR,Unknown
+2024-05-19 00:00:00,TransferOut,,,,Unknown,10.42,1.0,10.42,0.0,EUR,Unknown
+2024-05-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,82.0,0.0983,8.06,0.0,EUR,Unknown
+2024-05-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,82.0,0.00524,0.43,0.0,EUR,Unknown
+2024-05-20 00:00:00,Sell,FTNT,,Fortinet,Stock,6.0,56.59,339.54,0.0,EUR,Unknown
+2024-05-20 00:00:00,Buy,AIXXF,,AIXTRON,Stock,11.0,23.48,-258.28,0.0,EUR,Unknown
+2024-05-20 00:00:00,Buy,FCX,,Freeport-McMoRan,Stock,6.0,49.6,-297.6,0.0,EUR,Unknown
+2024-05-21 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,82.0,0.00341,0.28,0.0,EUR,Unknown
+2024-05-21 00:00:00,TransferOut,,,,Unknown,6.5,1.0,6.5,0.0,EUR,Unknown
+2024-05-22 00:00:00,TransferOut,,,,Unknown,4.99,1.0,4.99,0.0,EUR,Unknown
+2024-05-22 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,82.0,0.15,12.44,0.0,EUR,Unknown
+2024-05-23 00:00:00,Dividend,EUXTF,,Euronext,Stock,4.0,2.48,9.92,0.0,EUR,Unknown
+2024-05-23 00:00:00,TransferOut,,,,Unknown,2.4,1.0,2.4,0.0,EUR,Unknown
+2024-05-25 00:00:00,TransferOut,,,,Unknown,13.86,1.0,13.86,0.0,EUR,Unknown
+2024-05-26 00:00:00,TransferOut,,,,Unknown,9.0,1.0,9.0,0.0,EUR,Unknown
+2024-05-27 00:00:00,Dividend,ABMRF,,ABN AMRO Bank,Stock,29.0,0.89,25.81,0.0,EUR,Unknown
+2024-05-28 00:00:00,TransferOut,,,,Unknown,10.55,1.0,10.55,0.0,EUR,Unknown
+2024-05-29 00:00:00,TransferIn,,,,Unknown,3500.0,1.0,3500.0,0.0,EUR,Unknown
+2024-05-29 00:00:00,TransferOut,,,,Unknown,4.61,1.0,4.61,0.0,EUR,Unknown
+2024-05-29 00:00:00,TransferIn,,,,Unknown,300.0,1.0,300.0,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,BX,,Blackstone 'A',Stock,3.0,107.44,-322.32,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,DE,,Deere & Co.,Stock,1.0,339.2,-339.2,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,STLA,,Stellantis N.V.,Stock,14.0,20.55,-287.7,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,MPC,,Marathon Petroleum,Stock,2.0,160.3,-320.6,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,MSFT,,Microsoft,Stock,1.0,393.25,-393.25,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,PG,,Procter & Gamble,Stock,2.0,149.78,-299.56,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,BMY,,Bristol Myers Squibb,Stock,13.0,37.35,-485.49,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,FCX,,Freeport-McMoRan,Stock,6.0,47.74,-286.44,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,NU,,Nubank,Stock,25.0,10.88,-272.0,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,BRPETRACNPR6,,Petrobras (Vz),Stock,37.0,7.05,-260.85,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,XYL,,XYLEM,Stock,2.0,127.8,-255.6,0.0,EUR,Unknown
+2024-05-30 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-05-30 00:00:00,Sell,PODD,,Insulet Corp.,Stock,2.0,161.65,323.3,0.0,EUR,Unknown
+2024-05-30 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,2.0,159.58,-319.16,0.0,EUR,Unknown
+2024-05-31 00:00:00,Interest,,,,Unknown,2.35,1.0,2.35,0.0,EUR,Unknown
+2024-05-31 00:00:00,Dividend,LW,,Lamb Weston,Stock,4.0,0.33,1.32,0.0,EUR,Unknown
+2024-05-31 00:00:00,Dividend,KSPI,,Kaspi.kz,Stock,3.0,1.76,5.28,0.0,EUR,Unknown
+2024-05-31 00:00:00,Sell,XMTR,,Xometry,Stock,37.0,13.8,510.6,0.0,EUR,Unknown
+2024-05-31 00:00:00,Buy,CSCO,,Cisco Systems,Stock,6.0,42.55,-255.27,0.0,EUR,Unknown
+2024-05-31 00:00:00,Sell,MDB,,MongoDB,Stock,1.0,215.45,215.45,0.99,EUR,Unknown
+2024-05-31 00:00:00,Buy,CRWD,,Crowdstrike A,Stock,1.0,299.95,-299.95,0.0,EUR,Unknown
+2024-05-31 00:00:00,TransferOut,,,,Unknown,12.3,1.0,12.3,0.0,EUR,Unknown
+2024-06-03 00:00:00,Sell,PYPL,,PayPal Holdings,Stock,5.0,58.16,290.8,0.0,EUR,Unknown
+2024-06-03 00:00:00,Buy,PFE,,Pfizer,Stock,18.0,26.62,-479.07,0.0,EUR,Unknown
+2024-06-03 00:00:00,TransferIn,,,,Unknown,4.59,1.0,4.59,0.0,EUR,Unknown
+2024-06-03 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.109876,41.77,-4.59,0.0,EUR,Unknown
+2024-06-03 00:00:00,Dividend,BAESF,,BAE Systems,Stock,40.0,0.22,8.67,0.0,EUR,Unknown
+2024-06-03 00:00:00,TransferOut,,,,Unknown,176.48,1.0,176.48,0.0,EUR,Unknown
+2024-06-03 00:00:00,TransferIn,,,,Unknown,350.0,1.0,350.0,0.0,EUR,Unknown
+2024-06-05 00:00:00,TransferIn,,,,Unknown,1040.06,1.0,1040.06,0.0,EUR,Unknown
+2024-06-06 00:00:00,TransferOut,,,,Unknown,7.68,1.0,7.68,0.0,EUR,Unknown
+2024-06-06 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,41.0,6.33,-259.49,0.0,EUR,Unknown
+2024-06-06 00:00:00,Buy,PSKOF,,ORLEN,Stock,18.0,14.85,-267.3,0.0,EUR,Unknown
+2024-06-06 00:00:00,Buy,FCX,,Freeport-McMoRan,Stock,6.0,46.63,-279.75,0.0,EUR,Unknown
+2024-06-06 00:00:00,Buy,GB00B10RZP78,,Unilever,Stock,4.444444444444445,57.8475,-257.1,0.0,EUR,Unknown
+2024-06-06 00:00:00,Sell,IE00BKT09032,,WisdomTree Multi Ass.Iss.PLC ETP 05.12.62 INDEX,Stock,2.0,67.29,134.57,1.0,EUR,Unknown
+2024-06-06 00:00:00,Sell,IE00BKT09032,,WisdomTree Multi Ass.Iss.PLC ETP 05.12.62 INDEX,Stock,0.235702,67.29,15.86,0.0,EUR,Unknown
+2024-06-07 00:00:00,Dividend,GB00B10RZP78,,Unilever,Stock,8.0,0.48375,3.91,0.0,EUR,Unknown
+2024-06-07 00:00:00,TransferOut,,,,Unknown,3.34,1.0,3.34,0.0,EUR,Unknown
+2024-06-07 00:00:00,TransferOut,,,,Unknown,32.42,1.0,32.42,0.0,EUR,Unknown
+2024-06-08 00:00:00,TransferOut,,,,Unknown,0.85,1.0,0.85,0.0,EUR,Unknown
+2024-06-13 00:00:00,Dividend,MSFT,,Microsoft,Stock,3.0,0.7,2.1,0.0,EUR,Unknown
+2024-06-17 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,9.0,0.19,1.67,0.0,EUR,Unknown
+2024-06-17 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,7.121492,42.13,-300.0,0.0,EUR,Unknown
+2024-06-17 00:00:00,TransferOut,,,,Unknown,3.57,1.0,3.57,0.0,EUR,Unknown
+2024-06-17 00:00:00,TransferOut,,,,Unknown,237.15,1.0,237.15,0.0,EUR,Unknown
+2024-06-18 00:00:00,TransferOut,,,,Unknown,10.0,1.0,10.0,0.0,EUR,Unknown
+2024-06-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,82.0,0.15,11.95,0.0,EUR,Unknown
+2024-06-20 00:00:00,Dividend,KMTUF,,Komatsu,Stock,15.0,0.56,8.36,0.0,EUR,Unknown
+2024-06-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,82.0,0.0944,7.74,0.0,EUR,Unknown
+2024-06-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,82.0,0.0072,0.59,0.0,EUR,Unknown
+2024-06-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,82.0,0.00463,0.38,0.0,EUR,Unknown
+2024-06-20 00:00:00,Sell,IE00B8HGT870,,WisdomTree Multi Ass.Iss.PLC Gold 3xLev. ETP Secs12(12/62),Stock,0.103148,45.66,4.71,0.0,EUR,Unknown
+2024-06-20 00:00:00,Sell,IE00B8HGT870,,WisdomTree Multi Ass.Iss.PLC Gold 3xLev. ETP Secs12(12/62),Stock,3.0,45.71,137.13,1.0,EUR,Unknown
+2024-06-20 00:00:00,TransferOut,,,,Unknown,13.91,1.0,13.91,0.0,EUR,Unknown
+2024-06-20 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-06-21 00:00:00,TransferOut,,,,Unknown,4.99,1.0,4.99,0.0,EUR,Unknown
+2024-06-23 00:00:00,TransferOut,,,,Unknown,32.0,1.0,32.0,0.0,EUR,Unknown
+2024-06-24 00:00:00,TransferOut,,,,Unknown,12.45,1.0,12.45,0.0,EUR,Unknown
+2024-06-26 00:00:00,TransferIn,,,,Unknown,100.0,1.0,100.0,0.0,EUR,Unknown
+2024-06-27 00:00:00,TransferOut,,,,Unknown,2.7,1.0,2.7,0.0,EUR,Unknown
+2024-06-27 00:00:00,Dividend,XYL,,XYLEM,Stock,6.0,0.34,2.01,0.0,EUR,Unknown
+2024-06-27 00:00:00,TransferOut,,,,Unknown,14.2,1.0,14.2,0.0,EUR,Unknown
+2024-06-27 00:00:00,TransferIn,,,,Unknown,400.0,1.0,400.0,0.0,EUR,Unknown
+2024-06-27 00:00:00,TransferOut,,,,Unknown,8.49,1.0,8.49,0.0,EUR,Unknown
+2024-06-28 00:00:00,Interest,,,,Unknown,4.65,1.0,4.65,0.0,EUR,Unknown
+2024-06-28 00:00:00,TransferIn,,,,Unknown,2000.0,1.0,2000.0,0.0,EUR,Unknown
+2024-06-28 00:00:00,TransferOut,,,,Unknown,6.62,1.0,6.62,0.0,EUR,Unknown
+2024-06-28 00:00:00,Dividend,NVDA,,NVIDIA,Stock,10.0,0.009,0.09,0.0,EUR,Unknown
+2024-06-28 00:00:00,Dividend,VLO,,Valero Energy,Stock,3.0,0.99,2.97,0.0,EUR,Unknown
+2024-06-28 00:00:00,Dividend,LMT,,Lockheed Martin,Stock,2.0,2.92,5.84,0.0,EUR,Unknown
+2024-06-28 00:00:00,TransferOut,,,,Unknown,29.1,1.0,29.1,0.0,EUR,Unknown
+2024-06-28 00:00:00,TransferOut,,,,Unknown,3.42,1.0,3.42,0.0,EUR,Unknown
+2024-06-29 00:00:00,TransferOut,,,,Unknown,18.45,1.0,18.45,0.0,EUR,Unknown
+2024-06-29 00:00:00,TransferOut,,,,Unknown,3.14,1.0,3.14,0.0,EUR,Unknown
+2024-06-29 00:00:00,TransferOut,,,,Unknown,12.11,1.0,12.11,0.0,EUR,Unknown
+2024-06-29 00:00:00,TransferOut,,,,Unknown,87.99,1.0,87.99,0.0,EUR,Unknown
+2024-06-30 00:00:00,Interest,,,,Unknown,1.26,1.0,1.26,0.0,EUR,Unknown
+2024-07-01 00:00:00,Dividend,ALB,,Albemarle Corporation,Stock,8.0,0.37,2.97,0.0,EUR,Unknown
+2024-07-01 00:00:00,TransferOut,,,,Unknown,8.52,1.0,8.52,0.0,EUR,Unknown
+2024-07-01 00:00:00,Buy,HOEGF,,Höegh Autoliners,Stock,25.0,10.61,-265.25,0.0,EUR,Unknown
+2024-07-01 00:00:00,Buy,ALFNF,,Alfen,Stock,15.0,17.93,-268.88,0.0,EUR,Unknown
+2024-07-01 00:00:00,Buy,ENPH,,Enphase Energy,Stock,3.0,91.94,-275.82,0.0,EUR,Unknown
+2024-07-01 00:00:00,Buy,PG,,Procter & Gamble,Stock,2.0,153.96,-307.92,0.0,EUR,Unknown
+2024-07-01 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,2.0,169.32,-338.64,0.0,EUR,Unknown
+2024-07-01 00:00:00,Buy,MSFT,,Microsoft,Stock,1.0,416.9,-416.9,0.0,EUR,Unknown
+2024-07-02 00:00:00,TransferIn,,,,Unknown,4.86,1.0,4.86,0.0,EUR,Unknown
+2024-07-02 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.114964,42.27,-4.86,0.0,EUR,Unknown
+2024-07-02 00:00:00,Sell,SBYSF,,Sibanye Stillwater,Stock,200.0,0.94,187.2,0.99,EUR,Unknown
+2024-07-02 00:00:00,Buy,STLA,,Stellantis N.V.,Stock,18.0,18.18,-327.28,0.0,EUR,Unknown
+2024-07-04 00:00:00,TransferOut,,,,Unknown,4.9,1.0,4.9,0.0,EUR,Unknown
+2024-07-05 00:00:00,TransferIn,,,,Unknown,700.0,1.0,700.0,0.0,EUR,Unknown
+2024-07-05 00:00:00,Sell,HUM,,Humana,Stock,2.0,335.1,670.2,0.0,EUR,Unknown
+2024-07-05 00:00:00,Sell,FUJHF,,Subaru Corp,Stock,17.0,19.6,333.2,0.0,EUR,Unknown
+2024-07-05 00:00:00,Sell,DE000HS3X9G9,,HSBC Trinkaus & Burkhardt GmbH Call 20.09.24 Adobe 800,Stock,520.0,0.059,30.68,0.99,EUR,Unknown
+2024-07-05 00:00:00,Buy,1211.HK,,BYD,Stock,30.0,9.263333333333334,-277.9,0.0,EUR,Unknown
+2024-07-05 00:00:00,Buy,STNE,,StoneCo,Stock,23.0,11.22,-257.95,0.0,EUR,Unknown
+2024-07-05 00:00:00,Buy,EADSF,,Airbus,Stock,2.0,137.46,-274.92,0.0,EUR,Unknown
+2024-07-05 00:00:00,TransferOut,,,,Unknown,5.53,1.0,5.53,0.0,EUR,Unknown
+2024-07-06 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-07-08 00:00:00,TransferIn,,,,Unknown,50.0,1.0,50.0,0.0,EUR,Unknown
+2024-07-08 00:00:00,Buy,HOEGF,,Höegh Autoliners,Stock,26.0,10.15,-263.9,0.0,EUR,Unknown
+2024-07-08 00:00:00,Sell,ADBE,,Adobe Systems,Stock,1.0,532.2,532.2,0.0,EUR,Unknown
+2024-07-08 00:00:00,Buy,TOYOF,,Toyota Motor,Stock,27.0,18.99,-512.84,0.0,EUR,Unknown
+2024-07-08 00:00:00,TransferOut,,,,Unknown,10.07,1.0,10.07,0.0,EUR,Unknown
+2024-07-10 00:00:00,TransferIn,,,,Unknown,100.0,1.0,100.0,0.0,EUR,Unknown
+2024-07-10 00:00:00,Sell,ALB,,Albemarle Corporation,Stock,8.0,84.08,672.64,0.0,EUR,Unknown
+2024-07-10 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,43.0,5.94,-255.25,0.0,EUR,Unknown
+2024-07-10 00:00:00,Buy,MNST,,Monster Beverage,Stock,9.0,46.56,-419.0,0.0,EUR,Unknown
+2024-07-11 00:00:00,Dividend,TSM,,TSMC (ADR),Stock,3.0,0.49,1.48,0.0,EUR,Unknown
+2024-07-12 00:00:00,Sell,PROSF,,Prosus,Stock,9.0,33.31,299.79,0.0,EUR,Unknown
+2024-07-12 00:00:00,Buy,JUMSF,,Jumbo,Stock,12.0,25.46,-305.52,0.0,EUR,Unknown
+2024-07-14 00:00:00,TransferOut,,,,Unknown,100.0,1.0,100.0,0.0,EUR,Unknown
+2024-07-15 00:00:00,TransferIn,,,,Unknown,55.19,1.0,55.19,0.0,EUR,Unknown
+2024-07-15 00:00:00,TransferOut,,,,Unknown,12.94,1.0,12.94,0.0,EUR,Unknown
+2024-07-15 00:00:00,TransferOut,,,,Unknown,0.41,1.0,0.41,0.0,EUR,Unknown
+2024-07-15 00:00:00,TransferIn,,,,Unknown,13.35,1.0,13.35,0.0,EUR,Unknown
+2024-07-16 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,3.046613,98.47,-300.0,0.0,EUR,Unknown
+2024-07-16 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,9.195402,43.5,-400.0,0.0,EUR,Unknown
+2024-07-16 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,1.344929,223.06,-300.0,0.0,EUR,Unknown
+2024-07-19 00:00:00,Sell,BX,,Blackstone 'A',Stock,3.0,127.88,383.64,0.0,EUR,Unknown
+2024-07-19 00:00:00,Sell,LW,,Lamb Weston,Stock,4.0,71.78,287.12,0.0,EUR,Unknown
+2024-07-22 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2024-07-22 00:00:00,TransferIn,,,,Unknown,200.0,1.0,200.0,0.0,EUR,Unknown
+2024-07-22 00:00:00,Buy,FWRA.MI,,Invesco FTSE All-World UCITS ETF Acc,Stock,496.0,6.05,-2999.31,0.0,EUR,Unknown
+2024-07-22 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,14.0,18.45,-258.3,0.0,EUR,Unknown
+2024-07-22 00:00:00,Buy,TSM,,TSMC (ADR),Stock,2.0,153.8,-307.6,0.0,EUR,Unknown
+2024-07-24 00:00:00,Dividend,CSCO,,Cisco Systems,Stock,12.0,0.37,4.42,0.0,EUR,Unknown
+2024-07-26 00:00:00,Dividend,DHR,,Danaher,Stock,2.0,0.25,0.5,0.0,EUR,Unknown
+2024-07-26 00:00:00,Dividend,HUM,,Humana,Stock,2.0,0.82,1.63,0.0,EUR,Unknown
+2024-07-27 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-07-29 00:00:00,Dividend,1211.HK,,BYD,Stock,72.0,0.13333333333333333,9.64,0.0,EUR,Unknown
+2024-07-30 00:00:00,TransferIn,,,,Unknown,1300.0,1.0,1300.0,0.0,EUR,Unknown
+2024-07-31 00:00:00,TransferIn,,,,Unknown,2000.0,1.0,2000.0,0.0,EUR,Unknown
+2024-07-31 00:00:00,Interest,,,,Unknown,1.72,1.0,1.72,0.0,EUR,Unknown
+2024-07-31 00:00:00,Dividend,JPM,,JPMorgan Chase & Co.,Stock,2.0,1.07,2.13,0.0,EUR,Unknown
+2024-07-31 00:00:00,Buy,PG,,Procter & Gamble,Stock,2.0,148.86,-297.72,0.0,EUR,Unknown
+2024-07-31 00:00:00,Buy,STLA,,Stellantis N.V.,Stock,17.0,15.42,-262.17,0.0,EUR,Unknown
+2024-07-31 00:00:00,Buy,ASML.AS,,ASML Holding,Stock,1.0,851.7,-851.7,0.0,EUR,Unknown
+2024-07-31 00:00:00,Buy,MSFT,,Microsoft,Stock,1.0,384.4,-384.4,0.0,EUR,Unknown
+2024-07-31 00:00:00,Buy,SYK,,Stryker,Stock,1.0,300.7,-300.7,0.0,EUR,Unknown
+2024-08-01 00:00:00,Dividend,BMY,,Bristol Myers Squibb,Stock,13.0,0.55,7.14,0.0,EUR,Unknown
+2024-08-01 00:00:00,Dividend,FCX,,Freeport-McMoRan,Stock,18.0,0.14,2.47,0.0,EUR,Unknown
+2024-08-01 00:00:00,TransferOut,,,,Unknown,17.9,1.0,17.9,0.0,EUR,Unknown
+2024-08-01 00:00:00,Sell,PFE,,Pfizer,Stock,18.0,28.43,511.74,0.0,EUR,Unknown
+2024-08-01 00:00:00,Buy,NVDA,,NVIDIA,Stock,3.0,100.42,-301.26,0.0,EUR,Unknown
+2024-08-01 00:00:00,Buy,TSLA,,Tesla,Stock,1.0,200.6,-200.6,0.99,EUR,Unknown
+2024-08-02 00:00:00,TransferIn,,,,Unknown,2.37,1.0,2.37,0.0,EUR,Unknown
+2024-08-02 00:00:00,Dividend,BTAFF,,British American Tobacco,Stock,39.0,0.68,26.65,0.0,EUR,Unknown
+2024-08-02 00:00:00,Buy,IE00B4NCWG09,,iShares Physical Silver ETC - USD ACC,Stock,8.100773,24.69,-200.0,0.0,EUR,Unknown
+2024-08-02 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,4.958472,80.67,-400.0,0.0,EUR,Unknown
+2024-08-02 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,6.765594,44.34,-300.0,0.0,EUR,Unknown
+2024-08-02 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,2.49159,160.54,-400.0,0.0,EUR,Unknown
+2024-08-02 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.053472,44.32,-2.37,0.0,EUR,Unknown
+2024-08-02 00:00:00,Buy,FWRA.MI,,Invesco FTSE All-World UCITS ETF Acc,Stock,174.0,5.8,-1008.33,0.0,EUR,Unknown
+2024-08-02 00:00:00,Sell,MELI,,Mercado Libre,Stock,1.0,1598.8,1598.8,0.0,EUR,Unknown
+2024-08-02 00:00:00,Buy,ASML.AS,,ASML Holding,Stock,1.0,735.5,-735.5,0.0,EUR,Unknown
+2024-08-02 00:00:00,Buy,AMZN,,Amazon,Stock,3.0,150.98,-452.94,0.0,EUR,Unknown
+2024-08-02 00:00:00,Buy,JUMSF,,Jumbo,Stock,17.0,23.94,-406.98,0.0,EUR,Unknown
+2024-08-05 00:00:00,TransferOut,,,,Unknown,10.56,1.0,10.56,0.0,EUR,Unknown
+2024-08-05 00:00:00,TransferIn,,,,Unknown,500.0,1.0,500.0,0.0,EUR,Unknown
+2024-08-06 00:00:00,Buy,DE000SW19FA0,,"SocGen FaktS O.End CBOE VIX 16,741",Stock,1000.0,0.48,-480.0,1.0,EUR,Unknown
+2024-08-08 00:00:00,Dividend,DE,,Deere & Co.,Stock,2.0,1.34,2.68,0.0,EUR,Unknown
+2024-08-08 00:00:00,TransferOut,,,,Unknown,8.32,1.0,8.32,0.0,EUR,Unknown
+2024-08-09 00:00:00,TransferOut,,,,Unknown,15.04,1.0,15.04,0.0,EUR,Unknown
+2024-08-09 00:00:00,TransferOut,,,,Unknown,19.98,1.0,19.98,0.0,EUR,Unknown
+2024-08-10 00:00:00,TransferOut,,,,Unknown,5.96,1.0,5.96,0.0,EUR,Unknown
+2024-08-10 00:00:00,TransferOut,,,,Unknown,0.63,1.0,0.63,0.0,EUR,Unknown
+2024-08-12 00:00:00,TransferIn,,,,Unknown,160.19,1.0,160.19,0.0,EUR,Unknown
+2024-08-12 00:00:00,TransferOut,,,,Unknown,0.85,1.0,0.85,0.0,EUR,Unknown
+2024-08-12 00:00:00,TransferOut,,,,Unknown,7.43,1.0,7.43,0.0,EUR,Unknown
+2024-08-12 00:00:00,TransferOut,,,,Unknown,16.5,1.0,16.5,0.0,EUR,Unknown
+2024-08-13 00:00:00,TransferOut,,,,Unknown,11.33,1.0,11.33,0.0,EUR,Unknown
+2024-08-14 00:00:00,TransferOut,,,,Unknown,4.13,1.0,4.13,0.0,EUR,Unknown
+2024-08-14 00:00:00,TransferOut,,,,Unknown,10.19,1.0,10.19,0.0,EUR,Unknown
+2024-08-15 00:00:00,Dividend,PG,,Procter & Gamble,Stock,4.0,0.92,3.66,0.0,EUR,Unknown
+2024-08-15 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-08-16 00:00:00,TransferOut,,,,Unknown,9.9,1.0,9.9,0.0,EUR,Unknown
+2024-08-19 00:00:00,Sell,AIXXF,,AIXTRON,Stock,11.0,18.95,208.51,0.99,EUR,Unknown
+2024-08-19 00:00:00,Sell,EADSF,,Airbus,Stock,5.0,136.52,682.6,0.0,EUR,Unknown
+2024-08-19 00:00:00,Buy,STLA,,Stellantis N.V.,Stock,18.0,14.51,-261.11,0.0,EUR,Unknown
+2024-08-19 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,2.0,147.68,-295.36,0.0,EUR,Unknown
+2024-08-19 00:00:00,Buy,PSKOF,,ORLEN,Stock,25.0,15.26,-381.55,0.0,EUR,Unknown
+2024-08-20 00:00:00,Sell,ABMRF,,ABN AMRO Bank,Stock,29.0,15.29,443.27,0.0,EUR,Unknown
+2024-08-20 00:00:00,Buy,DKILF,,Daikin Industries,Stock,4.0,111.75,-447.0,0.0,EUR,Unknown
+2024-08-20 00:00:00,Sell,DHR,,Danaher,Stock,2.0,244.5,489.0,0.0,EUR,Unknown
+2024-08-20 00:00:00,Buy,ULTA,,Ulta Beauty,Stock,1.0,343.1,-343.1,0.0,EUR,Unknown
+2024-08-20 00:00:00,Sell,BAESF,,BAE Systems,Stock,40.0,15.67,626.8,0.0,EUR,Unknown
+2024-08-20 00:00:00,Buy,IBKR,,Interactive Brokers Group A,Stock,12.0,27.6125,-331.35,0.0,EUR,Unknown
+2024-08-20 00:00:00,Buy,JUMSF,,Jumbo,Stock,18.0,22.9,-412.2,0.0,EUR,Unknown
+2024-08-20 00:00:00,Sell,CRWD,,Crowdstrike A,Stock,3.0,242.65,727.95,0.0,EUR,Unknown
+2024-08-20 00:00:00,Buy,HOEGF,,Höegh Autoliners,Stock,26.0,9.86,-256.23,0.0,EUR,Unknown
+2024-08-20 00:00:00,Buy,FTNT,,Fortinet,Stock,6.0,67.75,-406.5,0.0,EUR,Unknown
+2024-08-20 00:00:00,TransferIn,BTC,,Bitcoin,Crypto,0.0495,59162.2,2928.53,0.0,EUR,Unknown
+2024-08-20 00:00:00,TransferOut,,,,Unknown,19.67,1.0,19.67,0.0,EUR,Unknown
+2024-08-21 00:00:00,TransferIn,,,,Unknown,50.0,1.0,50.0,0.0,EUR,Unknown
+2024-08-21 00:00:00,Sell,JPM,,JPMorgan Chase & Co.,Stock,2.0,192.66,385.32,0.0,EUR,Unknown
+2024-08-21 00:00:00,Sell,CSCO,,Cisco Systems,Stock,12.0,44.97,539.64,0.0,EUR,Unknown
+2024-08-21 00:00:00,Buy,LULU,,Lululemon Athletica,Stock,2.0,236.05,-472.1,0.0,EUR,Unknown
+2024-08-21 00:00:00,Buy,ALFNF,,Alfen,Stock,17.0,15.52,-263.76,0.0,EUR,Unknown
+2024-08-21 00:00:00,Buy,ETSY,,Etsy,Stock,6.0,49.03,-294.15,0.0,EUR,Unknown
+2024-08-22 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2024-08-22 00:00:00,Sell,ALFNF,,Alfen,Stock,43.0,15.84,681.12,0.0,EUR,Unknown
+2024-08-22 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,17.0,15.14,-257.3,0.0,EUR,Unknown
+2024-08-22 00:00:00,Buy,PLTR,,Palantir Technologies,Stock,13.0,29.15,-378.89,0.0,EUR,Unknown
+2024-08-22 00:00:00,TransferOut,,,,Unknown,5.0,1.0,5.0,0.0,EUR,Unknown
+2024-08-23 00:00:00,Sell,DE000SW19FA0,,"SocGen FaktS O.End CBOE VIX 16,741",Stock,1000.0,0.66,660.0,1.0,EUR,Unknown
+2024-08-23 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,119.0,0.0861,10.25,0.0,EUR,Unknown
+2024-08-23 00:00:00,Sell,KMTUF,,Komatsu,Stock,25.0,25.01,625.25,0.0,EUR,Unknown
+2024-08-23 00:00:00,Sell,VLXGF,,VOLEX,Stock,70.0,4.38,306.6,0.0,EUR,Unknown
+2024-08-23 00:00:00,Buy,PYPL,,PayPal Holdings,Stock,4.0,64.87,-259.48,0.0,EUR,Unknown
+2024-08-23 00:00:00,Buy,STNE,,StoneCo,Stock,20.0,12.77,-255.3,0.0,EUR,Unknown
+2024-08-23 00:00:00,Buy,DE000SW19FA0,,"SocGen FaktS O.End CBOE VIX 16,741",Stock,900.0,0.7,-630.0,1.0,EUR,Unknown
+2024-08-23 00:00:00,Buy,DNP.WA,,Dino Polska,Stock,60.0,7.586,-455.16,0.0,EUR,Unknown
+2024-08-23 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,7.0,6.59,-46.16,0.99,EUR,Unknown
+2024-08-23 00:00:00,Sell,MPC,,Marathon Petroleum,Stock,2.0,156.32,312.64,0.0,EUR,Unknown
+2024-08-23 00:00:00,Buy,VWSYF,,Vestas Wind Systems A/S,Stock,14.0,20.93,-293.02,0.0,EUR,Unknown
+2024-08-23 00:00:00,Sell,ADBE,,Adobe Systems,Stock,1.0,497.2,497.2,0.0,EUR,Unknown
+2024-08-23 00:00:00,Buy,NTLA,,Intellia Therapeutics,Stock,23.0,21.47,-493.81,0.0,EUR,Unknown
+2024-08-26 00:00:00,Sell,BTAFF,,British American Tobacco,Stock,39.0,32.71,1275.69,0.0,EUR,Unknown
+2024-08-26 00:00:00,Sell,TOYOF,,Toyota Motor,Stock,27.0,16.02,432.49,0.0,EUR,Unknown
+2024-08-26 00:00:00,Buy,PYPL,,PayPal Holdings,Stock,4.0,64.35,-257.4,0.0,EUR,Unknown
+2024-08-26 00:00:00,Buy,IBKR,,Interactive Brokers Group A,Stock,12.0,27.725,-332.7,0.0,EUR,Unknown
+2024-08-26 00:00:00,Buy,META,,Meta Platforms,Stock,1.0,473.2,-473.2,0.0,EUR,Unknown
+2024-08-26 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,17.0,15.1,-256.62,0.0,EUR,Unknown
+2024-08-26 00:00:00,TransferOut,,,,Unknown,10.71,1.0,10.71,0.0,EUR,Unknown
+2024-08-26 00:00:00,Buy,BRPETRACNPR6,,Petrobras (Vz),Stock,61.0,6.46,-394.12,0.0,EUR,Unknown
+2024-08-27 00:00:00,TransferOut,,,,Unknown,14.39,1.0,14.39,0.0,EUR,Unknown
+2024-08-27 00:00:00,Sell,BMY,,Bristol Myers Squibb,Stock,13.0,42.78,556.14,0.0,EUR,Unknown
+2024-08-27 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,19.0,13.54,-257.17,0.0,EUR,Unknown
+2024-08-27 00:00:00,Buy,PYPL,,PayPal Holdings,Stock,5.0,64.37,-321.85,0.0,EUR,Unknown
+2024-08-27 00:00:00,Sell,DE000SW19FA0,,"SocGen FaktS O.End CBOE VIX 16,741",Stock,900.0,0.7,630.0,1.0,EUR,Unknown
+2024-08-27 00:00:00,Sell,GMAB.CO,,Genmab,Stock,3.0,249.0,747.0,0.0,EUR,Unknown
+2024-08-27 00:00:00,Buy,US86800U1043,,Super Micro Computer,Stock,1.0,492.35,-492.35,0.0,EUR,Unknown
+2024-08-27 00:00:00,Sell,VLO,,Valero Energy,Stock,3.0,125.8,377.4,0.0,EUR,Unknown
+2024-08-27 00:00:00,Buy,VWSYF,,Vestas Wind Systems A/S,Stock,13.0,20.6,-267.8,0.0,EUR,Unknown
+2024-08-27 00:00:00,Buy,PYPL,,PayPal Holdings,Stock,5.0,63.99,-319.95,0.0,EUR,Unknown
+2024-08-27 00:00:00,TransferOut,,,,Unknown,399.0,1.0,399.0,0.0,EUR,Unknown
+2024-08-28 00:00:00,Dividend,KSPI,,Kaspi.kz,Stock,3.0,1.6,4.79,0.0,EUR,Unknown
+2024-08-28 00:00:00,Dividend,HOEGF,,Höegh Autoliners,Stock,151.0,0.62,93.0,0.0,EUR,Unknown
+2024-08-28 00:00:00,TransferOut,,,,Unknown,5.27,1.0,5.27,0.0,EUR,Unknown
+2024-08-28 00:00:00,Sell,DE,,Deere & Co.,Stock,2.0,339.7,679.4,0.0,EUR,Unknown
+2024-08-28 00:00:00,Buy,US86800U1043,,Super Micro Computer,Stock,1.0,361.55,-361.55,0.0,EUR,Unknown
+2024-08-28 00:00:00,Buy,POWL,,POWELL INDUSTRIES,Stock,2.0,147.8,-295.6,0.0,EUR,Unknown
+2024-08-28 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-08-29 00:00:00,Buy,FWRA.MI,,Invesco FTSE All-World UCITS ETF Acc,Stock,178.0,6.07,-1080.99,0.0,EUR,Unknown
+2024-08-29 00:00:00,Sell,SYK,,Stryker,Stock,1.0,323.4,323.4,0.0,EUR,Unknown
+2024-08-29 00:00:00,Buy,ULTA,,Ulta Beauty,Stock,1.0,337.3,-337.3,0.0,EUR,Unknown
+2024-08-30 00:00:00,Dividend,VLXGF,,VOLEX,Stock,70.0,0.0331,2.32,0.0,EUR,Unknown
+2024-08-30 00:00:00,TransferIn,,,,Unknown,1100.0,1.0,1100.0,0.0,EUR,Unknown
+2024-08-30 00:00:00,Sell,LULU,,Lululemon Athletica,Stock,2.0,240.45,480.9,0.0,EUR,Unknown
+2024-08-30 00:00:00,Sell,ULTA,,Ulta Beauty,Stock,2.0,306.1,612.2,0.0,EUR,Unknown
+2024-08-30 00:00:00,Buy,MNST,,Monster Beverage,Stock,6.0,42.66,-255.96,0.0,EUR,Unknown
+2024-08-30 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,20.0,13.41,-268.2,0.0,EUR,Unknown
+2024-08-30 00:00:00,TransferOut,,,,Unknown,54.28,1.0,54.28,0.0,EUR,Unknown
+2024-08-30 00:00:00,Buy,PYPL,,PayPal Holdings,Stock,4.0,65.93,-263.72,0.0,EUR,Unknown
+2024-08-30 00:00:00,Buy,ACMR,,ACM Research,Stock,26.0,16.49,-428.61,0.0,EUR,Unknown
+2024-08-31 00:00:00,Interest,,,,Unknown,0.95,1.0,0.95,0.0,EUR,Unknown
+2024-09-02 00:00:00,TransferIn,,,,Unknown,8.15,1.0,8.15,0.0,EUR,Unknown
+2024-09-02 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.185556,43.92,-8.15,0.0,EUR,Unknown
+2024-09-02 00:00:00,TransferOut,,,,Unknown,4.03,1.0,4.03,0.0,EUR,Unknown
+2024-09-02 00:00:00,TransferOut,,,,Unknown,11.96,1.0,11.96,0.0,EUR,Unknown
+2024-09-03 00:00:00,Dividend,VLO,,Valero Energy,Stock,3.0,0.97,2.9,0.0,EUR,Unknown
+2024-09-03 00:00:00,Dividend,PFE,,Pfizer,Stock,18.0,0.38,6.81,0.0,EUR,Unknown
+2024-09-03 00:00:00,Buy,FWRA.MI,,Invesco FTSE All-World UCITS ETF Acc,Stock,166.0,6.1,-1011.77,0.0,EUR,Unknown
+2024-09-03 00:00:00,TransferOut,,,,Unknown,6.68,1.0,6.68,0.0,EUR,Unknown
+2024-09-03 00:00:00,TransferOut,,,,Unknown,89.9,1.0,89.9,0.0,EUR,Unknown
+2024-09-03 00:00:00,Sell,US86800U1043,,Super Micro Computer,Stock,2.0,400.45,800.9,0.0,EUR,Unknown
+2024-09-03 00:00:00,Buy,NVDA,,NVIDIA,Stock,3.0,99.61,-298.83,0.0,EUR,Unknown
+2024-09-03 00:00:00,Buy,HOOD,,Robinhood,Stock,15.0,17.66,-264.9,0.0,EUR,Unknown
+2024-09-03 00:00:00,Buy,PLTR,,Palantir Technologies,Stock,9.0,27.99,-251.91,0.0,EUR,Unknown
+2024-09-06 00:00:00,TransferIn,,,,Unknown,245.0,1.0,245.0,0.0,EUR,Unknown
+2024-09-06 00:00:00,Dividend,GB00B10RZP78,,Unilever,Stock,12.444444444444445,0.495,6.11,0.0,EUR,Unknown
+2024-09-06 00:00:00,Sell,JUMSF,,Jumbo,Stock,12.0,24.56,294.72,0.0,EUR,Unknown
+2024-09-06 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,25.0,12.25,-306.13,0.0,EUR,Unknown
+2024-09-06 00:00:00,Sell,KSPI,,Kaspi.kz,Stock,3.0,114.0,342.0,0.0,EUR,Unknown
+2024-09-06 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,54.0,6.29,-339.71,0.0,EUR,Unknown
+2024-09-06 00:00:00,Sell,JUMSF,,Jumbo,Stock,35.0,24.56,859.6,0.0,EUR,Unknown
+2024-09-06 00:00:00,Buy,ASML.AS,,ASML Holding,Stock,1.0,684.7,-684.7,0.0,EUR,Unknown
+2024-09-06 00:00:00,Buy,NU,,Nubank,Stock,12.0,12.43,-149.16,0.99,EUR,Unknown
+2024-09-07 00:00:00,TransferOut,,,,Unknown,4.11,1.0,4.11,0.0,EUR,Unknown
+2024-09-09 00:00:00,TransferIn,,,,Unknown,25.0,1.0,25.0,0.0,EUR,Unknown
+2024-09-09 00:00:00,TransferOut,,,,Unknown,7.21,1.0,7.21,0.0,EUR,Unknown
+2024-09-09 00:00:00,TransferOut,,,,Unknown,17.07,1.0,17.07,0.0,EUR,Unknown
+2024-09-10 00:00:00,Dividend,MPC,,Marathon Petroleum,Stock,2.0,0.75,1.49,0.0,EUR,Unknown
+2024-09-10 00:00:00,TransferOut,,,,Unknown,1.19,1.0,1.19,0.0,EUR,Unknown
+2024-09-11 00:00:00,Dividend,ABMRF,,ABN AMRO Bank,Stock,29.0,0.6,17.4,0.0,EUR,Unknown
+2024-09-11 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-09-11 00:00:00,Sell,PG,,Procter & Gamble,Stock,6.0,158.22,949.32,0.0,EUR,Unknown
+2024-09-11 00:00:00,Buy,TSLA,,Tesla,Stock,3.0,200.35,-601.05,0.0,EUR,Unknown
+2024-09-11 00:00:00,Buy,PLTR,,Palantir Technologies,Stock,12.0,31.02,-372.24,0.0,EUR,Unknown
+2024-09-12 00:00:00,Dividend,MSFT,,Microsoft,Stock,6.0,0.68,4.05,0.0,EUR,Unknown
+2024-09-12 00:00:00,TransferOut,,,,Unknown,10.0,1.0,10.0,0.0,EUR,Unknown
+2024-09-13 00:00:00,Dividend,IBKR,,Interactive Brokers Group A,Stock,24.0,0.0575,1.35,0.0,EUR,Unknown
+2024-09-13 00:00:00,Sell,ETSY,,Etsy,Stock,6.0,50.5,303.0,0.0,EUR,Unknown
+2024-09-13 00:00:00,Buy,PSKOF,,ORLEN,Stock,25.0,14.36,-359.0,0.0,EUR,Unknown
+2024-09-15 00:00:00,TransferOut,,,,Unknown,80.52,1.0,80.52,0.0,EUR,Unknown
+2024-09-15 00:00:00,TransferOut,,,,Unknown,15.99,1.0,15.99,0.0,EUR,Unknown
+2024-09-16 00:00:00,Buy,IE00B4NCWG09,,iShares Physical Silver ETC - USD ACC,Stock,3.771734,26.51,-100.0,0.0,EUR,Unknown
+2024-09-16 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,13.0,0.18,2.33,0.0,EUR,Unknown
+2024-09-16 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,1.037967,91.53,-95.0,0.0,EUR,Unknown
+2024-09-16 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,4.419694,45.25,-200.0,0.0,EUR,Unknown
+2024-09-16 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.4728,179.78,-85.0,0.0,EUR,Unknown
+2024-09-16 00:00:00,TransferOut,,,,Unknown,8.31,1.0,8.31,0.0,EUR,Unknown
+2024-09-19 00:00:00,TransferOut,,,,Unknown,4.11,1.0,4.11,0.0,EUR,Unknown
+2024-09-19 00:00:00,TransferOut,,,,Unknown,2.4,1.0,2.4,0.0,EUR,Unknown
+2024-09-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,119.0,0.0121,1.44,0.0,EUR,Unknown
+2024-09-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,119.0,0.0735,8.75,0.0,EUR,Unknown
+2024-09-20 00:00:00,TransferOut,,,,Unknown,11.95,1.0,11.95,0.0,EUR,Unknown
+2024-09-20 00:00:00,Sell,ACMR,,ACM Research,Stock,26.0,15.56,404.56,0.0,EUR,Unknown
+2024-09-20 00:00:00,Buy,DKILF,,Daikin Industries,Stock,3.0,113.1,-339.3,0.0,EUR,Unknown
+2024-09-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2024-09-22 00:00:00,TransferOut,,,,Unknown,3.18,1.0,3.18,0.0,EUR,Unknown
+2024-09-22 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-09-23 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2024-09-23 00:00:00,Sell,GB00B10RZP78,,Unilever,Stock,12.444444444444445,64.6875,805.0,0.0,EUR,Unknown
+2024-09-23 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.443864,191.5,-85.0,0.0,EUR,Unknown
+2024-09-23 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.9865,96.3,-95.0,0.0,EUR,Unknown
+2024-09-23 00:00:00,TransferOut,,,,Unknown,4.72,1.0,4.72,0.0,EUR,Unknown
+2024-09-23 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,9.0,91.5,-823.5,0.0,EUR,Unknown
+2024-09-24 00:00:00,TransferOut,,,,Unknown,186.48,1.0,186.48,0.0,EUR,Unknown
+2024-09-25 00:00:00,TransferOut,,,,Unknown,2.18,1.0,2.18,0.0,EUR,Unknown
+2024-09-26 00:00:00,Dividend,XYL,,XYLEM,Stock,8.0,0.32,2.58,0.0,EUR,Unknown
+2024-09-26 00:00:00,Dividend,META,,Meta Platforms,Stock,1.0,0.45,0.45,0.0,EUR,Unknown
+2024-09-26 00:00:00,TransferIn,,,,Unknown,1100.0,1.0,1100.0,0.0,EUR,Unknown
+2024-09-26 00:00:00,Buy,FWRA.MI,,Invesco FTSE All-World UCITS ETF Acc,Stock,173.0,6.17,-1068.1,0.0,EUR,Unknown
+2024-09-27 00:00:00,Dividend,LMT,,Lockheed Martin,Stock,2.0,2.82,5.63,0.0,EUR,Unknown
+2024-09-27 00:00:00,TransferOut,,,,Unknown,10.98,1.0,10.98,0.0,EUR,Unknown
+2024-09-30 00:00:00,Interest,,,,Unknown,5.97,1.0,5.97,0.0,EUR,Unknown
+2024-09-30 00:00:00,Interest,,,,Unknown,3.07,1.0,3.07,0.0,EUR,Unknown
+2024-10-01 00:00:00,TransferIn,,,,Unknown,503.33,1.0,503.33,0.0,EUR,Unknown
+2024-10-01 00:00:00,Buy,GMAB.CO,,Genmab,Stock,2.0,217.5,-435.0,0.0,EUR,Unknown
+2024-10-02 00:00:00,TransferIn,,,,Unknown,6.83,1.0,6.83,0.0,EUR,Unknown
+2024-10-02 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.450164,188.82,-85.0,0.0,EUR,Unknown
+2024-10-02 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.98732,96.22,-95.0,0.0,EUR,Unknown
+2024-10-02 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.146686,46.56,-6.83,0.0,EUR,Unknown
+2024-10-02 00:00:00,Buy,FWRA.MI,,Invesco FTSE All-World UCITS ETF Acc,Stock,163.0,6.19,-1009.13,0.0,EUR,Unknown
+2024-10-03 00:00:00,TransferOut,,,,Unknown,3.26,1.0,3.26,0.0,EUR,Unknown
+2024-10-03 00:00:00,Sell,FCX,,Freeport-McMoRan,Stock,18.0,44.94,808.92,0.0,EUR,Unknown
+2024-10-03 00:00:00,Buy,SMCI,,Super Micro Computer,Stock,9.0,38.8,-349.16,0.0,EUR,Unknown
+2024-10-03 00:00:00,Buy,IREN,,IREN,Stock,43.0,6.91,-297.13,0.0,EUR,Unknown
+2024-10-03 00:00:00,Buy,NU,,Nubank,Stock,24.0,11.89,-285.26,0.0,EUR,Unknown
+2024-10-03 00:00:00,Sell,FTNT,,Fortinet,Stock,6.0,69.77,418.62,0.0,EUR,Unknown
+2024-10-03 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,58.0,7.07,-409.83,0.0,EUR,Unknown
+2024-10-04 00:00:00,TransferOut,,,,Unknown,11.44,1.0,11.44,0.0,EUR,Unknown
+2024-10-05 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2024-10-07 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,65.0,127.06,-8258.9,0.0,EUR,Unknown
+2024-10-07 00:00:00,Sell,FWRA.MI,,Invesco FTSE All-World UCITS ETF Acc,Stock,1350.0,6.24,8426.7,0.0,EUR,Unknown
+2024-10-08 00:00:00,TransferOut,,,,Unknown,29.99,1.0,29.99,0.0,EUR,Unknown
+2024-10-08 00:00:00,TransferOut,,,,Unknown,2.48,1.0,2.48,0.0,EUR,Unknown
+2024-10-09 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.424109,200.42,-85.0,0.0,EUR,Unknown
+2024-10-09 00:00:00,Dividend,TSM,,TSMC (ADR),Stock,5.0,0.57,2.85,0.0,EUR,Unknown
+2024-10-09 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.954725,99.51,-95.0,0.0,EUR,Unknown
+2024-10-09 00:00:00,TransferOut,,,,Unknown,9.83,1.0,9.83,0.0,EUR,Unknown
+2024-10-10 00:00:00,TransferOut,,,,Unknown,7.47,1.0,7.47,0.0,EUR,Unknown
+2024-10-10 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,14.0,127.58,-1786.12,0.0,EUR,Unknown
+2024-10-11 00:00:00,TransferOut,,,,Unknown,11.04,1.0,11.04,0.0,EUR,Unknown
+2024-10-11 00:00:00,Sell,NTLA,,Intellia Therapeutics,Stock,23.0,16.39,376.97,0.0,EUR,Unknown
+2024-10-11 00:00:00,Buy,IREN,,IREN,Stock,57.0,7.01,-399.57,0.0,EUR,Unknown
+2024-10-12 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-10-13 00:00:00,TransferOut,,,,Unknown,388.06,1.0,388.06,0.0,EUR,Unknown
+2024-10-14 00:00:00,TransferIn,,,,Unknown,400.0,1.0,400.0,0.0,EUR,Unknown
+2024-10-14 00:00:00,TransferOut,,,,Unknown,8.91,1.0,8.91,0.0,EUR,Unknown
+2024-10-16 00:00:00,Buy,IE00B4NCWG09,,iShares Physical Silver ETC - USD ACC,Stock,3.554923,28.13,-100.0,0.0,EUR,Unknown
+2024-10-16 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.422675,201.1,-85.0,0.0,EUR,Unknown
+2024-10-16 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,4.178854,47.86,-200.0,0.0,EUR,Unknown
+2024-10-16 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.918584,103.42,-95.0,0.0,EUR,Unknown
+2024-10-18 00:00:00,Sell,MNST,,Monster Beverage,Stock,15.0,49.74,746.1,0.0,EUR,Unknown
+2024-10-18 00:00:00,Buy,ELF,,"E.L.F. BEAUTY INC DL-,01",Stock,4.0,99.88,-399.52,0.0,EUR,Unknown
+2024-10-18 00:00:00,Buy,ENPH,,Enphase Energy,Stock,4.0,83.96,-335.84,0.0,EUR,Unknown
+2024-10-19 00:00:00,TransferOut,,,,Unknown,10.0,1.0,10.0,0.0,EUR,Unknown
+2024-10-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2024-10-21 00:00:00,TransferOut,,,,Unknown,6.17,1.0,6.17,0.0,EUR,Unknown
+2024-10-21 00:00:00,TransferOut,,,,Unknown,0.6,1.0,0.6,0.0,EUR,Unknown
+2024-10-22 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2024-10-22 00:00:00,TransferOut,,,,Unknown,10.84,1.0,10.84,0.0,EUR,Unknown
+2024-10-22 00:00:00,TransferIn,,,,Unknown,98.0,1.0,98.0,0.0,EUR,Unknown
+2024-10-23 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.413424,205.6,-85.0,0.0,EUR,Unknown
+2024-10-23 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.912496,104.11,-95.0,0.0,EUR,Unknown
+2024-10-23 00:00:00,TransferOut,,,,Unknown,10.95,1.0,10.95,0.0,EUR,Unknown
+2024-10-28 00:00:00,TransferIn,,,,Unknown,30.0,1.0,30.0,0.0,EUR,Unknown
+2024-10-28 00:00:00,TransferOut,,,,Unknown,9.3,1.0,9.3,0.0,EUR,Unknown
+2024-10-28 00:00:00,Sell,VWSYF,,Vestas Wind Systems A/S,Stock,27.0,17.68,477.49,0.0,EUR,Unknown
+2024-10-28 00:00:00,Buy,GMAB.CO,,Genmab,Stock,2.0,212.8,-425.6,0.0,EUR,Unknown
+2024-10-28 00:00:00,TransferOut,,,,Unknown,5.52,1.0,5.52,0.0,EUR,Unknown
+2024-10-28 00:00:00,Sell,DKILF,,Daikin Industries,Stock,7.0,109.8,768.6,0.0,EUR,Unknown
+2024-10-28 00:00:00,Buy,ELF,,"E.L.F. BEAUTY INC DL-,01",Stock,3.0,102.15,-306.45,0.0,EUR,Unknown
+2024-10-28 00:00:00,Buy,TMDX,,TRANSMEDICS GROUP,Stock,3.0,117.9,-353.7,0.0,EUR,Unknown
+2024-10-28 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,1.0,104.0,-104.0,0.99,EUR,Unknown
+2024-10-30 00:00:00,TransferOut,,,,Unknown,6.11,1.0,6.11,0.0,EUR,Unknown
+2024-10-30 00:00:00,TransferIn,,,,Unknown,1200.0,1.0,1200.0,0.0,EUR,Unknown
+2024-10-30 00:00:00,TransferOut,,,,Unknown,15.03,1.0,15.03,0.0,EUR,Unknown
+2024-10-30 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,8.0,128.26,-1026.08,0.0,EUR,Unknown
+2024-10-31 00:00:00,Interest,,,,Unknown,1.57,1.0,1.57,0.0,EUR,Unknown
+2024-10-31 00:00:00,TransferOut,,,,Unknown,13.66,1.0,13.66,0.0,EUR,Unknown
+2024-11-01 00:00:00,Sell,LMT,,Lockheed Martin,Stock,2.0,505.1,1010.2,0.0,EUR,Unknown
+2024-11-01 00:00:00,Buy,TMDX,,TRANSMEDICS GROUP,Stock,4.0,77.1,-308.4,0.0,EUR,Unknown
+2024-11-01 00:00:00,Buy,ELF,,"E.L.F. BEAUTY INC DL-,01",Stock,3.0,98.54,-295.62,0.0,EUR,Unknown
+2024-11-01 00:00:00,Buy,GMAB.CO,,Genmab,Stock,2.0,206.6,-413.2,0.0,EUR,Unknown
+2024-11-01 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-11-03 00:00:00,TransferOut,,,,Unknown,5.93,1.0,5.93,0.0,EUR,Unknown
+2024-11-04 00:00:00,TransferIn,,,,Unknown,7.03,1.0,7.03,0.0,EUR,Unknown
+2024-11-04 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.972314,97.71,-95.0,0.0,EUR,Unknown
+2024-11-04 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.433717,195.98,-85.0,0.0,EUR,Unknown
+2024-11-04 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.143715,48.92,-7.03,0.0,EUR,Unknown
+2024-11-04 00:00:00,TransferOut,,,,Unknown,5.48,1.0,5.48,0.0,EUR,Unknown
+2024-11-05 00:00:00,TransferIn,,,,Unknown,183.58,1.0,183.58,0.0,EUR,Unknown
+2024-11-06 00:00:00,TransferIn,,,,Unknown,800.0,1.0,800.0,0.0,EUR,Unknown
+2024-11-06 00:00:00,Buy,LNTH,,Lantheus Hldg.,Stock,3.0,85.06,-255.18,0.0,EUR,Unknown
+2024-11-06 00:00:00,Buy,TMDX,,TRANSMEDICS GROUP,Stock,4.0,78.56,-314.24,0.0,EUR,Unknown
+2024-11-06 00:00:00,Buy,NU,,Nubank,Stock,21.0,13.92,-292.4,0.0,EUR,Unknown
+2024-11-06 00:00:00,TransferOut,,,,Unknown,25.29,1.0,25.29,0.0,EUR,Unknown
+2024-11-07 00:00:00,Dividend,ASML.AS,,ASML Holding,Stock,3.0,1.52,4.56,0.0,EUR,Unknown
+2024-11-07 00:00:00,TransferOut,,,,Unknown,20.0,1.0,20.0,0.0,EUR,Unknown
+2024-11-10 00:00:00,TransferOut,,,,Unknown,3.59,1.0,3.59,0.0,EUR,Unknown
+2024-11-11 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.829911,114.47,-95.0,0.0,EUR,Unknown
+2024-11-11 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.365591,232.5,-85.0,0.0,EUR,Unknown
+2024-11-11 00:00:00,TransferOut,,,,Unknown,7.96,1.0,7.96,0.0,EUR,Unknown
+2024-11-12 00:00:00,TransferOut,,,,Unknown,12.43,1.0,12.43,0.0,EUR,Unknown
+2024-11-13 00:00:00,TransferOut,,,,Unknown,9.46,1.0,9.46,0.0,EUR,Unknown
+2024-11-14 00:00:00,TransferOut,,,,Unknown,14.93,1.0,14.93,0.0,EUR,Unknown
+2024-11-15 00:00:00,TransferOut,,,,Unknown,11.4,1.0,11.4,0.0,EUR,Unknown
+2024-11-16 00:00:00,TransferOut,,,,Unknown,9.98,1.0,9.98,0.0,EUR,Unknown
+2024-11-16 00:00:00,TransferOut,,,,Unknown,16.17,1.0,16.17,0.0,EUR,Unknown
+2024-11-17 00:00:00,TransferOut,,,,Unknown,116.83,1.0,116.83,0.0,EUR,Unknown
+2024-11-18 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,4.195158,47.67,-200.0,0.0,EUR,Unknown
+2024-11-18 00:00:00,Buy,IE00B4NCWG09,,iShares Physical Silver ETC - USD ACC,Stock,2.483502,28.19,-70.0,0.0,EUR,Unknown
+2024-11-18 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.922424,108.41,-100.0,0.0,EUR,Unknown
+2024-11-18 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.396085,214.6,-85.0,0.0,EUR,Unknown
+2024-11-18 00:00:00,TransferOut,,,,Unknown,6.59,1.0,6.59,0.0,EUR,Unknown
+2024-11-18 00:00:00,TransferOut,,,,Unknown,12.93,1.0,12.93,0.0,EUR,Unknown
+2024-11-19 00:00:00,TransferOut,,,,Unknown,9.76,1.0,9.76,0.0,EUR,Unknown
+2024-11-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2024-11-21 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,119.0,0.0186,2.21,0.0,EUR,Unknown
+2024-11-21 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,119.0,0.0673,8.01,0.0,EUR,Unknown
+2024-11-22 00:00:00,TransferOut,,,,Unknown,21.98,1.0,21.98,0.0,EUR,Unknown
+2024-11-22 00:00:00,Sell,IE00B4NCWG09,,iShares Physical Silver ETC - USD ACC,Stock,17.0,27.89,474.13,1.0,EUR,Unknown
+2024-11-22 00:00:00,Sell,IE00B4NCWG09,,iShares Physical Silver ETC - USD ACC,Stock,0.910932,27.89,25.41,0.0,EUR,Unknown
+2024-11-23 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-11-23 00:00:00,TransferOut,,,,Unknown,5.58,1.0,5.58,0.0,EUR,Unknown
+2024-11-24 00:00:00,TransferOut,,,,Unknown,49.43,1.0,49.43,0.0,EUR,Unknown
+2024-11-25 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2024-11-25 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.867678,115.25,-100.0,0.0,EUR,Unknown
+2024-11-25 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.374317,227.08,-85.0,0.0,EUR,Unknown
+2024-11-26 00:00:00,Dividend,KSPI,,Kaspi.kz,Stock,10.0,1.62,16.19,0.0,EUR,Unknown
+2024-11-26 00:00:00,TransferOut,,,,Unknown,5.84,1.0,5.84,0.0,EUR,Unknown
+2024-11-26 00:00:00,TransferOut,,,,Unknown,48.96,1.0,48.96,0.0,EUR,Unknown
+2024-11-28 00:00:00,TransferIn,,,,Unknown,1400.0,1.0,1400.0,0.0,EUR,Unknown
+2024-11-28 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,18.0,134.08,-2413.44,0.0,EUR,Unknown
+2024-11-28 00:00:00,TransferOut,,,,Unknown,20.0,1.0,20.0,0.0,EUR,Unknown
+2024-11-29 00:00:00,TransferIn,,,,Unknown,1400.0,1.0,1400.0,0.0,EUR,Unknown
+2024-11-29 00:00:00,Buy,NU,,Nubank,Stock,22.0,12.03,-264.66,0.0,EUR,Unknown
+2024-11-29 00:00:00,Buy,TMDX,,TRANSMEDICS GROUP,Stock,4.0,83.62,-334.48,0.0,EUR,Unknown
+2024-11-29 00:00:00,Buy,LNTH,,Lantheus Hldg.,Stock,3.0,85.76,-257.28,0.0,EUR,Unknown
+2024-11-29 00:00:00,Buy,LI,,Li Auto (ADR),Stock,12.0,22.0,-264.0,0.0,EUR,Unknown
+2024-11-29 00:00:00,Buy,NU,,Nubank,Stock,24.0,11.96,-287.14,0.0,EUR,Unknown
+2024-11-30 00:00:00,Interest,,,,Unknown,2.2,1.0,2.2,0.0,EUR,Unknown
+2024-12-01 00:00:00,TransferOut,,,,Unknown,133.0,1.0,133.0,0.0,EUR,Unknown
+2024-12-02 00:00:00,TransferIn,,,,Unknown,5.43,1.0,5.43,0.0,EUR,Unknown
+2024-12-02 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.111389,48.75,-5.43,0.0,EUR,Unknown
+2024-12-02 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.848248,117.89,-100.0,0.0,EUR,Unknown
+2024-12-02 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.361087,235.4,-85.0,0.0,EUR,Unknown
+2024-12-02 00:00:00,TransferOut,,,,Unknown,19.13,1.0,19.13,0.0,EUR,Unknown
+2024-12-03 00:00:00,Dividend,DKILF,,Daikin Industries,Stock,7.0,1.17,8.16,0.0,EUR,Unknown
+2024-12-03 00:00:00,TransferIn,,,,Unknown,200.0,1.0,200.0,0.0,EUR,Unknown
+2024-12-03 00:00:00,Sell,SMCI,,Super Micro Computer,Stock,9.0,37.8,340.2,0.0,EUR,Unknown
+2024-12-03 00:00:00,Buy,TMDX,,TRANSMEDICS GROUP,Stock,5.0,69.08,-345.4,0.0,EUR,Unknown
+2024-12-03 00:00:00,TransferOut,,,,Unknown,2.4,1.0,2.4,0.0,EUR,Unknown
+2024-12-04 00:00:00,TransferIn,,,,Unknown,1239.46,1.0,1239.46,0.0,EUR,Unknown
+2024-12-04 00:00:00,TransferIn,ANET,,Arista Networks,Stock,16.0,64.03,1024.5,0.0,EUR,Unknown
+2024-12-04 00:00:00,TransferOut,ARKK,,Arista Networks,Stock,4.0,0.0,0.0,0.0,EUR,Unknown
+2024-12-04 00:00:00,TransferOut,,,,Unknown,17.47,1.0,17.47,0.0,EUR,Unknown
+2024-12-05 00:00:00,Buy,TDW,,TIDEWATER INC.,Stock,6.0,47.02,-282.12,0.0,EUR,Unknown
+2024-12-05 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,2.0,164.5,-329.0,0.0,EUR,Unknown
+2024-12-05 00:00:00,Buy,LNTH,,Lantheus Hldg.,Stock,3.0,85.76,-257.28,0.0,EUR,Unknown
+2024-12-05 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,3.0,103.0,-309.0,0.0,EUR,Unknown
+2024-12-05 00:00:00,Buy,NU,,Nubank,Stock,7.0,11.49,-80.42,0.99,EUR,Unknown
+2024-12-06 00:00:00,TransferOut,,,,Unknown,5.99,1.0,5.99,0.0,EUR,Unknown
+2024-12-06 00:00:00,Sell,PYPL,,PayPal Holdings,Stock,7.0,84.16,589.12,0.0,EUR,Unknown
+2024-12-06 00:00:00,Buy,RNKGF,,RENK,Stock,12.0,21.41,-256.92,0.0,EUR,Unknown
+2024-12-06 00:00:00,Buy,SESMF,,SÜSS MicroTec,Stock,6.0,50.0,-300.0,0.0,EUR,Unknown
+2024-12-06 00:00:00,Sell,STNE,,StoneCo,Stock,193.0,8.86,1710.75,0.0,EUR,Unknown
+2024-12-06 00:00:00,Buy,GMAB.CO,,Genmab,Stock,2.0,205.5,-411.0,0.0,EUR,Unknown
+2024-12-06 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,3.0,104.0,-312.0,0.0,EUR,Unknown
+2024-12-06 00:00:00,Buy,TSM,,TSMC (ADR),Stock,2.0,191.2,-382.4,0.0,EUR,Unknown
+2024-12-06 00:00:00,Buy,PSKOF,,ORLEN,Stock,21.0,12.48,-262.12,0.0,EUR,Unknown
+2024-12-06 00:00:00,Buy,RNKGF,,RENK,Stock,15.0,21.32,-319.8,0.0,EUR,Unknown
+2024-12-06 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-12-06 00:00:00,TransferOut,,,,Unknown,1.0,1.0,1.0,0.0,EUR,Unknown
+2024-12-07 00:00:00,TransferOut,,,,Unknown,51.0,1.0,51.0,0.0,EUR,Unknown
+2024-12-08 00:00:00,TransferOut,,,,Unknown,11.99,1.0,11.99,0.0,EUR,Unknown
+2024-12-08 00:00:00,TransferOut,,,,Unknown,0.01,1.0,0.01,0.0,EUR,Unknown
+2024-12-08 00:00:00,TransferOut,,,,Unknown,1.49,1.0,1.49,0.0,EUR,Unknown
+2024-12-08 00:00:00,TransferOut,,,,Unknown,0.51,1.0,0.51,0.0,EUR,Unknown
+2024-12-08 00:00:00,TransferOut,,,,Unknown,82.67,1.0,82.67,0.0,EUR,Unknown
+2024-12-08 00:00:00,TransferOut,,,,Unknown,0.33,1.0,0.33,0.0,EUR,Unknown
+2024-12-09 00:00:00,TransferIn,,,,Unknown,1.85,1.0,1.85,0.0,EUR,Unknown
+2024-12-09 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.846668,118.11,-100.0,0.0,EUR,Unknown
+2024-12-09 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.037916,48.79,-1.85,0.0,EUR,Unknown
+2024-12-09 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.342465,248.2,-85.0,0.0,EUR,Unknown
+2024-12-10 00:00:00,Buy,JE00B588CD74,,WisdomTree Physical Swiss Gold - EUR ACC,Stock,0.2046,244.38,-50.0,1.0,EUR,Unknown
+2024-12-11 00:00:00,TransferIn,,,,Unknown,20.56,1.0,20.56,0.0,EUR,Unknown
+2024-12-12 00:00:00,Dividend,MSFT,,Microsoft,Stock,6.0,0.79,4.74,0.0,EUR,Unknown
+2024-12-13 00:00:00,Dividend,IBKR,,Interactive Brokers Group A,Stock,24.0,0.06,1.42,0.0,EUR,Unknown
+2024-12-13 00:00:00,TransferOut,,,,Unknown,14.31,1.0,14.31,0.0,EUR,Unknown
+2024-12-13 00:00:00,TransferOut,,,,Unknown,0.69,1.0,0.69,0.0,EUR,Unknown
+2024-12-15 00:00:00,TransferOut,,,,Unknown,83.07,1.0,83.07,0.0,EUR,Unknown
+2024-12-15 00:00:00,TransferOut,,,,Unknown,0.93,1.0,0.93,0.0,EUR,Unknown
+2024-12-16 00:00:00,TransferIn,,,,Unknown,1.62,1.0,1.62,0.0,EUR,Unknown
+2024-12-16 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.842601,118.68,-100.0,0.0,EUR,Unknown
+2024-12-16 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,15.0,0.19,2.85,0.0,EUR,Unknown
+2024-12-16 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.032977,49.13,-1.62,0.0,EUR,Unknown
+2024-12-16 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.323735,262.56,-85.0,0.0,EUR,Unknown
+2024-12-16 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,6.106994,49.12,-300.0,0.0,EUR,Unknown
+2024-12-16 00:00:00,TransferOut,,,,Unknown,29.13,1.0,29.13,0.0,EUR,Unknown
+2024-12-16 00:00:00,TransferOut,,,,Unknown,0.87,1.0,0.87,0.0,EUR,Unknown
+2024-12-17 00:00:00,TransferOut,,,,Unknown,17.65,1.0,17.65,0.0,EUR,Unknown
+2024-12-17 00:00:00,TransferOut,,,,Unknown,0.35,1.0,0.35,0.0,EUR,Unknown
+2024-12-18 00:00:00,Dividend,HOEGF,,Höegh Autoliners,Stock,177.0,1.21,214.07,0.0,EUR,Unknown
+2024-12-18 00:00:00,Dividend,POWL,,POWELL INDUSTRIES,Stock,2.0,0.26,0.51,0.0,EUR,Unknown
+2024-12-19 00:00:00,TransferIn,,,,Unknown,1700.0,1.0,1700.0,0.0,EUR,Unknown
+2024-12-19 00:00:00,TransferOut,,,,Unknown,21.26,1.0,21.26,0.0,EUR,Unknown
+2024-12-19 00:00:00,TransferOut,,,,Unknown,0.74,1.0,0.74,0.0,EUR,Unknown
+2024-12-19 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,12.0,133.86,-1606.32,0.0,EUR,Unknown
+2024-12-19 00:00:00,Buy,DE000SW19FB8,,"SocGen FaktS O.End CBOE VIX 16,741",Stock,600.0,1.1,-660.0,1.0,EUR,Unknown
+2024-12-20 00:00:00,TransferIn,,,,Unknown,1500.0,1.0,1500.0,0.0,EUR,Unknown
+2024-12-20 00:00:00,Dividend,PSKOF,,ORLEN,Stock,103.0,0.97,99.83,0.0,EUR,Unknown
+2024-12-20 00:00:00,Sell,LI,,Li Auto (ADR),Stock,12.0,22.6,271.2,0.0,EUR,Unknown
+2024-12-20 00:00:00,TransferIn,SOL,,Solana,Crypto,7.85825,163.85,1287.57,0.0,EUR,Unknown
+2024-12-20 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,6.0,79.84,-479.04,0.0,EUR,Unknown
+2024-12-20 00:00:00,TransferIn,ETH,,Ethereum,Crypto,0.44799762,3115.49,1395.73,0.0,EUR,Unknown
+2024-12-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2024-12-21 00:00:00,TransferOut,,,,Unknown,0.6,1.0,0.6,0.0,EUR,Unknown
+2024-12-21 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2024-12-21 00:00:00,TransferOut,,,,Unknown,1.0,1.0,1.0,0.0,EUR,Unknown
+2024-12-23 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2024-12-23 00:00:00,TransferIn,,,,Unknown,3.56,1.0,3.56,0.0,EUR,Unknown
+2024-12-23 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,180.0,0.24,43.47,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.356813,238.22,-85.0,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.07254,49.08,-3.56,0.0,EUR,Unknown
+2024-12-23 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,119.0,0.0829,9.87,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.904159,110.6,-100.0,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,NU,,Nubank,Stock,26.0,10.09,-262.29,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,WPLCF,,Wise,Stock,40.0,12.8,-512.0,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,EVGGF,,Evolution Gaming,Stock,4.0,70.62,-282.48,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,GRAB,,Grab Holdings Limited,Stock,60.0,4.8,-287.94,0.0,EUR,Unknown
+2024-12-23 00:00:00,Sell,STLA,,Stellantis N.V.,Stock,101.0,12.29,1240.89,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,ES0105046009,,Aena,Stock,20.0,19.9,-398.0,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,AMD,,Advanced Micro Devices,Stock,3.0,116.12,-348.36,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,TRMD,,TORM,Stock,15.0,17.76,-266.4,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,EVGGF,,Evolution Gaming,Stock,5.0,70.68,-353.4,0.0,EUR,Unknown
+2024-12-23 00:00:00,TransferOut,,,,Unknown,5.99,1.0,5.99,0.0,EUR,Unknown
+2024-12-23 00:00:00,TransferOut,,,,Unknown,0.01,1.0,0.01,0.0,EUR,Unknown
+2024-12-23 00:00:00,Sell,ES0105046009,,Aena,Stock,20.0,19.89,397.8,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,HXSCL,,SK HYNIX GDR 144A/REGS 1,Stock,3.0,116.0,-348.0,0.0,EUR,Unknown
+2024-12-23 00:00:00,TransferOut,,,,Unknown,54.49,1.0,54.49,0.0,EUR,Unknown
+2024-12-23 00:00:00,TransferOut,,,,Unknown,0.51,1.0,0.51,0.0,EUR,Unknown
+2024-12-23 00:00:00,Sell,PYPL,,PayPal Holdings,Stock,10.0,83.27,832.7,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,JUMSF,,Jumbo,Stock,20.0,25.48,-509.6,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,MSTR,,Strategy,Stock,1.0,332.1,-332.1,0.0,EUR,Unknown
+2024-12-23 00:00:00,Sell,PYPL,,PayPal Holdings,Stock,4.0,83.19,332.76,0.0,EUR,Unknown
+2024-12-23 00:00:00,Buy,GRS469003024,,Kri-Kri,Stock,22.0,15.35,-337.7,0.0,EUR,Unknown
+2024-12-24 00:00:00,Dividend,XYL,,XYLEM,Stock,8.0,0.35,2.76,0.0,EUR,Unknown
+2024-12-26 00:00:00,TransferOut,,,,Unknown,14.07,1.0,14.07,0.0,EUR,Unknown
+2024-12-26 00:00:00,TransferOut,,,,Unknown,0.93,1.0,0.93,0.0,EUR,Unknown
+2024-12-27 00:00:00,Sell,ENPH,,Enphase Energy,Stock,24.0,69.86,1676.64,0.0,EUR,Unknown
+2024-12-27 00:00:00,Buy,NU,,Nubank,Stock,26.0,9.97,-259.27,0.0,EUR,Unknown
+2024-12-27 00:00:00,Buy,JGHAF,,Jungheinrich Vz,Stock,20.0,25.08,-501.6,0.0,EUR,Unknown
+2024-12-27 00:00:00,Buy,GRAB,,Grab Holdings Limited,Stock,54.0,4.81,-259.47,0.0,EUR,Unknown
+2024-12-27 00:00:00,Buy,INPOF,,InPost,Stock,20.0,16.57,-331.4,0.0,EUR,Unknown
+2024-12-27 00:00:00,Dividend,NVDA,,NVIDIA,Stock,16.0,0.00938,0.15,0.0,EUR,Unknown
+2024-12-27 00:00:00,Dividend,META,,Meta Platforms,Stock,1.0,0.48,0.48,0.0,EUR,Unknown
+2024-12-27 00:00:00,Buy,GMAB.CO,,Genmab,Stock,2.0,200.1,-400.2,0.0,EUR,Unknown
+2024-12-27 00:00:00,Sell,JE00B588CD74,,WisdomTree Physical Swiss Gold - EUR ACC,Stock,0.2046,241.4,49.39,1.0,EUR,Unknown
+2024-12-27 00:00:00,Sell,DE000SW19FB8,,"SocGen FaktS O.End CBOE VIX 16,741",Stock,600.0,1.35,810.0,1.0,EUR,Unknown
+2024-12-27 00:00:00,Sell,RNKGF,,RENK,Stock,27.0,18.24,492.53,0.0,EUR,Unknown
+2024-12-27 00:00:00,Buy,GRS469003024,,Kri-Kri,Stock,18.0,14.9,-268.2,0.0,EUR,Unknown
+2024-12-27 00:00:00,Buy,JGHAF,,Jungheinrich Vz,Stock,10.0,25.6,-256.0,0.0,EUR,Unknown
+2024-12-27 00:00:00,Sell,SESMF,,SÜSS MicroTec,Stock,6.0,49.65,297.9,0.0,EUR,Unknown
+2024-12-27 00:00:00,Buy,INPOF,,InPost,Stock,17.0,16.44,-279.48,0.0,EUR,Unknown
+2024-12-27 00:00:00,Sell,LNTH,,Lantheus Hldg.,Stock,3.0,87.46,262.38,0.0,EUR,Unknown
+2024-12-27 00:00:00,Buy,GRAB,,Grab Holdings Limited,Stock,58.0,4.6,-266.74,0.0,EUR,Unknown
+2024-12-28 00:00:00,TransferOut,,,,Unknown,4.99,1.0,4.99,0.0,EUR,Unknown
+2024-12-29 00:00:00,TransferOut,,,,Unknown,109.57,1.0,109.57,0.0,EUR,Unknown
+2024-12-30 00:00:00,TransferOut,,,,Unknown,24.24,1.0,24.24,0.0,EUR,Unknown
+2024-12-30 00:00:00,TransferOut,,,,Unknown,5.49,1.0,5.49,0.0,EUR,Unknown
+2024-12-31 00:00:00,Interest,,,,Unknown,2.24,1.0,2.24,0.0,EUR,Unknown
+2024-12-31 00:00:00,Interest,,,,Unknown,3.47,1.0,3.47,0.0,EUR,Unknown
+2024-12-31 00:00:00,TransferOut,,,,Unknown,2.94,1.0,2.94,0.0,EUR,Unknown
+2024-12-31 00:00:00,TransferOut,,,,Unknown,5.99,1.0,5.99,0.0,EUR,Unknown
+2025-01-01 00:00:00,TransferOut,,,,Unknown,2.4,1.0,2.4,0.0,EUR,Unknown
+2025-01-01 00:00:00,TransferOut,,,,Unknown,400.0,1.0,400.0,0.0,EUR,Unknown
+2025-01-02 00:00:00,Sell,AMD,,Advanced Micro Devices,Stock,3.0,117.6,352.8,0.0,EUR,Unknown
+2025-01-02 00:00:00,Sell,TRMD,,TORM,Stock,15.0,18.94,284.1,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,NSSC,,NAPCO Security Technologies,Stock,8.0,34.83,-278.64,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,PSKRF,,Protector Forsikring,Stock,19.0,24.25,-460.75,0.0,EUR,Unknown
+2025-01-02 00:00:00,TransferIn,,,,Unknown,8.7,1.0,8.7,0.0,EUR,Unknown
+2025-01-02 00:00:00,TransferIn,,,,Unknown,1.45,1.0,1.45,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.355827,238.88,-85.0,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.955414,109.9,-105.0,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.029304,49.48,-1.45,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.175835,49.48,-8.7,0.0,EUR,Unknown
+2025-01-02 00:00:00,Sell,PSKOF,,ORLEN,Stock,29.0,11.24,325.96,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,8.0,134.26,-1074.08,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,RTPPF,,Rio Tinto,Stock,5.0,57.31,-286.55,0.0,EUR,Unknown
+2025-01-02 00:00:00,Sell,TSLA,,Tesla,Stock,1.0,392.6,392.6,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,VEEV,,Veeva Systems,Stock,2.0,205.2,-410.4,0.0,EUR,Unknown
+2025-01-02 00:00:00,Sell,HXSCL,,SK HYNIX GDR 144A/REGS 1,Stock,3.0,113.0,339.0,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,DKILF,,Daikin Industries,Stock,3.0,114.1,-342.3,0.0,EUR,Unknown
+2025-01-02 00:00:00,Sell,PYPL,,PayPal Holdings,Stock,6.0,83.72,502.32,0.0,EUR,Unknown
+2025-01-02 00:00:00,Buy,MARA,,Mara Holdings,Stock,29.0,16.73,-485.29,0.0,EUR,Unknown
+2025-01-02 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-01-05 00:00:00,TransferOut,,,,Unknown,300.0,1.0,300.0,0.0,EUR,Unknown
+2025-01-09 00:00:00,Dividend,TSM,,TSMC (ADR),Stock,7.0,0.6,4.17,0.0,EUR,Unknown
+2025-01-09 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.954545,110.0,-105.0,0.0,EUR,Unknown
+2025-01-09 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.361825,234.92,-85.0,0.0,EUR,Unknown
+2025-01-10 00:00:00,Sell,TSLA,,Tesla,Stock,1.0,381.05,381.05,0.0,EUR,Unknown
+2025-01-10 00:00:00,Buy,TMDX,,TRANSMEDICS GROUP,Stock,5.0,60.94,-304.7,0.0,EUR,Unknown
+2025-01-10 00:00:00,Sell,MSTR,,Strategy,Stock,1.0,319.9,319.9,0.0,EUR,Unknown
+2025-01-10 00:00:00,Buy,NRKBF,,Nkt A/S,Stock,4.0,66.05,-264.2,0.0,EUR,Unknown
+2025-01-10 00:00:00,Buy,GRAB,,Grab Holdings Limited,Stock,40.0,4.36,-174.4,0.99,EUR,Unknown
+2025-01-13 00:00:00,TransferOut,,,,Unknown,8.86,1.0,8.86,0.0,EUR,Unknown
+2025-01-13 00:00:00,Sell,HIMS,,Hims & Hers Health,Stock,20.0,24.39,487.8,0.0,EUR,Unknown
+2025-01-13 00:00:00,Buy,SPIW.DE,,Kontron,Stock,27.0,17.86,-482.22,0.0,EUR,Unknown
+2025-01-13 00:00:00,Sell,NRKBF,,Nkt A/S,Stock,4.0,65.95,263.8,0.0,EUR,Unknown
+2025-01-13 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,19.0,13.72,-260.64,0.0,EUR,Unknown
+2025-01-15 00:00:00,TransferOut,,,,Unknown,10.76,1.0,10.76,0.0,EUR,Unknown
+2025-01-16 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.938925,111.83,-105.0,0.0,EUR,Unknown
+2025-01-16 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.359529,236.42,-85.0,0.0,EUR,Unknown
+2025-01-16 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,3.915043,51.09,-200.0,0.0,EUR,Unknown
+2025-01-16 00:00:00,TransferOut,,,,Unknown,10.91,1.0,10.91,0.0,EUR,Unknown
+2025-01-17 00:00:00,TransferOut,,,,Unknown,7.78,1.0,7.78,0.0,EUR,Unknown
+2025-01-17 00:00:00,TransferOut,,,,Unknown,5.33,1.0,5.33,0.0,EUR,Unknown
+2025-01-17 00:00:00,TransferOut,,,,Unknown,9.83,1.0,9.83,0.0,EUR,Unknown
+2025-01-19 00:00:00,TransferOut,,,,Unknown,24.49,1.0,24.49,0.0,EUR,Unknown
+2025-01-20 00:00:00,TransferOut,,,,Unknown,20.43,1.0,20.43,0.0,EUR,Unknown
+2025-01-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-01-21 00:00:00,TransferOut,,,,Unknown,13.88,1.0,13.88,0.0,EUR,Unknown
+2025-01-21 00:00:00,Sell,TDW,,TIDEWATER INC.,Stock,6.0,53.32,319.92,0.0,EUR,Unknown
+2025-01-21 00:00:00,Buy,JGHAF,,Jungheinrich Vz,Stock,13.0,24.5,-318.5,0.0,EUR,Unknown
+2025-01-23 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2025-01-23 00:00:00,TransferOut,,,,Unknown,8.52,1.0,8.52,0.0,EUR,Unknown
+2025-01-24 00:00:00,TransferOut,,,,Unknown,21.05,1.0,21.05,0.0,EUR,Unknown
+2025-01-27 00:00:00,TransferOut,,,,Unknown,17.34,1.0,17.34,0.0,EUR,Unknown
+2025-01-29 00:00:00,TransferOut,,,,Unknown,12.82,1.0,12.82,0.0,EUR,Unknown
+2025-01-31 00:00:00,Interest,,,,Unknown,1.21,1.0,1.21,0.0,EUR,Unknown
+2025-01-31 00:00:00,TransferIn,,,,Unknown,1200.0,1.0,1200.0,0.0,EUR,Unknown
+2025-01-31 00:00:00,TransferOut,,,,Unknown,23.04,1.0,23.04,0.0,EUR,Unknown
+2025-01-31 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,8.0,138.86,-1110.88,0.0,EUR,Unknown
+2025-02-02 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-02-03 00:00:00,TransferIn,,,,Unknown,3.02,1.0,3.02,0.0,EUR,Unknown
+2025-02-03 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.373462,227.6,-85.0,0.0,EUR,Unknown
+2025-02-03 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.882768,113.28,-100.0,0.0,EUR,Unknown
+2025-02-03 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.056889,53.09,-3.02,0.0,EUR,Unknown
+2025-02-03 00:00:00,TransferOut,,,,Unknown,12.98,1.0,12.98,0.0,EUR,Unknown
+2025-02-03 00:00:00,TransferOut,,,,Unknown,14.79,1.0,14.79,0.0,EUR,Unknown
+2025-02-05 00:00:00,TransferIn,,,,Unknown,500.22,1.0,500.22,0.0,EUR,Unknown
+2025-02-06 00:00:00,Buy,ELF,,"E.L.F. BEAUTY INC DL-,01",Stock,3.0,85.3,-255.9,0.0,EUR,Unknown
+2025-02-06 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,18.0,14.34,-258.12,0.0,EUR,Unknown
+2025-02-06 00:00:00,Sell,NSSC,,NAPCO Security Technologies,Stock,8.0,25.26,202.08,0.99,EUR,Unknown
+2025-02-06 00:00:00,Buy,ELF,,"E.L.F. BEAUTY INC DL-,01",Stock,3.0,67.6,-202.8,0.99,EUR,Unknown
+2025-02-07 00:00:00,Sell,BRPETRACNPR6,,Petrobras (Vz),Stock,180.0,6.4,1151.64,0.0,EUR,Unknown
+2025-02-07 00:00:00,Buy,ELF,,"E.L.F. BEAUTY INC DL-,01",Stock,8.0,62.18,-497.44,0.0,EUR,Unknown
+2025-02-07 00:00:00,Buy,HON,,Honeywell,Stock,2.122,191.75306314797362,-406.9,0.0,EUR,Unknown
+2025-02-07 00:00:00,Buy,WPLCF,,Wise,Stock,16.0,13.6,-217.6,0.99,EUR,Unknown
+2025-02-07 00:00:00,Sell,HIMS,,Hims & Hers Health,Stock,15.0,39.02,585.3,0.0,EUR,Unknown
+2025-02-07 00:00:00,Buy,EUXTF,,Euronext,Stock,3.0,113.5,-340.5,0.0,EUR,Unknown
+2025-02-10 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.34019,249.86,-85.0,0.0,EUR,Unknown
+2025-02-10 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.850846,117.53,-100.0,0.0,EUR,Unknown
+2025-02-10 00:00:00,Buy,CROX,,Crocs,Stock,3.0,87.63,-262.89,0.0,EUR,Unknown
+2025-02-13 00:00:00,Dividend,PSKRF,,Protector Forsikring,Stock,19.0,0.34,6.51,0.0,EUR,Unknown
+2025-02-13 00:00:00,TransferOut,,,,Unknown,5.68,1.0,5.68,0.0,EUR,Unknown
+2025-02-15 00:00:00,TransferOut,,,,Unknown,25.0,1.0,25.0,0.0,EUR,Unknown
+2025-02-17 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.3291,258.28,-85.0,0.0,EUR,Unknown
+2025-02-17 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.842672,118.67,-100.0,0.0,EUR,Unknown
+2025-02-17 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,3.71333,53.86,-200.0,0.0,EUR,Unknown
+2025-02-17 00:00:00,Sell,PLTR,,Palantir Technologies,Stock,8.0,112.38,899.04,0.0,EUR,Unknown
+2025-02-17 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-02-17 00:00:00,Buy,ELF,,"E.L.F. BEAUTY INC DL-,01",Stock,4.0,70.3,-281.2,0.0,EUR,Unknown
+2025-02-17 00:00:00,Buy,SMFRF,,SUMITOMO FORESTRY,Stock,27.0,10.066666666666666,-271.8,0.0,EUR,Unknown
+2025-02-17 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,3.0,107.0,-321.0,0.0,EUR,Unknown
+2025-02-18 00:00:00,Sell,PLTR,,Palantir Technologies,Stock,3.0,116.88,350.64,0.0,EUR,Unknown
+2025-02-18 00:00:00,Buy,WPLCF,,Wise,Stock,29.0,13.36,-387.44,0.0,EUR,Unknown
+2025-02-18 00:00:00,Sell,PLTR,,Palantir Technologies,Stock,3.0,118.0,354.0,0.0,EUR,Unknown
+2025-02-18 00:00:00,Buy,LI,,Li Auto (ADR),Stock,14.0,24.7,-345.8,0.0,EUR,Unknown
+2025-02-19 00:00:00,Dividend,ASML.AS,,ASML Holding,Stock,3.0,1.52,4.56,0.0,EUR,Unknown
+2025-02-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,180.0,0.00189,0.34,0.0,EUR,Unknown
+2025-02-20 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,180.0,0.11,20.03,0.0,EUR,Unknown
+2025-02-20 00:00:00,TransferOut,,,,Unknown,8.37,1.0,8.37,0.0,EUR,Unknown
+2025-02-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-02-21 00:00:00,Sell,PLTR,,Palantir Technologies,Stock,6.0,100.58,603.48,0.0,EUR,Unknown
+2025-02-21 00:00:00,Buy,POWL,,POWELL INDUSTRIES,Stock,2.0,172.4,-344.8,0.0,EUR,Unknown
+2025-02-21 00:00:00,Sell,PLTR,,Palantir Technologies,Stock,3.0,100.5,301.5,0.0,EUR,Unknown
+2025-02-21 00:00:00,Buy,NU,,Nubank,Stock,25.0,10.5,-262.6,0.0,EUR,Unknown
+2025-02-21 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,3.0,100.0,-300.0,0.0,EUR,Unknown
+2025-02-22 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2025-02-22 00:00:00,TransferOut,,,,Unknown,6.88,1.0,6.88,0.0,EUR,Unknown
+2025-02-24 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.362906,234.22,-85.0,0.0,EUR,Unknown
+2025-02-24 00:00:00,TransferOut,,,,Unknown,5.17,1.0,5.17,0.0,EUR,Unknown
+2025-02-24 00:00:00,TransferIn,,,,Unknown,20.0,1.0,20.0,0.0,EUR,Unknown
+2025-02-25 00:00:00,TransferOut,,,,Unknown,12.28,1.0,12.28,0.0,EUR,Unknown
+2025-02-25 00:00:00,Sell,HON,,Honeywell,Stock,2.122,190.62205466541,404.5,0.0,EUR,Unknown
+2025-02-25 00:00:00,Sell,SMFRF,,SUMITOMO FORESTRY,Stock,27.0,9.6,259.2,0.0,EUR,Unknown
+2025-02-25 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,3.0,97.5,-292.5,0.0,EUR,Unknown
+2025-02-25 00:00:00,Buy,POWL,,POWELL INDUSTRIES,Stock,2.0,156.5,-313.0,0.0,EUR,Unknown
+2025-02-25 00:00:00,Sell,PSKOF,,ORLEN,Stock,18.0,14.52,261.43,0.0,EUR,Unknown
+2025-02-25 00:00:00,Buy,HOEGF,,Höegh Autoliners,Stock,47.0,6.74,-316.55,0.0,EUR,Unknown
+2025-02-26 00:00:00,TransferOut,,,,Unknown,11.07,1.0,11.07,0.0,EUR,Unknown
+2025-02-28 00:00:00,TransferIn,,,,Unknown,574.55,1.0,574.55,0.0,EUR,Unknown
+2025-02-28 00:00:00,Buy,JUMSF,,Jumbo,Stock,10.0,26.34,-263.4,0.0,EUR,Unknown
+2025-02-28 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,23.0,13.26,-304.98,0.0,EUR,Unknown
+2025-02-28 00:00:00,TransferIn,,,,Unknown,1200.0,1.0,1200.0,0.0,EUR,Unknown
+2025-03-01 00:00:00,Interest,,,,Unknown,1.37,1.0,1.37,0.0,EUR,Unknown
+2025-03-01 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-03-03 00:00:00,TransferIn,,,,Unknown,2.59,1.0,2.59,0.0,EUR,Unknown
+2025-03-03 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.4,212.5,-85.0,0.0,EUR,Unknown
+2025-03-03 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.924898,108.12,-100.0,0.0,EUR,Unknown
+2025-03-03 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.023954,108.12,-2.59,0.0,EUR,Unknown
+2025-03-03 00:00:00,TransferOut,,,,Unknown,9.6,1.0,9.6,0.0,EUR,Unknown
+2025-03-03 00:00:00,Sell,DKILF,,Daikin Industries,Stock,3.0,102.4,307.2,0.0,EUR,Unknown
+2025-03-03 00:00:00,Buy,NVDA,,NVIDIA,Stock,3.0,110.52,-331.56,0.0,EUR,Unknown
+2025-03-05 00:00:00,Dividend,HOEGF,,Höegh Autoliners,Stock,177.0,0.45,80.15,0.0,EUR,Unknown
+2025-03-06 00:00:00,Sell,CROX,,Crocs,Stock,3.0,94.63,283.89,0.0,EUR,Unknown
+2025-03-06 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,3.0,94.5,-283.5,0.0,EUR,Unknown
+2025-03-06 00:00:00,Sell,PSKOF,,ORLEN,Stock,27.0,15.14,408.73,0.0,EUR,Unknown
+2025-03-06 00:00:00,Buy,NU,,Nubank,Stock,41.0,9.85,-403.97,0.0,EUR,Unknown
+2025-03-06 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,3.0,185.34,-556.02,1.0,EUR,Unknown
+2025-03-06 00:00:00,Sell,PSKOF,,ORLEN,Stock,20.0,15.14,302.8,0.0,EUR,Unknown
+2025-03-06 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,9.0,31.82,-286.38,0.0,EUR,Unknown
+2025-03-06 00:00:00,TransferIn,,,,Unknown,348.38,1.0,348.38,0.0,EUR,Unknown
+2025-03-07 00:00:00,Sell,PSKOF,,ORLEN,Stock,30.0,15.24,457.32,0.0,EUR,Unknown
+2025-03-07 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,3.0,91.0,-273.0,0.0,EUR,Unknown
+2025-03-07 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,9.0,30.33,-272.97,0.0,EUR,Unknown
+2025-03-10 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,1.115013,89.69,-100.0,0.0,EUR,Unknown
+2025-03-10 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.501593,169.46,-85.0,0.0,EUR,Unknown
+2025-03-10 00:00:00,Sell,VEEV,,Veeva Systems,Stock,2.0,224.8,449.6,0.0,EUR,Unknown
+2025-03-10 00:00:00,Buy,GRAB,,Grab Holdings Limited,Stock,67.0,3.85,-257.88,0.0,EUR,Unknown
+2025-03-10 00:00:00,Sell,RTPPF,,Rio Tinto,Stock,5.0,57.74,288.7,0.0,EUR,Unknown
+2025-03-10 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,2.0,152.94,-305.88,0.0,EUR,Unknown
+2025-03-10 00:00:00,Buy,GRAB,,Grab Holdings Limited,Stock,43.0,3.83,-164.65,0.99,EUR,Unknown
+2025-03-10 00:00:00,Sell,PSKRF,,Protector Forsikring,Stock,19.0,26.1,495.9,0.0,EUR,Unknown
+2025-03-10 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,3.0,91.0,-273.0,0.0,EUR,Unknown
+2025-03-10 00:00:00,Sell,LNTH,,Lantheus Hldg.,Stock,3.0,100.7,302.1,0.0,EUR,Unknown
+2025-03-10 00:00:00,Buy,NU,,Nubank,Stock,27.0,9.64,-260.2,0.0,EUR,Unknown
+2025-03-10 00:00:00,TransferOut,,,,Unknown,15.15,1.0,15.15,0.0,EUR,Unknown
+2025-03-10 00:00:00,Sell,XYL,,XYLEM,Stock,4.0,119.7,478.8,0.0,EUR,Unknown
+2025-03-10 00:00:00,Buy,ASML.AS,,ASML Holding,Stock,1.0,637.0,-637.0,0.0,EUR,Unknown
+2025-03-10 00:00:00,Sell,XYL,,XYLEM,Stock,4.0,119.65,478.6,0.0,EUR,Unknown
+2025-03-10 00:00:00,Buy,AMD,,Advanced Micro Devices,Stock,6.0,90.78,-544.68,0.0,EUR,Unknown
+2025-03-10 00:00:00,TransferOut,,,,Unknown,388.06,1.0,388.06,0.0,EUR,Unknown
+2025-03-11 00:00:00,TransferOut,,,,Unknown,4.2,1.0,4.2,0.0,EUR,Unknown
+2025-03-11 00:00:00,Sell,PLTR,,Palantir Technologies,Stock,11.0,70.59,776.49,0.0,EUR,Unknown
+2025-03-11 00:00:00,Buy,GMAB.CO,,Genmab,Stock,2.0,185.3,-370.6,0.0,EUR,Unknown
+2025-03-11 00:00:00,Buy,SMCI,,Super Micro Computer,Stock,11.0,37.68,-414.48,0.0,EUR,Unknown
+2025-03-12 00:00:00,TransferOut,,,,Unknown,3.59,1.0,3.59,0.0,EUR,Unknown
+2025-03-13 00:00:00,Dividend,MSFT,,Microsoft,Stock,6.0,0.76,4.57,0.0,EUR,Unknown
+2025-03-14 00:00:00,Dividend,IBKR,,Interactive Brokers Group A,Stock,24.0,0.0575,1.37,0.0,EUR,Unknown
+2025-03-14 00:00:00,TransferOut,,,,Unknown,18.01,1.0,18.01,0.0,EUR,Unknown
+2025-03-17 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,1.142661,87.52,-100.0,0.0,EUR,Unknown
+2025-03-17 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,15.0,0.18,2.74,0.0,EUR,Unknown
+2025-03-17 00:00:00,Sell,SMCI,,Super Micro Computer,Stock,11.0,38.89,427.79,0.0,EUR,Unknown
+2025-03-17 00:00:00,Sell,AMD,,Advanced Micro Devices,Stock,6.0,92.08,552.48,0.0,EUR,Unknown
+2025-03-17 00:00:00,Buy,SEZL,,Sezzle Inc.,Stock,12.0,35.333333333333336,-424.0,0.0,EUR,Unknown
+2025-03-17 00:00:00,Buy,ZETA,,Zeta Global Holdings Corp Class A,Stock,20.0,12.9,-258.0,0.0,EUR,Unknown
+2025-03-17 00:00:00,Buy,NATKY,,NAC Kazatomprom GDR,Stock,9.0,33.6,-302.4,0.0,EUR,Unknown
+2025-03-17 00:00:00,TransferOut,,,,Unknown,21.41,1.0,21.41,0.0,EUR,Unknown
+2025-03-18 00:00:00,Sell,ZETA,,Zeta Global Holdings Corp Class A,Stock,20.0,12.5,250.0,0.0,EUR,Unknown
+2025-03-18 00:00:00,Sell,LNTH,,Lantheus Hldg.,Stock,3.0,94.32,282.96,0.0,EUR,Unknown
+2025-03-18 00:00:00,Buy,HXSCL,,SK HYNIX GDR 144A/REGS 1,Stock,4.0,129.0,-516.0,0.0,EUR,Unknown
+2025-03-19 00:00:00,Dividend,XYL,,XYLEM,Stock,8.0,0.37,2.95,0.0,EUR,Unknown
+2025-03-19 00:00:00,Dividend,POWL,,POWELL INDUSTRIES,Stock,2.0,0.25,0.5,0.0,EUR,Unknown
+2025-03-19 00:00:00,TransferOut,,,,Unknown,20.95,1.0,20.95,0.0,EUR,Unknown
+2025-03-20 00:00:00,TransferOut,,,,Unknown,7.73,1.0,7.73,0.0,EUR,Unknown
+2025-03-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-03-21 00:00:00,TransferOut,,,,Unknown,14.61,1.0,14.61,0.0,EUR,Unknown
+2025-03-24 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2025-03-24 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,180.0,0.00233,0.42,0.0,EUR,Unknown
+2025-03-24 00:00:00,Sell,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,2.0,54.25,108.5,1.0,EUR,Unknown
+2025-03-24 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,180.0,5.56e-05,0.01,0.0,EUR,Unknown
+2025-03-24 00:00:00,Sell,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.764976,54.25,41.5,0.0,EUR,Unknown
+2025-03-24 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,180.0,0.11,19.15,0.0,EUR,Unknown
+2025-03-24 00:00:00,Dividend,BRPETRACNPR6,,Petrobras (Vz),Stock,180.0,0.00144,0.26,0.0,EUR,Unknown
+2025-03-24 00:00:00,TransferOut,,,,Unknown,23.78,1.0,23.78,0.0,EUR,Unknown
+2025-03-24 00:00:00,Sell,HXSCL,,SK HYNIX GDR 144A/REGS 1,Stock,4.0,132.0,528.0,0.0,EUR,Unknown
+2025-03-24 00:00:00,Buy,TSM,,TSMC (ADR),Stock,3.0,168.4,-505.2,0.0,EUR,Unknown
+2025-03-26 00:00:00,Dividend,META,,Meta Platforms,Stock,1.0,0.49,0.49,0.0,EUR,Unknown
+2025-03-26 00:00:00,TransferOut,,,,Unknown,13.79,1.0,13.79,0.0,EUR,Unknown
+2025-03-27 00:00:00,TransferIn,,,,Unknown,550.18,1.0,550.18,0.0,EUR,Unknown
+2025-03-27 00:00:00,TransferIn,,,,Unknown,1200.0,1.0,1200.0,0.0,EUR,Unknown
+2025-03-27 00:00:00,Buy,NATKY,,NAC Kazatomprom GDR,Stock,9.0,31.5,-283.5,0.0,EUR,Unknown
+2025-03-27 00:00:00,Buy,INPOF,,InPost,Stock,18.0,14.8,-266.4,0.0,EUR,Unknown
+2025-03-28 00:00:00,TransferOut,,,,Unknown,99.0,1.0,99.0,0.0,EUR,Unknown
+2025-03-28 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-03-28 00:00:00,TransferOut,,,,Unknown,13.1,1.0,13.1,0.0,EUR,Unknown
+2025-03-28 00:00:00,TransferOut,,,,Unknown,12.17,1.0,12.17,0.0,EUR,Unknown
+2025-03-28 00:00:00,TransferOut,,,,Unknown,12.06,1.0,12.06,0.0,EUR,Unknown
+2025-03-29 00:00:00,TransferOut,,,,Unknown,2.0,1.0,2.0,0.0,EUR,Unknown
+2025-03-31 00:00:00,Interest,,,,Unknown,0.37,1.0,0.37,0.0,EUR,Unknown
+2025-03-31 00:00:00,TransferOut,,,,Unknown,109.39,1.0,109.39,0.0,EUR,Unknown
+2025-03-31 00:00:00,Dividend,JUMSF,,Jumbo,Stock,10.0,0.47,4.72,0.0,EUR,Unknown
+2025-03-31 00:00:00,Dividend,JUMSF,,Jumbo,Stock,20.0,0.47,9.45,0.0,EUR,Unknown
+2025-03-31 00:00:00,Sell,MARA,,Mara Holdings,Stock,29.0,10.77,312.33,0.0,EUR,Unknown
+2025-03-31 00:00:00,Sell,IREN,,IREN,Stock,100.0,5.46,546.0,0.0,EUR,Unknown
+2025-03-31 00:00:00,Buy,AMZN,,Amazon,Stock,2.0,174.0,-348.0,0.0,EUR,Unknown
+2025-03-31 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,5.0,86.0,-430.0,0.0,EUR,Unknown
+2025-04-01 00:00:00,Interest,,,,Unknown,0.32,1.0,0.32,0.0,EUR,Unknown
+2025-04-01 00:00:00,Dividend,NOVO-B.CO,,Novo Nordisk 'B',Stock,6.0,1.06,6.35,0.0,EUR,Unknown
+2025-04-01 00:00:00,Interest,,,,Unknown,1.24,1.0,1.24,0.0,EUR,Unknown
+2025-04-02 00:00:00,TransferIn,,,,Unknown,8.82,1.0,8.82,0.0,EUR,Unknown
+2025-04-02 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,1.144688,87.36,-100.0,0.0,EUR,Unknown
+2025-04-02 00:00:00,Dividend,NVDA,,NVIDIA,Stock,19.0,0.00895,0.17,0.0,EUR,Unknown
+2025-04-02 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.498566,160.46,-80.0,0.0,EUR,Unknown
+2025-04-02 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.887154,56.36,-50.0,0.0,EUR,Unknown
+2025-04-02 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.100961,87.36,-8.82,0.0,EUR,Unknown
+2025-04-03 00:00:00,TransferOut,,,,Unknown,95.1,1.0,95.1,0.0,EUR,Unknown
+2025-04-06 00:00:00,TransferOut,,,,Unknown,78.1,1.0,78.1,0.0,EUR,Unknown
+2025-04-07 00:00:00,TransferIn,,,,Unknown,92.94,1.0,92.94,0.0,EUR,Unknown
+2025-04-07 00:00:00,TransferOut,,,,Unknown,3.67,1.0,3.67,0.0,EUR,Unknown
+2025-04-07 00:00:00,TransferOut,,,,Unknown,3.77,1.0,3.77,0.0,EUR,Unknown
+2025-04-08 00:00:00,TransferOut,,,,Unknown,17.08,1.0,17.08,0.0,EUR,Unknown
+2025-04-09 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,1.702272,58.75,-100.0,0.0,EUR,Unknown
+2025-04-09 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.733541,109.06,-80.0,0.0,EUR,Unknown
+2025-04-09 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.932227,53.64,-50.0,0.0,EUR,Unknown
+2025-04-10 00:00:00,Dividend,TSM,,TSMC (ADR),Stock,7.0,0.59,4.16,0.0,EUR,Unknown
+2025-04-10 00:00:00,TransferOut,,,,Unknown,16.35,1.0,16.35,0.0,EUR,Unknown
+2025-04-12 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-04-16 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,1.49109,67.07,-100.0,0.0,EUR,Unknown
+2025-04-16 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.645421,123.95,-80.0,0.0,EUR,Unknown
+2025-04-16 00:00:00,Buy,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.887784,56.32,-50.0,0.0,EUR,Unknown
+2025-04-17 00:00:00,Dividend,RTPPF,,Rio Tinto,Stock,5.0,2.05,10.24,0.0,EUR,Unknown
+2025-04-17 00:00:00,TransferOut,,,,Unknown,5.66,1.0,5.66,0.0,EUR,Unknown
+2025-04-21 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2025-04-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-04-22 00:00:00,TransferOut,,,,Unknown,3.23,1.0,3.23,0.0,EUR,Unknown
+2025-04-23 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,1.404297,71.21,-100.0,0.0,EUR,Unknown
+2025-04-23 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.60006,133.32,-80.0,0.0,EUR,Unknown
+2025-04-24 00:00:00,TransferOut,,,,Unknown,11.82,1.0,11.82,0.0,EUR,Unknown
+2025-04-26 00:00:00,TransferOut,,,,Unknown,23.81,1.0,23.81,0.0,EUR,Unknown
+2025-04-28 00:00:00,TransferIn,,,,Unknown,28.81,1.0,28.81,0.0,EUR,Unknown
+2025-04-29 00:00:00,TransferOut,,,,Unknown,2.0,1.0,2.0,0.0,EUR,Unknown
+2025-04-29 00:00:00,TransferOut,,,,Unknown,12.06,1.0,12.06,0.0,EUR,Unknown
+2025-04-29 00:00:00,TransferOut,,,,Unknown,12.16,1.0,12.16,0.0,EUR,Unknown
+2025-04-29 00:00:00,TransferOut,,,,Unknown,13.1,1.0,13.1,0.0,EUR,Unknown
+2025-04-30 00:00:00,TransferIn,,,,Unknown,2436.69,1.0,2436.69,0.0,EUR,Unknown
+2025-04-30 00:00:00,TransferOut,,,,Unknown,3.0,1.0,3.0,0.0,EUR,Unknown
+2025-04-30 00:00:00,TransferOut,,,,Unknown,21.71,1.0,21.71,0.0,EUR,Unknown
+2025-05-01 00:00:00,Interest,,,,Unknown,1.05,1.0,1.05,0.0,EUR,Unknown
+2025-05-02 00:00:00,TransferIn,,,,Unknown,3.32,1.0,3.32,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,NU,,Nubank,Stock,2.271901,11.0,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.065308,382.8,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,0.175389,142.54,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.321357,155.59,-50.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,0.412269,60.64,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,GRAB,,Grab Holdings Limited,Stock,5.839757,4.28,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,DDOG,,Datadog A,Stock,0.263629,94.83,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,0.31407,79.6,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,APD,,Air Products & Chemicals Inc.,Stock,0.103007,242.7,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,RTPPF,,Rio Tinto,Stock,0.473305,52.82,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,WPLCF,,Wise,Stock,2.078137,12.03,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,YASKF,,Yaskawa Electric,Stock,1.324854,18.87,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,EADSF,,Airbus,Stock,0.163185,153.2,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,TSM,,TSMC (ADR),Stock,0.158629,157.6,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.012348,2024.62,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,TOELF,,Tokyo Electron,Stock,0.190985,130.9,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,AMZN,,Amazon,Stock,0.149611,167.1,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.052753,473.91,-25.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,1.253839,79.76,-100.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,8.065817,123.98,-1000.0,0.0,EUR,Unknown
+2025-05-02 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,0.026778,123.98,-3.32,0.0,EUR,Unknown
+2025-05-02 00:00:00,TransferOut,,,,Unknown,5.06,1.0,5.06,0.0,EUR,Unknown
+2025-05-02 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-05-05 00:00:00,TransferOut,,,,Unknown,3.43,1.0,3.43,0.0,EUR,Unknown
+2025-05-06 00:00:00,Dividend,ASML.AS,,ASML Holding,Stock,4.0,1.84,7.36,0.0,EUR,Unknown
+2025-05-06 00:00:00,Sell,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,50.0,57.94,2897.0,1.0,EUR,Unknown
+2025-05-06 00:00:00,Sell,PHYMF,,iShares Physical Gold ETC - USD ACC,Stock,0.824869,57.94,47.79,0.0,EUR,Unknown
+2025-05-06 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,0.854879,59.37,-50.75,0.0,EUR,Unknown
+2025-05-06 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,16.0,59.37,-949.92,1.0,EUR,Unknown
+2025-05-06 00:00:00,Buy,ALFVF,,Alfa Laval,Stock,0.755158,36.35,-27.45,0.0,EUR,Unknown
+2025-05-06 00:00:00,Buy,ALFVF,,Alfa Laval,Stock,13.0,36.35,-472.55,1.0,EUR,Unknown
+2025-05-06 00:00:00,Buy,MSCI,,MSCI,Stock,2.0,484.3,-968.6,1.0,EUR,Unknown
+2025-05-06 00:00:00,Buy,MSCI,,MSCI,Stock,0.064409,484.25,-31.19,0.0,EUR,Unknown
+2025-05-07 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,3.0,133.3,-399.9,1.0,EUR,Unknown
+2025-05-07 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,0.7515,133.29,-100.17,0.0,EUR,Unknown
+2025-05-08 00:00:00,TransferOut,,,,Unknown,15.29,1.0,15.29,0.0,EUR,Unknown
+2025-05-08 00:00:00,TransferOut,,,,Unknown,10.81,1.0,10.81,0.0,EUR,Unknown
+2025-05-08 00:00:00,TransferOut,,,,Unknown,84.71,1.0,84.71,0.0,EUR,Unknown
+2025-05-10 00:00:00,TransferOut,,,,Unknown,2.47,1.0,2.47,0.0,EUR,Unknown
+2025-05-11 00:00:00,TransferIn,,,,Unknown,35.1,1.0,35.1,0.0,EUR,Unknown
+2025-05-12 00:00:00,TransferOut,,,,Unknown,3.99,1.0,3.99,0.0,EUR,Unknown
+2025-05-12 00:00:00,Sell,ELF,,"E.L.F. BEAUTY INC DL-,01",Stock,8.0,66.88,535.04,0.0,EUR,Unknown
+2025-05-12 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,4.0,75.4,-301.6,0.0,EUR,Unknown
+2025-05-13 00:00:00,TransferOut,,,,Unknown,3.43,1.0,3.43,0.0,EUR,Unknown
+2025-05-13 00:00:00,TransferOut,,,,Unknown,26.98,1.0,26.98,0.0,EUR,Unknown
+2025-05-14 00:00:00,TransferIn,,,,Unknown,5.0,1.0,5.0,0.0,EUR,Unknown
+2025-05-14 00:00:00,Dividend,HOEGF,,Höegh Autoliners,Stock,224.0,0.74,165.65,0.0,EUR,Unknown
+2025-05-14 00:00:00,TransferOut,,,,Unknown,5.0,1.0,5.0,0.0,EUR,Unknown
+2025-05-15 00:00:00,TransferOut,,,,Unknown,258.26,1.0,258.26,0.0,EUR,Unknown
+2025-05-15 00:00:00,TransferIn,,,,Unknown,248.26,1.0,248.26,0.0,EUR,Unknown
+2025-05-15 00:00:00,Buy,INPOF,,InPost,Stock,15.0,15.4,-231.0,1.0,EUR,Unknown
+2025-05-15 00:00:00,TransferOut,,,,Unknown,17.09,1.0,17.09,0.0,EUR,Unknown
+2025-05-15 00:00:00,Sell,YASKF,,Yaskawa Electric,Stock,0.324854,20.62,6.7,0.0,EUR,Unknown
+2025-05-15 00:00:00,Sell,YASKF,,Yaskawa Electric,Stock,1.0,20.64,20.64,1.0,EUR,Unknown
+2025-05-16 00:00:00,TransferOut,,,,Unknown,124.24,1.0,124.24,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,VTTGF,,VAT,Stock,0.058105,344.2,-20.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,0.066515,150.34,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,GRAB,,Grab Holdings Limited,Stock,1.084598,4.61,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,RTPPF,,Rio Tinto,Stock,0.179243,55.79,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,KYCCF,,Keyence,Stock,0.025258,395.91,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,CNSWF,,Constellation Software,Stock,0.001531,3265.84,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,SPGI,,S&P Global,Stock,0.01066,469.04,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,SE,,Sea (ADR),Stock,0.034246,146.0,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,CPNG,,Coupang,Stock,0.202306,24.72,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,MSTR,,Strategy,Stock,0.014029,356.4,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,ADYYF,,Adyen,Stock,0.006025,1659.75,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,EADSF,,Airbus,Stock,0.062546,159.88,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,GMAB.CO,,Genmab,Stock,0.112612,177.6,-20.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,ANPDF,,Anta Sports Products,Stock,0.943218,10.6,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,0.664893,60.16,-40.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,BN,,Brookfield Corporation,Stock,0.6996255,35.733333333333334,-25.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,NU,,Nubank,Stock,0.861178,11.61,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,HUBS,,HubSpot,Stock,0.008369,597.44,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.024102,414.9,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,DDOG,,Datadog A,Stock,0.047411,105.46,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,ABLZF,,ABB,Stock,0.098347,50.84,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,PLTR,,Palantir Technologies,Stock,0.043081,116.06,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,RNMBF,,Rheinmetall,Stock,0.002906,1720.58,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,EVGGF,,Evolution Gaming,Stock,0.244857,61.26,-15.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,SPOT,,Spotify Technology,Stock,0.00868,576.04,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.004286,2333.18,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.009996,500.2,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,NET,,Cloudflare,Stock,0.035816,139.6,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,US7731221062,,Rocket Lab USA 'A',Stock,0.436109,22.93,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.021891,456.81,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,META,,Meta Platforms,Stock,0.017516,570.91,-10.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,BLK,,BlackRock,Stock,0.005652,884.64,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,0.542005,73.8,-40.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,TOELF,,Tokyo Electron,Stock,0.033978,147.15,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,MRK,,"Merck & Co., Inc.",Stock,0.590841,67.7,-40.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,EUXTF,,Euronext,Stock,0.034153,146.4,-5.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,TGTX,,TG Therapeutics,Stock,0.97688,30.71,-30.0,0.0,EUR,Unknown
+2025-05-16 00:00:00,Buy,AMZN,,Amazon,Stock,0.02717,184.03,-5.0,0.0,EUR,Unknown
+2025-05-19 00:00:00,TransferIn,,,,Unknown,124.24,1.0,124.24,0.0,EUR,Unknown
+2025-05-19 00:00:00,TransferIn,,,,Unknown,20.0,1.0,20.0,0.0,EUR,Unknown
+2025-05-19 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-05-20 00:00:00,Dividend,EVGGF,,Evolution Gaming,Stock,9.0,2.8,25.2,0.0,EUR,Unknown
+2025-05-20 00:00:00,Sell,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,0.592228,187.73,111.18,0.0,EUR,Unknown
+2025-05-20 00:00:00,Sell,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,15.0,187.73,2815.95,1.0,EUR,Unknown
+2025-05-20 00:00:00,Buy,ZTS,,Zoetis,Stock,8.0,145.8,-1166.4,1.0,EUR,Unknown
+2025-05-20 00:00:00,Buy,BN,,Brookfield Corporation,Stock,15.0,35.333333333333336,-530.0,1.0,EUR,Unknown
+2025-05-20 00:00:00,Buy,INPOF,,InPost,Stock,35.0,14.72,-515.2,1.0,EUR,Unknown
+2025-05-20 00:00:00,Buy,SOFI,,SoFi Technologies,Stock,30.0,11.94,-358.26,1.0,EUR,Unknown
+2025-05-20 00:00:00,Buy,ZETA,,Zeta Global Holdings Corp Class A,Stock,30.0,11.9,-357.0,1.0,EUR,Unknown
+2025-05-20 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-05-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-05-21 00:00:00,Sell,LI,,Li Auto (ADR),Stock,14.0,25.8,361.2,0.0,EUR,Unknown
+2025-05-21 00:00:00,Buy,EVGGF,,Evolution Gaming,Stock,5.0,60.34,-301.7,0.0,EUR,Unknown
+2025-05-21 00:00:00,Sell,IE00BLRPRL42,,WisdomTree NASDAQ 100 3x Daily Leveraged,Stock,5.0,188.2,941.0,1.0,EUR,Unknown
+2025-05-21 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-05-22 00:00:00,TransferOut,,,,Unknown,16.42,1.0,16.42,0.0,EUR,Unknown
+2025-05-23 00:00:00,Dividend,JGHAF,,Jungheinrich Vz,Stock,43.0,0.8,34.4,0.0,EUR,Unknown
+2025-05-23 00:00:00,Buy,STOHF,,Equinor,Stock,30.0,20.93,-627.9,1.0,EUR,Unknown
+2025-05-23 00:00:00,Buy,NU,,Nubank,Stock,35.0,10.57,-370.09,1.0,EUR,Unknown
+2025-05-23 00:00:00,Sell,APD,,Air Products & Chemicals Inc.,Stock,0.103007,236.29,24.34,1.0,EUR,Unknown
+2025-05-23 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-05-26 00:00:00,TransferOut,,,,Unknown,102.47,1.0,102.47,0.0,EUR,Unknown
+2025-05-26 00:00:00,TransferIn,,,,Unknown,102.47,1.0,102.47,0.0,EUR,Unknown
+2025-05-26 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-05-27 00:00:00,TransferIn,RKLB,,Rocket Lab 'A',Stock,0.436109,22.93,10.0,0.0,EUR,Unknown
+2025-05-27 00:00:00,TransferOut,US7731221062,,Rocket Lab USA 'A',Stock,0.436109,0.0,0.0,0.0,EUR,Unknown
+2025-05-28 00:00:00,Dividend,EUXTF,,Euronext,Stock,0.034153,2.93,0.1,0.0,EUR,Unknown
+2025-05-28 00:00:00,TransferIn,,,,Unknown,4832.01,1.0,4832.01,0.0,EUR,Unknown
+2025-05-28 00:00:00,TransferOut,,,,Unknown,2.5,1.0,2.5,0.0,EUR,Unknown
+2025-05-28 00:00:00,TransferIn,,,,Unknown,850.0,1.0,850.0,0.0,EUR,Unknown
+2025-05-29 00:00:00,TransferOut,,,,Unknown,2.0,1.0,2.0,0.0,EUR,Unknown
+2025-05-29 00:00:00,Buy,CAMRF,,CAMURUS AB Aktie,Stock,10.0,46.66,-466.6,1.0,EUR,Unknown
+2025-05-29 00:00:00,Buy,CADLF,,Cadeler,Stock,200.0,4.45,-889.2,1.0,EUR,Unknown
+2025-05-29 00:00:00,TransferOut,,,,Unknown,12.05,1.0,12.05,0.0,EUR,Unknown
+2025-05-29 00:00:00,TransferOut,,,,Unknown,12.16,1.0,12.16,0.0,EUR,Unknown
+2025-05-29 00:00:00,TransferOut,,,,Unknown,13.09,1.0,13.09,0.0,EUR,Unknown
+2025-05-29 00:00:00,Buy,AWK,,American Water Works,Stock,8.0,123.9,-991.2,1.0,EUR,Unknown
+2025-05-29 00:00:00,TransferIn,,,,Unknown,200.0,1.0,200.0,0.0,EUR,Unknown
+2025-05-29 00:00:00,Sell,TOELF,,Tokyo Electron,Stock,0.224963,143.09,32.19,1.0,EUR,Unknown
+2025-05-29 00:00:00,TransferOut,,,,Unknown,38.24,1.0,38.24,0.0,EUR,Unknown
+2025-05-30 00:00:00,Dividend,MSCI,,MSCI,Stock,2.064409,1.6,3.3,0.0,EUR,Unknown
+2025-05-30 00:00:00,TransferOut,,,,Unknown,3.0,1.0,3.0,0.0,EUR,Unknown
+2025-05-30 00:00:00,TransferOut,,,,Unknown,8.36,1.0,8.36,0.0,EUR,Unknown
+2025-06-01 00:00:00,Interest,,,,Unknown,1.85,1.0,1.85,0.0,EUR,Unknown
+2025-06-02 00:00:00,Sell,STOHF,,Equinor,Stock,30.0,20.82,624.6,1.0,EUR,Unknown
+2025-06-02 00:00:00,TransferIn,,,,Unknown,4.42,1.0,4.42,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,0.338707,147.62,-50.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,NU,,Nubank,Stock,9.658103,10.35,-100.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,1.40845,71.0,-100.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.241779,413.6,-100.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.166475,480.55,-80.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,DKILF,,Daikin Industries,Stock,1.053159,99.7,-105.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,RTPPF,,Rio Tinto,Stock,1.44314,51.97,-75.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,EUXTF,,Euronext,Stock,0.342935,145.8,-50.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,2.059569,63.12,-130.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,WPLCF,,Wise,Stock,5.742725,13.06,-75.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,SMCI,,Super Micro Computer,Stock,1.417635,35.27,-50.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,CCJ,,Cameco,Stock,1.45631,51.5,-75.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,ABLZF,,ABB,Stock,1.51699,49.44,-75.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,RYDAF,,Shell,Stock,1.698369,29.44,-50.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,FTNT,,Fortinet,Stock,0.848896,88.35,-75.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,EVGGF,,Evolution Gaming,Stock,0.833055,60.02,-50.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,JNJ,,Johnson & Johnson,Stock,0.559785,133.98,-75.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,KYCCF,,Keyence,Stock,0.20475,366.3,-75.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,BN,,Brookfield Corporation,Stock,3.0,33.333333333333336,-100.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,NSRGF,,Nestlé,Stock,1.071237,93.35,-100.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,XYL,,XYLEM,Stock,0.685557,109.4,-75.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,TSM,,TSMC (ADR),Stock,0.588928,169.8,-100.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,ANET,,Arista Networks,Stock,0.978473,76.65,-75.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,ZTS,,Zoetis,Stock,0.339305,147.36,-50.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,UBER,,Uber Technologies,Stock,0.685213,72.97,-50.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,8.1409,127.75,-1040.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.228024,438.55,-100.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.002248,2224.2,-5.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,Buy,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,0.034598,127.75,-4.42,0.0,EUR,Unknown
+2025-06-02 00:00:00,Sell,JGHAF,,Jungheinrich Vz,Stock,43.0,35.2,1513.6,0.99,EUR,Unknown
+2025-06-02 00:00:00,Sell,HOEGF,,Höegh Autoliners,Stock,224.0,7.45,1667.68,0.99,EUR,Unknown
+2025-06-02 00:00:00,TransferOut,,,,Unknown,450.0,1.0,450.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,TransferOut,,,,Unknown,4.68,1.0,4.68,0.0,EUR,Unknown
+2025-06-02 00:00:00,Sell,SEZL,,Sezzle Inc.,Stock,12.0,92.2,1106.4,0.99,EUR,Unknown
+2025-06-02 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-06-02 00:00:00,TransferIn,,,,Unknown,170.1,1.0,170.1,0.0,EUR,Unknown
+2025-06-02 00:00:00,Sell,POWL,,POWELL INDUSTRIES,Stock,6.0,147.5,885.0,0.99,EUR,Unknown
+2025-06-02 00:00:00,Buy,1211.HK,,BYD,Stock,69.0,14.466666666666667,-998.2,0.99,EUR,Unknown
+2025-06-02 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-06-03 00:00:00,TransferOut,,,,Unknown,56.0,1.0,56.0,0.0,EUR,Unknown
+2025-06-03 00:00:00,TransferOut,,,,Unknown,40.0,1.0,40.0,0.0,EUR,Unknown
+2025-06-04 00:00:00,TransferOut,,,,Unknown,4186.78,1.0,4186.78,0.0,EUR,Unknown
+2025-06-04 00:00:00,TransferIn,,,,Unknown,4186.78,1.0,4186.78,0.0,EUR,Unknown
+2025-06-04 00:00:00,Buy,SBS,,Sabesp ADR,Stock,80.0,17.9,-1432.0,1.0,EUR,Unknown
+2025-06-04 00:00:00,Buy,AMZN,,Amazon,Stock,6.0,180.66,-1083.96,1.0,EUR,Unknown
+2025-06-04 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,10.0,73.8,-738.0,1.0,EUR,Unknown
+2025-06-04 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,15.0,63.98,-959.7,1.0,EUR,Unknown
+2025-06-04 00:00:00,Sell,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,16.268093,129.58,2108.02,1.0,EUR,Unknown
+2025-06-04 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,205.0,9.96,-2042.42,1.0,EUR,Unknown
+2025-06-05 00:00:00,TransferOut,,,,Unknown,4.47,1.0,4.47,0.0,EUR,Unknown
+2025-06-05 00:00:00,TransferIn,,,,Unknown,60.0,1.0,60.0,0.0,EUR,Unknown
+2025-06-06 00:00:00,Buy,GRPOF,,Grupo Traxion SAB de CV Ordinary Shares - Class A,Stock,600.0,0.93,-558.0,1.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,VTTGF,,VAT,Stock,0.058105,346.27,20.12,1.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,ALFVF,,Alfa Laval,Stock,13.0,37.76,490.88,1.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,ALFVF,,Alfa Laval,Stock,0.755158,37.75,28.51,0.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,ABLZF,,ABB,Stock,0.615337,50.66,31.17,0.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,NSRGF,,Nestlé,Stock,1.0,92.12,92.12,1.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,ABLZF,,ABB,Stock,1.0,50.66,50.66,1.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,NSRGF,,Nestlé,Stock,0.071237,92.09,6.56,0.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,CCJ,,Cameco,Stock,1.0,53.36,53.36,1.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,CCJ,,Cameco,Stock,0.45631,53.36,24.35,0.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,GRPOF,,Grupo Traxion SAB de CV Ordinary Shares - Class A,Stock,600.0,0.9,540.0,1.0,EUR,Unknown
+2025-06-09 00:00:00,Buy,LVMHF,,LVMH - Louis Vuitton Moët Hennessy,Stock,0.527646,474.75,-250.5,0.0,EUR,Unknown
+2025-06-09 00:00:00,Buy,LVMHF,,LVMH - Louis Vuitton Moët Hennessy,Stock,2.0,474.75,-949.5,1.0,EUR,Unknown
+2025-06-09 00:00:00,Sell,MRK,,"Merck & Co., Inc.",Stock,0.590841,69.1,40.83,1.0,EUR,Unknown
+2025-06-09 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-06-10 00:00:00,TransferOut,,,,Unknown,3.87,1.0,3.87,0.0,EUR,Unknown
+2025-06-11 00:00:00,Dividend,SPGI,,S&P Global,Stock,0.01066,0.82,0.00875,0.0,EUR,Unknown
+2025-06-11 00:00:00,TransferOut,,,,Unknown,60.0,1.0,60.0,0.0,EUR,Unknown
+2025-06-12 00:00:00,Dividend,MSFT,,Microsoft,Stock,6.0,0.72,4.32,0.0,EUR,Unknown
+2025-06-12 00:00:00,Dividend,KNSL,,Kinsale Capital,Stock,0.08941,0.2,0.0175,0.0,EUR,Unknown
+2025-06-13 00:00:00,Dividend,IBKR,,Interactive Brokers Group A,Stock,24.0,0.0675,1.65,0.0,EUR,Unknown
+2025-06-13 00:00:00,Sell,NOVO-B.CO,,Novo Nordisk 'B',Stock,6.0,69.32,415.92,0.99,EUR,Unknown
+2025-06-13 00:00:00,Sell,LNTH,,Lantheus Hldg.,Stock,10.0,68.4,684.0,0.99,EUR,Unknown
+2025-06-16 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,17.0,0.18,3.1,0.0,EUR,Unknown
+2025-06-16 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,0.7326,68.25,-50.0,0.0,EUR,Unknown
+2025-06-16 00:00:00,Buy,GRAB,,Grab Holdings Limited,Stock,4.954173,4.04,-20.0,0.0,EUR,Unknown
+2025-06-16 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.077674,450.6,-35.0,0.0,EUR,Unknown
+2025-06-16 00:00:00,Buy,SBGSF,,Schneider Electric SE,Stock,0.112917,221.4,-25.0,0.0,EUR,Unknown
+2025-06-16 00:00:00,Buy,SE,,Sea (ADR),Stock,0.145985,137.0,-20.0,0.0,EUR,Unknown
+2025-06-16 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.023815,2099.52,-50.0,0.0,EUR,Unknown
+2025-06-16 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,4.332111,0.18,0.79,0.0,EUR,Unknown
+2025-06-16 00:00:00,Buy,KYCCF,,Keyence,Stock,0.071633,349.0,-25.0,0.0,EUR,Unknown
+2025-06-16 00:00:00,Buy,INPOF,,InPost,Stock,35.0,14.04,-491.4,0.99,EUR,Unknown
+2025-06-16 00:00:00,TransferOut,,,,Unknown,10.85,1.0,10.85,0.0,EUR,Unknown
+2025-06-18 00:00:00,TransferOut,,,,Unknown,610.62,1.0,610.62,0.0,EUR,Unknown
+2025-06-18 00:00:00,Dividend,POWL,,POWELL INDUSTRIES,Stock,6.0,0.23,1.4,0.0,EUR,Unknown
+2025-06-18 00:00:00,TransferIn,,,,Unknown,610.62,1.0,610.62,0.0,EUR,Unknown
+2025-06-18 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-06-19 00:00:00,Sell,JUMSF,,Jumbo,Stock,20.0,27.58,551.6,0.99,EUR,Unknown
+2025-06-19 00:00:00,Sell,JUMSF,,Jumbo,Stock,10.0,27.6,276.0,0.99,EUR,Unknown
+2025-06-20 00:00:00,TransferIn,,,,Unknown,349.0,1.0,349.0,0.0,EUR,Unknown
+2025-06-20 00:00:00,Dividend,SPIW.DE,,Kontron,Stock,27.0,0.6,16.2,0.0,EUR,Unknown
+2025-06-20 00:00:00,Buy,NU,,Nubank,Stock,52.0,10.64,-553.18,0.99,EUR,Unknown
+2025-06-20 00:00:00,Buy,INPOF,,InPost,Stock,20.0,13.65,-273.0,0.99,EUR,Unknown
+2025-06-20 00:00:00,Buy,CRM,,Salesforce,Stock,3.0,227.15,-681.45,1.0,EUR,Unknown
+2025-06-20 00:00:00,Buy,CRM,,Salesforce,Stock,0.301782,227.15,-68.55,0.0,EUR,Unknown
+2025-06-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-06-22 00:00:00,TransferOut,,,,Unknown,10.0,1.0,10.0,0.0,EUR,Unknown
+2025-06-23 00:00:00,Dividend,BLK,,BlackRock,Stock,0.005652,4.61,0.0261,0.0,EUR,Unknown
+2025-06-23 00:00:00,TransferOut,,,,Unknown,4.57,1.0,4.57,0.0,EUR,Unknown
+2025-06-23 00:00:00,TransferOut,,,,Unknown,14.02,1.0,14.02,0.0,EUR,Unknown
+2025-06-24 00:00:00,TransferOut,,,,Unknown,30.0,1.0,30.0,0.0,EUR,Unknown
+2025-06-26 00:00:00,Dividend,META,,Meta Platforms,Stock,1.0,0.45,0.45,0.0,EUR,Unknown
+2025-06-26 00:00:00,Dividend,META,,Meta Platforms,Stock,0.017516,0.49,0.00862,0.0,EUR,Unknown
+2025-06-26 00:00:00,TransferOut,,,,Unknown,3.87,1.0,3.87,0.0,EUR,Unknown
+2025-06-27 00:00:00,TransferIn,,,,Unknown,3076.23,1.0,3076.23,0.0,EUR,Unknown
+2025-06-28 00:00:00,TransferOut,,,,Unknown,3.0,1.0,3.0,0.0,EUR,Unknown
+2025-06-29 00:00:00,TransferIn,,,,Unknown,150.0,1.0,150.0,0.0,EUR,Unknown
+2025-06-30 00:00:00,Interest,,,,Unknown,0.04,1.0,0.04,0.0,EUR,Unknown
+2025-06-30 00:00:00,Dividend,BN,,Brookfield Corporation,Stock,18.6996255,0.0512,0.96,0.0,EUR,Unknown
+2025-06-30 00:00:00,Buy,BN,,Brookfield Corporation,Stock,0.0278745,34.44,-0.96,0.0,EUR,Unknown
+2025-06-30 00:00:00,TransferOut,,,,Unknown,6.86,1.0,6.86,0.0,EUR,Unknown
+2025-06-30 00:00:00,TransferOut,,,,Unknown,3.0,1.0,3.0,0.0,EUR,Unknown
+2025-06-30 00:00:00,TransferOut,,,,Unknown,450.0,1.0,450.0,0.0,EUR,Unknown
+2025-06-30 00:00:00,TransferOut,,,,Unknown,7.21,1.0,7.21,0.0,EUR,Unknown
+2025-07-01 00:00:00,Interest,,,,Unknown,0.03,1.0,0.03,0.0,EUR,Unknown
+2025-07-01 00:00:00,TransferOut,,,,Unknown,38.24,1.0,38.24,0.0,EUR,Unknown
+2025-07-01 00:00:00,Interest,,,,Unknown,1.3,1.0,1.3,0.0,EUR,Unknown
+2025-07-01 00:00:00,TransferOut,,,,Unknown,1.64,1.0,1.64,0.0,EUR,Unknown
+2025-07-01 00:00:00,TransferOut,,,,Unknown,3.0,1.0,3.0,0.0,EUR,Unknown
+2025-07-01 00:00:00,TransferOut,,,,Unknown,13.8,1.0,13.8,0.0,EUR,Unknown
+2025-07-02 00:00:00,TransferIn,,,,Unknown,2.97,1.0,2.97,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,TMO,,Thermo Fisher Scientific Inc.,Stock,0.277816,359.95,-100.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,META,,Meta Platforms,Stock,0.040903,611.2,-25.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,ZTS,,Zoetis,Stock,0.368785,135.58,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,CRWD,,Crowdstrike A,Stock,0.118722,421.15,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,BN,,Brookfield Corporation,Stock,1.425855,35.06666666666667,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,RKLB,,Rocket Lab 'A',Stock,0.83752,29.85,-25.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,0.41862,59.72,-25.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,DKILF,,Daikin Industries,Stock,0.968054,103.3,-100.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,97.626914,9.99,-975.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.107307,465.95,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,STMZF,,Scottish Mort Inv Tst,Stock,8.223684,12.16,-100.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,AMZN,,Amazon,Stock,0.267265,187.08,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.121743,410.7,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,RTPPF,,Rio Tinto,Stock,0.984445,50.79,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,NOW,,ServiceNow,Stock,0.582475,171.682,-100.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.061394,407.21,-25.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,V,,Visa,Stock,0.335232,298.3,-100.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,MSCI,,MSCI,Stock,0.100989,495.1,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,KYCCF,,Keyence,Stock,0.301295,331.9,-100.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,SPGI,,S&P Global,Stock,0.222296,449.85,-100.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,AWK,,American Water Works,Stock,0.414937,120.5,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,XYL,,XYLEM,Stock,0.225123,111.05,-25.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,LIN,,Linde,Stock,0.247035,404.8,-100.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,PROSF,,Prosus,Stock,1.067691,46.83,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,0.681198,73.4,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,TSM,,TSMC (ADR),Stock,0.254323,196.6,-50.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.046685,2142.02,-100.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,SE,,Sea (ADR),Stock,0.193798,129.0,-25.0,0.0,EUR,Unknown
+2025-07-02 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,0.297386,9.99,-2.97,0.0,EUR,Unknown
+2025-07-02 00:00:00,TransferOut,,,,Unknown,56.0,1.0,56.0,0.0,EUR,Unknown
+2025-07-03 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-07-03 00:00:00,Dividend,NVDA,,NVIDIA,Stock,19.0,0.00842,0.16,0.0,EUR,Unknown
+2025-07-03 00:00:00,Sell,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,0.722539,101.28,73.18,0.0,EUR,Unknown
+2025-07-03 00:00:00,Sell,IE00B7Y34M31,,WisdomTree S&P 500 3x Daily Leveraged,Stock,40.0,101.28,4051.2,1.0,EUR,Unknown
+2025-07-03 00:00:00,Buy,DSKYF,,Daiichi Sankyo,Stock,80.0,19.16,-1532.8,1.0,EUR,Unknown
+2025-07-04 00:00:00,Buy,SRPT,,Sarepta Therapeutics,Stock,125.0,15.56,-1944.38,1.0,EUR,Unknown
+2025-07-04 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.233263,2143.5,-500.0,1.0,EUR,Unknown
+2025-07-04 00:00:00,Sell,CRM,,Salesforce,Stock,0.301782,230.17,69.46,0.0,EUR,Unknown
+2025-07-04 00:00:00,Sell,CRM,,Salesforce,Stock,3.0,230.15,690.45,1.0,EUR,Unknown
+2025-07-05 00:00:00,TransferOut,,,,Unknown,43.07,1.0,43.07,0.0,EUR,Unknown
+2025-07-05 00:00:00,TransferIn,,,,Unknown,400.0,1.0,400.0,0.0,EUR,Unknown
+2025-07-06 00:00:00,TransferOut,,,,Unknown,3.74,1.0,3.74,0.0,EUR,Unknown
+2025-07-07 00:00:00,TransferOut,,,,Unknown,16.45,1.0,16.45,0.0,EUR,Unknown
+2025-07-08 00:00:00,TransferOut,,,,Unknown,299.43,1.0,299.43,0.0,EUR,Unknown
+2025-07-08 00:00:00,TransferOut,,,,Unknown,254.11,1.0,254.11,0.0,EUR,Unknown
+2025-07-08 00:00:00,TransferOut,,,,Unknown,321.68,1.0,321.68,0.0,EUR,Unknown
+2025-07-09 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-07-10 00:00:00,Dividend,TSM,,TSMC (ADR),Stock,0.747557,0.66,0.5,0.0,EUR,Unknown
+2025-07-12 00:00:00,TransferOut,,,,Unknown,8.63,1.0,8.63,0.0,EUR,Unknown
+2025-07-14 00:00:00,TransferOut,,,,Unknown,7.35,1.0,7.35,0.0,EUR,Unknown
+2025-07-15 00:00:00,TransferOut,,,,Unknown,3.97,1.0,3.97,0.0,EUR,Unknown
+2025-07-16 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-07-16 00:00:00,TransferOut,,,,Unknown,87.99,1.0,87.99,0.0,EUR,Unknown
+2025-07-17 00:00:00,Cost,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-07-19 00:00:00,TransferOut,,,,Unknown,6.92,1.0,6.92,0.0,EUR,Unknown
+2025-07-20 00:00:00,TransferOut,,,,Unknown,2.24,1.0,2.24,0.0,EUR,Unknown
+2025-07-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-07-21 00:00:00,Sell,SMCI,,Super Micro Computer,Stock,1.417635,44.85,63.58,1.0,EUR,Unknown
+2025-07-21 00:00:00,TransferOut,,,,Unknown,21.99,1.0,21.99,0.0,EUR,Unknown
+2025-07-21 00:00:00,TransferOut,,,,Unknown,3.93,1.0,3.93,0.0,EUR,Unknown
+2025-07-21 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-07-25 00:00:00,TransferOut,,,,Unknown,9.54,1.0,9.54,0.0,EUR,Unknown
+2025-07-26 00:00:00,TransferOut,,,,Unknown,25.0,1.0,25.0,0.0,EUR,Unknown
+2025-07-28 00:00:00,Sell,SRPT,,Sarepta Therapeutics,Stock,125.0,9.56,1194.75,1.0,EUR,Unknown
+2025-07-28 00:00:00,TransferOut,,,,Unknown,3.17,1.0,3.17,0.0,EUR,Unknown
+2025-07-28 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-07-28 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-07-29 00:00:00,Dividend,1211.HK,,BYD,Stock,57.0,0.48,27.42,0.0,EUR,Unknown
+2025-07-30 00:00:00,TransferOut,,,,Unknown,131.81,1.0,131.81,0.0,EUR,Unknown
+2025-07-30 00:00:00,TransferOut,,,,Unknown,3.0,1.0,3.0,0.0,EUR,Unknown
+2025-07-30 00:00:00,TransferOut,,,,Unknown,450.0,1.0,450.0,0.0,EUR,Unknown
+2025-07-30 00:00:00,TransferIn,,,,Unknown,2700.0,1.0,2700.0,0.0,EUR,Unknown
+2025-07-30 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,22.581009,44.29,-1000.0,1.0,EUR,Unknown
+2025-07-30 00:00:00,TransferOut,,,,Unknown,38.24,1.0,38.24,0.0,EUR,Unknown
+2025-07-31 00:00:00,Dividend,NATKY,,NAC Kazatomprom GDR,Stock,9.0,1.99,17.93,0.0,EUR,Unknown
+2025-08-01 00:00:00,Interest,,,,Unknown,1.19,1.0,1.19,0.0,EUR,Unknown
+2025-08-01 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-08-02 00:00:00,TransferIn,,,,Unknown,160.1,1.0,160.1,0.0,EUR,Unknown
+2025-08-03 00:00:00,TransferOut,,,,Unknown,207.66,1.0,207.66,0.0,EUR,Unknown
+2025-08-04 00:00:00,TransferIn,,,,Unknown,207.66,1.0,207.66,0.0,EUR,Unknown
+2025-08-04 00:00:00,TransferOut,,,,Unknown,60.56,1.0,60.56,0.0,EUR,Unknown
+2025-08-04 00:00:00,TransferIn,,,,Unknown,13.84,1.0,13.84,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,0.591505,42.27,-25.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,BN,,Brookfield Corporation,Stock,1.3111875,38.13333333333333,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,LIN,,Linde,Stock,0.251509,397.6,-100.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,0.299078,167.18,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,0.688705,72.6,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.064632,386.81,-25.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,95.214843,10.24,-975.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,KYCCF,,Keyence,Stock,0.296912,336.8,-100.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,PROSF,,Prosus,Stock,1.013684,49.33,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,TSM,,TSMC (ADR),Stock,0.243902,205.0,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,CRWD,,Crowdstrike A,Stock,0.127275,392.85,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.12623,396.1,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,MSCI,,MSCI,Stock,0.101358,493.3,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,SPGI,,S&P Global,Stock,0.103648,482.4,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,META,,Meta Platforms,Stock,0.037919,659.3,-25.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.119431,418.65,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,ZTS,,Zoetis,Stock,0.764058,130.88,-100.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,NOW,,ServiceNow,Stock,0.313675,159.4,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,SE,,Sea (ADR),Stock,0.185185,135.0,-25.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.048285,2071.04,-100.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,AMZN,,Amazon,Stock,0.272094,183.76,-50.0,0.0,EUR,Unknown
+2025-08-04 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,1.351562,10.24,-13.84,0.0,EUR,Unknown
+2025-08-04 00:00:00,TransferIn,,,,Unknown,60.56,1.0,60.56,0.0,EUR,Unknown
+2025-08-04 00:00:00,TransferIn,,,,Unknown,45.0,1.0,45.0,0.0,EUR,Unknown
+2025-08-05 00:00:00,TransferOut,,,,Unknown,40.0,1.0,40.0,0.0,EUR,Unknown
+2025-08-05 00:00:00,TransferOut,,,,Unknown,56.0,1.0,56.0,0.0,EUR,Unknown
+2025-08-06 00:00:00,Dividend,ASML.AS,,ASML Holding,Stock,4.0,1.6,6.4,0.0,EUR,Unknown
+2025-08-07 00:00:00,TransferIn,,,,Unknown,220.0,1.0,220.0,0.0,EUR,Unknown
+2025-08-07 00:00:00,TransferOut,,,,Unknown,220.0,1.0,220.0,0.0,EUR,Unknown
+2025-08-07 00:00:00,Buy,INPOF,,InPost,Stock,3.840245,13.02,-50.0,0.0,EUR,Unknown
+2025-08-07 00:00:00,Buy,NU,,Nubank,Stock,4.642525,10.77,-50.0,0.0,EUR,Unknown
+2025-08-07 00:00:00,Buy,ASML.AS,,ASML Holding,Stock,0.081645,612.4,-50.0,0.0,EUR,Unknown
+2025-08-07 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,0.899742,77.8,-70.0,0.0,EUR,Unknown
+2025-08-11 00:00:00,Sell,ZETA,,Zeta Global Holdings Corp Class A,Stock,30.0,16.1,483.0,1.0,EUR,Unknown
+2025-08-11 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-08-12 00:00:00,TransferOut,,,,Unknown,4.96,1.0,4.96,0.0,EUR,Unknown
+2025-08-12 00:00:00,TransferOut,,,,Unknown,98.98,1.0,98.98,0.0,EUR,Unknown
+2025-08-12 00:00:00,TransferOut,,,,Unknown,150.0,1.0,150.0,0.0,EUR,Unknown
+2025-08-13 00:00:00,TransferIn,,,,Unknown,98.98,1.0,98.98,0.0,EUR,Unknown
+2025-08-13 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,8.0,40.27,-322.16,0.99,EUR,Unknown
+2025-08-15 00:00:00,TransferOut,,,,Unknown,13.15,1.0,13.15,0.0,EUR,Unknown
+2025-08-18 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-08-19 00:00:00,Dividend,NOVO-B.CO,,Novo Nordisk 'B',Stock,59.315344,0.5,29.8,0.0,EUR,Unknown
+2025-08-20 00:00:00,TransferOut,,,,Unknown,10.39,1.0,10.39,0.0,EUR,Unknown
+2025-08-20 00:00:00,TransferOut,,,,Unknown,21.99,1.0,21.99,0.0,EUR,Unknown
+2025-08-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-08-22 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-08-27 00:00:00,Dividend,GRS469003024,,Kri-Kri,Stock,40.0,0.4,16.03,0.0,EUR,Unknown
+2025-08-27 00:00:00,Sell,UBER,,Uber Technologies,Stock,0.685213,83.32,57.09,1.0,EUR,Unknown
+2025-08-27 00:00:00,TransferOut,,,,Unknown,3.07,1.0,3.07,0.0,EUR,Unknown
+2025-08-28 00:00:00,TransferIn,,,,Unknown,2700.0,1.0,2700.0,0.0,EUR,Unknown
+2025-08-28 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-08-28 00:00:00,TransferOut,,,,Unknown,414.0,1.0,414.0,0.0,EUR,Unknown
+2025-08-28 00:00:00,TransferIn,,,,Unknown,70.1,1.0,70.1,0.0,EUR,Unknown
+2025-08-29 00:00:00,TransferIn,,,,Unknown,300.0,1.0,300.0,0.0,EUR,Unknown
+2025-08-29 00:00:00,TransferOut,,,,Unknown,38.24,1.0,38.24,0.0,EUR,Unknown
+2025-08-29 00:00:00,Dividend,MSCI,,MSCI,Stock,2.266756,1.54,3.49,0.0,EUR,Unknown
+2025-08-29 00:00:00,Buy,INPOF,,InPost,Stock,24.0,12.4,-297.6,0.99,EUR,Unknown
+2025-08-30 00:00:00,TransferOut,,,,Unknown,3.49,1.0,3.49,0.0,EUR,Unknown
+2025-09-01 00:00:00,TransferOut,,,,Unknown,20.67,1.0,20.67,0.0,EUR,Unknown
+2025-09-01 00:00:00,Interest,,,,Unknown,1.08,1.0,1.08,0.0,EUR,Unknown
+2025-09-01 00:00:00,TransferOut,,,,Unknown,450.0,1.0,450.0,0.0,EUR,Unknown
+2025-09-01 00:00:00,TransferOut,,,,Unknown,4.0,1.0,4.0,0.0,EUR,Unknown
+2025-09-01 00:00:00,TransferIn,,,,Unknown,20.67,1.0,20.67,0.0,EUR,Unknown
+2025-09-01 00:00:00,TransferOut,,,,Unknown,5.26,1.0,5.26,0.0,EUR,Unknown
+2025-09-01 00:00:00,TransferOut,,,,Unknown,5.11,1.0,5.11,0.0,EUR,Unknown
+2025-09-02 00:00:00,TransferIn,,,,Unknown,7.73,1.0,7.73,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,RNMBF,,Rheinmetall,Stock,0.014132,1769.03,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,MSCI,,MSCI,Stock,0.104909,476.6,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,CRWD,,Crowdstrike A,Stock,0.141322,353.8,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,BN,,Brookfield Corporation,Stock,1.325088,37.733333333333334,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,LIN,,Linde,Stock,0.122129,409.4,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,DKILF,,Daikin Industries,Stock,0.237079,105.45,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,XYL,,XYLEM,Stock,0.209117,119.55,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,ZTS,,Zoetis,Stock,0.382438,130.74,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Dividend,V,,Visa,Stock,0.335232,0.51,0.17,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,SBGSF,,Schneider Electric SE,Stock,0.234082,213.6,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,TSM,,TSMC (ADR),Stock,0.127161,196.6,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,KYCCF,,Keyence,Stock,0.152207,328.5,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,RTPPF,,Rio Tinto,Stock,0.468867,53.32,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,0.739996,10.45,-7.73,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,0.1394,179.34,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,0.510204,49.0,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,PROSF,,Prosus,Stock,0.48216,51.85,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,AMZN,,Amazon,Stock,0.260416,192.0,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,META,,Meta Platforms,Stock,0.039859,627.21,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.124316,402.2,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,SPGI,,S&P Global,Stock,0.107619,464.6,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,NOW,,ServiceNow,Stock,0.16177,154.54,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.024038,2080.04,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.057971,431.25,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,0.632911,79.0,-50.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.063435,394.1,-25.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,90.943901,10.45,-950.0,0.0,EUR,Unknown
+2025-09-02 00:00:00,Sell,ANET,,Arista Networks,Stock,0.978473,115.12,112.64,1.0,EUR,Unknown
+2025-09-02 00:00:00,TransferOut,,,,Unknown,56.0,1.0,56.0,0.0,EUR,Unknown
+2025-09-03 00:00:00,Dividend,ZTS,,Zoetis,Stock,8.70809,0.43,3.74,0.0,EUR,Unknown
+2025-09-03 00:00:00,Dividend,AWK,,American Water Works,Stock,8.414937,0.71,5.98,0.0,EUR,Unknown
+2025-09-03 00:00:00,TransferIn,,,,Unknown,60.0,1.0,60.0,0.0,EUR,Unknown
+2025-09-03 00:00:00,Sell,TMO,,Thermo Fisher Scientific Inc.,Stock,0.277816,412.9,114.71,1.0,EUR,Unknown
+2025-09-03 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-09-08 00:00:00,TransferOut,,,,Unknown,89.9,1.0,89.9,0.0,EUR,Unknown
+2025-09-09 00:00:00,Dividend,JNJ,,Johnson & Johnson,Stock,0.559785,1.11,0.62,0.0,EUR,Unknown
+2025-09-09 00:00:00,TransferOut,,,,Unknown,5.36,1.0,5.36,0.0,EUR,Unknown
+2025-09-10 00:00:00,Dividend,SPGI,,S&P Global,Stock,0.336604,0.81,0.27,0.0,EUR,Unknown
+2025-09-11 00:00:00,Dividend,MSFT,,Microsoft,Stock,6.0,0.71,4.24,0.0,EUR,Unknown
+2025-09-11 00:00:00,Dividend,KNSL,,Kinsale Capital,Stock,0.457215,0.15,0.0683,0.0,EUR,Unknown
+2025-09-11 00:00:00,TransferOut,,,,Unknown,4.77,1.0,4.77,0.0,EUR,Unknown
+2025-09-12 00:00:00,Dividend,IBKR,,Interactive Brokers Group A,Stock,24.0,0.0679,1.63,0.0,EUR,Unknown
+2025-09-14 00:00:00,TransferIn,,,,Unknown,940.0,1.0,940.0,0.0,EUR,Unknown
+2025-09-15 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,17.0,0.18,3.01,0.0,EUR,Unknown
+2025-09-15 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,4.770589,0.18,0.85,0.0,EUR,Unknown
+2025-09-15 00:00:00,TransferOut,,,,Unknown,5.46,1.0,5.46,0.0,EUR,Unknown
+2025-09-15 00:00:00,TransferOut,,,,Unknown,9.06,1.0,9.06,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,1.043841,47.9,-50.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,SBGSF,,Schneider Electric SE,Stock,0.2145,233.1,-50.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.050382,1984.84,-100.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.27196,367.7,-100.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,0.69252,72.2,-50.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,DKILF,,Daikin Industries,Stock,0.487567,102.55,-50.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,9.35979,10.68,-100.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.277932,359.8,-100.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,ZTS,,Zoetis,Stock,0.801282,124.8,-100.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,Buy,CRWD,,Crowdstrike A,Stock,0.133244,375.25,-50.0,0.0,EUR,Unknown
+2025-09-16 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-09-17 00:00:00,Sell,JNJ,,Johnson & Johnson,Stock,0.559785,149.66,83.78,1.0,EUR,Unknown
+2025-09-17 00:00:00,Sell,EVGGF,,Evolution Gaming,Stock,1.0,73.16,73.16,1.0,EUR,Unknown
+2025-09-17 00:00:00,Sell,EVGGF,,Evolution Gaming,Stock,0.077912,73.16,5.7,0.0,EUR,Unknown
+2025-09-18 00:00:00,TransferOut,,,,Unknown,9.09,1.0,9.09,0.0,EUR,Unknown
+2025-09-18 00:00:00,Dividend,LIN,,Linde,Stock,0.620673,1.27,0.79,0.0,EUR,Unknown
+2025-09-18 00:00:00,TransferOut,,,,Unknown,15.84,1.0,15.84,0.0,EUR,Unknown
+2025-09-18 00:00:00,TransferOut,,,,Unknown,97.93,1.0,97.93,0.0,EUR,Unknown
+2025-09-20 00:00:00,TransferOut,,,,Unknown,21.99,1.0,21.99,0.0,EUR,Unknown
+2025-09-20 00:00:00,TransferOut,,,,Unknown,6.68,1.0,6.68,0.0,EUR,Unknown
+2025-09-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-09-22 00:00:00,Buy,RYDAF,,Shell,Stock,0.016985,30.62,-0.52,0.0,EUR,Unknown
+2025-09-22 00:00:00,Dividend,RYDAF,,Shell,Stock,1.698369,0.31,0.52,0.0,EUR,Unknown
+2025-09-23 00:00:00,TransferIn,,,,Unknown,42.48,1.0,42.48,0.0,EUR,Unknown
+2025-09-23 00:00:00,Dividend,ANPDF,,Anta Sports Products,Stock,0.943218,0.15,0.14,0.0,EUR,Unknown
+2025-09-23 00:00:00,Dividend,BLK,,BlackRock,Stock,0.005652,4.51,0.0255,0.0,EUR,Unknown
+2025-09-23 00:00:00,TransferOut,,,,Unknown,6.67,1.0,6.67,0.0,EUR,Unknown
+2025-09-24 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-09-25 00:00:00,Dividend,XYL,,XYLEM,Stock,0.91068,0.34,0.31,0.0,EUR,Unknown
+2025-09-25 00:00:00,Dividend,RTPPF,,Rio Tinto,Stock,3.080133,1.24,3.83,0.0,EUR,Unknown
+2025-09-26 00:00:00,TransferOut,,,,Unknown,2.5,1.0,2.5,0.0,EUR,Unknown
+2025-09-27 00:00:00,TransferOut,,,,Unknown,1.9,1.0,1.9,0.0,EUR,Unknown
+2025-09-28 00:00:00,TransferOut,,,,Unknown,100.36,1.0,100.36,0.0,EUR,Unknown
+2025-09-29 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2025-09-29 00:00:00,Dividend,META,,Meta Platforms,Stock,0.136197,0.44,0.06,0.0,EUR,Unknown
+2025-09-29 00:00:00,Dividend,META,,Meta Platforms,Stock,1.0,0.45,0.45,0.0,EUR,Unknown
+2025-09-29 00:00:00,Dividend,BN,,Brookfield Corporation,Stock,22.7896305,0.051533333333333334,1.17,0.0,EUR,Unknown
+2025-09-29 00:00:00,TransferIn,,,,Unknown,635.22,1.0,635.22,0.0,EUR,Unknown
+2025-09-29 00:00:00,Sell,TSLA,,Tesla,Stock,8.0,376.2,3009.6,0.0,EUR,Unknown
+2025-09-29 00:00:00,TransferIn,,,,Unknown,2200.0,1.0,2200.0,0.0,EUR,Unknown
+2025-09-30 00:00:00,TransferOut,,,,Unknown,38.24,1.0,38.24,0.0,EUR,Unknown
+2025-09-30 00:00:00,TransferOut,,,,Unknown,450.0,1.0,450.0,0.0,EUR,Unknown
+2025-09-30 00:00:00,TransferOut,,,,Unknown,4.0,1.0,4.0,0.0,EUR,Unknown
+2025-09-30 00:00:00,Buy,AMZN,,Amazon,Stock,2.0,187.12,-374.24,0.0,EUR,Unknown
+2025-09-30 00:00:00,Buy,AMZN,,Amazon,Stock,2.0,187.3,-374.6,0.0,EUR,Unknown
+2025-09-30 00:00:00,Buy,MSFT,,Microsoft,Stock,1.0,440.85,-440.85,0.0,EUR,Unknown
+2025-09-30 00:00:00,Buy,INPOF,,InPost,Stock,25.0,10.5,-262.5,0.0,EUR,Unknown
+2025-09-30 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,4.0,69.8,-279.2,0.0,EUR,Unknown
+2025-09-30 00:00:00,Buy,AER,,AerCap,Stock,12.0,103.25,-1239.0,0.0,EUR,Unknown
+2025-10-01 00:00:00,Interest,,,,Unknown,0.32,1.0,0.32,0.0,EUR,Unknown
+2025-10-01 00:00:00,Interest,,,,Unknown,0.7,1.0,0.7,0.0,EUR,Unknown
+2025-10-02 00:00:00,TransferIn,,,,Unknown,4.39,1.0,4.39,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,0.999,50.05,-50.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Dividend,NVDA,,NVIDIA,Stock,19.0,0.00842,0.16,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,SBGSF,,Schneider Electric SE,Stock,0.199203,251.0,-50.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,META,,Meta Platforms,Stock,0.040577,616.11,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,BN,,Brookfield Corporation,Stock,1.293102,38.666666666666664,-50.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.026939,1856.05,-50.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.266524,375.2,-100.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,RTPPF,,Rio Tinto,Stock,0.440683,56.73,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,LIN,,Linde,Stock,0.125944,397.0,-50.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,DKILF,,Daikin Industries,Stock,0.251155,99.54,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,RNMBF,,Rheinmetall,Stock,0.012639,1978.0,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,PROSF,,Prosus,Stock,0.404792,61.76,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,0.403863,10.87,-4.39,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,0.119474,209.25,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,MSCI,,MSCI,Stock,0.10573,472.9,-50.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.274348,364.5,-100.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,KYCCF,,Keyence,Stock,0.304228,328.7,-100.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,AMZN,,Amazon,Stock,0.266042,187.94,-50.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.058802,425.16,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,CRWD,,Crowdstrike A,Stock,0.058837,424.9,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,NOW,,ServiceNow,Stock,0.160685,155.584,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,XYL,,XYLEM,Stock,0.197005,126.9,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,TSM,,TSMC (ADR),Stock,0.101214,247.0,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,SPGI,,S&P Global,Stock,0.121359,412.0,-50.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,ZTS,,Zoetis,Stock,0.796685,125.52,-100.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,2.299908,10.87,-25.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-10-02 00:00:00,TransferOut,,,,Unknown,40.0,1.0,40.0,0.0,EUR,Unknown
+2025-10-03 00:00:00,TransferOut,,,,Unknown,46.57,1.0,46.57,0.0,EUR,Unknown
+2025-10-03 00:00:00,TransferIn,,,,Unknown,46.57,1.0,46.57,0.0,EUR,Unknown
+2025-10-04 00:00:00,TransferIn,,,,Unknown,111.9,1.0,111.9,0.0,EUR,Unknown
+2025-10-04 00:00:00,TransferOut,,,,Unknown,6.96,1.0,6.96,0.0,EUR,Unknown
+2025-10-05 00:00:00,TransferOut,,,,Unknown,56.0,1.0,56.0,0.0,EUR,Unknown
+2025-10-09 00:00:00,Dividend,TSM,,TSMC (ADR),Stock,10.0,0.71,7.1,0.0,EUR,Unknown
+2025-10-09 00:00:00,Dividend,TSM,,TSMC (ADR),Stock,1.372943,0.71,0.97,0.0,EUR,Unknown
+2025-10-13 00:00:00,TransferOut,,,,Unknown,5.67,1.0,5.67,0.0,EUR,Unknown
+2025-10-13 00:00:00,TransferOut,,,,Unknown,10.46,1.0,10.46,0.0,EUR,Unknown
+2025-10-15 00:00:00,TransferOut,,,,Unknown,5.3,1.0,5.3,0.0,EUR,Unknown
+2025-10-16 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-10-17 00:00:00,Sell,VFAWF,,Vanguard FTSE All-World UCITS ETF - USD ACC,Stock,133.0,140.22,18649.26,22.41,EUR,Unknown
+2025-10-17 00:00:00,TransferIn,,,,Unknown,10000.0,1.0,10000.0,0.0,EUR,Unknown
+2025-10-17 00:00:00,TransferIn,,,,Unknown,8300.0,1.0,8300.0,0.0,EUR,Unknown
+2025-10-17 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,1614.0,10.84,-17495.76,1.0,EUR,Unknown
+2025-10-17 00:00:00,TransferOut,,,,Unknown,388.56,1.0,388.56,0.0,EUR,Unknown
+2025-10-18 00:00:00,TransferOut,,,,Unknown,1.99,1.0,1.99,0.0,EUR,Unknown
+2025-10-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-10-21 00:00:00,TransferOut,,,,Unknown,21.99,1.0,21.99,0.0,EUR,Unknown
+2025-10-21 00:00:00,TransferOut,,,,Unknown,5.37,1.0,5.37,0.0,EUR,Unknown
+2025-10-21 00:00:00,TransferOut,,,,Unknown,5.18,1.0,5.18,0.0,EUR,Unknown
+2025-10-21 00:00:00,TransferOut,,,,Unknown,10.15,1.0,10.15,0.0,EUR,Unknown
+2025-10-23 00:00:00,TransferOut,,,,Unknown,27.59,1.0,27.59,0.0,EUR,Unknown
+2025-10-24 00:00:00,TransferOut,,,,Unknown,48.0,1.0,48.0,0.0,EUR,Unknown
+2025-10-28 00:00:00,TransferIn,,,,Unknown,532.54,1.0,532.54,0.0,EUR,Unknown
+2025-10-28 00:00:00,Sell,SOFI,,SoFi Technologies,Stock,30.0,26.29,788.55,1.0,EUR,Unknown
+2025-10-28 00:00:00,TransferOut,,,,Unknown,10.15,1.0,10.15,0.0,EUR,Unknown
+2025-10-28 00:00:00,TransferOut,,,,Unknown,532.54,1.0,532.54,0.0,EUR,Unknown
+2025-10-28 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,4.0,65.6,-262.4,0.0,EUR,Unknown
+2025-10-28 00:00:00,Buy,INPOF,,InPost,Stock,23.0,11.13,-255.99,0.0,EUR,Unknown
+2025-10-29 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2025-10-30 00:00:00,TransferIn,,,,Unknown,3431.99,1.0,3431.99,0.0,EUR,Unknown
+2025-10-30 00:00:00,TransferOut,,,,Unknown,4.0,1.0,4.0,0.0,EUR,Unknown
+2025-10-30 00:00:00,TransferOut,,,,Unknown,450.0,1.0,450.0,0.0,EUR,Unknown
+2025-10-31 00:00:00,TransferIn,,,,Unknown,576.61,1.0,576.61,0.0,EUR,Unknown
+2025-10-31 00:00:00,TransferOut,,,,Unknown,38.24,1.0,38.24,0.0,EUR,Unknown
+2025-10-31 00:00:00,TransferOut,,,,Unknown,13.14,1.0,13.14,0.0,EUR,Unknown
+2025-10-31 00:00:00,TransferOut,,,,Unknown,576.61,1.0,576.61,0.0,EUR,Unknown
+2025-10-31 00:00:00,Buy,CNI,,Canadian National Railway Company,Stock,7.0,83.64,-585.48,0.0,EUR,Unknown
+2025-10-31 00:00:00,Sell,META,,Meta Platforms,Stock,0.176774,565.98,100.05,1.0,EUR,Unknown
+2025-10-31 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-11-01 00:00:00,Interest,,,,Unknown,1.06,1.0,1.06,0.0,EUR,Unknown
+2025-11-03 00:00:00,TransferIn,,,,Unknown,444.66,1.0,444.66,0.0,EUR,Unknown
+2025-11-03 00:00:00,TransferIn,,,,Unknown,6.88,1.0,6.88,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,BN,,Brookfield Corporation,Stock,1.265822,39.5,-50.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,AMZN,,Amazon,Stock,0.112866,221.5,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.118273,338.2,-40.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,MSCI,,MSCI,Stock,0.099088,504.6,-50.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,RNMBF,,Rheinmetall,Stock,0.014293,1749.11,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,KYCCF,,Keyence,Stock,0.310848,321.7,-100.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.108837,459.4,-50.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.024455,2044.57,-50.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,SPGI,,S&P Global,Stock,0.117357,426.05,-50.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,1.16618,42.88,-50.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,ZTS,,Zoetis,Stock,0.807363,123.86,-100.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,LIN,,Linde,Stock,0.136986,365.0,-50.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,DKILF,,Daikin Industries,Stock,0.246184,101.55,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,0.101832,245.5,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,NOW,,ServiceNow,Stock,0.16102,155.26,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,XYL,,XYLEM,Stock,0.076923,130.0,-10.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,CRWD,,Crowdstrike A,Stock,0.052465,476.51,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,SBGSF,,Schneider Electric SE,Stock,0.203665,245.5,-50.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.060371,414.11,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,PROSF,,Prosus,Stock,0.415696,60.14,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,RTPPF,,Rio Tinto,Stock,0.40512,61.71,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,TSM,,TSMC (ADR),Stock,0.093808,266.5,-25.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,115.125752,11.29,-1300.0,0.0,EUR,Unknown
+2025-11-03 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,0.60928,11.29,-6.88,0.0,EUR,Unknown
+2025-11-03 00:00:00,Dividend,PROSF,,Prosus,Stock,2.968327,0.2,0.59,0.0,EUR,Unknown
+2025-11-03 00:00:00,TransferOut,,,,Unknown,444.66,1.0,444.66,0.0,EUR,Unknown
+2025-11-03 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-11-04 00:00:00,TransferOut,,,,Unknown,56.0,1.0,56.0,0.0,EUR,Unknown
+2025-11-04 00:00:00,Buy,LU3176111881,,EQT Nexus Fund,Stock,10.0,100.0,-1000.0,0.0,EUR,Unknown
+2025-11-04 00:00:00,Buy,LU3176111881,,EQT Nexus Fund,Stock,0.1,100.0,-10.0,0.0,EUR,Unknown
+2025-11-04 00:00:00,TransferOut,,,,Unknown,5.63,1.0,5.63,0.0,EUR,Unknown
+2025-11-04 00:00:00,Buy,CNI,,Canadian National Railway Company,Stock,5.0,82.98,-414.9,0.0,EUR,Unknown
+2025-11-06 00:00:00,Dividend,ASML.AS,,ASML Holding,Stock,0.081645,1.59,0.13,0.0,EUR,Unknown
+2025-11-06 00:00:00,Dividend,ASML.AS,,ASML Holding,Stock,4.0,1.6,6.4,0.0,EUR,Unknown
+2025-11-07 00:00:00,Sell,LVMHF,,LVMH - Louis Vuitton Moët Hennessy,Stock,0.527646,603.49,318.43,0.0,EUR,Unknown
+2025-11-07 00:00:00,Sell,LVMHF,,LVMH - Louis Vuitton Moët Hennessy,Stock,2.0,603.5,1207.0,1.0,EUR,Unknown
+2025-11-07 00:00:00,Buy,INPOF,,InPost,Stock,142.0,9.85,-1397.99,1.0,EUR,Unknown
+2025-11-07 00:00:00,Buy,INPOF,,InPost,Stock,0.204164,9.85,-2.01,0.0,EUR,Unknown
+2025-11-09 00:00:00,TransferIn,,,,Unknown,140.1,1.0,140.1,0.0,EUR,Unknown
+2025-11-10 00:00:00,Sell,EUXTF,,Euronext,Stock,0.377088,127.11,47.93,1.0,EUR,Unknown
+2025-11-10 00:00:00,Sell,WPLCF,,Wise,Stock,7.0,10.53,73.71,1.0,EUR,Unknown
+2025-11-10 00:00:00,Sell,WPLCF,,Wise,Stock,0.820862,10.53,8.64,0.0,EUR,Unknown
+2025-11-10 00:00:00,Sell,ANPDF,,Anta Sports Products,Stock,0.943218,9.19,8.67,1.0,EUR,Unknown
+2025-11-10 00:00:00,TransferOut,,,,Unknown,18.99,1.0,18.99,0.0,EUR,Unknown
+2025-11-10 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-11-15 00:00:00,TransferOut,,,,Unknown,10.0,1.0,10.0,0.0,EUR,Unknown
+2025-11-17 00:00:00,TransferOut,,,,Unknown,5.77,1.0,5.77,0.0,EUR,Unknown
+2025-11-19 00:00:00,TransferOut,,,,Unknown,96.0,1.0,96.0,0.0,EUR,Unknown
+2025-11-19 00:00:00,TransferOut,,,,Unknown,8.64,1.0,8.64,0.0,EUR,Unknown
+2025-11-20 00:00:00,TransferOut,,,,Unknown,21.99,1.0,21.99,0.0,EUR,Unknown
+2025-11-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-11-21 00:00:00,TransferOut,,,,Unknown,226.73,1.0,226.73,0.0,EUR,Unknown
+2025-11-23 00:00:00,TransferOut,,,,Unknown,80.99,1.0,80.99,0.0,EUR,Unknown
+2025-11-25 00:00:00,Dividend,KYCCF,,Keyence,Stock,1.052055,1.52,1.59,0.0,EUR,Unknown
+2025-11-27 00:00:00,TransferIn,,,,Unknown,871.58,1.0,871.58,0.0,EUR,Unknown
+2025-11-27 00:00:00,TransferOut,,,,Unknown,8.75,1.0,8.75,0.0,EUR,Unknown
+2025-11-27 00:00:00,Sell,SE,,Sea (ADR),Stock,0.559214,116.5,65.15,1.0,EUR,Unknown
+2025-11-27 00:00:00,TransferIn,,,,Unknown,4800.0,1.0,4800.0,0.0,EUR,Unknown
+2025-11-27 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-11-28 00:00:00,TransferOut,,,,Unknown,38.24,1.0,38.24,0.0,EUR,Unknown
+2025-11-28 00:00:00,Dividend,MSCI,,MSCI,Stock,2.576483,1.55,4.0,0.0,EUR,Unknown
+2025-11-28 00:00:00,TransferOut,,,,Unknown,95.91,1.0,95.91,0.0,EUR,Unknown
+2025-11-28 00:00:00,TransferOut,,,,Unknown,319.0,1.0,319.0,0.0,EUR,Unknown
+2025-11-29 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,4.99,EUR,Unknown
+2025-11-29 00:00:00,TransferOut,,,,Unknown,2930.0,1.0,2930.0,0.0,EUR,Unknown
+2025-11-30 00:00:00,TransferIn,,,,Unknown,2300.0,1.0,2300.0,0.0,EUR,Unknown
+2025-11-30 00:00:00,TransferIn,,,,Unknown,630.0,1.0,630.0,0.0,EUR,Unknown
+2025-12-01 00:00:00,Dividend,V,,Visa,Stock,0.335232,0.57,0.19,0.0,EUR,Unknown
+2025-12-01 00:00:00,Interest,,,,Unknown,1.67,1.0,1.67,0.0,EUR,Unknown
+2025-12-01 00:00:00,TransferOut,,,,Unknown,450.0,1.0,450.0,0.0,EUR,Unknown
+2025-12-01 00:00:00,TransferOut,,,,Unknown,4.0,1.0,4.0,0.0,EUR,Unknown
+2025-12-01 00:00:00,TransferOut,,,,Unknown,6.06,1.0,6.06,0.0,EUR,Unknown
+2025-12-02 00:00:00,TransferIn,,,,Unknown,5.81,1.0,5.81,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,ZTS,,Zoetis,Stock,0.943752,105.96,-100.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,SPGI,,S&P Global,Stock,0.117178,426.7,-50.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,XYL,,XYLEM,Stock,0.083263,120.1,-10.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,NOW,,ServiceNow,Stock,0.174845,142.984,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,MELI,,Mercado Libre,Stock,0.027388,1825.62,-50.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,0.521918,11.13,-5.81,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,TSM,,TSMC (ADR),Stock,0.099206,252.0,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,AMZN,,Amazon,Stock,0.123365,202.65,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,KYCCF,,Keyence,Stock,0.343642,291.0,-100.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,PROSF,,Prosus,Stock,0.468779,53.33,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,1.208167,41.39,-50.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,DKILF,,Daikin Industries,Stock,0.227479,109.9,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,EADSF,,Airbus,Stock,0.130032,192.26,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.057385,435.65,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,RTPPF,,Rio Tinto,Stock,0.40167,62.24,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,RNMBF,,Rheinmetall,Stock,0.034281,1458.53,-50.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,LIN,,Linde,Stock,0.142369,351.2,-50.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,CRWD,,Crowdstrike A,Stock,0.056766,440.4,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,MSCI,,MSCI,Stock,0.104231,479.7,-50.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Dividend,AWK,,American Water Works,Stock,8.414937,0.71,5.98,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,ISRG,,Intuitive Surgical,Stock,0.051156,488.7,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,KNSL,,Kinsale Capital,Stock,0.123342,324.3,-40.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,BN,,Brookfield Corporation,Stock,1.25,40.0,-50.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,GOOGL,,Alphabet 'A',Stock,0.091575,273.0,-25.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,SBGSF,,Schneider Electric SE,Stock,0.214362,233.25,-50.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,116.780452,11.13,-1300.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Dividend,DKILF,,Daikin Industries,Stock,2.745859,0.91,2.5,0.0,EUR,Unknown
+2025-12-02 00:00:00,Dividend,ZTS,,Zoetis,Stock,11.452553,0.43,4.92,0.0,EUR,Unknown
+2025-12-02 00:00:00,TransferOut,,,,Unknown,4.73,1.0,4.73,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,CNI,,Canadian National Railway Company,Stock,4.0,82.28,-329.12,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,NATKY,,NAC Kazatomprom GDR,Stock,6.0,49.0,-294.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,HIMS,,Hims & Hers Health,Stock,9.0,32.41,-291.69,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,5.0,67.8,-339.0,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,AMZN,,Amazon,Stock,3.0,203.1,-609.3,0.0,EUR,Unknown
+2025-12-02 00:00:00,Buy,EUXTF,,Euronext,Stock,3.0,130.4,-391.2,0.0,EUR,Unknown
+2025-12-03 00:00:00,TransferOut,,,,Unknown,56.0,1.0,56.0,0.0,EUR,Unknown
+2025-12-03 00:00:00,TransferOut,,,,Unknown,40.0,1.0,40.0,0.0,EUR,Unknown
+2025-12-04 00:00:00,Dividend,AER,,AerCap,Stock,12.0,0.23,2.77,0.0,EUR,Unknown
+2025-12-05 00:00:00,Interest,,,,Unknown,0.08,1.0,0.08,0.0,EUR,Unknown
+2025-12-06 00:00:00,TransferOut,,,,Unknown,71.76,1.0,71.76,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,INPOF,,InPost,Stock,185.0,9.71,1796.35,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,1211.HK,,BYD,Stock,171.0,10.83,1851.07,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,WPLCF,,Wise,Stock,85.0,9.86,838.1,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,EVGGF,,Evolution Gaming,Stock,14.0,56.54,791.56,0.0,EUR,Unknown
+2025-12-08 00:00:00,Buy,XIACF,,Xiaomi,Stock,350.0,4.71,-1648.15,0.0,EUR,Unknown
+2025-12-08 00:00:00,Buy,SE,,Sea (ADR),Stock,3.0,115.5,-346.5,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,DSKYF,,Daiichi Sankyo,Stock,80.0,18.91,1512.8,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,NOVO-B.CO,,Novo Nordisk 'B',Stock,64.242736,40.66,2611.79,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,INPOF,,InPost,Stock,192.0,9.72,1865.28,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,AMZN,,Amazon,Stock,7.478829,197.66,1478.27,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,SBS,,Sabesp ADR,Stock,80.0,21.8,1744.0,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,INPOF,,InPost,Stock,0.204164,9.7,1.98,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,ZTS,,Zoetis,Stock,13.203668,101.9,1345.45,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,BN,,Brookfield Corporation,Stock,26.0,39.9,1037.4,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,GOOGL,,Alphabet 'A',Stock,5.08347,275.25,1399.23,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,BN,,Brookfield Corporation,Stock,0.598555,39.9,23.88,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,NU,,Nubank,Stock,0.791182,14.5,11.47,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,MELI,,Mercado Libre,Stock,0.524132,1793.4,939.98,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,NU,,Nubank,Stock,47.0,14.5,681.59,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,AWK,,American Water Works,Stock,8.414937,110.65,931.11,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,MSCI,,MSCI,Stock,2.680714,462.4,1239.56,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,CADLF,,Cadeler,Stock,200.0,3.99,797.6,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,DKILF,,Daikin Industries,Stock,0.470677,108.55,51.09,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,KYCCF,,Keyence,Stock,0.010773,299.82,3.23,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,ISRG,,Intuitive Surgical,Stock,1.303676,494.35,644.47,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,KNSL,,Kinsale Capital,Stock,1.0,303.7,303.7,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,CAMRF,,CAMURUS AB Aktie,Stock,10.0,54.55,545.5,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,TSM,,TSMC (ADR),Stock,1.667171,257.5,429.3,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,DKILF,,Daikin Industries,Stock,3.0,108.55,325.65,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,KYCCF,,Keyence,Stock,2.0,299.4,598.8,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,KNSL,,Kinsale Capital,Stock,0.314545,303.71,95.53,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,SPGI,,S&P Global,Stock,0.800117,425.7,340.61,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,LIN,,Linde,Stock,1.025972,343.0,351.91,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,MSTR,,Strategy,Stock,0.014029,156.11,2.19,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,BRK/B,,Berkshire Hathaway ‘B’,Stock,0.78517,430.1,337.7,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,CRWD,,Crowdstrike A,Stock,0.688631,440.5,303.34,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,EADSF,,Airbus,Stock,0.355763,197.86,70.39,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,PROSF,,Prosus,Stock,0.852802,51.92,44.28,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,NOW,,ServiceNow,Stock,1.55447,147.022,228.54,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,SBGSF,,Schneider Electric SE,Stock,0.178729,237.12,42.38,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,RTPPF,,Rio Tinto,Stock,4.796473,62.99,302.13,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,PROSF,,Prosus,Stock,3.0,51.92,155.76,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,SBGSF,,Schneider Electric SE,Stock,1.0,237.1,237.1,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,V,,Visa,Stock,0.335232,285.86,95.83,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,RNMBF,,Rheinmetall,Stock,0.078251,1569.05,122.78,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,XYL,,XYLEM,Stock,1.476988,119.25,176.13,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,RKLB,,Rocket Lab 'A',Stock,1.0,42.8,42.8,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,STMZF,,Scottish Mort Inv Tst,Stock,0.223684,12.52,2.8,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,RKLB,,Rocket Lab 'A',Stock,0.273629,42.8,11.71,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,STMZF,,Scottish Mort Inv Tst,Stock,8.0,12.53,100.24,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,DDOG,,Datadog A,Stock,0.31104,130.43,40.57,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,TGTX,,TG Therapeutics,Stock,0.97688,26.1,25.5,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,FTNT,,Fortinet,Stock,0.848896,74.57,63.3,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,HUBS,,HubSpot,Stock,0.008369,328.59,2.75,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,RYDAF,,Shell,Stock,1.715354,31.53,54.08,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,GMAB.CO,,Genmab,Stock,0.112612,274.84,30.95,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,PLTR,,Palantir Technologies,Stock,0.043081,155.99,6.72,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,GRAB,,Grab Holdings Limited,Stock,0.878528,4.45,3.91,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,ADYYF,,Adyen,Stock,0.006025,1361.0,8.2,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,GRAB,,Grab Holdings Limited,Stock,11.0,4.46,49.02,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,CPNG,,Coupang,Stock,0.202306,23.03,4.66,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,SPOT,,Spotify Technology,Stock,0.00868,485.02,4.21,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,BLK,,BlackRock,Stock,0.005652,920.03,5.2,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,NET,,Cloudflare,Stock,0.035816,174.22,6.24,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,CNSWF,,Constellation Software,Stock,0.001531,2077.07,3.18,1.0,EUR,Unknown
+2025-12-08 00:00:00,Buy,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,1000.0,11.2,-11198.0,1.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,KSPI,,Kaspi.kz,Stock,56.899742,64.66,3678.92,0.0,EUR,Unknown
+2025-12-08 00:00:00,Sell,KSPI,,Kaspi.kz,Stock,14.959859,64.2,960.42,1.0,EUR,Unknown
+2025-12-08 00:00:00,TransferOut,,,,Unknown,31.0,1.0,31.0,0.0,EUR,Unknown
+2025-12-08 00:00:00,Cost,,,,Unknown,0.0,1.0,0.0,0.0,EUR,Unknown
+2025-12-09 00:00:00,TransferOut,,,,Unknown,4716.14,1.0,4716.14,0.0,EUR,Unknown
+2025-12-09 00:00:00,Buy,AMZN,US0231351067,AMAZON.COM INC,Stock,5.0,227.69,-1138.79475725,0.34475725,USD,Unknown
+2025-12-09 00:00:00,Buy,AWK,US0304201033,AMERICAN WATER WORKS CO INC,Stock,2.0,129.21,-258.77665725,0.35665725,USD,Unknown
+2025-12-09 00:00:00,Buy,AWK,US0304201033,AMERICAN WATER WORKS CO INC,Stock,8.0,129.22,-1033.7856,0.0256,USD,Unknown
+2025-12-09 00:00:00,Buy,CELH,US15118V2079,CELSIUS HOLDINGS INC,Stock,30.0,43.69,-1311.05625725,0.35625725,USD,Unknown
+2025-12-09 00:00:00,Buy,KSPI,US48581R2058,JSC KASPI.KZ ADR,Stock,70.0,74.0,-5180.27325725,0.27325725,USD,Unknown
+2025-12-09 00:00:00,Buy,LIN,IE000S9YS762,LINDE PLC,Stock,5.0,394.5,-1972.84475725,0.34475725,USD,Unknown
+2025-12-09 00:00:00,Buy,MELI,US58733R1023,MERCADOLIBRE INC,Stock,1.0,2057.695,-2058.04545725,0.35045725,USD,Unknown
+2025-12-09 00:00:00,Buy,MSCI,US55354G1004,MSCI INC,Stock,2.0,540.035,-1080.42065725,0.35065725,USD,Unknown
+2025-12-09 00:00:00,Buy,NFLX,US64110L1061,NETFLIX INC,Stock,25.0,96.428,-2411.05525725,0.35525725,USD,Unknown
+2025-12-09 00:00:00,Buy,NU,KYG6683N1034,NU HOLDINGS LTD/CAYMAN ISL-A,Stock,50.0,16.6475,-832.73525725,0.36025725,USD,Unknown
+2025-12-09 00:00:00,Buy,NU,KYG6683N1034,NU HOLDINGS LTD/CAYMAN ISL-A,Stock,50.0,16.648,-832.41,0.01,USD,Unknown
+2025-12-09 00:00:00,Buy,XYL,US98419M1009,XYLEM INC,Stock,15.0,138.57,-2078.90325725,0.35325725,USD,Unknown
+2025-12-09 00:00:00,Buy,ZTS,US98978V1035,ZOETIS INC,Stock,3.0,116.2,-348.94125725,0.34125725,USD,Unknown
+2025-12-09 00:00:00,Buy,ZTS,US98978V1035,ZOETIS INC,Stock,12.0,116.2,-1394.436,0.036,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,16000.0,1.16385,18619.8814,1.7186,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,4452.46,1.16328,5179.4576688,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.24,1.16322,0.2791728,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.46,1.16328,0.5351088,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.3,1.16112,0.348336,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,600.31,1.16118,697.0679658,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.13,1.16113,0.1509469,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,1171.86,1.1621,-1361.818506,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,1171.69,1.16113,1360.4844097,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.03,1.16277,0.0348831,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.26,1.16277,0.3023202,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,978.89,1.16278,1138.2337142,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,979.35,1.1638,-1139.76753,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.19,1.16288,0.2209472,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.01,1.16267,0.0116267,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.3,1.16267,0.348801,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,928.78,1.16253,1079.7346134,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,929.38,1.1634,-1081.240692,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.29,1.16248,0.3371192,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.01,1.16207,0.0116207,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.29,1.16207,0.3370003,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,1697.08,1.16203,1972.0578724,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,1697.77,1.163,-1974.50651,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.37,1.16208,0.4299696,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.03,1.16317,0.0348951,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.27,1.16327,0.3140829,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,1126.52,1.16333,1310.5145116,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.31,1.16327,0.3606137,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,2072.09,1.16333,2410.5244597,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,3199.56,1.16425,-3725.08773,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.06,1.16337,0.0698022,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.24,1.16327,0.2791848,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,1786.47,1.16333,2078.2541451,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.25,1.16323,0.2908075,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,1786.99,1.16415,-2080.3244085,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.03,1.16312,0.0348936,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.23,1.16257,0.2673911,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,1498.4,1.16308,1742.759072,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,1498.87,1.164,-1744.68468,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.22,1.16313,0.2558886,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.02,1.16297,0.0232594,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.31,1.16302,0.3605362,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,1110.9,1.16293,1291.898937,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.24,1.16293,0.2791032,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,1111.47,1.16385,-1293.5843595,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.02,1.16237,0.0232474,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.3,1.16232,0.348696,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,1432.08,1.16238,1664.6211504,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,1432.53,1.1633,-1666.462149,0.0,USD,Unknown
+2025-12-09 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,0.13,1.16238,0.1511094,0.0,USD,Unknown
+2025-12-09 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,0.00338267,1.16282306,-0.0039334466803702,0.0,USD,Unknown
+2025-12-09 00:00:00,TransferIn,CASH,,Cash TransferIn,Stock,0.0,1.0,5045.48,0.0,EUR,Unknown
+2025-12-09 00:00:00,TransferIn,CASH,,Cash TransferIn,Stock,0.0,1.0,16000.0,0.0,EUR,Unknown
+2025-12-09 00:00:00,TransferOut,,,,Unknown,13312.76,1.0,13312.76,0.0,EUR,Unknown
+2025-12-09 00:00:00,Buy,INPOF,,InPost,Stock,200.0,9.77,-1953.0,0.0,EUR,Unknown
+2025-12-09 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,70.0,63.64,-4455.01,0.24,USD,Unknown
+2025-12-09 00:00:00,Buy,MELI,,Mercado Libre,Stock,1.0,1769.7,-1769.7,0.3,USD,Unknown
+2025-12-09 00:00:00,Buy,AMZN,,Amazon,Stock,5.0,195.82,-979.11,0.3,USD,Unknown
+2025-12-09 00:00:00,Buy,MSCI,,MSCI,Stock,2.0,464.45,-928.9,0.3,USD,Unknown
+2025-12-09 00:00:00,Buy,LIN,,Linde,Stock,5.0,339.29,-1696.43,0.3,USD,Unknown
+2025-12-09 00:00:00,Buy,CELH,,Celsius Holdings,Stock,30.0,37.58,-1127.26,0.31,USD,Unknown
+2025-12-09 00:00:00,Buy,NFLX,,Netflix,Stock,25.0,82.93,-2073.3,0.31,USD,Unknown
+2025-12-09 00:00:00,Buy,XYL,,XYLEM,Stock,15.0,119.18,-1787.64,0.3,USD,Unknown
+2025-12-09 00:00:00,Buy,ZTS,,Zoetis,Stock,15.0,99.94,-1499.05,0.32,USD,Unknown
+2025-12-09 00:00:00,Buy,AWK,,American Water Works,Stock,10.0,111.13,-1111.33,0.33,USD,Unknown
+2025-12-09 00:00:00,Buy,NU,,Nubank,Stock,100.0,14.32,-1431.78,0.32,USD,Unknown
+2025-12-09 00:00:00,TransferIn,,,,Unknown,4716.14,1.0,4716.14,0.0,EUR,Unknown
+2025-12-09 00:00:00,TransferOut,,,,Unknown,4616.14,1.0,4616.14,0.0,EUR,Unknown
+2025-12-09 00:00:00,TransferOut,,,,Unknown,14.11,1.0,14.11,0.0,EUR,Unknown
+2025-12-09 00:00:00,TransferIn,,,,Unknown,431.2,1.0,431.2,0.0,EUR,Unknown
+2025-12-10 00:00:00,Buy,NOVOBc,DK0062498333,NOVO NORDISK A/S-B,Stock,50.0,309.0,-15460.224044319,10.224044319,DKK,Unknown
+2025-12-10 00:00:00,Sell,EUR.DKK,,EUR.DKK,Stock,2.0,7.46728,14.93456,0.0,DKK,Unknown
+2025-12-10 00:00:00,Buy,EUR.DKK,,EUR.DKK,Stock,0.63047089,7.47142456,-4.710515691911058,0.0,DKK,Unknown
+2025-12-10 00:00:00,Sell,EUR.DKK,,EUR.DKK,Stock,0.18698473,7.4667593,1.396169971685489,0.0,DKK,Unknown
+2025-12-10 00:00:00,Sell,USD.DKK,,USD.DKK,Stock,2409.0,6.41287,15448.60383,0.0,DKK,Unknown
+2025-12-10 00:00:00,Buy,EUR.USD,,EUR.USD,Stock,1.98,1.16474,-2.3061852,0.0,USD,Unknown
+2025-12-10 00:00:00,Dividend,SPGI,,S&P Global,Stock,0.682939,0.83,0.57,0.0,EUR,Unknown
+2025-12-10 00:00:00,Dividend,DSKYF,,Daiichi Sankyo,Stock,80.0,0.21,17.15,0.0,EUR,Unknown
+2025-12-10 00:00:00,Buy,NOVO-B.CO,,Novo Nordisk 'B',Stock,50.0,41.37,-2068.62,1.37,DKK,Unknown
+2025-12-11 00:00:00,TransferOut,,,,Unknown,11.22,1.0,11.22,0.0,EUR,Unknown
+2025-12-11 00:00:00,Dividend,MSFT,,Microsoft,Stock,7.0,0.77,5.42,0.0,EUR,Unknown
+2025-12-11 00:00:00,Dividend,KNSL,,Kinsale Capital,Stock,1.191203,0.14,0.17,0.0,EUR,Unknown
+2025-12-11 00:00:00,TransferOut,,,,Unknown,9.88,1.0,9.88,0.0,EUR,Unknown
+2025-12-12 00:00:00,Dividend,IBKR,,Interactive Brokers Group A,Stock,24.0,0.0679,1.63,0.0,EUR,Unknown
+2025-12-12 00:00:00,Dividend,STMZF,,Scottish Mort Inv Tst,Stock,8.223684,0.0181,0.15,0.0,EUR,Unknown
+2025-12-12 00:00:00,TransferOut,,,,Unknown,191.71,1.0,191.71,0.0,EUR,Unknown
+2025-12-15 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,5.08347,0.18,0.91,0.0,EUR,Unknown
+2025-12-16 00:00:00,Sell,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,3350.0,10.96,36722.7,1.0,EUR,Unknown
+2025-12-16 00:00:00,Buy,FWRA.MI,,Invesco FTSE All-World UCITS ETF Acc,Stock,5350.0,7.01,-37503.5,1.0,EUR,Unknown
+2025-12-16 00:00:00,Sell,IE0003XJA0J9,,Amundi Prime All Country World UCITS ETF - USD ACC,Stock,0.275565,10.96,3.02,1.0,EUR,Unknown
+2025-12-17 00:00:00,Dividend,LIN,,Linde,Stock,1.025972,1.27,1.31,0.0,EUR,Unknown
+2025-12-18 00:00:00,Dividend,RYDAF,,Shell,Stock,1.715354,0.31,0.53,0.0,EUR,Unknown
+2025-12-18 00:00:00,Dividend,GOOGL,,Alphabet 'A',Stock,17.0,0.18,3.04,0.0,EUR,Unknown
+2025-12-19 00:00:00,TransferIn,,,,Unknown,100.0,1.0,100.0,0.0,EUR,Unknown
+2025-12-19 00:00:00,TransferOut,,,,Unknown,8.54,1.0,8.54,0.0,EUR,Unknown
+2025-12-20 00:00:00,TransferOut,,,,Unknown,21.99,1.0,21.99,0.0,EUR,Unknown
+2025-12-21 00:00:00,TransferOut,,,,Unknown,17.4,1.0,17.4,0.0,EUR,Unknown
+2025-12-23 00:00:00,Dividend,XYL,,XYLEM,Stock,1.393725,0.34,0.48,0.0,EUR,Unknown
+2025-12-23 00:00:00,Dividend,BLK,,BlackRock,Stock,0.005652,4.52,0.0255,0.0,EUR,Unknown
+2025-12-23 00:00:00,TransferOut,,,,Unknown,20.0,1.0,20.0,0.0,EUR,Unknown
+2025-12-24 00:00:00,Buy,BN,CA11271J1075,BROOKFIELD CORP,Stock,10.0,46.705,-467.40225725,0.35225725,USD,Unknown
+2025-12-24 00:00:00,Buy,BN,CA11271J1075,BROOKFIELD CORP,Stock,10.0,46.705,-467.052,0.002,USD,Unknown
+2025-12-24 00:00:00,Buy,KSPI,US48581R2058,JSC KASPI.KZ ADR,Stock,6.0,78.52,-471.47145725,0.35145725,USD,Unknown
+2025-12-24 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,1072.34,1.1779,1261.413506,1.69578,USD,Unknown
+2025-12-24 00:00:00,TransferIn,CASH,,Cash TransferIn,Stock,0.0,1.0,1145.48,0.0,EUR,Unknown
+2025-12-24 00:00:00,TransferIn,,,,Unknown,2000.0,1.0,2000.0,0.0,EUR,Unknown
+2025-12-24 00:00:00,TransferOut,,,,Unknown,11.16,1.0,11.16,0.0,EUR,Unknown
+2025-12-24 00:00:00,Buy,BN,,Brookfield Corporation,Stock,20.0,39.67,-793.31,0.3,USD,Unknown
+2025-12-24 00:00:00,Buy,KSPI,,Kaspi.kz,Stock,6.0,66.69,-400.11,0.3,USD,Unknown
+2025-12-30 00:00:00,TransferIn,CASH,,Cash TransferIn,Stock,0.0,1.0,545.48,0.0,EUR,Unknown
+2025-12-31 00:00:00,Buy,NFLX,US64110L1061,NETFLIX INC,Stock,6.0,93.405,-560.78145725,0.35145725,USD,Unknown
+2026-01-02 00:00:00,Sell,EUR.USD,,EUR.USD,Stock,477.54,1.1743,559.072442,1.70278,USD,Unknown

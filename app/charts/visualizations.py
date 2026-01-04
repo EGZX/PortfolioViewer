@@ -219,29 +219,29 @@ def create_allocation_treemap(
     # Path "Portfolio" -> "Label" (Ticker)
     fig = px.treemap(
         holdings_df, 
-        path=['Label'], 
+        path=['Ticker'],  # Use Ticker for clean display
         values=market_value_col,
-        color='Label', 
+        color='Ticker', 
         color_discrete_sequence=colors,
-        hover_data={'Name': True, market_value_col: True, 'Percentage': ':.1f'}
+        hover_data={'Name': True, 'Ticker': False, market_value_col: True, 'Percentage': ':.1f'}
     )
     
     # Custom Hover Template
     val_fmt = "€%{value:,.0f}" if not privacy_mode else "••••••"
     
-    # Use customdata to access 'Name' (stored in hover_data)
-    # px automatically puts hover_data into customdata.
-    # Index 0 = Name (based on hover_data dict order usually)
+    # Update hover to show Name + Value + Allocation
+    # customdata[0] = Name (from hover_data)
     fig.update_traces(
         hovertemplate='<b>%{label}</b><br>' +
+                      'Name: %{customdata[0]}<br>' +
                       f'Value: {val_fmt}<br>' +
-                      'Share: %{percentRoot:.1%}<br>' +
+                      'Allocation: %{percentRoot:.1%}<br>' +
                       '<extra></extra>',
         marker=dict(
             line=dict(width=1, color='rgba(148, 163, 184, 0.2)'), # Subtle slate border
             cornerradius=0 # Sharp edges for clean grid
         ),
-        texttemplate='%{label}<br>%{percentRoot:.1%}',  # Format with 1 decimal
+        texttemplate='%{label}',  # Show ticker only
         textfont=dict(family="JetBrains Mono", size=14, color="#e2e8f0"), # Light text
         textposition="middle center",
         root_color="rgba(0,0,0,0)" # Transparent root
