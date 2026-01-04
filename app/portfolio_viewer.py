@@ -590,7 +590,7 @@ def main():
                         width=None, # use column width
                         hide_index=True,
                         height=400,
-                        use_container_width=True
+                        width="stretch"
                     )
                     
                     # Export Holdings
@@ -709,7 +709,7 @@ def main():
                     filtered_df,
                     width=None,
                     hide_index=True,
-                    use_container_width=True
+                    width="stretch"
                 )
                 
                 # Export Transactions
@@ -845,7 +845,7 @@ def main():
                         pd.DataFrame(breakdown_data),
                         width=None,
                         hide_index=True,
-                        use_container_width=True
+                        width="stretch"
                     )
                     
                     # Export Tax Breakdown

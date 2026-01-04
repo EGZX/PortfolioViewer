@@ -30,7 +30,7 @@ def render_duplicate_review(duplicate_groups: List[Dict], store) -> None:
     with col2:
         high_conf_count = sum(1 for g in duplicate_groups if _get_confidence(g) >= 95)
         if high_conf_count > 0:
-            if st.button(f"🧹 Fix {high_conf_count} Exact", type="primary", use_container_width=True):
+            if st.button(f"🧹 Fix {high_conf_count} Exact", type="primary", width="stretch"):
                  with st.spinner("Resolving..."):
                      _bulk_resolve_exact(store, duplicate_groups)
                      st.rerun()
