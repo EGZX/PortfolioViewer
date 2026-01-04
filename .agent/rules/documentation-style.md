@@ -1,6 +1,10 @@
----
+﻿---
 trigger: always_on
 ---
 
-Document the current state of the code. Do not reference user requests. Do not create docuementation on fixes except for updating a release nots docuement with bugfixes. Separate documents that specifically describe one bugfix are not desired.
-Documentation must be clear and technically precise. All documentation must provide a quick and clear overview about what is docuements, for whom and how to read it.
+# Documentation Standards
+
+1.  **Living Documentation**: Documentation reflects the *current* state of the project. It is not a Changelog.
+2.  **Technical Precision**: Be concise and accurate. Avoid fluff.
+3.  **Audience Aware**: Clearly state the purpose of the document and its intended audience (e.g., User vs. Developer) at the top.
+4.  **No Fragmentation**: Do not create separate "fix" documents. Update the central documentation (e.g., README.md, Architecture docs) instead.

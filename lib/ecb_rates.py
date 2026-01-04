@@ -95,7 +95,7 @@ class ECBRateProvider:
         cached_rate = self._get_cached_rate(target_date, from_currency, to_currency)
         if cached_rate is not None:
             logger.debug(f"ECB rate cache HIT: {from_currency}/EUR on {target_date} = {cached_rate}")
-            return cached_rate
+            return Decimal(1) / cached_rate
         
         # Fetch from API
         rate = self._fetch_from_api(target_date, from_currency)
@@ -109,13 +109,13 @@ class ECBRateProvider:
                     logger.info(f"ECB rate for {target_date} not available, using {prev_date}: {from_currency}/EUR = {rate}")
                     # Cache with original date for future lookups
                     self._cache_rate(target_date, from_currency, to_currency, rate)
-                    return rate
+                    return Decimal(1) / rate
         
         if rate is not None:
             # Cache successful fetch
             self._cache_rate(target_date, from_currency, to_currency, rate)
             logger.info(f"ECB rate fetched: {from_currency}/EUR on {target_date} = {rate}")
-            return rate
+            return Decimal(1) / rate
         
         logger.warning(f"Could not fetch ECB rate for {from_currency}/EUR on {target_date}")
         return None

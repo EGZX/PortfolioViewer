@@ -195,8 +195,23 @@ class Portfolio:
                 
                 # Cost Basis tracked in EUR
                 amt_native = abs(amount_eur)
+                
+                # Stock dividends have no cost basis
                 if t.type == TransactionType.STOCK_DIVIDEND:
-                    amt_native = 0
+                    amt_native = Decimal(0)
+                
+                # CASH transfers and FX currency pairs should not add to cost basis
+                # These represent cash movements, not stock acquisitions
+                elif t.type == TransactionType.TRANSFER_IN:
+                    ticker_upper = t.ticker.upper() if t.ticker else ""
+                    # Check if it's CASH or an FX pair (e.g., EUR.USD, USD.JPY)
+                    is_cash_or_fx = (
+                        ticker_upper == 'CASH' or 
+                        '.' in ticker_upper  # FX pairs contain a dot (e.g., EUR.USD)
+                    )
+                    if is_cash_or_fx:
+                        amt_native = Decimal(0)
+                        logger.debug(f"TRANSFER_IN {ticker_upper}: Excluding from cost basis (cash/FX movement)")
                 
                 pos.cost_basis += amt_native
                 
@@ -336,10 +351,10 @@ class Portfolio:
                 rate = get_fx_rate(price_currency, "EUR")
                 position_val_eur = position_val_eur * Decimal(str(rate))
             
-            logger.info(f"[NET_WORTH] {ticker}: {pos.shares} shares * {current_price} {price_currency} = {pos.market_value} {price_currency} → €{position_val_eur:.2f}")
+            logger.debug(f"[NET_WORTH] {ticker}: {pos.shares} shares * {current_price} {price_currency} = {pos.market_value} {price_currency} → €{position_val_eur:.2f}")
             holdings_value += position_val_eur
         
-        logger.info(f"[NET_WORTH] Holdings total: €{holdings_value:.2f}, Cash: €{self.cash_balance:.2f}")
+        logger.debug(f"[NET_WORTH] Holdings total: €{holdings_value:.2f}, Cash: €{self.cash_balance:.2f}")
         total = holdings_value + self.cash_balance
         return total
     
@@ -367,6 +382,12 @@ class Portfolio:
         # Re-index price history to daily frequency (ffill for weekends/holidays)
         s_date = start_date.date() if hasattr(start_date, 'date') else start_date
         e_date = end_date.date() if hasattr(end_date, 'date') else end_date
+        
+        # Cap end_date at today to prevent future plotting
+        today = date.today()
+        if e_date > today:
+            e_date = today
+            
         date_range = pd.date_range(start=s_date, end=e_date, freq='D')
         
         # Handle empty price history

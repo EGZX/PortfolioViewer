@@ -628,9 +628,24 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
         for t in tickers:
             if t in cached_df.columns:
                 last_valid = cached_df[t].last_valid_index()
-                if last_valid and last_valid >= cutoff_date:
+                valid_count = cached_df[t].count()
+                # Ensure we are comparing dates (not datetimes)
+                s_date = start_date.date() if hasattr(start_date, 'date') else start_date
+                e_date = end_date.date() if hasattr(end_date, 'date') else end_date
+                days_requested = (e_date - s_date).days
+                
+                # Check 1: Is data stale?
+                is_stale = not last_valid or last_valid < cutoff_date
+                
+                # Check 2: Is data too sparse? (Detects "only today's price" scenario)
+                # If we asked for > 20 days but have < 10 points, we likely miss history.
+                is_sparse = (days_requested > 20) and (valid_count < 10)
+                
+                if not is_stale and not is_sparse:
                     valid_cached_tickers.append(t)
                 else:
+                    if is_sparse:
+                        logger.debug(f"Refetching {t}: Sparse history detected ({valid_count} pts / {days_requested} days)")
                     tickers_to_fetch.append(t)
             else:
                 tickers_to_fetch.append(t)
@@ -688,7 +703,7 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
             chunk_num = (i // chunk_size) + 1
             total_chunks = (len(fetch_mapped) + chunk_size - 1) // chunk_size
             
-            logger.info(f"⏳ Downloading chunk {chunk_num}/{total_chunks} ({len(chunk)} tickers)...")
+            logger.debug(f"⏳ Downloading chunk {chunk_num}/{total_chunks} ({len(chunk)} tickers)...")
             
             try:
                 data = yf.download(
@@ -727,14 +742,14 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
                                         cache_updates.append((original, dt.date(), float(price), 'yfinance'))
                             else:
                                 # No data for this ticker in the batch -> Blacklist it
-                                logger.warning(f"No data for {original} ({mapped}) -> Blacklisting")
+                                logger.debug(f"No data for {original} ({mapped}) -> Blacklisting")
                                 cache.blacklist_ticker(original)
                         except (KeyError, AttributeError):
                             # Also blacklist on error
                              cache.blacklist_ticker(original)
                              continue
                 
-                logger.info(f"✓ Chunk {chunk_num}/{total_chunks} complete ({len(cache_updates)} price points)")
+                logger.debug(f"✓ Chunk {chunk_num}/{total_chunks} complete ({len(cache_updates)} price points)")
                 
             except Exception as e:
                 logger.error(f"Failed chunk {chunk_num}: {e}")
@@ -749,7 +764,7 @@ def fetch_historical_prices(tickers: List[str], start_date: date, end_date: date
         if cache_updates:
             logger.info(f"Saving {len(cache_updates)} price points to cache...")
             cache.set_prices_batch(cache_updates)
-            logger.info("✓ Cache updated successfully")
+            logger.debug("✓ Cache updated successfully")
 
             
     # Combine Cached and Fetched

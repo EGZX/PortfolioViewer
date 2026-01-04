@@ -107,6 +107,11 @@ def process_data_pipeline(file_content: str):
                 # We overwrite the main fields with EUR values so the rest of the app 
                 # (Store, Tax, Portfolio) only sees EUR.
                 if trans.fx_rate and trans.fx_rate != 1:
+                    # Store original values for Tax Compliance (ECB rates require original currency)
+                    trans.price_original = trans.price
+                    trans.total_original = trans.total
+                    trans.fees_original = trans.fees
+                    
                     trans.price = trans.price * trans.fx_rate
                     trans.total = trans.total * trans.fx_rate
                     trans.fees = trans.fees * trans.fx_rate

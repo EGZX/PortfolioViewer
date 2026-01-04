@@ -167,6 +167,7 @@ class AssetType(str, Enum):
     CASH = "Cash"
     COMMODITY = "Commodity"
     INDEX = "Index"
+    FOREX = "Forex"  # Foreign Exchange / Currency Pair
     UNKNOWN = "Unknown"
     
     @classmethod
@@ -231,6 +232,7 @@ class AssetType(str, Enum):
             # Cash
             "CASH": cls.CASH,
             "MONEY MARKET": cls.CASH,
+            "FOREX": cls.FOREX,
             
             # Commodity
             "COMMODITY": cls.COMMODITY,
@@ -258,6 +260,10 @@ class AssetType(str, Enum):
         
         name_upper = name.upper()
         
+        # Forex Name Detection
+        if "CASH" in name_upper and any(curr in name_upper for curr in ["USD", "EUR", "GBP", "CHF"]):
+            return cls.FOREX
+        
         # ETF detection from name
         etf_keywords = ['ETF', 'ETC', 'ETN', 'INDEX FUND', 'ISHARES', 'VANGUARD', 
                        'SPDR', 'XTRACKERS', 'WISDOMTREE', 'INVESCO', 'AMUNDI']
@@ -278,6 +284,12 @@ class AssetType(str, Enum):
             return cls.UNKNOWN
         
         ticker_upper = ticker.upper()
+        
+        # Forex Patterns (dot separated currencies, e.g. EUR.USD)
+        if len(ticker) == 7 and '.' in ticker:
+             parts = ticker.split('.')
+             if len(parts) == 2 and len(parts[0]) == 3 and len(parts[1]) == 3:
+                 return cls.FOREX
         
         # Check for ISIN format
         if len(ticker) == 12 and ticker[0:2].isalpha() and ticker.isalnum():
@@ -341,6 +353,11 @@ class Transaction(BaseModel):
     withholding_tax: Decimal = Decimal(0)
     withholding_tax_country: Optional[str] = None
     realized_gain: Decimal = Decimal(0)  # From CSV realizedgains column (for SELL transactions)
+    
+    # Original currency values (before normalization to EUR)
+    price_original: Optional[Decimal] = None
+    total_original: Optional[Decimal] = None
+    fees_original: Optional[Decimal] = None
     
     # Corporate action metadata
     split_ratio_from: Optional[Decimal] = None  # e.g., 1 for 2-for-1 split

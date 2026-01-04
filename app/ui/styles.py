@@ -779,69 +779,7 @@ APP_STYLE = """
         height: 32px;
     }
 
-    div[data-testid="stRadio"] {
-        width: 100% !important;
-        display: inline-flex !important;
-        justify-content: flex-end !important; 
-        align-items: center;
-        margin-bottom: 0 !important;
-        margin-top: 0px !important; 
-        min-height: 40px !important; /* Force matching height with header text row */
-        padding-right: 0px !important; 
-    }
 
-    div[data-testid="stRadio"] > div[role="radiogroup"] {
-        background-color: rgba(15, 23, 42, 0.6);
-        border: 1px solid rgba(148, 163, 184, 0.1);
-        border-radius: 6px;
-        padding: 3px;
-        display: inline-flex !important;
-        flex-direction: row !important; 
-        flex-wrap: nowrap !important;
-        gap: 0 !important;
-        width: auto !important;
-        height: 28px !important; /* Fixed inner height */
-        margin-top: 0 !important; 
-        float: right; 
-    }
-
-    div[data-testid="stRadio"] label {
-        background: transparent;
-        border: none;
-        border-radius: 4px; /* pills */
-        padding: 4px 14px !important; 
-        margin: 0 !important;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #64748b;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.8rem !important; 
-        font-weight: 500;
-        min-width: 70px; 
-        height: 28px; 
-        line-height: 1;
-        white-space: nowrap !important;
-    }
-    
-    /* Hide the default radio circle (first div usually) */
-    div[data-testid="stRadio"] label > div:first-child {
-        display: none !important;
-    }
-
-    /* Selected state */
-    div[data-testid="stRadio"] label:has(input:checked) {
-        background-color: rgba(30, 41, 59, 1);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        color: #f1f5f9;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    }
-
-    div[data-testid="stRadio"] label:hover:not(:has(input:checked)) {
-        background-color: rgba(255,255,255,0.03);
-        color: #94a3b8;
-    }
     
     /* Consistent gap for columns on desktop */
     [data-testid="stHorizontalBlock"] {
