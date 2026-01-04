@@ -7,7 +7,9 @@
 # -----------------------------------------------------------------------------
 
 import streamlit as st
+from decimal import Decimal
 from lib.parsers.csv_parser import CSVParser
+from lib.parsers.ibkr_flex_parser import IbkrFlexParser
 from lib.isin_resolver import ISINResolver
 from lib.corporate_actions import CorporateActionService
 from lib.fx_rates import FXRateService
@@ -22,12 +24,19 @@ def process_data_pipeline(file_content: str):
     Process CSV content into enriched transactions with caching.
     """
     try:
-        # 1. Parse
-        parser = CSVParser()
-        transactions = parser.parse_csv(file_content)
+        # Detect parser type
+        is_ibkr_flex = "ClientAccountID" in file_content and "TransactionType" in file_content
+        
+        if is_ibkr_flex:
+            logger.info("Detected Interactive Brokers Flex Query format")
+            parser = IbkrFlexParser()
+            transactions = parser.parse(file_content)
+        else:
+            parser = CSVParser()
+            transactions = parser.parse_csv(file_content)
         
         if not transactions:
-            return None, [], 0, None
+            return [], [], 0
         
         # Collect all identifiers that need resolution (ISINs)
         isins_to_resolve = []
@@ -79,9 +88,10 @@ def process_data_pipeline(file_content: str):
             fetch_splits=True
         )
         
-        # FX Rates
+        # FX Rates & Normalization (User Constraint: Store everything as EUR)
         fx_conversions = 0
         for trans in transactions:
+            # Always ensure we have an FX rate relative to EUR
             if trans.original_currency != 'EUR':
                 # Fetch historical FX rate for this transaction date
                 historical_rate, rate_source = FXRateService.get_rate(
@@ -90,10 +100,23 @@ def process_data_pipeline(file_content: str):
                     trans.date.date()
                 )
                 
-                # Update FX rate if we got a historical one
-                if historical_rate != trans.fx_rate:
-                    trans.fx_rate = historical_rate
+                # Update FX rate
+                trans.fx_rate = historical_rate
+                
+                # NORMALIZE TO EUR IMMEDIATELY
+                # We overwrite the main fields with EUR values so the rest of the app 
+                # (Store, Tax, Portfolio) only sees EUR.
+                if trans.fx_rate and trans.fx_rate != 1:
+                    trans.price = trans.price * trans.fx_rate
+                    trans.total = trans.total * trans.fx_rate
+                    trans.fees = trans.fees * trans.fx_rate
+                    trans.withholding_tax = trans.withholding_tax * trans.fx_rate
                     fx_conversions += 1
+                    
+                    logger.debug(f"Normalized {trans.ticker} to EUR @ {trans.fx_rate}: {trans.price:.2f} EUR")
+            else:
+                trans.fx_rate = Decimal(1)
+
         
         # Validation performed outside to avoid serialization issues
         

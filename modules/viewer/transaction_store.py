@@ -233,7 +233,7 @@ class TransactionStore:
             conn.execute("CREATE INDEX IF NOT EXISTS idx_dup_candidates_group ON duplicate_candidates(group_id)")
             
             conn.commit()
-            logger.info("Database schema initialized")
+            logger.debug("Database schema initialized")
     
     def _generate_transaction_hash(self, txn: Transaction) -> str:
         """
@@ -312,6 +312,10 @@ class TransactionStore:
             
             original_currency=row['original_currency'] or row['currency'] or 'EUR',
             broker=row['broker'],
+            
+            # Import tracking
+            import_source=row['source_name'],
+            import_date=datetime.fromisoformat(row['source_import_date']),
             
             # Additional fields
             cost_basis_local=self.encryption.decrypt_decimal(row['cost_basis_local_enc']),
@@ -454,7 +458,7 @@ class TransactionStore:
             except Exception as e:
                 logger.error(f"Failed to decrypt transaction {row['id']}: {e}")
         
-        logger.info(f"Retrieved {len(transactions)} transactions")
+        logger.debug(f"Retrieved {len(transactions)} transactions")
         return transactions
     
     def get_sources(self) -> List[str]:
@@ -516,19 +520,43 @@ class TransactionStore:
         
         return {row['source_name']: row['count'] for row in rows}
     
+        return {row['source_name']: row['count'] for row in rows}
+    
+    def clear_pending_duplicates(self) -> int:
+        """Clear all pending duplicate groups."""
+        with self._get_conn() as conn:
+            # Delete pending groups (candidates cascade delete usually, but we delete manually to be safe or if no cascade)
+            # Actually we need to check schema. Assuming no cascade for now.
+            conn.execute("""
+                DELETE FROM duplicate_candidates 
+                WHERE group_id IN (
+                    SELECT group_id FROM duplicate_groups WHERE resolution_status = 'pending'
+                )
+            """)
+            result = conn.execute("DELETE FROM duplicate_groups WHERE resolution_status = 'pending'")
+            count = result.rowcount
+            conn.commit()
+            logger.info(f"Cleared {count} pending duplicate groups")
+            return count
+
     def find_near_duplicates(
         self,
-        min_score: float = 60.0
+        min_score: float = 60.0,
+        clear_existing: bool = True
     ) -> List['DuplicateGroup']:
         """
         Find near-duplicate transactions using ISIN-based matching.
         
         Args:
             min_score: Minimum similarity score (default 60)
+            clear_existing: Whether to clear pending duplicates before scanning (default True)
         
         Returns:
             List of DuplicateGroup objects
         """
+        if clear_existing:
+            self.clear_pending_duplicates()
+
         from modules.viewer.duplicate_detector import DuplicateDetector
         
         # Get all transactions

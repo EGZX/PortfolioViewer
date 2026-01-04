@@ -113,9 +113,23 @@ def setup_logger(
     log_path = Path(log_file)
     log_path.parent.mkdir(parents=True, exist_ok=True)
     
-    # Use rotating file handler to prevent huge log files
+    # Use safe rotating file handler to prevent locking issues on Windows
     from logging.handlers import RotatingFileHandler
-    file_handler = RotatingFileHandler(
+    
+    class SafeRotatingFileHandler(RotatingFileHandler):
+        """
+        RotatingFileHandler that swallows PermissionError/OSError during rollover.
+        Common on Windows when the log file is open in an editor.
+        """
+        def doRollover(self):
+            try:
+                super().doRollover()
+            except (PermissionError, OSError):
+                # File is likely locked; skip rollover and keep appending
+                # This results in a larger file but prevents crashes/spam
+                pass
+
+    file_handler = SafeRotatingFileHandler(
         log_file,
         maxBytes=10 * 1024 * 1024,  # 10MB
         backupCount=5,

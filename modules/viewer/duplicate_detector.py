@@ -78,51 +78,59 @@ class DuplicateDetector:
         """
         score = 0.0
         
-        # 1. ISIN/Ticker match (50 points - CRITICAL)
-        if txn_a.isin and txn_b.isin:
-            if txn_a.isin == txn_b.isin:
-                score += 50
-            else:
-                return 0.0, DuplicateGroupType.DUPLICATE  # Different ISIN = not duplicate
-        elif txn_a.ticker and txn_b.ticker:
-            if txn_a.ticker == txn_b.ticker:
-                score += 40  # Ticker match less reliable than ISIN
-            else:
-                return 0.0, DuplicateGroupType.DUPLICATE
-        else:
-            return 0.0, DuplicateGroupType.DUPLICATE  # Can't match without identifier
+        # 1. Strict Direction/Type Check (User Requirement 1)
+        # "Same direction (buy OR sell)"
+        if txn_a.type != txn_b.type:
+            return 0.0, DuplicateGroupType.DUPLICATE
+
+        # 2. Strict Asset Match (User Requirement 2)
+        # "Same asset"
+        asset_match = False
+        if txn_a.isin and txn_b.isin and txn_a.isin == txn_b.isin:
+            asset_match = True
+            score += 50
+        elif txn_a.ticker and txn_b.ticker and txn_a.ticker == txn_b.ticker:
+            asset_match = True
+            score += 40
         
-        # 2. Shares match (30 points - CRITICAL)
+        if not asset_match:
+            return 0.0, DuplicateGroupType.DUPLICATE
+
+        # 3. Strict Shares Match (User Requirement 3)
+        # "Same unit count... within a very close range"
         if txn_a.shares > 0 and txn_b.shares > 0:
-            shares_diff = abs(txn_a.shares - txn_b.shares) / max(txn_a.shares, txn_b.shares)
-            if shares_diff <= self.shares_tolerance:
-                score += 30
-            elif shares_diff <= Decimal("0.01"):  # Within 1%
-                score += 20
+            shares_diff = abs(txn_a.shares - txn_b.shares)
+            # Tolerance: 0.0001 absolute diff to account for truncation (e.g. 0.055 vs 0.0551)
+            # OR very small percentage for large numbers
+            if shares_diff < Decimal("0.0002"):
+                 score += 40
             else:
-                score += max(0, 15 - (float(shares_diff) * 100))  # Partial credit
-        
-        # 3. Date proximity (20 points)
-        date_diff = abs((txn_a.date.date() - txn_b.date.date()).days)
-        if date_diff == 0:
-            score += 20
-        elif date_diff <= self.date_tolerance:
-            score += 15
-        elif date_diff <= 7:
-            score += 5
-        
-        # 4. Determine group type based on direction
-        same_direction = self._check_same_direction(txn_a, txn_b)
-        
-        if same_direction:
-            group_type = DuplicateGroupType.DUPLICATE
+                 return 0.0, DuplicateGroupType.DUPLICATE
         else:
-            group_type = DuplicateGroupType.TRANSFER
-            # Bonus for opposite direction transfers
-            if score >= 60:
-                logger.info(f"Opposite direction detected: {txn_a.type} vs {txn_b.type} - likely transfer")
+             # If shares are 0 (e.g. unknown), we can't be sure
+             return 0.0, DuplicateGroupType.DUPLICATE
+
+        # 4. Strict Date Proximity (User Requirement 4)
+        # "Close together in time (same day +-1)"
+        date_diff = abs((txn_a.date.date() - txn_b.date.date()).days)
+        if date_diff > 1:
+            return 0.0, DuplicateGroupType.DUPLICATE
         
-        return score, group_type
+        # 5. Smart Price Match (EUR Normalized)
+        # Since all prices are normalized to EUR in the pipeline, we can blindly compare them.
+        if txn_a.price > 0 and txn_b.price > 0:
+            # Direct comparison of EUR prices
+            p_a = txn_a.price
+            p_b = txn_b.price
+            
+            price_diff = abs(p_a - p_b) / max(p_a, p_b)
+            # 0.001% tolerance for float math/rounding differences
+            if price_diff <= Decimal("0.00001"): 
+                score += 10
+            else:
+                 return 0.0, DuplicateGroupType.DUPLICATE
+        
+        return score, DuplicateGroupType.DUPLICATE
     
     def _check_same_direction(self, txn_a: Transaction, txn_b: Transaction) -> bool:
         """Check if transactions have same direction."""

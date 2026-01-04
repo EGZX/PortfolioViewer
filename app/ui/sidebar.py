@@ -13,6 +13,7 @@ from modules.viewer.transaction_store import TransactionStore
 from lib.utils.logging_config import setup_logger
 
 logger = setup_logger(__name__)
+cache = get_market_cache()
 
 def render_sidebar_controls():
     """
@@ -126,14 +127,15 @@ def render_sidebar_controls():
                             st.session_state.show_duplicate_review = True
                             st.rerun()
                     with col2:
-                        if st.button("🔄 Scan Now", width='stretch'):
-                            with st.spinner("Scanning for duplicates..."):
-                                store.find_near_duplicates(min_score=60)
+                        # Scan Now clears old results first to ensure valid state
+                        if st.button("🔄 Scan Again", width='stretch', help="Clear current results and rescan"):
+                            with st.spinner("Clearing & Rescanning..."):
+                                store.find_near_duplicates(min_score=60, clear_existing=True)
                             st.rerun()
                 else:
                     if st.button("🔍 Scan for Duplicates", width='stretch'):
                         with st.spinner("Scanning..."):
-                            groups = store.find_near_duplicates(min_score=60)
+                            groups = store.find_near_duplicates(min_score=60, clear_existing=True)
                             if groups:
                                 st.success(f"Found {len(groups)} duplicate groups!")
                             else:
