@@ -702,7 +702,11 @@ def main():
             )
         
         with col3:
-            strategy_index = 1 # Default to WeightedAverage (1) as it's standard for Austria
+            # Lot Matching Strategy
+            # Austria requires weighted average cost basis per DACH standards
+            matching_options = ["WeightedAverage", "FIFO"]
+            default_method = "WeightedAverage" if selected_jurisdiction == "Austria" else "FIFO"
+            
             strategy = st.selectbox(
                 "Lot Matching",
                 options=["FIFO", "WeightedAverage"],
