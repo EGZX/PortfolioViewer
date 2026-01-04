@@ -53,6 +53,11 @@ class TransactionType(str, Enum):
     COST = "Cost"  # Legacy alias for fee
     TAX_WITHHOLDING = "TaxWithholding"
     
+    # Foreign Exchange
+    FX_BUY = "FXBuy"  # Buy foreign currency with EUR
+    FX_SELL = "FXSell"  # Sell foreign currency for EUR
+    FX_EXCHANGE = "FXExchange"  # General currency exchange
+    
     # Other
     RETURN_OF_CAPITAL = "ReturnOfCapital"
     
@@ -92,6 +97,17 @@ class TransactionType(str, Enum):
             "COST": cls.COST,
             "TAXWITHHOLDING": cls.TAX_WITHHOLDING,
             "RETURNOFCAPITAL": cls.RETURN_OF_CAPITAL,
+            
+            # FX / Currency Exchange
+            "FXBUY": cls.FX_BUY,
+            "FX_BUY": cls.FX_BUY,
+            "FXSELL": cls.FX_SELL,
+            "FX_SELL": cls.FX_SELL,
+            "FXEXCHANGE": cls.FX_EXCHANGE,
+            "FX_EXCHANGE": cls.FX_EXCHANGE,
+            "FOREX": cls.FX_EXCHANGE,
+            "EXCHANGE": cls.FX_EXCHANGE,
+            "CURRENCYEXCHANGE": cls.FX_EXCHANGE,
             
             # German
             "KAUF": cls.BUY,

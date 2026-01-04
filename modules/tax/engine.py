@@ -17,6 +17,7 @@ Copyright (c) 2026 Andre. All rights reserved.
 """
 
 import uuid
+import json
 from collections import defaultdict
 from datetime import date
 from decimal import Decimal
@@ -25,6 +26,7 @@ from abc import ABC, abstractmethod
 
 from lib.parsers.enhanced_transaction import Transaction, TransactionType
 from modules.tax.tax_events import TaxLot, TaxEvent, LotMatchingMethod
+from modules.tax.currency_lot import CurrencyLot
 from lib.utils.logging_config import setup_logger
 from lib.ecb_rates import get_ecb_rate
 
@@ -32,25 +34,7 @@ logger = setup_logger(__name__)
 
 
 class LotMatchingStrategy(ABC):
-    """Abstract base class for lot matching algorithms."""
-    
-    @abstractmethod
-    def match_sell(
-        self,
-        sell_transaction: Transaction,
-        open_lots: List[TaxLot]
-    ) -> List[TaxEvent]:
-        """
-        Match a sell transaction to open lots.
-        
-        Args:
-            sell_transaction: The sell transaction
-            open_lots: List of open lots for this ticker
-        
-        Returns:
-            List of TaxEvents (one per lot matched, or single merged event)
-        """
-        pass
+    """Base class for lot matching strategies (stocks AND currencies)."""
     
     @abstractmethod
     def handle_buy(
@@ -58,21 +42,39 @@ class LotMatchingStrategy(ABC):
         buy_transaction: Transaction,
         open_lots: List[TaxLot]
     ) -> List[TaxLot]:
-        """
-        Process a buy transaction.
-        
-        Args:
-            buy_transaction: The buy transaction
-            open_lots: Existing open lots for this ticker
-        
-        Returns:
-            Updated list of open lots
-        """
+        """Add a new stock lot from a buy transaction."""
+        pass
+    
+    @abstractmethod
+    def match_sell(
+        self,
+        sell_transaction: Transaction,
+        open_lots: List[TaxLot]
+    ) -> List[TaxEvent]:
+        """Match a stock sell transaction against open lots."""
+        pass
+    
+    @abstractmethod
+    def handle_fx_buy(
+        self,
+        buy_transaction: Transaction,
+        currency_lots: List
+    ) -> List:
+        """Add a new currency lot from FX buy transaction."""
+        pass
+    
+    @abstractmethod
+    def match_fx_sell(
+        self,
+        sell_transaction: Transaction,
+        currency_lots: List
+    ) -> TaxEvent:
+        """Match FX sell transaction against currency lots."""
         pass
     
     @abstractmethod
     def get_method_name(self) -> LotMatchingMethod:
-        """Return the matching method name."""
+        """Return the matching method enum value."""
         pass
 
 
@@ -180,6 +182,93 @@ class FIFOStrategy(LotMatchingStrategy):
     
     def get_method_name(self) -> LotMatchingMethod:
         return LotMatchingMethod.FIFO
+    
+    def handle_fx_buy(self, buy_transaction: Transaction, currency_lots: List) -> List:
+        """FIFO: Add new currency lot."""
+        
+        ecb_rate = get_ecb_rate(buy_transaction.date.date(), buy_transaction.original_currency, "EUR")
+        
+        lot = CurrencyLot(
+            lot_id=str(uuid.uuid4()),
+            currency=buy_transaction.original_currency,
+            amount=abs(buy_transaction.total) - buy_transaction.fees,
+            amount_gross=abs(buy_transaction.total),
+            amount_net=abs(buy_transaction.total) - buy_transaction.fees,
+            fee_amount=buy_transaction.fees,
+            fee_currency=buy_transaction.original_currency,
+            cost_basis_eur=abs(buy_transaction.total) * ecb_rate,
+            acquisition_date=buy_transaction.date.date(),
+            ecb_rate_at_purchase=ecb_rate
+        )
+        
+        currency_lots.append(lot)
+        logger.debug(f"FIFO FX Buy: {lot.amount_net:.2f} {buy_transaction.original_currency}, cost: €{lot.cost_basis_eur:.2f}")
+        return currency_lots
+    
+    def match_fx_sell(self, sell_transaction: Transaction, currency_lots: List) -> TaxEvent:
+        """FIFO: Match FX sell against oldest lots first."""
+        currency = sell_transaction.original_currency
+        gross_amount = abs(sell_transaction.total)
+        fee_amount = sell_transaction.fees
+        total_consumed = gross_amount + fee_amount
+        
+        ecb_rate_sale = get_ecb_rate(sell_transaction.date.date(), currency, "EUR")
+        proceeds_eur = gross_amount * ecb_rate_sale
+        
+        # FIFO: oldest lots first
+        remaining = total_consumed
+        total_cost_basis = Decimal(0)
+        total_fees_from_lots = Decimal(0)
+        earliest_date = None
+        
+        for lot in sorted(currency_lots, key=lambda x: x.acquisition_date):
+            if remaining <= 0:
+                break
+            
+            if earliest_date is None:
+                earliest_date = lot.acquisition_date
+            
+            qty_from_lot = min(lot.amount, remaining)
+            fraction = qty_from_lot / lot.amount if lot.amount > 0 else Decimal(0)
+            
+            cost_from_lot = fraction * lot.cost_basis_eur
+            fee_from_lot = fraction * lot.fee_amount
+            
+            total_cost_basis += cost_from_lot
+            total_fees_from_lots += fee_from_lot
+            
+            lot.amount -= qty_from_lot
+            lot.cost_basis_eur -= cost_from_lot
+            lot.fee_amount -= fee_from_lot
+            remaining -= qty_from_lot
+        
+        if remaining > Decimal("0.01"):
+            logger.warning(f"FIFO FX Sell: Insufficient {currency} lots. Needed {total_consumed:.2f}, shortage: {remaining:.2f}")
+        
+        event = TaxEvent(
+            event_id=f"fx_{sell_transaction.date.strftime('%Y%m%d')}_{uuid.uuid4().hex[:8]}",
+            ticker=f"FX_{currency}",
+            asset_type="FX",
+            date_sold=sell_transaction.date.date(),
+            date_acquired=earliest_date or sell_transaction.date.date(),
+            quantity_sold=gross_amount,
+            proceeds_base=proceeds_eur,
+            cost_basis_base=total_cost_basis,
+            realized_gain=proceeds_eur - total_cost_basis,
+            holding_period_days=(sell_transaction.date.date() - earliest_date).days if earliest_date else 0,
+            lot_matching_method=LotMatchingMethod.FIFO,
+            sale_fx_rate=ecb_rate_sale,
+            notes=json.dumps({
+                "fee_amount": float(fee_amount),
+                "fee_currency": currency,
+                "fees_from_lots": float(total_fees_from_lots),
+                "gross_sold": float(gross_amount),
+                "net_proceeds": float(proceeds_eur)
+            })
+        )
+        
+        logger.debug(f"FIFO FX Sell: {gross_amount:.2f} {currency} → €{proceeds_eur:.2f}, gain: €{event.realized_gain:.2f}")
+        return event
 
 
 class WeightedAverageStrategy(LotMatchingStrategy):
@@ -308,6 +397,124 @@ class WeightedAverageStrategy(LotMatchingStrategy):
     
     def get_method_name(self) -> LotMatchingMethod:
         return LotMatchingMethod.WEIGHTED_AVERAGE
+    
+    def handle_fx_buy(self, buy_transaction: Transaction, currency_lots: List) -> List:
+        """WeightedAverage: Merge into existing lots or create new."""
+        
+        ecb_rate = get_ecb_rate(buy_transaction.date.date(), buy_transaction.original_currency, "EUR")
+        currency = buy_transaction.original_currency
+        
+        new_amount = abs(buy_transaction.total) - buy_transaction.fees
+        new_cost = abs(buy_transaction.total) * ecb_rate
+        new_fees = buy_transaction.fees
+        
+        # Find existing lots for this currency
+        existing_lots = [lot for lot in currency_lots if lot.currency == currency]
+        
+        if existing_lots:
+            # Merge: calculate weighted average
+            total_amount = sum(lot.amount for lot in existing_lots) + new_amount
+            total_cost = sum(lot.cost_basis_eur for lot in existing_lots) + new_cost
+            total_fees = sum(lot.fee_amount for lot in existing_lots) + new_fees
+            
+            # Remove old lots
+            currency_lots[:] = [lot for lot in currency_lots if lot.currency != currency]
+            
+            # Create merged lot
+            merged_lot = CurrencyLot(
+                lot_id=str(uuid.uuid4()),
+                currency=currency,
+                amount=total_amount,
+                amount_gross=total_amount,  # Not tracking separate gross for merged
+                amount_net=total_amount,
+                fee_amount=total_fees,
+                fee_currency=currency,
+                cost_basis_eur=total_cost,
+                acquisition_date=min(lot.acquisition_date for lot in existing_lots),
+                ecb_rate_at_purchase=total_cost / total_amount if total_amount > 0 else Decimal(1)
+            )
+            currency_lots.append(merged_lot)
+            logger.debug(f"WeightedAvg FX Buy: Merged {new_amount:.2f} {currency} into {total_amount:.2f}, avg cost: €{total_cost/total_amount:.4f}")
+        else:
+            # First purchase of this currency
+            lot = CurrencyLot(
+                lot_id=str(uuid.uuid4()),
+                currency=currency,
+                amount=new_amount,
+                amount_gross=abs(buy_transaction.total),
+                amount_net=new_amount,
+                fee_amount=new_fees,
+                fee_currency=currency,
+                cost_basis_eur=new_cost,
+                acquisition_date=buy_transaction.date.date(),
+                ecb_rate_at_purchase=ecb_rate
+            )
+            currency_lots.append(lot)
+            logger.debug(f"WeightedAvg FX Buy: New {new_amount:.2f} {currency}, cost: €{new_cost:.2f}")
+        
+        return currency_lots
+    
+    def match_fx_sell(self, sell_transaction: Transaction, currency_lots: List) -> TaxEvent:
+        """WeightedAverage: Sell from merged lot at average cost."""
+        currency = sell_transaction.original_currency
+        gross_amount = abs(sell_transaction.total)
+        fee_amount = sell_transaction.fees
+        total_consumed = gross_amount + fee_amount
+        
+        ecb_rate_sale = get_ecb_rate(sell_transaction.date.date(), currency, "EUR")
+        proceeds_eur = gross_amount * ecb_rate_sale
+        
+        # Find lot for this currency (should be single merged lot)
+        currency_lot = next((lot for lot in currency_lots if lot.currency == currency), None)
+        
+        if not currency_lot or currency_lot.amount == 0:
+            logger.warning(f"WeightedAvg FX Sell: No {currency} lots available")
+            # Create event with zero cost basis
+            earliest_date = sell_transaction.date.date()
+            total_cost_basis = Decimal(0)
+        else:
+            earliest_date = currency_lot.acquisition_date
+            
+            # Calculate proportional cost
+            if currency_lot.amount > 0:
+                fraction = min(Decimal(1), total_consumed / currency_lot.amount)
+            else:
+                fraction = Decimal(0)
+            
+            total_cost_basis = fraction * currency_lot.cost_basis_eur
+            total_fees = fraction * currency_lot.fee_amount
+            
+            # Reduce lot
+            currency_lot.amount -= total_consumed
+            currency_lot.cost_basis_eur -= total_cost_basis
+            currency_lot.fee_amount -= total_fees
+            
+            if currency_lot.amount < Decimal("-0.01"):
+                logger.warning(f"WeightedAvg FX Sell: Overdraft {currency} lot by {abs(currency_lot.amount):.2f}")
+        
+        event = TaxEvent(
+            event_id=f"fx_{sell_transaction.date.strftime('%Y%m%d')}_{uuid.uuid4().hex[:8]}",
+            ticker=f"FX_{currency}",
+            asset_type="FX",
+            date_sold=sell_transaction.date.date(),
+            date_acquired=earliest_date,
+            quantity_sold=gross_amount,
+            proceeds_base=proceeds_eur,
+            cost_basis_base=total_cost_basis,
+            realized_gain=proceeds_eur - total_cost_basis,
+            holding_period_days=(sell_transaction.date.date() - earliest_date).days,
+            lot_matching_method=LotMatchingMethod.WEIGHTED_AVERAGE,
+            sale_fx_rate=ecb_rate_sale,
+            notes=json.dumps({
+                "fee_amount": float(fee_amount),
+                "fee_currency": currency,
+                "gross_sold": float(gross_amount),
+                "net_proceeds": float(proceeds_eur)
+            })
+        )
+        
+        logger.debug(f"WeightedAvg FX Sell: {gross_amount:.2f} {currency} → €{proceeds_eur:.2f}, gain: €{event.realized_gain:.2f}")
+        return event
 
 
 class TaxBasisEngine:
@@ -335,6 +542,7 @@ class TaxBasisEngine:
         
         # State: Use ISIN as primary key, ticker as fallback
         self.open_lots: Dict[str, List[TaxLot]] = defaultdict(list)
+        self.currency_lots: Dict[str, List[CurrencyLot]] = defaultdict(list)  # FX lot tracking
         self.realized_events: List[TaxEvent] = []
     
     def _get_asset_key(self, txn: Transaction) -> str:
@@ -408,6 +616,17 @@ class TaxBasisEngine:
                 tax_already_paid=txn.withholding_tax * txn.fx_rate
             )
             self.realized_events.append(event)
+        
+        elif txn.type == TransactionType.FX_BUY:
+            self._handle_fx_buy(txn)
+        
+        elif txn.type == TransactionType.FX_SELL:
+            self._handle_fx_sell(txn)
+        
+        elif txn.type == TransactionType.FX_EXCHANGE:
+            # Exchange is a combination of sell + buy
+            # For now, log as not implemented
+            logger.warning(f"FX_EXCHANGE not fully implemented: {txn.date.date()} {txn.original_currency}")
     
     def get_realized_events(
         self,
@@ -435,6 +654,27 @@ class TaxBasisEngine:
         for lots in self.open_lots.values():
             all_lots.extend(lots)
         return all_lots
+    
+    def _handle_fx_buy(self, txn: Transaction):
+        """Record FX buy using configured strategy."""
+        self.currency_lots[txn.original_currency] = self.strategy.handle_fx_buy(
+            txn,
+            self.currency_lots[txn.original_currency]
+        )
+    
+    def _handle_fx_sell(self, txn: Transaction):
+        """Record FX sell using configured strategy."""
+        event = self.strategy.match_fx_sell(
+            txn,
+            self.currency_lots[txn.original_currency]
+        )
+        self.realized_events.append(event)
+        
+        # Clean up exhausted lots
+        self.currency_lots[txn.original_currency] = [
+            lot for lot in self.currency_lots[txn.original_currency]
+            if not lot.is_exhausted()
+        ]
     
     def export_to_json(self, filepath: str):
         """Export realized events to JSON file."""

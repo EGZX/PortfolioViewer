@@ -90,9 +90,14 @@ class AustriaTaxCalculator(TaxCalculator):
         
         total_gains = Decimal(0)
         total_losses = Decimal(0)
+        crypto_old_stock_gains = Decimal(0)  # Pre-2021 crypto held >1 year (tax-free)
         
         fund_types = {"ETF", "FUND", "MUTUALFUND"}
         deriv_types = {"OPTION", "FUTURE", "CFD", "WARRANT"}
+        crypto_types = {"CRYPTO", "CRYPTOCURRENCY", "BITCOIN", "ETHEREUM"}
+        
+        # Critical date for crypto taxation change in Austria
+        CRYPTO_TAX_CHANGE_DATE = date(2021, 3, 1)
         
         # Process Foreign (Untaxed) Events for E1kv
         for event in year_events_foreign:
@@ -114,8 +119,31 @@ class AustriaTaxCalculator(TaxCalculator):
             else:
                 # Sale Event
                 is_deriv = asset_type_upper in deriv_types
+                is_crypto = asset_type_upper in crypto_types or "BTC" in (event.ticker or "").upper() or "ETH" in (event.ticker or "").upper()
+                is_fx = asset_type_upper == "FX" or (event.ticker and event.ticker.startswith("FX_"))
                 
-                if is_deriv:
+                # Check for old crypto exemption (acquired before March 1, 2021, held >1 year)
+                is_old_crypto_exempt = False
+                if is_crypto and event.date_acquired and event.date_acquired < CRYPTO_TAX_CHANGE_DATE:
+                    holding_days = event.holding_period_days if event.holding_period_days else 0
+                    if holding_days > 365:
+                        is_old_crypto_exempt = True
+                        if amount > 0:
+                            crypto_old_stock_gains += amount  # Track but don't tax
+                
+                if is_old_crypto_exempt:
+                    # Old crypto held >1 year - tax exempt, just track
+                    pass
+                elif is_fx:
+                    # Pure FX trading - Austria doesn't adjust for fees (raw gain is correct)
+                    if amount >= 0:
+                        pots["kz_994"] += amount  # FX gains
+                        total_gains += amount
+                    else:
+                        loss = abs(amount)
+                        pots["kz_892"] += loss  # FX losses
+                        total_losses += loss
+                elif is_deriv:
                     if amount >= 0:
                         pots["kz_995"] += amount
                         total_gains += amount
@@ -158,6 +186,8 @@ class AustriaTaxCalculator(TaxCalculator):
             "net_taxable_gain": net_taxable_gain,
             "tax_rate": self.CAPITAL_GAINS_TAX_RATE,
             "tax_owed": tax_owed,
+            # Crypto old stock (tax-exempt)
+            "crypto_old_stock_exempt": crypto_old_stock_gains,
             # Domestic Info
             "domestic_income_gross": domestic_gains - domestic_losses,
             "domestic_tax_withheld": domestic_tax_paid
@@ -168,12 +198,16 @@ class AustriaTaxCalculator(TaxCalculator):
             "Report maps to Form E1kv (Foreign Income/Auslandsdepot) ONLY",
             f"Excluded {len(year_events_domestic)} domestic transactions where tax was already withheld (Endbesteuert)",
             "Losses offset gains within the same tax year (Foreign bucket)",
-            "FX gains calculated day-accurately on transaction dates"
+            "FX gains calculated day-accurately on transaction dates",
+            "Crypto acquired before March 1, 2021 and held >1 year is tax-exempt",
+            "FX transactions: fees tracked but do not reduce taxable gain (Austrian rule)"
         ]
         
         notes = []
         if net_taxable_gain < 0:
             notes.append(f"Net Loss of €{abs(net_taxable_gain):,.2f} remaining.")
+        if crypto_old_stock_gains > 0:
+            notes.append(f"Crypto old stock (pre-2021, held >1yr): €{crypto_old_stock_gains:,.2f} exempt from tax.")
             
         return TaxLiability(
             jurisdiction=f"{self.get_jurisdiction_name()} ({self.get_jurisdiction_code()}) - E1kv",
