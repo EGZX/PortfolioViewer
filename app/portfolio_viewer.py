@@ -492,10 +492,42 @@ def main():
     st.markdown('<div style="margin-bottom: 1.5rem;"></div>', unsafe_allow_html=True)
     
     # ==================== DATA TABLES & METRICS (TABS) ====================
-    tab1, tab2, tab3, tab4 = st.tabs(["Holdings", "Metrics", "Transactions", "Tax"])
+    # Persist tab usage
+    if "active_tab" not in st.session_state:
+        st.session_state.active_tab = "Holdings"
+
+    # Use segmented control (pills) or radio for navigation to maintain state
+    # Using radio with horizontal=True acts like tabs but allows state control
+    tabs = ["Holdings", "Metrics", "Transactions", "Tax Report"]
     
+    # Use native segmented control (pills) for professional tab navigation
+    # This replaces the old CSS-hacked st.radio approach
+    
+    # Custom Styling for Segmented Control - Spacing only
+    # Theme colors are configured via .streamlit/config.toml
+    st.markdown("""
+        <style>
+        /* Reduce bottom spacing to visually connect tabs with content */
+        div[data-testid="stSegmentedControl"] {
+            margin-bottom: 0.25rem !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    selected_tab = st.segmented_control(
+        "Navigation",
+        options=tabs,
+        default=st.session_state.active_tab if st.session_state.active_tab in tabs else tabs[0],
+        selection_mode="single",
+        label_visibility="collapsed",
+        key="nav_segmented_control",
+        on_change=lambda: st.session_state.update({"active_tab": st.session_state.nav_segmented_control})
+    )
+
+    st.markdown("---") # Separator
+
     # ========== TAB 1: HOLDINGS ==========
-    with tab1:
+    if selected_tab == "Holdings":
         # Add filter controls
         filter_col1, filter_col2, filter_col3 = st.columns([2, 2, 6])
         
@@ -535,9 +567,10 @@ def main():
                     
                     st.dataframe(
                         holdings_display,
-                        width='stretch',
+                        width=None, # use column width
                         hide_index=True,
-                        height=400
+                        height=400,
+                        use_container_width=True
                     )
                     
                     # Export Holdings
@@ -562,7 +595,7 @@ def main():
             logger.error(f"Holdings display error: {e}", exc_info=True)
     
     # ========== TAB 2: DETAILED METRICS ==========
-    with tab2:
+    elif selected_tab == "Metrics":
         detailed_metrics = [
             {"label": "Cost Basis", "value": mask_currency(holdings_cost_basis, st.session_state.privacy_mode)},
             {"label": "Total Dividends", "value": mask_currency_precise(portfolio.total_dividends, st.session_state.privacy_mode)},
@@ -589,7 +622,7 @@ def main():
         )
     
     # ========== TAB 3: TRANSACTION HISTORY ==========
-    with tab3:
+    elif selected_tab == "Transactions":
         try:
             # Create transaction history DataFrame
             trans_data = []
@@ -654,8 +687,9 @@ def main():
                 
                 st.dataframe(
                     filtered_df,
-                    width='stretch',
-                    hide_index=True
+                    width=None,
+                    hide_index=True,
+                    use_container_width=True
                 )
                 
                 # Export Transactions
@@ -677,7 +711,7 @@ def main():
             logger.error(f"Transaction history error: {e}", exc_info=True)
     
     # ========== TAB 4: TAX ==========
-    with tab4:
+    elif selected_tab == "Tax Report":
         # st.markdown("### Tax Reporting (Austrian KESt)") # Removed header
         
         # Tax settings
@@ -704,14 +738,12 @@ def main():
         with col3:
             # Lot Matching Strategy
             # Austria requires weighted average cost basis per DACH standards
-            matching_options = ["WeightedAverage", "FIFO"]
-            default_method = "WeightedAverage" if selected_jurisdiction == "Austria" else "FIFO"
+            # We enforce this automatically now
+            matching_map = {"Austria": "WeightedAverage", "Germany": "FIFO", "USA": "FIFO"}
+            strategy = matching_map.get(selected_jurisdiction, "FIFO")
             
-            strategy = st.selectbox(
-                "Lot Matching",
-                options=["FIFO", "WeightedAverage"],
-                index=strategy_index
-            )
+            st.markdown(f"**Lot Matching**")
+            st.caption(f"Using **{strategy}** (Standard for {selected_jurisdiction})")
         
         try:
             # Process transactions through Tax Basis Engine
@@ -766,10 +798,22 @@ def main():
                 # Identify special summary keys to exclude from list (as they are in KPIs)
                 summary_keys = {"total_gains", "total_losses", "net_taxable_gain", "tax_owed", "tax_rate"}
                 
+                # Mapping for better display names
+                label_map = {
+                    "crypto_old_stock_exempt": "Crypto (Old Stock - Exempt)",
+                    "domestic_income_gross": "Domestic Income (Gross)",
+                    "domestic_tax_withheld": "Domestic Tax Withheld",
+                    "crypto_new_stock_taxable": "Crypto (New Stock - Taxable)",
+                    "foreign_dividend_taxable": "Foreign Dividends",
+                    "foreign_interest_taxable": "Foreign Interest",
+                    "misc_income": "Miscellaneous Income"
+                }
+
                 for key, value in liability.breakdown.items():
                     if key not in summary_keys:
+                        display_name = label_map.get(key, key)
                         breakdown_data.append({
-                            "Category": key,
+                            "Category": display_name,
                             "Amount (EUR)": mask_currency_precise(value, st.session_state.privacy_mode)
                         })
                 
@@ -779,8 +823,9 @@ def main():
                     
                     st.dataframe(
                         pd.DataFrame(breakdown_data),
-                        width='stretch',
-                        hide_index=True
+                        width=None,
+                        hide_index=True,
+                        use_container_width=True
                     )
                     
                     # Export Tax Breakdown

@@ -101,7 +101,18 @@ class FIFOStrategy(LotMatchingStrategy):
             
             # Calculate proceeds for this portion (proportional to quantity sold)
             proceeds_fraction = qty_from_lot / sell_transaction.shares
-            proceeds = proceeds_fraction * abs(sell_transaction.total)
+            
+            # Determine total proceeds in Base Currency (EUR) using ECB Rate if needed
+            if sell_transaction.original_currency != "EUR":
+                # Ensure we use the original amount and apply ECB rate
+                amt_total = sell_transaction.total_original if sell_transaction.total_original is not None else sell_transaction.total
+                # Get ECB rate for sale date
+                ecb_rate_sale = get_ecb_rate(sell_transaction.date.date(), sell_transaction.original_currency, "EUR")
+                total_proceeds_base = abs(amt_total) * ecb_rate_sale
+            else:
+                total_proceeds_base = abs(sell_transaction.total)
+                
+            proceeds = proceeds_fraction * total_proceeds_base
             
             # CRITICAL FIX: Calculate cost basis using CURRENT lot quantity, not original
             # This ensures correct calculation for partially-sold lots
@@ -161,6 +172,10 @@ class FIFOStrategy(LotMatchingStrategy):
             "EUR"
         )
         
+        # Use original currency amounts to avoid double conversion and ensure ECB compliance
+        amt_total = buy_transaction.total_original if buy_transaction.total_original is not None else buy_transaction.total
+        amt_fees = buy_transaction.fees_original if buy_transaction.fees_original is not None else buy_transaction.fees
+        
         new_lot = TaxLot(
             lot_id=str(uuid.uuid4()),
             ticker=buy_transaction.ticker,
@@ -170,10 +185,10 @@ class FIFOStrategy(LotMatchingStrategy):
             acquisition_date=buy_transaction.date.date(),
             quantity=buy_transaction.shares,
             original_quantity=buy_transaction.shares,
-            cost_basis_local=abs(buy_transaction.total),
-            cost_basis_base=abs(buy_transaction.total) * ecb_fx_rate,
+            cost_basis_local=abs(amt_total),
+            cost_basis_base=abs(amt_total) * ecb_fx_rate,
             currency_original=buy_transaction.original_currency,
-            fees_base=buy_transaction.fees * ecb_fx_rate,
+            fees_base=amt_fees * ecb_fx_rate,
             fx_rate_used=ecb_fx_rate
         )
         
@@ -294,7 +309,17 @@ class WeightedAverageStrategy(LotMatchingStrategy):
         qty_to_sell = min(sell_transaction.shares, merged_lot.quantity)
         
         # Calculate proceeds and Cost basis
-        proceeds = abs(sell_transaction.total)
+        # Determine total proceeds in Base Currency (EUR) using ECB Rate if needed
+        if sell_transaction.original_currency != "EUR":
+            # Ensure we use the original amount and apply ECB rate
+            amt_total = sell_transaction.total_original if sell_transaction.total_original is not None else sell_transaction.total
+            # Get ECB rate for sale date
+            ecb_rate_sale = get_ecb_rate(sell_transaction.date.date(), sell_transaction.original_currency, "EUR")
+            total_proceeds_base = abs(amt_total) * ecb_rate_sale
+        else:
+            total_proceeds_base = abs(sell_transaction.total)
+            
+        proceeds = total_proceeds_base
         
         # Cost basis portion for this sale (proportional to shares sold)
         cost_basis_portion = (qty_to_sell / merged_lot.quantity) * merged_lot.cost_basis_base
@@ -347,6 +372,10 @@ class WeightedAverageStrategy(LotMatchingStrategy):
             "EUR"
         )
         
+        # Use original currency amounts to avoid double conversion
+        amt_total = buy_transaction.total_original if buy_transaction.total_original is not None else buy_transaction.total
+        amt_fees = buy_transaction.fees_original if buy_transaction.fees_original is not None else buy_transaction.fees
+
         new_lot = TaxLot(
             lot_id=str(uuid.uuid4()),
             ticker=buy_transaction.ticker,
@@ -356,10 +385,10 @@ class WeightedAverageStrategy(LotMatchingStrategy):
             acquisition_date=buy_transaction.date.date(),
             quantity=buy_transaction.shares,
             original_quantity=buy_transaction.shares,
-            cost_basis_local=abs(buy_transaction.total),
-            cost_basis_base=abs(buy_transaction.total) * ecb_fx_rate,
+            cost_basis_local=abs(amt_total),
+            cost_basis_base=abs(amt_total) * ecb_fx_rate,
             currency_original=buy_transaction.original_currency,
-            fees_base=buy_transaction.fees * ecb_fx_rate,
+            fees_base=amt_fees * ecb_fx_rate,
             fx_rate_used=ecb_fx_rate
         )
         
@@ -568,8 +597,112 @@ class TaxBasisEngine:
         
         logger.debug(f"Generated {len(self.realized_events)} tax events")
     
+    def _process_forex_trade(self, txn: Transaction):
+        """
+        Handle trades of FX Pairs (e.g. EUR.USD).
+        
+        Logic:
+        - "EUR.USD" usually means Base=EUR, Quote=USD.
+        - BUY EUR.USD = Buy EUR, Sell USD.
+        - SELL EUR.USD = Sell EUR, Buy USD.
+        
+        In a Portfolio with EUR Base Currency:
+        - BUY EUR.USD -> Receiving EUR (Base) is neutral. Paying USD (Foreign) is a DISPOSAL of USD. -> FX_SELL (USD).
+        - SELL EUR.USD -> Paying EUR (Base) is neutral. Receiving USD (Foreign) is an ACQUISITION of USD. -> FX_BUY (USD).
+        
+        We assume the Ticker is formatted as BASE.QUOTE (standard).
+        """
+        if not txn.ticker or '.' not in txn.ticker:
+            logger.warning(f"Invalid FX Pair ticker: {txn.ticker}. Treating as non-taxable.")
+            return
+
+        try:
+            base, quote = txn.ticker.split('.')
+            
+            # Determine which currency is the foreign one relative to Portfolio BASE ("EUR" assumed for now)
+            # Ideally this should be configurable, but the whole app is EUR-centric currently.
+            PORTFOLIO_BASE = "EUR" 
+            
+            # Case 1: Pair matches Base (e.g. EUR.USD)
+            if base == PORTFOLIO_BASE:
+                foreign_currency = quote
+                
+                if txn.type == TransactionType.BUY:
+                    # Buy EUR, Sell USD -> Disposal of Foreign Currency (USD)
+                    # We need to construct a virtual FX_SELL transaction for the Quote currency
+                    
+                    # Quantity handled: Total value in Quote currency
+                    # If I buy 1000 EUR at 1.05, total is -1050 USD.
+                    # The "Amount" of USD disposed is txn.total_original (if available) or calculated.
+                    
+                    amount_foreign = abs(txn.total_original) if txn.total_original else abs(txn.total * txn.fx_rate) # Approximation
+                    
+                    # To sell it, we check our USD pools.
+                    virtual_txn = Transaction(
+                        date=txn.date,
+                        type=TransactionType.FX_SELL,
+                        ticker=foreign_currency, # "USD"
+                        name=f"FX Disposal via {txn.ticker}",
+                        asset_type=AssetType.CASH, # Treating FX as Cash for pool logic
+                        currency_primary=foreign_currency,
+                        original_currency=foreign_currency,
+                        shares=amount_foreign, # Amount of USD sold
+                        price=Decimal(1),
+                        total=txn.total, # Value in EUR (Proceeds in Base)
+                        fx_rate=txn.fx_rate,
+                        total_original=amount_foreign
+                    )
+                    self._handle_fx_sell(virtual_txn)
+                    
+                elif txn.type == TransactionType.SELL:
+                    # Sell EUR, Buy USD -> Acquisition of Foreign Currency (USD)
+                    # FX_BUY (USD)
+                    
+                    # Amount of USD received.
+                    # Sell 1000 EUR at 1.05 -> Receive 1050 USD.
+                    # txn.total_original should be positive USD.
+                    
+                    amount_foreign = abs(txn.total_original) if txn.total_original else abs(txn.total * txn.fx_rate)
+                    
+                    virtual_txn = Transaction(
+                        date=txn.date,
+                        type=TransactionType.FX_BUY,
+                        ticker=foreign_currency, # "USD"
+                        name=f"FX Acquisition via {txn.ticker}",
+                        asset_type=AssetType.CASH,
+                        currency_primary=foreign_currency,
+                        original_currency=foreign_currency,
+                        shares=amount_foreign,
+                        price=Decimal(1),
+                        total=txn.total, # User paid this much EUR (Cost Basis)
+                        fx_rate=txn.fx_rate,
+                        total_original=amount_foreign
+                    )
+                    self._handle_fx_buy(virtual_txn)
+
+            # Case 2: Pair is fully foreign (e.g. GBP.USD) - Cross Rate
+            # This is complex (Buy GBP, Sell USD). 
+            # Treat as: Disposal of USD (Tax Event), Acquisition of GBP (New Pool).
+            elif base != PORTFOLIO_BASE and quote != PORTFOLIO_BASE:
+                logger.warning(f"Cross-currency FX pair {txn.ticker} not fully supported yet.")
+                
+            else:
+                # Quote is base? (USD.EUR)
+                # Buy USD, Sell EUR -> Buy USD (FX_BUY).
+                # Logic would mirror above but flipped.
+                pass
+
+        except Exception as e:
+            logger.error(f"Error processing FX trade {txn.ticker}: {e}")
+
     def process_transaction(self, txn: Transaction):
         """Process a single transaction."""
+        
+        # Detect Forex Pairs masquerading as Trades (e.g. EUR.USD)
+        if txn.asset_type.value == "Forex" or (txn.ticker and "." in txn.ticker and len(txn.ticker) == 7):
+             self._process_forex_trade(txn)
+             return
+
         asset_key = self._get_asset_key(txn)
         
         if txn.type == TransactionType.BUY:
