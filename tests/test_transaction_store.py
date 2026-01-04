@@ -3,7 +3,7 @@ Unit Tests for Encrypted TransactionStore
 
 Tests database operations, encryption, deduplication, and source management.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import pytest

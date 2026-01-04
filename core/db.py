@@ -1,5 +1,5 @@
 """
-Database Connection Manager - "The Glue"
+Database Connection Manager
 
 Provides unified access to both SQLite (for trades/settings) and DuckDB 
 (for analytical queries across SQLite + Parquet files).

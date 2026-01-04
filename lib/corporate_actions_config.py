@@ -15,7 +15,7 @@ Format:
     ]
 }
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 # Spin-off examples:

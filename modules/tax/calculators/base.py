@@ -4,7 +4,7 @@ Abstract Base Class for Tax Calculators
 Defines the interface that all country-specific tax calculators must implement.
 Each calculator takes a list of TaxEvents and produces a TaxLiability result.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 from abc import ABC, abstractmethod

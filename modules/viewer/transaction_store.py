@@ -13,7 +13,7 @@ Security:
 - Encryption key loaded from Streamlit secrets
 - Individual fields encrypted separately for query capability
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import sqlite3

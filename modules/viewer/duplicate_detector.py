@@ -4,7 +4,7 @@ Near-Duplicate Detection with ISIN-Based Matching
 Detects potential duplicate transactions using robust ISIN + shares + direction logic.
 Distinguishes between duplicates (same direction) and transfers (opposite direction).
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 from datetime import datetime, timedelta, date

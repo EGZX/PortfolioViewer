@@ -13,7 +13,7 @@ TAX COMPLIANCE:
 - Broker FX rates from CSVs are NOT used for tax calculations
 - Historical rates cached permanently (immutable)
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import uuid

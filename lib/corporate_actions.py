@@ -4,7 +4,7 @@ Corporate Actions Service
 Handles detection and application of stock splits and other corporate actions
 to ensure accurate cost basis and share count calculations.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import yfinance as yf

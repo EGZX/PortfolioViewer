@@ -3,7 +3,7 @@ Utility script to generate encryption keys for TransactionStore
 
 Run this once to generate a secure encryption key for your secrets.toml
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 from cryptography.fernet import Fernet

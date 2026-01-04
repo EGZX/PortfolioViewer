@@ -4,7 +4,7 @@ Interactive Duplicate Review UI Component
 Streamlit component for reviewing and resolving near-duplicate transactions.
 Compact list view for efficiency.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import streamlit as st
