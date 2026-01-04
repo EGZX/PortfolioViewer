@@ -18,10 +18,11 @@ A portfolio analysis tool with:
 import sys
 from pathlib import Path
 
-# Fix module imports - add project root to path
+# Add project root to Python path for module resolution
 _root = Path(__file__).parent.parent
 if str(_root) not in sys.path:
     sys.path.insert(0, str(_root))
+
 
 import streamlit as st
 from datetime import datetime, date
@@ -692,7 +693,7 @@ def main():
             )
             
         with col2:
-            jurisdiction_options = ["Austria"] # Future: Germany, US
+            jurisdiction_options = ["Austria"]
             selected_jurisdiction = st.selectbox(
                  "Tax Jurisdiction",
                  options=jurisdiction_options,
@@ -811,7 +812,7 @@ def main():
                         else:
                             event_type = "Income"
                     
-                    # Fix "Unknown" asset type if it looks like Cash/Interest
+                    # Classify Unknown asset types based on transaction context
                     if asset_type == "Unknown" and event_type == "Interest":
                         asset_type = "Cash"
 

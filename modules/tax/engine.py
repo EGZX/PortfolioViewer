@@ -97,9 +97,17 @@ class FIFOStrategy(LotMatchingStrategy):
             # How much to sell from this lot
             qty_from_lot = min(lot.quantity, remaining_to_sell)
             
-            # Calculate proceeds for this portion
-            proceeds = (qty_from_lot / sell_transaction.shares) * abs(sell_transaction.total)
-            cost_basis = (qty_from_lot / lot.original_quantity) * lot.cost_basis_base
+            # Calculate proceeds for this portion (proportional to quantity sold)
+            proceeds_fraction = qty_from_lot / sell_transaction.shares
+            proceeds = proceeds_fraction * abs(sell_transaction.total)
+            
+            # CRITICAL FIX: Calculate cost basis using CURRENT lot quantity, not original
+            # This ensures correct calculation for partially-sold lots
+            if lot.quantity > 0:
+                fraction_of_lot_sold = qty_from_lot / lot.quantity
+                cost_basis = fraction_of_lot_sold * lot.cost_basis_base
+            else:
+                cost_basis = Decimal(0)
             
             # Create tax event
             event = TaxEvent(
@@ -119,13 +127,14 @@ class FIFOStrategy(LotMatchingStrategy):
                 lot_ids_used=[lot.lot_id],
                 sale_currency=sell_transaction.original_currency,
                 sale_fx_rate=sell_transaction.fx_rate,
-                tax_already_paid=(qty_from_lot / sell_transaction.shares) * sell_transaction.withholding_tax * sell_transaction.fx_rate
+                tax_already_paid=proceeds_fraction * sell_transaction.withholding_tax * sell_transaction.fx_rate
             )
             
             events.append(event)
             
-            # Update lot
+            # Update lot: reduce both quantity AND cost basis proportionally
             lot.quantity -= qty_from_lot
+            lot.cost_basis_base -= Decimal(str(cost_basis))
             remaining_to_sell -= qty_from_lot
         
         if remaining_to_sell > 0:
@@ -188,6 +197,11 @@ class WeightedAverageStrategy(LotMatchingStrategy):
         # Weighted average: Single merged lot
         merged_lot = open_lots[0] if len(open_lots) == 1 else self._merge_lots(open_lots)
         
+        # Safety check: cannot sell from exhausted lot
+        if merged_lot.quantity <= 0:
+            logger.error(f"Cannot sell {sell_transaction.ticker}: lot is exhausted")
+            return []
+        
         qty_to_sell = min(sell_transaction.shares, merged_lot.quantity)
         
         # Calculate proceeds and Cost basis
@@ -225,7 +239,7 @@ class WeightedAverageStrategy(LotMatchingStrategy):
         # CRITICAL FIX: The open lots must be updated to reflect the merged state
         # Clear existing specific lots and replace with the single merged pool lot
         open_lots.clear()
-        if merged_lot.quantity > 0:
+        if not merged_lot.is_exhausted():
             open_lots.append(merged_lot)
         
         return [event]
