@@ -4,7 +4,7 @@ Tests for Currency Lot Tracking and FX Transactions
 Verifies FX buy/sell transactions are correctly tracked with lot matching,
 fees are handled per jurisdiction rules, and FX gains are accurately calculated.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import sys

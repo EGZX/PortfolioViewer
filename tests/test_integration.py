@@ -7,7 +7,7 @@ Tests end-to-end workflows:
 3. Tax Basis Engine → Tax Calculator → Tax Liability
 4. Corporate Actions → Adjusted Transactions → Correct Holdings
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import pytest

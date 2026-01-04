@@ -3,7 +3,7 @@ Austrian Tax Calculator - Usage Example
 
 Demonstrates how to use the Austrian tax calculator with sample data.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 from datetime import date

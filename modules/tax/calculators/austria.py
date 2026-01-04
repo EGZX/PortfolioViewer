@@ -6,13 +6,13 @@ Implements Austria's capital gains tax rules:
 - No annual tax-free allowance
 - No holding period exemptions (abolished in 2011)
 - Separate reporting of gains/losses by asset type
-- CRITICAL: Fees and costs CANNOT reduce taxable gains
+- Fees and costs do not reduce taxable gains
 
 References:
 - Austrian Income Tax Act (EStG) §27a
 - Eco-Social Tax Reform 2021
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 from typing import List, Dict
@@ -33,7 +33,7 @@ class AustriaTaxCalculator(TaxCalculator):
     - No annual allowance (unlike Germany)
     - No holding period exemptions
     - Gains and losses reported separately by asset type
-    - Fees CANNOT reduce taxable gains (unique Austrian rule)
+    - Fees do not reduce taxable gains (unique Austrian rule)
     """
     
     # Tax rate (as of 2024)

@@ -3,7 +3,7 @@ Basic test for Tax Basis Engine
 
 Quick verification that FIFO and Weighted Average calculations work correctly.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import sys

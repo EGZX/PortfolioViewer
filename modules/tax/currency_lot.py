@@ -4,7 +4,7 @@ Currency Lot Tracking for FX Transactions
 Tracks foreign currency positions for tax-accurate FX gain/loss calculation.
 Universal implementation - jurisdiction-specific fee treatment in calculators.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 from dataclasses import dataclass, field

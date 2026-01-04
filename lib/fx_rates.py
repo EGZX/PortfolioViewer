@@ -12,7 +12,7 @@ Supported Central Banks:
 
 Falls back to yfinance for unsupported currencies or when central bank APIs fail.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import requests

@@ -4,7 +4,7 @@ Unit Tests for Corporate Actions (Spin-offs and Mergers)
 Tests enhanced corporate actions functionality including spin-offs
 and configured actions.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import pytest

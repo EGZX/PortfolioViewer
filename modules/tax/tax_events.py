@@ -8,7 +8,7 @@ Defines the core data structures for tax basis tracking:
 
 These are universal models used across all jurisdictions.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 from dataclasses import dataclass, field

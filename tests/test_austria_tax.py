@@ -3,7 +3,7 @@ Unit Tests for Austrian Tax Calculator
 
 Tests Austria-specific tax calculation with KESt rules.
 
-Copyright (c) 2026 Andre. All rights reserved.
+Copyright (c) 2026 Andreas Wagner. All rights reserved.
 """
 
 import pytest
