@@ -503,13 +503,33 @@ def main():
     # Use native segmented control (pills) for professional tab navigation
     # This replaces the old CSS-hacked st.radio approach
     
-    # Custom Styling for Segmented Control - Spacing only
+    # Custom Styling for Segmented Control + Tab Content Container
     # Theme colors are configured via .streamlit/config.toml
     st.markdown("""
         <style>
-        /* Reduce bottom spacing to visually connect tabs with content */
+        /* Eliminate gap between tabs and content */
         div[data-testid="stSegmentedControl"] {
-            margin-bottom: 0.25rem !important;
+            margin-bottom: 0rem !important;
+        }
+        
+        /* Increase font size to match dropdowns */
+        div[data-testid="stSegmentedControl"] button,
+        div[data-testid="stSegmentedControl"] div {
+            font-size: 0.95rem !important;
+            padding: 0.5rem 1.2rem !important;
+        }
+        
+        /* Create visual "panel" effect - add subtle border and background to tab content area */
+        div[data-testid="stSegmentedControl"] ~ div {
+            padding-top: 1rem !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            padding-bottom: 1rem !important;
+            border: 1px solid rgba(60, 66, 75, 0.5) !important;
+            border-top: none !important; /* No top border to merge with tabs */
+            background-color: rgba(13, 17, 23, 0.4) !important;
+            border-radius: 0 0 10px 10px !important; /* Only bottom corners rounded */
+            margin-top: 0 !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -523,8 +543,8 @@ def main():
         key="nav_segmented_control",
         on_change=lambda: st.session_state.update({"active_tab": st.session_state.nav_segmented_control})
     )
-
-    st.markdown("---") # Separator
+    
+    # No separator - tabs flow directly into content
 
     # ========== TAB 1: HOLDINGS ==========
     if selected_tab == "Holdings":

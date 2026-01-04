@@ -161,6 +161,17 @@ class Portfolio:
         
         # Update holdings for transactions with tickers
         if t.ticker and t.ticker.strip():
+            # Skip FX pairs entirely - they should not create positions
+            # FX pairs are used for tracking currency gains but are not "holdings"
+            ticker_upper = t.ticker.upper()
+            if '.' in ticker_upper:
+                # Check if this looks like an FX pair (EUR.USD, USD.JPY, etc.)
+                if any(curr in ticker_upper for curr in ['EUR', 'USD', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD']):
+                    logger.debug(f"Skipping FX pair from position tracking: {t.ticker} ({t.type.value})")
+                    # Still process cash impact but don't create a position
+                    # (Cash was already handled above)
+                    return
+            
             # Use ISIN as primary key ("Asset ID") if available (stable), else fallback to ticker
             # This ensures we track positions stably even if tickers change
             key = t.isin if t.isin else t.ticker
@@ -461,6 +472,15 @@ class Portfolio:
         for idx, (key, pos) in enumerate(self.holdings.items()):
             # Use ticker from position for display/lookup
             ticker = pos.ticker
+            
+            # Skip FX pairs (e.g., EUR.USD) - these are currency tracking positions
+            if ticker and '.' in ticker.upper():
+                ticker_upper = ticker.upper()
+                # Common FX pair patterns: EUR.USD, USD.JPY, GBP.USD, etc.
+                if any(curr in ticker_upper for curr in ['EUR', 'USD', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD']):
+                    logger.debug(f"Skipping FX pair from holdings display: {ticker}")
+                    continue
+            
             # Skip closed positions
             if pos.shares <= 0:
                 continue
