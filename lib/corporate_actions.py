@@ -594,7 +594,7 @@ class CorporateActionService:
                         all_logs.extend(spinoff_log)
                     
                     elif action.action_type == "Merger":
-                        # TODO: Implement merger handling
+                        # Merger handling not yet implemented
                         logger.warning(f"Merger handling not yet implemented: {action}")
         
         logger.info(f"CORPORATE ACTIONS: Complete - {len(all_logs)} adjustments")

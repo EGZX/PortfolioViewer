@@ -55,6 +55,7 @@ data/  # Git ignored - persistence layer (SQLite + Parquet)
 
 # Tests
 #tests/
+Testdata/
 
 # Hypothesis test cache
 .hypothesis/
