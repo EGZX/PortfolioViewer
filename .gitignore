@@ -41,17 +41,11 @@ Thumbs.db
 .streamlit/secrets.toml
 
 # Test data (contains sensitive financial information)
-#Testdata/
-#*.csv
 
 # Logs
-#*.log
-#logs/
 bugfixing/
 
 # Database and Cache
-# *.db  <-- Uncomment to ignore DB if not using it for persistence
-data/  # Git ignored - persistence layer (SQLite + Parquet)
 
 # Tests
 #tests/
@@ -63,3 +57,16 @@ Testdata/
 # Configuration tools
 scripts/config_helper.py
 scripts/generate_cache_key.py
+
+# Personal financial data and runtime state: never tracked. The SQLite +
+# Parquet persistence layer, its logs and broker/tax exports were scrubbed from
+# the history on 2026-10-20 (gitignore takes no inline comments, so the old
+# `data/  # ...` line never matched).
+data/
+logs/
+*.log
+*.db
+*.db-shm
+*.db-wal
+Testdata/
+.streamlit/secrets.toml
